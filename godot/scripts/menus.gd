@@ -11,6 +11,28 @@ const SCALE := 1.0 / 3.0  # menu art is @3x
 const SPACE := 13.5  # space_x / space_y in points
 const PANEL_SIZE := Vector2(1843, 1036)
 const PANEL_H_PTS := 1036.0 / 3.0
+## Each menu's title. The art has them baked in, in a font we can't bundle;
+## _open() wipes them and draws these in Liberation Sans Bold instead, so
+## every title (ours included) matches.
+const TITLES := {
+	"welcome": "WELCOME",
+	"newbie": "NEWBIE?",
+	"options": "OPTIONS",
+	"paused_game": "PAUSED",
+	"confirm_quit": "CONFIRM",
+	"lose_life": "OH NO!",
+	"game_over": "GAME OVER",
+	"restart_from_checkpoint": "RESTART",
+	"end_level": "LEVEL CLEAR",
+	"end_level_checkpoint": "LEVEL CLEAR",
+	"congratulations": "CONGRATULATIONS",
+	"completion": "COMPLETION",
+}
+## Where the art's white panel starts (row 260 of the @3x art is its edge).
+const PANEL_TOP_ROW := 260
+## Title size: the art's titles are Arial-width letters at this size.
+const TITLE_PX := 120
+
 ## Practice grid: levels per page, as 5 columns of 4 rows.
 const PRACTICE_PAGE := 20
 
@@ -22,6 +44,8 @@ var _tap_ready_at := 0.0
 var _tween: Tween
 ## Button art with its baked-in text wiped, for buttons the original lacked.
 var _blank_buttons := {}
+## Menu art with the baked-in title wiped, by art name.
+var _blank_panels := {}
 
 
 func _ready() -> void:
@@ -65,7 +89,8 @@ func close() -> void:
 	visible = false
 
 
-func _open(tag: String, bg_name: String, fade := true) -> void:
+## title: overrides the art's own title (TITLES) when not empty.
+func _open(tag: String, bg_name: String, fade := true, title := "") -> void:
 	close()
 	current = tag
 	visible = true
@@ -82,15 +107,44 @@ func _open(tag: String, bg_name: String, fade := true) -> void:
 	_recentre()
 
 	var art := TextureRect.new()
-	art.texture = load("res://assets/menu/%s.png" % bg_name)
+	art.texture = _blank_panel(bg_name)
 	art.position = -PANEL_SIZE / 2.0
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(art)
+	_title(title if title != "" else TITLES.get(bg_name, ""))
 
 	if fade:
 		_panel.modulate.a = 0.0
 		_tween = create_tween()
 		_tween.tween_property(_panel, "modulate:a", 1.0, 0.4)
+
+
+## The menu art without its title: everything above the panel is plain
+## background in every menu, apart from the title.
+func _blank_panel(bg_name: String) -> Texture2D:
+	if not _blank_panels.has(bg_name):
+		var img: Image = load("res://assets/menu/%s.png" % bg_name).get_image()
+		img.decompress()
+		img.fill_rect(Rect2i(0, 0, img.get_width(), PANEL_TOP_ROW), BASE_BG)
+		_blank_panels[bg_name] = ImageTexture.create_from_image(img)
+	return _blank_panels[bg_name]
+
+
+## The menu title, standing on the panel's top edge.
+func _title(text: String) -> void:
+	if text == "":
+		return
+	Hud.fonts()
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", Hud.sans_bold)
+	l.add_theme_font_size_override("font_size", TITLE_PX)
+	l.add_theme_color_override("font_color", Color.WHITE)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(l)
+	l.size = l.get_minimum_size()
+	var edge := PANEL_TOP_ROW - PANEL_SIZE.y / 2.0
+	l.position = Vector2(-l.size.x / 2.0, edge - Hud.sans_bold.get_ascent(TITLE_PX))
 
 
 func _button(
@@ -385,37 +439,14 @@ func show_restart(reached: Array) -> void:
 ## furthest: levels 1..furthest are open. bests: Save.bests.
 ## note: a line under the heading, e.g. how the last practice run went.
 func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note := "") -> void:
-	_open("practice", "restart_from_checkpoint")
-	# The art says RESTART / select checkpoint: cover both with our own words.
-	var title_cover := ColorRect.new()
-	title_cover.color = BASE_BG
-	title_cover.position = Vector2(-340, -380)
-	title_cover.size = Vector2(680, 122)
-	title_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(title_cover)
-	# The letters dip into the panel's top edge too.
-	var edge_cover := ColorRect.new()
-	edge_cover.color = Color.WHITE
-	edge_cover.position = Vector2(-340, -257)
-	edge_cover.size = Vector2(680, 30)
-	edge_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(edge_cover)
-	var edge_blend := ColorRect.new()  # the art's one anti-aliased edge row
-	edge_blend.color = Color("#d0eaf5")
-	edge_blend.position = Vector2(-340, -258)
-	edge_blend.size = Vector2(680, 1)
-	edge_blend.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(edge_blend)
+	_open("practice", "restart_from_checkpoint", true, "PRACTICE")
+	# The art says "select checkpoint" under the title: cover it with our own.
 	var heading_cover := ColorRect.new()
 	heading_cover.color = Color.WHITE
 	heading_cover.position = Vector2(-340, -200)
 	heading_cover.size = Vector2(680, 70)
 	heading_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(heading_cover)
-	# Like every title in the art: letters about 84 px tall at @3x, standing
-	# right on the panel's top edge (art row 260, so y = -258 here).
-	var title := _label("PRACTICE", 39, Color.WHITE, Vector2.ZERO, Vector2(0.5, 0.0), Hud.sans_bold)
-	title.position.y = -258.0 - Hud.sans_bold.get_ascent(117)
 	var first := page * PRACTICE_PAGE + 1
 	var last := mini(first + PRACTICE_PAGE - 1, count)
 	var heading := note if note != "" else "levels %d-%d" % [first, last]
