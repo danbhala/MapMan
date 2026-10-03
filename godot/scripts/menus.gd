@@ -11,6 +11,8 @@ const SCALE := 1.0 / 3.0  # menu art is @3x
 const SPACE := 13.5  # space_x / space_y in points
 const PANEL_SIZE := Vector2(1843, 1036)
 const PANEL_H_PTS := 1036.0 / 3.0
+## Practice grid: levels per page, as 5 columns of 4 rows.
+const PRACTICE_PAGE := 20
 
 var current := ""
 var _panel: Control
@@ -117,7 +119,12 @@ func _button(
 ## A button in the original's style with our own text: the art of `tag` with
 ## its baked-in text wiped, and `text` drawn over it.
 func _text_button(
-	tag: String, text: String, act: String, pos_pts: Vector2, anchor: Vector2
+	tag: String,
+	text: String,
+	act: String,
+	pos_pts: Vector2,
+	anchor: Vector2,
+	size_pts := Vector2.ZERO
 ) -> TextureButton:
 	var b := TextureButton.new()
 	var normal := _blank_button(tag)
@@ -126,8 +133,13 @@ func _text_button(
 	b.texture_pressed = on
 	b.texture_hover = on
 	b.texture_focused = on
-	b.size = normal.get_size()
-	_place(b, normal.get_size(), pos_pts, anchor)
+	var size_px := normal.get_size()
+	if size_pts != Vector2.ZERO:  # stretch the art to a smaller button
+		b.ignore_texture_size = true
+		b.stretch_mode = TextureButton.STRETCH_SCALE
+		size_px = size_pts * 3.0
+	b.size = size_px
+	_place(b, size_px, pos_pts, anchor)
 	b.pressed.connect(func(): action.emit(act))
 	_panel.add_child(b)
 	Hud.fonts()
@@ -251,7 +263,9 @@ func show_main(highscore: int, has_checkpoint: bool) -> void:
 	_open("main", "welcome")
 	var space_y := SPACE * 0.75
 	var y := _bottom() + space_y
-	_button("options", "options", Vector2(0, y), Vector2(0.5, 0.0))
+	# Options and practice share the bottom row; each is half its width.
+	_button("options", "options", Vector2(-SPACE / 2.0, y), Vector2(1.0, 0.0))
+	_text_button("options", "practice", "practice", Vector2(SPACE / 2.0, y), Vector2(0.0, 0.0))
 	y += 119.0 / 3.0 + space_y
 	_button("tutorial", "tutorial", Vector2(0, y), Vector2(0.5, 0.0))
 	y += 119.0 / 3.0 + space_y
@@ -365,6 +379,129 @@ func show_restart(reached: Array) -> void:
 		y += bh + SPACE
 	_main_menu_button()
 	_focus_first()
+
+
+## Practice: pick any level reached in the main game and play just that one.
+## furthest: levels 1..furthest are open. bests: Save.bests.
+## note: a line under the heading, e.g. how the last practice run went.
+func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note := "") -> void:
+	_open("practice", "restart_from_checkpoint")
+	# The art says RESTART / select checkpoint: cover both with our own words.
+	var title_cover := ColorRect.new()
+	title_cover.color = BASE_BG
+	title_cover.position = Vector2(-340, -380)
+	title_cover.size = Vector2(680, 122)
+	title_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(title_cover)
+	# The letters dip into the panel's top edge too.
+	var edge_cover := ColorRect.new()
+	edge_cover.color = Color.WHITE
+	edge_cover.position = Vector2(-340, -257)
+	edge_cover.size = Vector2(680, 30)
+	edge_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(edge_cover)
+	var edge_blend := ColorRect.new()  # the art's one anti-aliased edge row
+	edge_blend.color = Color("#d0eaf5")
+	edge_blend.position = Vector2(-340, -258)
+	edge_blend.size = Vector2(680, 1)
+	edge_blend.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(edge_blend)
+	var heading_cover := ColorRect.new()
+	heading_cover.color = Color.WHITE
+	heading_cover.position = Vector2(-340, -200)
+	heading_cover.size = Vector2(680, 70)
+	heading_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(heading_cover)
+	# Sits where the art's own titles do, just above the panel.
+	_label("PRACTICE", 38, Color.WHITE, Vector2(0, 87), Vector2(0.5, 0.0), Hud.sans_bold)
+	var first := page * PRACTICE_PAGE + 1
+	var last := mini(first + PRACTICE_PAGE - 1, count)
+	var heading := note if note != "" else "levels %d-%d" % [first, last]
+	_label(heading, 13, Color.BLACK, Vector2(0, 54), Vector2(0.5, 0.5))
+
+	var cw := 70.0
+	var ch := 31.0
+	var gap := 8.0
+	var x0 := -2.5 * cw - 2.0 * gap
+	var y := 33.0
+	for i in range(PRACTICE_PAGE):
+		var level := first + i
+		if level > count:
+			break
+		var pos := Vector2(x0 + (i % 5) * (cw + gap), y - (i / 5) * (ch + gap / 2.0))
+		_level_cell(level, level <= furthest, bests.get(level, {}), pos, Vector2(cw, ch))
+
+	var pages := ceili(float(count) / PRACTICE_PAGE)
+	# Page arrows either side of the main menu button.
+	var arrow_y := _bottom() - SPACE / 2.0
+	var arrow := Vector2(45, load("res://assets/buttons/main_menu.png").get_height() / 3.0)
+	if page > 0:
+		var act := "practice page %d" % (page - 1)
+		_text_button("options", "<", act, Vector2(-83, arrow_y), Vector2(1.0, 1.0), arrow)
+	if page < pages - 1:
+		var act := "practice page %d" % (page + 1)
+		_text_button("options", ">", act, Vector2(83, arrow_y), Vector2(0.0, 1.0), arrow)
+	_main_menu_button()
+	_focus_first()
+
+
+## One level in the practice grid: its number, and its best time and stars.
+func _level_cell(
+	level: int, open: bool, best: Dictionary, pos_pts: Vector2, size_pts: Vector2
+) -> void:
+	var tag := "Checkpoint_10" if open else "Checkpoint_10_locked"
+	var b := TextureButton.new()
+	b.texture_normal = _blank_button(tag)
+	b.texture_pressed = _blank_button(tag + "_on")
+	b.texture_hover = b.texture_pressed
+	b.texture_focused = b.texture_pressed
+	b.ignore_texture_size = true
+	b.stretch_mode = TextureButton.STRETCH_SCALE
+	var size_px := size_pts * 3.0
+	b.size = size_px
+	_place(b, size_px, pos_pts, Vector2(0, 1))
+	if open:
+		b.pressed.connect(func(): action.emit("practice level %d" % level))
+		if _first_button == null:
+			_first_button = b
+	else:
+		b.disabled = true
+		b.focus_mode = Control.FOCUS_NONE
+	_panel.add_child(b)
+	Hud.fonts()
+	var number := Label.new()
+	number.text = str(level)
+	number.add_theme_font_override("font", Hud.mono)
+	number.add_theme_font_size_override("font_size", 40)
+	number.add_theme_color_override("font_color", Color.WHITE)
+	number.add_theme_color_override("font_outline_color", Color.WHITE)
+	number.add_theme_constant_override("outline_size", 3)
+	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	number.position = Vector2(0, 2)
+	number.size = Vector2(size_px.x, 50)
+	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(number)
+	if open and not best.is_empty():
+		var detail := Label.new()
+		detail.text = "%ds" % best.time + ("   %d" % best.stars if best.stars > 0 else "")
+		detail.add_theme_font_override("font", Hud.mono)
+		detail.add_theme_font_size_override("font_size", 24)
+		detail.add_theme_color_override("font_color", Color.WHITE)
+		detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		detail.position = Vector2(0, 54)
+		detail.size = Vector2(size_px.x, 30)
+		detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(detail)
+		if best.stars > 0:
+			# The HUD's star, just before the star count.
+			var star := TextureRect.new()
+			star.texture = load("res://assets/star/star_white_transparent.png")
+			star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			star.size = Vector2(24, 23)
+			var text_w := Hud.mono.get_string_size(detail.text, 0, -1, 24).x
+			star.position = Vector2((size_px.x + text_w) / 2.0 - 44, 58)
+			star.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			b.add_child(star)
 
 
 ## Level clear: the three bonuses count down into the score, star by star.

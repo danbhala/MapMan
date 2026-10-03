@@ -173,6 +173,13 @@ func run() -> void:
 	await frames(40)
 	await shot("13_options")
 
+	# Practice: levels reached so far, with bests on some of them.
+	save.furthest_level = 23
+	save.bests = {21: {"time": 7, "stars": 1}, 22: {"time": 12, "stars": 0}}
+	game._on_menu_action("practice")
+	await frames(40)
+	await shot("14_practice")
+
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
 		quit(0)

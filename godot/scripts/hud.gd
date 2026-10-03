@@ -12,6 +12,7 @@ const NORMAL_TIME := Color("#ffffff")
 const TIME_UP := Color("#aeaeae")
 
 static var mono: Font
+static var sans_bold: Font
 static var sans: Font
 
 var level_label: Label
@@ -38,6 +39,7 @@ static func fonts() -> void:
 	if mono == null:
 		mono = load("res://assets/fonts/LiberationMono-Regular.ttf")
 		sans = load("res://assets/fonts/LiberationSans-Regular.ttf")
+		sans_bold = load("res://assets/fonts/LiberationSans-Bold.ttf")
 
 
 static func make_label(font: Font, size: int, color := Color.WHITE) -> Label:
@@ -171,6 +173,10 @@ func set_lives(lives: int) -> void:
 func show_stats(on: bool) -> void:
 	for n in [level_label, score_label, star, lives_label, heart]:
 		n.visible = on
+
+
+func show_level(on: bool) -> void:
+	level_label.visible = on
 
 
 func show_bar(on: bool) -> void:
