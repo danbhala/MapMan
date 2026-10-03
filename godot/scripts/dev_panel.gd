@@ -150,6 +150,7 @@ func _build_panel(theme: Theme) -> Control:
 	# Tilt tuning
 	box.add_child(_heading("Tilt tuning (saved on this phone, applies to this app)"))
 	box.add_child(_slider("tilt_threshold", "Tilt to start moving (g)", 0.02, 0.4, 0.01))
+	box.add_child(_slider("keep_threshold", "Tilt to keep moving (g)", 0.02, 0.4, 0.01))
 	box.add_child(_slider("fast_threshold", "Tilt for full speed (g)", 0.05, 0.8, 0.01))
 	box.add_child(_slider("shake_threshold", "Shake to get unstuck (g)", 0.1, 2.0, 0.05))
 	row = HBoxContainer.new()
@@ -307,7 +308,10 @@ class TiltGauge:
 			"steer %+.2f %+.2f" % [v.x, v.y],
 			"gravity %+.1f %+.1f %+.1f" % [g.x, g.y, g.z],
 			"shake %.2f g" % game.tilt.shake_strength(),
-			"start %.2f  fast %.2f" % [Dev.t("tilt_threshold"), fast],
+			(
+				"start %.2f  keep %.2f  fast %.2f"
+				% [Dev.t("tilt_threshold"), Dev.t("keep_threshold"), fast]
+			),
 		]
 		var y := 16.0
 		for line in lines:
