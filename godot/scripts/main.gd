@@ -6,7 +6,6 @@ const POINTS_PER_LEVEL := 10
 const INITIAL_LIVES := 3
 const INITIAL_SECONDS := 20.0
 const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
-const TILT_THRESHOLD := 0.1
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
@@ -27,6 +26,7 @@ var player: Player
 var hud: Hud
 var menus: Menus
 var tilt := TiltInput.new()
+var dev_panel: DevPanel
 
 # game state (names follow the original)
 var game_active := false
@@ -44,6 +44,8 @@ var end_of_level_points := 0
 
 var _bg: ColorRect
 var _gradient: TextureRect
+
+var _moves := 0  # moves made in this attempt at the level, for the play log
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -96,6 +98,10 @@ func _ready() -> void:
 
 	get_viewport().size_changed.connect(_layout)
 	_layout()
+	if Dev.enabled:
+		dev_panel = DevPanel.new(self)
+		add_child(dev_panel)
+
 	hud.show_bar(false)
 	hud.show_stats(false)
 	show_start_menu()
@@ -152,7 +158,8 @@ func _timer_start() -> void:
 func _update_timer(delta: float) -> void:
 	if not _timer_running:
 		return
-	_time_left = maxf(0.0, _time_left - delta)
+	if not (Dev.enabled and Dev.unlimited_time):
+		_time_left = maxf(0.0, _time_left - delta)
 	var secs := _seconds_remaining()
 	hud.set_timer(secs, _time_left)
 	if secs > 0 and secs <= 3:
@@ -189,7 +196,7 @@ func _process(delta: float) -> void:
 		var time_left := _seconds_remaining()
 		set_time_message(time_left)
 		if time_left < 1 and not dead and not tutorial:
-			lose_life()
+			lose_life("timeout")
 	elif map.loaded():
 		loaded()
 
@@ -325,14 +332,15 @@ func move_player(delta: float) -> void:
 
 ## Returns the idle facing to use, or an invalid Callable once a move started.
 func _try_axis(axis: Vector2i, value: float, can_move: bool, face: Callable) -> Callable:
+	var threshold: float = Dev.t("tilt_threshold")
 	var step := Vector2i.ZERO
-	if value > TILT_THRESHOLD:
+	if value > threshold:
 		step = axis
-	elif value < -TILT_THRESHOLD:
+	elif value < -threshold:
 		step = -axis
 	else:
 		return face
-	var seconds := STOP_TIME * (0.5 if absf(value) > 2.0 * TILT_THRESHOLD else 1.0)
+	var seconds := STOP_TIME * (0.5 if absf(value) > Dev.t("fast_threshold") else 1.0)
 	if can_move:
 		move(step, seconds)
 	var actual := -step if reverse else step
@@ -347,6 +355,7 @@ func move(step: Vector2i, seconds: float) -> void:
 	if map.moving:
 		map.update_move(0.0)
 		Audio.play_step()
+		_moves += 1
 		if vanish > 0:
 			vanish -= 1
 
@@ -460,6 +469,7 @@ func load_level() -> void:
 func reset_all(reset_stars := true) -> void:
 	if reset_stars:
 		stars = 0
+	_moves = 0
 	map.reset()
 	dead = false
 	reverse = false
@@ -481,6 +491,8 @@ func reset_all(reset_stars := true) -> void:
 
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
+	if not tutorial:
+		Dev.record(level, "win", _time_left, _moves)
 	if check_point:
 		Audio.pause_music(3.0)
 		Audio.play("checkpoint")
@@ -545,8 +557,11 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	hud.show_stats(not tutorial)
 
 
-func lose_life() -> void:
+## reason: "death" (a death tile) or "timeout" (the clock ran out).
+func lose_life(reason := "death") -> void:
 	_timer_stop()
+	if not tutorial:
+		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
 	player.show_player()
 	player.face_death()
@@ -555,7 +570,7 @@ func lose_life() -> void:
 
 
 func finish_lose_life() -> void:
-	if not tutorial:
+	if not tutorial and not (Dev.enabled and Dev.unlimited_lives):
 		lives -= 1
 	_update_stats()
 	if lives < 1:
@@ -579,6 +594,24 @@ func game_over(show_score := true) -> void:
 		Audio.play_game_over()
 		var pb := Save.submit_score(score)
 		menus.show_game_over(score, pb, Save.has_any_checkpoint())
+
+
+# --- dev menu ----------------------------------------------------------------
+
+
+## Start a normal game at any level (dev menu).
+func dev_go_to_level(n: int) -> void:
+	menus.close()
+	new_game(clampi(n, 1, levels.size()))
+
+
+## Move on to the next level without finishing this one (dev menu).
+func dev_skip_level() -> void:
+	if not game_active:
+		return
+	menus.close()
+	end_of_level_points = 0
+	next_level()
 
 
 # --- menus -----------------------------------------------------------------

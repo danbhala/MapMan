@@ -7,11 +7,8 @@ extends RefCounted
 ## Its size uses the original's units (fractions of 1 g): 0.1 starts a move,
 ## above 0.2 moves at double speed.
 
-## Flip these if tilting on a real device steers the wrong way.
-const INVERT_X := false
-const INVERT_Y := false
-## Shake strength (in g of user acceleration) that frees MapMan from a sticky tile.
-const SHAKE_THRESHOLD := 0.4
+## Inverting the axes and the shake strength needed to get unstuck are tuned
+## in the dev menu (Dev.tuning); their defaults live in dev.gd.
 ## What keys/gamepad count as: a firm tilt, so MapMan moves at full speed.
 const KEY_TILT := 0.25
 
@@ -64,9 +61,9 @@ func _tilt_vector() -> Vector2:
 	# edge down makes y grow (go up, which is -y on screen).
 	var d := (Input.get_gravity() - _neutral) / 9.81
 	var v := Vector2(d.x, -d.y)
-	if INVERT_X:
+	if Dev.t("invert_x"):
 		v.x = -v.x
-	if INVERT_Y:
+	if Dev.t("invert_y"):
 		v.y = -v.y
 	return v
 
@@ -107,6 +104,12 @@ func shook() -> bool:
 	else:
 		_shake_key_latch = false
 	if has_accelerometer():
-		var user_accel := (Input.get_accelerometer() - Input.get_gravity()) / 9.81
-		return user_accel.length() > SHAKE_THRESHOLD
+		return shake_strength() > Dev.t("shake_threshold")
 	return false
+
+
+## How hard the device is being shaken right now, in g, gravity excluded.
+func shake_strength() -> float:
+	if not has_accelerometer():
+		return 0.0
+	return ((Input.get_accelerometer() - Input.get_gravity()) / 9.81).length()

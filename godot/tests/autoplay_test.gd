@@ -64,6 +64,9 @@ func wait_until(cond: Callable, timeout_frames := 3000) -> bool:
 func run() -> void:
 	var save = root.get_node("Save")
 	save.persist = false  # never touch the player's real progress
+	var dev = root.get_node("Dev")
+	dev.enabled = false  # play like a release build: no cheats, no dev overlay
+	dev.persist = false
 	save.checkpoints.clear()
 	save.first_play = false
 	game = load("res://scenes/main.tscn").instantiate()

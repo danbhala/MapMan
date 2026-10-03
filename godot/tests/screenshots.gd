@@ -86,6 +86,9 @@ func run() -> void:
 	seed(20261003)
 	var save = root.get_node("Save")
 	save.persist = false
+	var dev = root.get_node("Dev")
+	dev.enabled = false  # screenshots show the release build
+	dev.persist = false
 	save.highscore = 0
 	save.checkpoints.clear()
 	save.first_play = false

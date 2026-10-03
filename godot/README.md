@@ -14,6 +14,17 @@ Open this `godot` folder in Godot 4.5 (or later) and press Play. The first open 
 
 Tilt is calibrated automatically when each level starts, so whatever angle you're holding the phone at becomes "level". This replaces the original's sitting/standing option. If tilting steers the wrong way on a real device, flip `INVERT_X` / `INVERT_Y` at the top of `scripts/tilt_input.gd`.
 
+## Dev builds
+
+"MapMan Dev" is a second app that installs alongside the real one, with its own save. It has a **DEV** button (top right) that opens:
+
+- level select and skip level
+- unlimited time and unlimited lives
+- a live tilt gauge, and sliders for how much tilt starts a move, how much gives full speed and how hard to shake; settings are saved on the phone and can be copied as text
+- a play log of attempts, deaths and timeouts per level, copied as text for `tools/playlog_report.py`
+
+The build and commit it came from are shown under the DEV button. Running the project from the Godot editor also has the dev tools.
+
 ## What's where
 
 - `scripts/main.gd` – game flow and the per-frame movement and tile rules (from `map_man.py`)
