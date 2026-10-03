@@ -9,6 +9,8 @@ var game
 
 func before_all() -> void:
 	Save.persist = false  # never touch the player's real progress
+	Dev.persist = false
+	Dev.enabled = false
 
 
 func after_each() -> void:

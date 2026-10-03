@@ -20,6 +20,7 @@ config/icon="res://assets/man/idle/front.png"
 
 Save="*res://scripts/save.gd"
 Audio="*res://scripts/audio.gd"
+Dev="*res://scripts/dev.gd"
 
 [display]
 

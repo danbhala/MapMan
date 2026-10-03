@@ -20,13 +20,17 @@ How to work:
    route length in moves, `slack_seconds` left on the clock at full tilt,
    time-loss and extra-time tiles on that route, sticky and reverse tiles on
    the route, stars and death tiles, checkpoints, and `needs_extra_time`.
-2. Read the layouts of any level you comment on from `godot/data/levels.json`.
-3. Look for: unsolvable levels; levels whose slack is far below their
+2. If the user shares a play log copied from the dev menu, save it to a file
+   and run `python3 godot/tools/playlog_report.py <file>`: real attempts,
+   clear rate, deaths and timeouts per level next to the estimated slack.
+   Real play outranks estimates when they disagree.
+3. Read the layouts of any level you comment on from `godot/data/levels.json`.
+4. Look for: unsolvable levels; levels whose slack is far below their
    neighbours (a difficulty spike); long runs of near-identical levels;
    mechanics used before the tutorial introduces them (tutorial order:
    reverse, vanish, sticky, points, lives, death, time, hide/unhide,
    checkpoints); checkpoints placed right after a spike.
-4. Tile counts and slack don't capture everything: reverse and sticky tiles,
+5. Tile counts and slack don't capture everything: reverse and sticky tiles,
    hidden paths and long vanishes add difficulty the slack number misses.
    Say so when it matters, rather than ranking by slack alone.
 

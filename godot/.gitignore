@@ -3,3 +3,4 @@
 /android/
 *.tmp
 /build/
+build_info.json
