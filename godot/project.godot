@@ -15,6 +15,7 @@ config/description="Tilt-to-move tile maze game, ported from the Pythonista orig
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://assets/man/idle/front.png"
+config/quit_on_go_back=false
 
 [autoload]
 

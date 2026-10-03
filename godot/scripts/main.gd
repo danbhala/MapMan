@@ -859,3 +859,22 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		if game_active and not dead and not menus.visible and is_inside_tree():
 			show_pause_menu()
+	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		go_back()
+
+
+## Android's back button or gesture: steps out one level, like other apps.
+## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
+func go_back() -> void:
+	match menus.current:
+		"":
+			if game_active and not dead:
+				show_pause_menu()
+		"pause", "confirm_quit":
+			_on_menu_action("unpause")
+		"options", "restart", "first_play", "game_over", "congratulations":
+			_on_menu_action("main menu")
+		"main":
+			get_tree().quit()
+		# Tap-to-continue screens (life lost, level clear, completion scoring)
+		# ignore back so a stray press can't skip or lose anything.
