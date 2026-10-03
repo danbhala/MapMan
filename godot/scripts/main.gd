@@ -39,6 +39,8 @@ var paused := false
 var tutorial := false
 ## Playing the bonus map after the last level, where MapWoman waits.
 var completed := false
+## Practising one level from the practice menu: no lives, score or checkpoints.
+var practice := false
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -65,6 +67,7 @@ var _ending_phase := EndingPhase.WAITING
 var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
+var _practice_page := 0
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -585,6 +588,8 @@ func load_level() -> void:
 		hud.set_timer(0, -1.0, true)
 		hud.blank_timer()
 		hud.set_time_message("get ready...")
+		if not practice:
+			Save.level_reached(level)
 	_update_stats()
 
 
@@ -621,6 +626,18 @@ func advance_level(check_point: bool) -> void:
 		show_game_complete()
 		return
 	if not tutorial:
+		var new_best := false
+		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
+			new_best = Save.record_best(level, _seconds_remaining(), stars)
+		if practice:
+			Audio.play("end_level")
+			_end_practice(
+				(
+					"level %d: %ds left%s"
+					% [level, _seconds_remaining(), ", new best!" if new_best else ""]
+				)
+			)
+			return
 		Dev.record(level, "win", _time_left, _moves)
 	if check_point:
 		Audio.pause_music(3.0)
@@ -679,6 +696,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	Audio.play_game()
 	tutorial = is_tutorial
 	completed = false
+	practice = false
 	score = 0
 	level = start_level
 	lives = INITIAL_LIVES
@@ -693,7 +711,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
-	if not tutorial:
+	if not tutorial and not practice:
 		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
 	player.show_player()
@@ -703,6 +721,11 @@ func lose_life(reason := "death") -> void:
 
 
 func finish_lose_life() -> void:
+	if practice:
+		# No lives in practice: straight back to the start of the level.
+		load_level()
+		reset_all()
+		return
 	if not tutorial and not (Dev.enabled and Dev.unlimited_lives):
 		lives -= 1
 	_update_stats()
@@ -721,6 +744,7 @@ func game_over(show_score := true) -> void:
 	player.vanish()
 	_hide_ending()
 	completed = false
+	practice = false
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -744,12 +768,42 @@ func dev_go_to_level(n: int) -> void:
 func dev_skip_level() -> void:
 	if not game_active:
 		return
+	if practice:
+		# Skipping never saves checkpoints or unlocks levels from practice.
+		_end_practice()
+		return
 	menus.close()
 	end_of_level_points = 0
 	next_level()
 
 
 # --- menus -----------------------------------------------------------------
+
+# --- practice --------------------------------------------------------------
+
+
+func show_practice_menu(page := -1, note := "") -> void:
+	if page >= 0:
+		_practice_page = page
+	Audio.play_menu()
+	menus.show_practice(_practice_page, Save.furthest_level, Save.bests, levels.size(), note)
+
+
+func start_practice(n: int) -> void:
+	# Practising first still leaves the first-play screen for "play from start".
+	var first_play := Save.first_play
+	new_game(n)
+	if first_play:
+		Save.first_play = true
+		Save.save_all()
+	practice = true
+	hud.show_stats(false)
+	hud.show_level(true)
+
+
+func _end_practice(note := "") -> void:
+	game_over(false)
+	show_practice_menu(-1, note)
 
 
 func show_start_menu() -> void:
@@ -796,8 +850,17 @@ func _on_menu_action(act: String) -> void:
 		"confirm quit":
 			menus.show_confirm_quit()
 		"end game", "end tutorial":
-			game_over(false)
-			show_start_menu()
+			if practice:
+				_end_practice()
+			else:
+				game_over(false)
+				show_start_menu()
+		"practice":
+			# Open on the page with the furthest level reached.
+			var last_page := (levels.size() - 1) / Menus.PRACTICE_PAGE
+			show_practice_menu(
+				clampi((Save.furthest_level - 1) / Menus.PRACTICE_PAGE, 0, last_page)
+			)
 		"next level":
 			menus.close()
 			next_level()
@@ -822,7 +885,12 @@ func _on_menu_action(act: String) -> void:
 			set_background()
 			menus.show_congratulations(score, pb)
 		_:
-			if act.begins_with("L") and act.substr(1).is_valid_int():
+			if act.begins_with("practice page "):
+				show_practice_menu(int(act.get_slice(" ", 2)))
+			elif act.begins_with("practice level "):
+				menus.close()
+				start_practice(int(act.get_slice(" ", 2)))
+			elif act.begins_with("L") and act.substr(1).is_valid_int():
 				menus.close()
 				new_game(int(act.substr(1)) + 1)
 
@@ -880,7 +948,7 @@ func go_back() -> void:
 				show_pause_menu()
 		"pause", "confirm_quit":
 			_on_menu_action("unpause")
-		"options", "restart", "first_play", "game_over", "congratulations":
+		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
 		"main":
 			get_tree().quit()

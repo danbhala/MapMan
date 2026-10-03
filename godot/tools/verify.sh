@@ -62,6 +62,12 @@ if grep -q "SCRIPT ERROR\|Parse Error" "$OUT/import.log"; then
 fi
 
 step unit "$GODOT" --headless --path . -s addons/gut/gut_cmdln.gd
+# GUT skips a test file that fails to load and still reports success.
+last=$((${#results[@]} - 1))
+if [ "${results[$last]:0:4}" = "PASS" ] && grep -q "Failed to load script\|Parse Error" "$OUT/unit.log"; then
+  results[$last]="FAIL  unit: a test file did not load (log: $OUT/unit.log)"
+  failed=1
+fi
 # shellcheck disable=SC2086
 step autoplay "$GODOT" --headless --path . --script res://tests/autoplay_test.gd -- $LEVELS
 last=$((${#results[@]} - 1))

@@ -14,6 +14,10 @@ var first_play := true
 var has_completed := false
 ## level number -> best score when that checkpoint was reached
 var checkpoints := {}
+## The furthest level reached in the main game; practice unlocks up to it.
+var furthest_level := 1
+## level number -> {"time": best seconds left, "stars": most stars}
+var bests := {}
 ## Tests turn this off so they never overwrite the player's real progress.
 var persist := true
 
@@ -24,8 +28,9 @@ func _ready() -> void:
 	load_all()
 
 
-func load_all() -> void:
-	if _cfg.load(PATH) != OK:
+## path: tests load an old save from elsewhere; the game uses PATH.
+func load_all(path := PATH) -> void:
+	if _cfg.load(path) != OK:
 		return
 	music_on = _cfg.get_value("options", "music", true)
 	fx_on = _cfg.get_value("options", "fx", true)
@@ -40,6 +45,19 @@ func load_all() -> void:
 	checkpoints.clear()
 	for key in cps:
 		checkpoints[int(key)] = int(cps[key])
+	# Saves from before practice mode have no furthest level: count what they
+	# had reached (a checkpoint restarts on the level after it).
+	var seeded := 1
+	for level in checkpoints:
+		seeded = maxi(seeded, level + 1)
+	if has_completed:
+		seeded = 100
+	furthest_level = _cfg.get_value("progress", "furthest_level", seeded)
+	var saved_bests: Dictionary = _cfg.get_value("progress", "bests", {})
+	bests.clear()
+	for key in saved_bests:
+		var b: Dictionary = saved_bests[key]
+		bests[int(key)] = {"time": int(b.get("time", 0)), "stars": int(b.get("stars", 0))}
 
 
 func save_all() -> void:
@@ -53,6 +71,8 @@ func save_all() -> void:
 	_cfg.set_value("progress", "first_play", first_play)
 	_cfg.set_value("progress", "has_completed", has_completed)
 	_cfg.set_value("progress", "checkpoints", checkpoints)
+	_cfg.set_value("progress", "furthest_level", furthest_level)
+	_cfg.set_value("progress", "bests", bests)
 	_cfg.save(PATH)
 
 
@@ -60,6 +80,22 @@ func checkpoint_reached(level: int, score: int) -> void:
 	if not checkpoints.has(level) or score > checkpoints[level]:
 		checkpoints[level] = score
 	save_all()
+
+
+func level_reached(level: int) -> void:
+	if level > furthest_level:
+		furthest_level = level
+		save_all()
+
+
+## Keeps the best time left and the most stars separately; true if either improved.
+func record_best(level: int, time_left: int, stars: int) -> bool:
+	var old: Dictionary = bests.get(level, {"time": -1, "stars": -1})
+	if time_left <= old.time and stars <= old.stars:
+		return false
+	bests[level] = {"time": maxi(time_left, old.time), "stars": maxi(stars, old.stars)}
+	save_all()
+	return true
 
 
 func has_any_checkpoint() -> bool:
