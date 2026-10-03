@@ -16,7 +16,8 @@ https://github.com/danbhala/MapMan/raw/android-build/MapMan.apk
    pointing `export/android/android_sdk_path` and `java_sdk_path` at an Android
    SDK and a JDK 17+. The preset exports unsigned (`package/signed=false`) so
    signing doesn't depend on the SDK's build-tools.
-4. Export: `godot --headless --path godot --export-release "Android" godot/build/MapMan-unsigned.apk`
+4. Export (the output path is relative to the project folder, and the folder
+   must exist): `mkdir -p godot/build && godot --headless --path godot --export-release "Android" build/MapMan-unsigned.apk`
 5. Sign and zipalign with apksigner + zipalign from build-tools, or with
    [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer):
    `java -jar uber-apk-signer.jar -a godot/build/MapMan-unsigned.apk -o godot/build/signed`.

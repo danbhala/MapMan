@@ -11,8 +11,13 @@ func before_all() -> void:
 	Save.persist = false  # never touch the player's real progress
 
 
+func after_each() -> void:
+	for action in ["move_left", "move_right", "move_up", "move_down", "shake"]:
+		Input.action_release(action)
+
+
 ## A one-row level: the player starts on "b" (column 0) and walks right.
-func _start(row: String, extra_rows: Array = []) -> void:
+func _start(row: String, extra_rows: Array = [], loading = null) -> void:
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
 	var rows: Array = extra_rows.duplicate()
@@ -21,7 +26,7 @@ func _start(row: String, extra_rows: Array = []) -> void:
 		{
 			"number": 1,
 			"rows": rows,
-			"loading": null,
+			"loading": loading,
 			"delay": 0.0,
 			"x_hides": 25,
 			"checkpoint": false,
@@ -195,3 +200,13 @@ func test_running_out_of_time_costs_a_life() -> void:
 	game._time_left = 0.0
 	game._process(0.0)
 	assert_true(game.dead)
+
+
+func test_start_hidden_tiles_appear_when_unhidden() -> void:
+	# "*" in a loading row = hidden from the start (levels 4, 18, 57 ...).
+	_start("bucpw", [], ["abc*d"])
+	var tile = game.map.tiles[Vector2i(3, 0)]
+	assert_false(tile.sprite.visible, "starts hidden")
+	_step_on(1)
+	assert_true(tile.sprite.visible, "unhide tile reveals it")
+	assert_almost_eq(tile.sprite.scale.x, 1.0 / 3.0, 0.001, "at full size")

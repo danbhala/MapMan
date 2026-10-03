@@ -11,14 +11,21 @@ esac
 command -v gdformat >/dev/null 2>&1 || exit 0
 case "$file" in */addons/*) exit 0 ;; esac
 
-gdformat "$file" >/dev/null 2>&1
+note=""
+if gdformat "$file" 2>&1 | grep -q "^reformatted"; then
+  note="gdformat reformatted $file; re-read it before editing it again."
+fi
 problems=$(cd "${CLAUDE_PROJECT_DIR:-.}/godot" 2>/dev/null && gdlint "$file" 2>&1 | grep -v "^Success")
 if [ -n "$problems" ]; then
-  python3 - "$file" "$problems" <<'PY'
+  note="${note:+$note }gdlint found problems in $file:
+$problems"
+fi
+if [ -n "$note" ]; then
+  python3 - "$note" <<'PY'
 import json, sys
 print(json.dumps({"hookSpecificOutput": {
     "hookEventName": "PostToolUse",
-    "additionalContext": "gdlint found problems in %s (file was also run through gdformat):\n%s" % (sys.argv[1], sys.argv[2]),
+    "additionalContext": sys.argv[1],
 }}))
 PY
 fi

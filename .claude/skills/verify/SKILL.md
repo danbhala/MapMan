@@ -12,8 +12,7 @@ Run MapMan's checks and report back. Pass the arguments through: `$ARGUMENTS`
 accepts new screenshots after an intended visual change).
 
 1. Run `godot/tools/verify.sh $ARGUMENTS` from the repository root. It prints a
-   PASS/FAIL/SKIP summary and keeps logs and screenshots in `/tmp/mapman-verify`
-   (or `$VERIFY_OUT`).
+   PASS/FAIL/SKIP summary and the folder holding its logs and screenshots.
 2. For every FAIL, read the matching log and report the first real error with
    its file and line. Don't paraphrase a stack trace; quote the error line.
 3. If `screenshots` failed, open the `*_diff.png` images in the screenshots

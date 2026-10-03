@@ -305,6 +305,10 @@ func _appear(node: Node2D, wait: float) -> void:
 func _set_start_hidden(tile: Tile) -> void:
 	tile.start_hidden = true
 	tile.can_hide = true
+	# These tiles skip the appear animation, so give them full size now;
+	# visibility alone decides whether they show.
+	if tile.sprite:
+		tile.sprite.scale = Vector2.ONE * ASSET_SCALE
 	_hide_tile(tile)
 
 

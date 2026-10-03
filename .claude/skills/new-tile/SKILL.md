@@ -12,7 +12,9 @@ any step either won't load, won't draw, or won't be tested.
    shows an effect icon in the bottom bar, a 228×228 px icon to
    `godot/assets/effects/`. Match the existing flat white-oval style.
 3. **`godot/scripts/level_map.gd`:** add its texture in `_texture_for()`, a state
-   dictionary next to `reverses`/`stickies`, registration in `_add_tile()`,
+   dictionary next to `reverses`/`stickies` (and add it to the list cleared at
+   the top of `load_level()`, or its state leaks into the next level),
+   registration in `_add_tile()`,
    restore-on-death in `reset()` if it should come back after a lost life, and
    `can_hide` in `_add_tile()` if it should vanish with hide tiles.
 4. **`godot/scripts/main.gd`:** apply the rule in `update_player()` with

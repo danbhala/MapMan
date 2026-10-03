@@ -18,16 +18,21 @@ for arg in "$@"; do
   case "$arg" in
     --full) LEVELS="" ;;
     --update-baseline) SHOT_MODE="--baseline=res://tests/baseline --update-baseline" ;;
+    *) echo "unknown option: $arg (use --full or --update-baseline)" >&2; exit 2 ;;
   esac
 done
 mkdir -p "$OUT"
 
 results=()
 failed=0
+# A runtime error inside an awaited test can leave Godot running; cap each step.
+LIMIT=""
+command -v timeout >/dev/null 2>&1 && LIMIT="timeout 900"
 step() {  # step <name> <command...>
   local name="$1"; shift
   echo "== $name"
-  if "$@" >"$OUT/$name.log" 2>&1; then
+  # shellcheck disable=SC2086
+  if $LIMIT "$@" >"$OUT/$name.log" 2>&1; then
     results+=("PASS  $name")
   else
     results+=("FAIL  $name  (log: $OUT/$name.log)")
@@ -57,14 +62,19 @@ if grep -q "SCRIPT ERROR\|Parse Error" "$OUT/import.log"; then
 fi
 
 step unit "$GODOT" --headless --path . -s addons/gut/gut_cmdln.gd
+# shellcheck disable=SC2086
 step autoplay "$GODOT" --headless --path . --script res://tests/autoplay_test.gd -- $LEVELS
-grep -q "ALL CHECKS PASSED" "$OUT/autoplay.log" || { results+=("FAIL  autoplay did not report success"); failed=1; }
+last=$((${#results[@]} - 1))
+if [ "${results[$last]:0:4}" = "PASS" ] && ! grep -q "ALL CHECKS PASSED" "$OUT/autoplay.log"; then
+  results[$last]="FAIL  autoplay did not report success (log: $OUT/autoplay.log)"
+  failed=1
+fi
 
 if command -v xvfb-run >/dev/null 2>&1 || [ -n "${DISPLAY:-}" ]; then
-  RUN=()
-  [ -z "${DISPLAY:-}" ] && RUN=(xvfb-run -a -s "-screen 0 1400x800x24")
+  RUN=""
+  [ -z "${DISPLAY:-}" ] && RUN="xvfb-run -a"
   # shellcheck disable=SC2086
-  step screenshots "${RUN[@]}" "$GODOT" --path . --rendering-driver opengl3 \
+  step screenshots $RUN "$GODOT" --path . --rendering-driver opengl3 \
     --resolution 1334x750 --fixed-fps 60 --audio-driver Dummy \
     --script res://tests/screenshots.gd -- --out="$OUT/screens" $SHOT_MODE
 else
