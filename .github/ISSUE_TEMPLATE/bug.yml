@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in the game doesn't work as it should
+title: "fix: "
+labels: ["type: fix"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! Keep the title as "fix: <what's wrong, in a few words>". Add
+        "@claude" anywhere in this issue to have Claude open a PR for it.
+  - type: input
+    id: build
+    attributes:
+      label: Build
+      description: In MapMan Dev, the line under the DEV button (e.g. "v1.1.0 · 3e5d3c1 · pr-8"). In MapMan, the version from the release you installed.
+      placeholder: v1.1.0 · 3e5d3c1 · master
+    validations:
+      required: true
+  - type: dropdown
+    id: app
+    attributes:
+      label: Which app
+      options:
+        - MapMan Dev (test build)
+        - MapMan (release)
+        - Running on a computer
+    validations:
+      required: true
+  - type: input
+    id: level
+    attributes:
+      label: Level
+      placeholder: "e.g. 43, tutorial 9, main menu"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did (tilted which way, stepped on which tile) and what you saw.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshot, play log or tilt tuning
+      description: Paste anything copied from the DEV menu here.

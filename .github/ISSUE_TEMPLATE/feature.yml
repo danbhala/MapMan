@@ -1,0 +1,21 @@
+name: Feature or change
+description: New gameplay, menus, sounds or anything else
+title: "feat: "
+labels: ["type: feat"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep the title as "feat: <what players get>". Add "@claude" to have
+        Claude open a PR.
+  - type: textarea
+    id: what
+    attributes:
+      label: What and why
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: How we'll know it's done
+      description: What you'd check on the phone.

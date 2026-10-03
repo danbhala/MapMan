@@ -1,0 +1,32 @@
+# Line endings: text files are LF in the repo whatever the OS.
+* text=auto eol=lf
+*.sh text eol=lf
+
+# Binary assets: never diff or merge as text.
+*.png binary
+*.jpg binary
+*.ogg binary
+*.wav binary
+*.caf binary
+*.ttf binary
+*.apk binary
+*.tpz binary
+
+# Godot text formats.
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.cfg text eol=lf
+*.godot text eol=lf
+*.import text eol=lf
+*.uid text eol=lf
+
+# Hide vendored and generated files from diffs and language stats.
+godot/addons/gut/** linguist-vendored
+godot/tests/baseline/** -diff linguist-generated
+Script/** linguist-documentation
+
+# The original Pythonista game and its app template are frozen as they were:
+# don't normalise their line endings.
+Script/** -text
+PythonistaAppTemplate/** -text

@@ -53,6 +53,10 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   (every commit), `/open-pr` (every PR: title, body, labels, merging).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
+- Issues come from templates (bug, level, feature) with conventional titles;
+  `@claude` in an issue or comment runs Claude in GitHub Actions
+  (`.github/workflows/claude.yml`). `CONTRIBUTING.md` is the human version of
+  these rules, including repo settings only the owner can change.
 - Branch per change, PR into master. Commit as the user's GitHub noreply
   address (`2726152+danbhala@users.noreply.github.com`); their email is private.
 - Every PR gets a "MapMan Dev" test APK (Test APK workflow) and a comment with

@@ -1,0 +1,33 @@
+name: Level idea or difficulty
+description: A new level, or a level that's too hard, too easy or out of order
+title: "feat(levels): "
+labels: ["type: feat", "area: levels"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a new level, draw it with the tile letters below. For difficulty,
+        say which levels and why. Add "@claude" to have Claude make the change.
+
+        `b` start · `n s e w` exit · `c` tile · `-` gap · `r` reverse · `y` sticky ·
+        `v` vanish · `p` star · `l` life · `d` death · `m` +5 s · `t` -5 s ·
+        `h`/`u` hide/unhide · `i` hidden tile
+  - type: input
+    id: levels
+    attributes:
+      label: Levels
+      placeholder: "e.g. 35, or new level after 40"
+  - type: textarea
+    id: layout
+    attributes:
+      label: Layout or problem
+      description: Up to 12 rows of 17 characters for a new level, or what feels wrong.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: playlog
+    attributes:
+      label: Play log
+      description: Paste "Copy play log" from the DEV menu if you have it.
+      render: json
