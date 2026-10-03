@@ -1,60 +1,64 @@
 name: Release
 
-# When master gets a version (version/name in godot/export_presets.cfg) that
-# has no tag yet, build the Android APK, tag the commit vX.Y and publish a
-# GitHub Release with that version's CHANGELOG section as its notes.
-# Merging a version bump is all a release needs.
+# Versioning is driven by Conventional Commits (feat:, fix:, feat!: ...).
+# On every push to master, release-please keeps a "chore(main): release X.Y.Z"
+# pull request up to date with the next version and its CHANGELOG entry.
+# Merging that PR tags vX.Y.Z and creates the GitHub Release; the android job
+# below then builds the APK, attaches it to the release and refreshes the
+# android-build branch that phones download from.
 
 on:
   push:
     branches: [master]
-    paths:
-      - CHANGELOG.md
-      - godot/export_presets.cfg
-      - .github/workflows/release.yml
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 env:
   GODOT_VERSION: 4.5.1
   UBER_SIGNER_VERSION: 1.3.0
 
 jobs:
-  release:
+  release-please:
+    runs-on: ubuntu-24.04
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      major: ${{ steps.release.outputs.major }}
+      minor: ${{ steps.release.outputs.minor }}
+      patch: ${{ steps.release.outputs.patch }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  android:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      TAG: ${{ needs.release-please.outputs.tag_name }}
+      VERSION: ${{ needs.release-please.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ needs.release-please.outputs.tag_name }}
 
-      - name: Work out the version and whether it is new
-        id: version
+      - name: Stamp the version into the Android preset
+        # version/code must only ever go up: 1.2.3 -> 10203.
         run: |
-          version=$(sed -n 's/^version\/name="\(.*\)"/\1/p' godot/export_presets.cfg)
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          if git rev-parse -q --verify "refs/tags/v$version" >/dev/null; then
-            echo "v$version is already tagged; nothing to release."
-            echo "new=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          grep -q "^## \[$version\]" CHANGELOG.md || {
-            echo "::error::Version $version has no '## [$version]' section in CHANGELOG.md"; exit 1; }
-          echo "new=true" >> "$GITHUB_OUTPUT"
-
-      - name: Tag 1.0, the first Godot release (one-off; skipped once it exists)
-        run: |
-          if ! git rev-parse -q --verify refs/tags/v1.0 >/dev/null; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git tag -a v1.0 ded2d6e -m "MapMan 1.0: Godot 4.5 port of the Pythonista original"
-            git push origin v1.0
-          fi
+          code=$(( ${{ needs.release-please.outputs.major }} * 10000 + ${{ needs.release-please.outputs.minor }} * 100 + ${{ needs.release-please.outputs.patch }} ))
+          sed -i "s/^version\/name=.*/version\/name=\"$VERSION\"/; s/^version\/code=.*/version\/code=$code/" godot/export_presets.cfg
+          grep '^version/' godot/export_presets.cfg
 
       - name: Cache Godot and export templates
-        if: steps.version.outputs.new == 'true'
         id: godot-cache
         uses: actions/cache@v4
         with:
@@ -64,7 +68,7 @@ jobs:
           key: godot-android-${{ env.GODOT_VERSION }}
 
       - name: Download Godot and its Android templates
-        if: steps.version.outputs.new == 'true' && steps.godot-cache.outputs.cache-hit != 'true'
+        if: steps.godot-cache.outputs.cache-hit != 'true'
         run: |
           base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
           mkdir -p ~/godot
@@ -78,7 +82,6 @@ jobs:
           rm /tmp/templates.tpz
 
       - name: Point Godot at the runner's Android SDK and Java
-        if: steps.version.outputs.new == 'true'
         run: |
           mkdir -p ~/.config/godot
           cat > ~/.config/godot/editor_settings-4.5.tres <<EOF
@@ -90,7 +93,6 @@ jobs:
           EOF
 
       - name: Build the APK
-        if: steps.version.outputs.new == 'true'
         run: |
           mkdir -p godot/build
           ~/godot/godot --headless --path godot --import
@@ -98,7 +100,6 @@ jobs:
           test -s godot/build/MapMan-unsigned.apk
 
       - name: Sign the APK
-        if: steps.version.outputs.new == 'true'
         # uber-apk-signer's built-in debug key is the same key every earlier
         # build used, so phones can install each release over the last one.
         run: |
@@ -108,21 +109,28 @@ jobs:
           cp godot/build/signed/*.apk MapMan.apk
           unzip -l MapMan.apk | grep -q assets/data/levels.json
 
-      - name: Publish the release
-        if: steps.version.outputs.new == 'true'
+      - name: Attach the APK to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version="${{ steps.version.outputs.version }}"
-          awk -v v="$version" '
-            $0 ~ "^## \\[" v "\\]" {on=1; next}
-            on && /^## \[/ {exit}
-            on && /^\[.*\]: / {exit}
-            on {print}
-          ' CHANGELOG.md > notes.md
+          gh release upload "$TAG" MapMan.apk --clobber
           {
             echo
             echo "**Install on Android:** download MapMan.apk below on your phone and open it."
-          } >> notes.md
-          gh release create "v$version" MapMan.apk --target "$GITHUB_SHA" \
-            --title "MapMan $version" --notes-file notes.md
+          } > install-note.md
+          gh release view "$TAG" --json body --jq .body > notes.md
+          cat install-note.md >> notes.md
+          gh release edit "$TAG" --notes-file notes.md
+
+      - name: Refresh the android-build branch (the phone download link)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin android-build
+          git worktree add /tmp/android-build origin/android-build
+          cp MapMan.apk /tmp/android-build/MapMan.apk
+          cd /tmp/android-build
+          sed -i "s/^Version .*, built from master/Version $VERSION, built from master/" README.md
+          git add MapMan.apk README.md
+          git commit -m "chore: android build $VERSION"
+          git push origin HEAD:android-build

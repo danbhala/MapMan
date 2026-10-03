@@ -27,14 +27,24 @@ Other commands, from the repo root:
 - Level difficulty numbers: `python3 godot/tools/level_report.py [levels]`
 - Lint: `cd godot && gdlint scripts tests && gdformat --check scripts tests`
 
-## Releases
+## Commits and releases
 
-Record every user-visible change under `## [Unreleased]` in `CHANGELOG.md` as
-you make it. To release: rename that section to the new version and date, set
-the same `version/name` (and a higher `version/code`) in
-`godot/export_presets.cfg`, and merge. On master, the Release workflow sees the
-untagged version, builds the APK, tags `vX.Y` and publishes a GitHub Release.
-(This session can't push tags itself; the workflow can.)
+Versions are semver (`version.txt`) and come from Conventional Commits; don't
+edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
+
+- PR titles must be conventional (a CI check enforces it): `feat:` new
+  gameplay, levels or menus (minor), `fix:` bugs (patch), `feat!:` or a
+  `BREAKING CHANGE:` footer for things like an incompatible save format
+  (major); `docs:`, `test:`, `ci:`, `chore:`, `refactor:` don't release.
+  Lowercase subject, written for players: "fix: unhide tiles reappear".
+- Merge PRs with squash, using the PR title as the commit title
+  (`gh api -X PUT repos/danbhala/mapman/pulls/N/merge -f merge_method=squash
+  -f commit_title="<PR title> (#N)"`). Commit messages on branches should be
+  conventional too.
+- release-please keeps a "chore(main): release X.Y.Z" PR open with the next
+  version and changelog. Merging it tags `vX.Y.Z`, publishes the GitHub
+  Release, and the Release workflow attaches the APK and refreshes the
+  `android-build` branch. Only merge it when the user asks for a release.
 
 ## Workflow
 
