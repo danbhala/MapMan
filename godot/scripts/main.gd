@@ -106,8 +106,8 @@ func _ready() -> void:
 	add_child(_vortex)
 	_woman = Player.new()
 	_woman.art = "woman"
-	_woman.z_index = 11
 	add_child(_woman)
+	_woman.z_index = 11  # in front of MapMan (Player._ready() sets 10)
 	_hearts = LoopingSprite.new("hearts", 90)
 	_hearts.z_index = 20
 	add_child(_hearts)
@@ -871,6 +871,9 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if dev_panel and dev_panel.is_open():
+		dev_panel.close()
+		return
 	match menus.current:
 		"":
 			if game_active and not dead:

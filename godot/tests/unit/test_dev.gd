@@ -204,3 +204,10 @@ func test_go_to_level_and_skip_level() -> void:
 	game.dev_skip_level()
 	assert_eq(game.level, 2, "skip moves on without finishing")
 	assert_eq(game.score, 0, "skipping scores nothing")
+
+
+func test_back_closes_the_dev_panel_first() -> void:
+	game.dev_panel.open()
+	game.go_back()
+	assert_false(game.dev_panel.is_open())
+	assert_eq(game.menus.current, "", "the game underneath isn't paused")

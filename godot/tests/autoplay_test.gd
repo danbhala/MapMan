@@ -111,10 +111,20 @@ func run() -> void:
 		if lvl % 10 == 0:
 			print("  ...level %d done, score %d, lives %d" % [lvl, game.score, game.lives])
 
+	if game.completed:
+		# Past the last level: walk the ending map to MapWoman, who then leads
+		# MapMan into the vortex and on to the completion scoring.
+		var ok := await play_current_level()
+		check(ok, "walked through the ending")
+		check(
+			await wait_until(func(): return game.menus.current == "completion"),
+			"completion scoring after the ending"
+		)
 	if game.menus.current == "completion":
 		game._on_menu_action("completion done")
 		check(game.menus.current == "congratulations", "congratulations after last level")
 		check(root.get_node("Save").has_completed, "completion saved")
+		print("finished the game through the ending")
 	print(
 		(
 			"played %d levels, score %d, checkpoints %s"

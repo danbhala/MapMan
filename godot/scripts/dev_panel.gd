@@ -82,6 +82,10 @@ func open() -> void:
 	get_tree().paused = true
 
 
+func is_open() -> bool:
+	return _panel.visible
+
+
 func close() -> void:
 	_panel.visible = false
 	get_tree().paused = false
