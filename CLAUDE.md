@@ -27,6 +27,14 @@ Other commands, from the repo root:
 - Level difficulty numbers: `python3 godot/tools/level_report.py [levels]`
 - Lint: `cd godot && gdlint scripts tests && gdformat --check scripts tests`
 
+## Releases
+
+Record every user-visible change under `## [Unreleased]` in `CHANGELOG.md` as
+you make it. To release: rename that section to the new version and date, set
+the same `version/name` (and a higher `version/code`) in
+`godot/export_presets.cfg`, merge, then tag master `vX.Y` and push the tag.
+The Release workflow builds the APK and publishes a GitHub Release.
+
 ## Workflow
 
 - Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`.

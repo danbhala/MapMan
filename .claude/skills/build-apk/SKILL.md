@@ -8,6 +8,11 @@ Build an installable Android APK of MapMan and publish it on the `android-build`
 branch, which phones download from:
 https://github.com/danbhala/MapMan/raw/android-build/MapMan.apk
 
+For a numbered release, prefer the release flow in `CLAUDE.md` (CHANGELOG +
+version + `vX.Y` tag); `.github/workflows/release.yml` then builds the same APK
+and attaches it to a GitHub Release. Use this skill for in-between test builds,
+and still update `android-build` after a release so the phone link stays current.
+
 1. Run the `/verify` skill first. Don't build from a failing tree.
 2. Bump `version/code` (integer) and `version/name` in `godot/export_presets.cfg`
    so the phone installs it as an update.
