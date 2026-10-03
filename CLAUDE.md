@@ -32,8 +32,9 @@ Other commands, from the repo root:
 Record every user-visible change under `## [Unreleased]` in `CHANGELOG.md` as
 you make it. To release: rename that section to the new version and date, set
 the same `version/name` (and a higher `version/code`) in
-`godot/export_presets.cfg`, merge, then tag master `vX.Y` and push the tag.
-The Release workflow builds the APK and publishes a GitHub Release.
+`godot/export_presets.cfg`, and merge. On master, the Release workflow sees the
+untagged version, builds the APK, tags `vX.Y` and publishes a GitHub Release.
+(This session can't push tags itself; the workflow can.)
 
 ## Workflow
 
