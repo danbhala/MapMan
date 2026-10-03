@@ -147,3 +147,51 @@ func test_old_saves_count_checkpoints_as_reached() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	Save.checkpoints.clear()
 	Save.has_completed = false
+
+
+func test_practising_the_last_level_never_starts_the_ending() -> void:
+	# The last level is also a checkpoint: neither may follow a practice win.
+	game.levels[2]["checkpoint"] = true
+	Save.furthest_level = 3
+	game._on_menu_action("practice")
+	game._on_menu_action("practice level 3")
+	_loaded()
+	_win()
+	assert_eq(game.menus.current, "practice")
+	assert_false(game.completed)
+	assert_false(Save.has_completed)
+	assert_true(Save.checkpoints.is_empty())
+
+
+func test_timeout_in_practice_restarts_the_level() -> void:
+	game._on_menu_action("practice")
+	game._on_menu_action("practice level 1")
+	_loaded()
+	game._time_left = 0.0
+	game._process(0.0)  # the main loop notices the clock ran out
+	assert_true(game.dead, "time up")
+	game.finish_lose_life()
+	assert_true(game.practice)
+	assert_eq(game.menus.current, "")
+	assert_false(game.dead)
+
+
+func test_dev_skip_level_ends_practice() -> void:
+	Dev.enabled = true
+	game.levels[0]["checkpoint"] = true
+	game._on_menu_action("practice")
+	game._on_menu_action("practice level 1")
+	_loaded()
+	game.dev_skip_level()
+	Dev.enabled = false
+	assert_eq(game.menus.current, "practice")
+	assert_true(Save.checkpoints.is_empty(), "no checkpoint saved")
+	assert_eq(Save.furthest_level, 1, "nothing unlocked")
+
+
+func test_practice_keeps_the_first_play_screen() -> void:
+	Save.first_play = true
+	game._on_menu_action("practice")
+	game._on_menu_action("practice level 1")
+	assert_true(Save.first_play)
+	Save.first_play = false

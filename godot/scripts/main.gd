@@ -626,7 +626,9 @@ func advance_level(check_point: bool) -> void:
 		show_game_complete()
 		return
 	if not tutorial:
-		var new_best := Save.record_best(level, _seconds_remaining(), stars)
+		var new_best := false
+		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
+			new_best = Save.record_best(level, _seconds_remaining(), stars)
 		if practice:
 			Audio.play("end_level")
 			_end_practice(
@@ -766,6 +768,10 @@ func dev_go_to_level(n: int) -> void:
 func dev_skip_level() -> void:
 	if not game_active:
 		return
+	if practice:
+		# Skipping never saves checkpoints or unlocks levels from practice.
+		_end_practice()
+		return
 	menus.close()
 	end_of_level_points = 0
 	next_level()
@@ -784,7 +790,12 @@ func show_practice_menu(page := -1, note := "") -> void:
 
 
 func start_practice(n: int) -> void:
+	# Practising first still leaves the first-play screen for "play from start".
+	var first_play := Save.first_play
 	new_game(n)
+	if first_play:
+		Save.first_play = true
+		Save.save_all()
 	practice = true
 	hud.show_stats(false)
 	hud.show_level(true)
