@@ -1,11 +1,18 @@
 name: Release
 
-# Push a tag like v1.2 to build the Android APK and publish a GitHub Release
-# with that version's CHANGELOG section as its notes.
+# When master gets a version (version/name in godot/export_presets.cfg) that
+# has no tag yet, build the Android APK, tag the commit vX.Y and publish a
+# GitHub Release with that version's CHANGELOG section as its notes.
+# Merging a version bump is all a release needs.
 
 on:
   push:
-    tags: ["v*"]
+    branches: [master]
+    paths:
+      - CHANGELOG.md
+      - godot/export_presets.cfg
+      - .github/workflows/release.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -20,18 +27,34 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Check the tag matches the app version
+      - name: Work out the version and whether it is new
+        id: version
         run: |
-          tag="${GITHUB_REF_NAME#v}"
-          name=$(sed -n 's/^version\/name="\(.*\)"/\1/p' godot/export_presets.cfg)
-          if [ "$tag" != "$name" ]; then
-            echo "::error::Tag v$tag doesn't match version/name \"$name\" in godot/export_presets.cfg"
-            exit 1
+          version=$(sed -n 's/^version\/name="\(.*\)"/\1/p' godot/export_presets.cfg)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$version" >/dev/null; then
+            echo "v$version is already tagged; nothing to release."
+            echo "new=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
-          grep -q "^## \[$tag\]" CHANGELOG.md || { echo "::error::No '## [$tag]' section in CHANGELOG.md"; exit 1; }
+          grep -q "^## \[$version\]" CHANGELOG.md || {
+            echo "::error::Version $version has no '## [$version]' section in CHANGELOG.md"; exit 1; }
+          echo "new=true" >> "$GITHUB_OUTPUT"
+
+      - name: Tag 1.0, the first Godot release (one-off; skipped once it exists)
+        run: |
+          if ! git rev-parse -q --verify refs/tags/v1.0 >/dev/null; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a v1.0 ded2d6e -m "MapMan 1.0: Godot 4.5 port of the Pythonista original"
+            git push origin v1.0
+          fi
 
       - name: Cache Godot and export templates
+        if: steps.version.outputs.new == 'true'
         id: godot-cache
         uses: actions/cache@v4
         with:
@@ -41,7 +64,7 @@ jobs:
           key: godot-android-${{ env.GODOT_VERSION }}
 
       - name: Download Godot and its Android templates
-        if: steps.godot-cache.outputs.cache-hit != 'true'
+        if: steps.version.outputs.new == 'true' && steps.godot-cache.outputs.cache-hit != 'true'
         run: |
           base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
           mkdir -p ~/godot
@@ -55,6 +78,7 @@ jobs:
           rm /tmp/templates.tpz
 
       - name: Point Godot at the runner's Android SDK and Java
+        if: steps.version.outputs.new == 'true'
         run: |
           mkdir -p ~/.config/godot
           cat > ~/.config/godot/editor_settings-4.5.tres <<EOF
@@ -66,6 +90,7 @@ jobs:
           EOF
 
       - name: Build the APK
+        if: steps.version.outputs.new == 'true'
         run: |
           mkdir -p godot/build
           ~/godot/godot --headless --path godot --import
@@ -73,6 +98,7 @@ jobs:
           test -s godot/build/MapMan-unsigned.apk
 
       - name: Sign the APK
+        if: steps.version.outputs.new == 'true'
         # uber-apk-signer's built-in debug key is the same key every earlier
         # build used, so phones can install each release over the last one.
         run: |
@@ -83,10 +109,11 @@ jobs:
           unzip -l MapMan.apk | grep -q assets/data/levels.json
 
       - name: Publish the release
+        if: steps.version.outputs.new == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${{ steps.version.outputs.version }}"
           awk -v v="$version" '
             $0 ~ "^## \\[" v "\\]" {on=1; next}
             on && /^## \[/ {exit}
@@ -97,5 +124,5 @@ jobs:
             echo
             echo "**Install on Android:** download MapMan.apk below on your phone and open it."
           } >> notes.md
-          gh release create "$GITHUB_REF_NAME" MapMan.apk \
-            --title "MapMan $version" --notes-file notes.md --verify-tag
+          gh release create "v$version" MapMan.apk --target "$GITHUB_SHA" \
+            --title "MapMan $version" --notes-file notes.md

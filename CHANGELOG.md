@@ -26,7 +26,8 @@ the Android app's version name (`godot/export_presets.cfg`).
 - `godot/tools/verify.sh`: lint, import, unit tests, the autoplay bot and a
   screenshot comparison in one command; GitHub Actions runs it on every push.
 - `godot/tools/level_report.py`: route length and clock slack per level.
-- Tagging a version builds the Android APK and publishes a GitHub Release.
+- Merging a new version to master tags it, builds the Android APK and
+  publishes a GitHub Release with this changelog's notes.
 
 ## [1.0] - 2026-10-03
 
