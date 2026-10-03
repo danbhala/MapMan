@@ -1,0 +1,192 @@
+{
+ "levels": [
+  {
+   "number": 1,
+   "rows": [
+    "",
+    " Wccccccc",
+    "        c",
+    "    ccccc",
+    "    c",
+    "    ccccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Tilt your device to move around the map.\nHead for the exit tile to progress to the next level."
+  },
+  {
+   "number": 2,
+   "rows": [
+    "",
+    " N",
+    " c",
+    " z",
+    " c",
+    " rzcrccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Stepping on this tile will reverse the controls.\nStep on another and they go back to normal."
+  },
+  {
+   "number": 3,
+   "rows": [
+    "",
+    " N",
+    " c",
+    " z",
+    " c",
+    " czcvccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Stepping on this tile will make Map Man disappear.\nDon't worry after a few moves he will show up again."
+  },
+  {
+   "number": 4,
+   "rows": [
+    "",
+    " N",
+    " c",
+    " z",
+    " c",
+    " czcyccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him u and get moving again."
+  },
+  {
+   "number": 5,
+   "rows": [
+    "",
+    " N-----p",
+    " c-----c",
+    " ccccccc",
+    " c",
+    " ccccccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Watch out for bonus points,\n although you may have to go out of your way to get them"
+  },
+  {
+   "number": 6,
+   "rows": [
+    "",
+    " N-----ccccl",
+    " c-----c",
+    " ccccccc",
+    " c",
+    " ccccccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Also keep an out for extra lives,\nbut take care as they that will take you\neven more off course then bonus points"
+  },
+  {
+   "number": 7,
+   "rows": [
+    "    ",
+    "Wcccccdccccc",
+    "     ccc  dcd",
+    "      d    c",
+    "           b"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Be careful for the poison tiles, if you step on them you will lose a life."
+  },
+  {
+   "number": 8,
+   "rows": [
+    "",
+    "Wcccc",
+    "    cccccm",
+    "    c",
+    "    cttccc",
+    "         cccccm",
+    "         b"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
+  },
+  {
+   "number": 9,
+   "rows": [
+    "",
+    "Wccci",
+    "    i iiiiiiiiu",
+    "    i i  i",
+    "    iii  h",
+    "         c",
+    "         b"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "These tile causes other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+  },
+  {
+   "number": 10,
+   "rows": [
+    "  cccc",
+    "  c  c",
+    "Wcc  ccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "description": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
+  },
+  {
+   "number": 11,
+   "rows": [
+    "  c   n",
+    "  c   c",
+    "  c   c",
+    "  c   c",
+    "  c   c",
+    "  c   c",
+    "  c   c",
+    "  c   b"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
+  },
+  {
+   "number": 12,
+   "rows": [
+    "",
+    "Wczczccb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "You're all set, head for the exit to start the game. Have fun!"
+  }
+ ]
+}
