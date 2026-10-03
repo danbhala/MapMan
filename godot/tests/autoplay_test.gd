@@ -5,24 +5,40 @@ extends SceneTree
 ##
 ##   godot --headless --path godot --script res://tests/autoplay_test.gd
 ##
-## Optional: -- --levels=10 to stop after that many levels.
+## Options after "--":
+##   --levels=10        stop after that many levels
+##   --start=35         skip the tutorial and start at level 35
+##   --only-levels      skip the lose-life, game-over and pause checks
+##   --time-scale=1     play at real speed (default 3x), e.g. when recording
+##                      with --write-movie for the playtester agent
 
 const DIRS := [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 const ACTIONS := {
-	Vector2i.RIGHT: "move_right", Vector2i.LEFT: "move_left",
-	Vector2i.UP: "move_up", Vector2i.DOWN: "move_down",
+	Vector2i.RIGHT: "move_right",
+	Vector2i.LEFT: "move_left",
+	Vector2i.UP: "move_up",
+	Vector2i.DOWN: "move_down",
 }
 
 var game
 var failures: Array[String] = []
 var max_levels := 100
+var start_level := 0  # 0 = play the tutorial, then from level 1
+var only_levels := false  # skip the lose-life / game-over / pause checks
 
 
 func _initialize() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--levels="):
 			max_levels = int(arg.split("=")[1])
-	Engine.time_scale = 3.0
+		elif arg.begins_with("--start="):
+			start_level = int(arg.split("=")[1])
+		elif arg == "--only-levels":
+			only_levels = true
+		elif arg.begins_with("--time-scale="):
+			Engine.time_scale = float(arg.split("=")[1])
+	if Engine.time_scale == 1.0:
+		Engine.time_scale = 3.0
 	run.call_deferred()
 
 
@@ -46,20 +62,28 @@ func wait_until(cond: Callable, timeout_frames := 3000) -> bool:
 
 
 func run() -> void:
+	var save = root.get_node("Save")
+	save.persist = false  # never touch the player's real progress
+	save.checkpoints.clear()
+	save.first_play = false
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	await frames(5)
 	check(game.menus.current == "main", "main menu shows at startup")
 
-	# --- tutorial straight into the game ---
-	game._on_menu_action("tutorial")
-	check(game.tutorial and game.game_active, "tutorial starts")
-	for i in game.tutorial_levels.size():
-		var ok := await play_current_level()
-		check(ok, "tutorial level %d completed" % (i + 1))
-		if not ok:
-			return finish()
-	check(not game.tutorial and game.level == 1, "tutorial runs into level 1")
+	if start_level > 0:
+		game.menus.close()
+		game.new_game(start_level)
+	else:
+		# --- tutorial straight into the game ---
+		game._on_menu_action("tutorial")
+		check(game.tutorial and game.game_active, "tutorial starts")
+		for i in game.tutorial_levels.size():
+			var ok := await play_current_level()
+			check(ok, "tutorial level %d completed" % (i + 1))
+			if not ok:
+				return finish()
+		check(not game.tutorial and game.level == 1, "tutorial runs into level 1")
 
 	# --- main levels ---
 	var played := 0
@@ -88,12 +112,18 @@ func run() -> void:
 		game._on_menu_action("completion done")
 		check(game.menus.current == "congratulations", "congratulations after last level")
 		check(root.get_node("Save").has_completed, "completion saved")
-	print("played %d levels, score %d, checkpoints %s" % [played, game.score, str(root.get_node("Save").checkpoints.keys())])
+	print(
+		(
+			"played %d levels, score %d, checkpoints %s"
+			% [played, game.score, str(root.get_node("Save").checkpoints.keys())]
+		)
+	)
 	if game.game_active:
 		game.game_over(false)
 
-	await test_lose_life_and_game_over()
-	await test_pause()
+	if not only_levels:
+		await test_lose_life_and_game_over()
+		await test_pause()
 	finish()
 
 
@@ -161,8 +191,12 @@ func play_current_level() -> bool:
 	for target in path:
 		var ok := await step_to(target)
 		if not ok:
-			push_error("stuck walking to %s on level %d (at %s, reverse=%s, stuck=%s, dead=%s)" % [
-				target, game.level, map.position_key, game.reverse, game.stuck, game.dead])
+			push_error(
+				(
+					"stuck walking to %s on level %d (at %s, reverse=%s, stuck=%s, dead=%s)"
+					% [target, game.level, map.position_key, game.reverse, game.stuck, game.dead]
+				)
+			)
 			return false
 		if game.dead:
 			push_error("died on level %d at %s" % [game.level, map.position_key])
@@ -170,7 +204,13 @@ func play_current_level() -> bool:
 	for a in ACTIONS.values():
 		Input.action_release(a)
 	# Reaching the exit either opens the score menu or (tutorial) loads the next level.
-	return await wait_until(func(): return game.menus.visible or game.level != start_level or game.tutorial != start_tutorial, 600)
+	return await wait_until(
+		func():
+			return (
+				game.menus.visible or game.level != start_level or game.tutorial != start_tutorial
+			),
+		600
+	)
 
 
 func step_to(target: Vector2i) -> bool:

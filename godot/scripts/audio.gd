@@ -64,6 +64,7 @@ func _stream(path: String) -> AudioStream:
 
 # --- effects -------------------------------------------------------------
 
+
 func play(name: String, volume := 1.0, pitch := 1.0) -> void:
 	if not Save.fx_on or not SFX.has(name):
 		return
@@ -91,6 +92,7 @@ func stop_clock() -> void:
 
 
 # --- music ---------------------------------------------------------------
+
 
 func play_menu() -> void:
 	if _music_kind == "menu" and _music.playing:
