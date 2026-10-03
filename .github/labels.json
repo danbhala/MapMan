@@ -1,0 +1,23 @@
+[
+  {"name": "type: feat", "color": "1d76db", "description": "New gameplay, levels, menus or features (minor release)"},
+  {"name": "type: fix", "color": "d73a4a", "description": "Bug fix (patch release)"},
+  {"name": "type: perf", "color": "5319e7", "description": "Performance improvement (patch release)"},
+  {"name": "type: revert", "color": "b60205", "description": "Reverts an earlier change"},
+  {"name": "type: docs", "color": "0075ca", "description": "Documentation only (no release)"},
+  {"name": "type: refactor", "color": "c5def5", "description": "Code change with no behaviour change (no release)"},
+  {"name": "type: test", "color": "bfd4f2", "description": "Tests only (no release)"},
+  {"name": "type: build", "color": "c2e0c6", "description": "Build, export or dependency changes (no release)"},
+  {"name": "type: ci", "color": "c2e0c6", "description": "GitHub Actions and checks (no release)"},
+  {"name": "type: chore", "color": "ededed", "description": "Housekeeping (no release)"},
+  {"name": "type: style", "color": "ededed", "description": "Formatting only (no release)"},
+  {"name": "breaking change", "color": "b60205", "description": "Incompatible change, e.g. save format (major release)"},
+  {"name": "area: gameplay", "color": "fbca04", "description": "Movement, tile rules, lives, clock, scoring"},
+  {"name": "area: levels", "color": "fef2c0", "description": "Level layouts, tutorial, difficulty"},
+  {"name": "area: ui", "color": "f9d0c4", "description": "Menus, HUD, bottom bar, fonts"},
+  {"name": "area: art", "color": "f9d0c4", "description": "Sprites, tiles, effects images"},
+  {"name": "area: audio", "color": "d4c5f9", "description": "Music and sound effects"},
+  {"name": "area: android", "color": "0e8a16", "description": "Phone build, tilt, sensors, install"},
+  {"name": "area: tests", "color": "bfdadc", "description": "Unit tests, autoplay bot, screenshots"},
+  {"name": "area: tooling", "color": "bfdadc", "description": "CI, release automation, Claude Code setup"},
+  {"name": "needs phone test", "color": "e99695", "description": "Feel, tilt or shake must be checked on a real phone before release"}
+]

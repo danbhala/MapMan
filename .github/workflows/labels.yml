@@ -1,0 +1,29 @@
+name: Labels
+
+# Keeps the repository's labels in step with .github/labels.json: creates new
+# ones and updates colours and descriptions. Labels not in the file are left alone.
+
+on:
+  push:
+    branches: [master]
+    paths: [.github/labels.json]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create or update labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          jq -c '.[]' .github/labels.json | while read -r label; do
+            name=$(jq -r .name <<<"$label")
+            gh label create "$name" --force \
+              --color "$(jq -r .color <<<"$label")" \
+              --description "$(jq -r .description <<<"$label")"
+          done

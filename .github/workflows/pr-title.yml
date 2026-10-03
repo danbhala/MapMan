@@ -12,7 +12,7 @@ on:
     types: [opened, reopened, edited, synchronize]
 
 permissions:
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   title:
@@ -40,3 +40,32 @@ jobs:
           subjectPatternError: |
             The subject "{subject}" in "{title}" should start with a lowercase
             letter, e.g. "fix: unhide tiles reappear".
+
+  label:
+    name: Type label from title
+    needs: title
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set the type and breaking-change labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          type=$(printf '%s' "$TITLE" | sed -nE 's/^([a-z]+)(\([^)]*\))?!?:.*/\1/p')
+          # Drop type labels that no longer match (the title may have been edited).
+          for old in $(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name | select(startswith("type: ")) | sub("type: "; "")'); do
+            if [ "$old" != "$type" ]; then
+              gh pr edit "$PR" -R "$REPO" --remove-label "type: $old"
+            fi
+          done
+          if [ -n "$type" ]; then
+            gh pr edit "$PR" -R "$REPO" --add-label "type: $type"
+          fi
+          if printf '%s' "$TITLE" | grep -qE '^[a-z]+(\([^)]*\))?!:' || printf '%s' "$BODY" | grep -q '^BREAKING CHANGE:'; then
+            gh pr edit "$PR" -R "$REPO" --add-label "breaking change"
+          else
+            gh pr edit "$PR" -R "$REPO" --remove-label "breaking change" || true
+          fi

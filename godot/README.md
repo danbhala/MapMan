@@ -51,4 +51,4 @@ Linting uses [gdtoolkit](https://pypi.org/project/gdtoolkit) (`pip install "gdto
 
 ## Working with Claude
 
-The repo is set up for Claude Code: `CLAUDE.md` files describe the project, `.claude/skills/` holds `/verify`, `/new-level`, `/new-tile` and `/build-apk`, `.claude/agents/` holds the level-analyst, playtester and reviewer agents, a hook lints every GDScript edit, and `.mcp.json` adds the [godot-mcp](https://github.com/Coding-Solo/godot-mcp) server (set `GODOT_PATH` if Godot isn't found automatically).
+The repo is set up for Claude Code: `CLAUDE.md` files describe the project, `.claude/skills/` holds `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit` and `/open-pr`, `.claude/agents/` holds the level-analyst, playtester and reviewer agents, a hook lints every GDScript edit, and `.mcp.json` adds the [godot-mcp](https://github.com/Coding-Solo/godot-mcp) server (set `GODOT_PATH` if Godot isn't found automatically).
