@@ -10,8 +10,10 @@ https://github.com/danbhala/MapMan/raw/android-build/MapMan.apk
 
 Numbered releases don't need this skill: merging release-please's
 "chore(main): release X.Y.Z" PR makes `.github/workflows/release.yml` build the
-APK, attach it to the GitHub Release and refresh `android-build`. Use this skill
-only for test builds between releases, and don't bump `version/name` or
+APK, attach it to the GitHub Release and refresh `android-build`. Test builds
+are automatic too: every PR and master push builds "MapMan Dev" (Test APK
+workflow, link commented on the PR). Use this skill only for a local build
+that can't wait for CI, and don't bump `version/name` or
 `version/code` in the repo (release builds stamp them from `version.txt`; a
 test build can set them locally without committing).
 

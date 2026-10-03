@@ -1,0 +1,62 @@
+name: Set up Godot
+description: Installs Godot (cached) and, optionally, its Android export templates and Android settings.
+
+inputs:
+  version:
+    description: Godot version
+    default: "4.5.1"
+  android:
+    description: Also install Android export templates and point Godot at the runner's SDK
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Godot
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/godot
+          ~/.local/share/godot/export_templates
+        key: godot-${{ inputs.version }}-android-${{ inputs.android }}
+
+    - name: Download Godot
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        V: ${{ inputs.version }}
+        ANDROID: ${{ inputs.android }}
+      run: |
+        base="https://github.com/godotengine/godot/releases/download/${V}-stable"
+        mkdir -p ~/godot
+        curl -sSfL -o /tmp/godot.zip "$base/Godot_v${V}-stable_linux.x86_64.zip"
+        unzip -q /tmp/godot.zip -d ~/godot
+        mv ~/godot/Godot_v${V}-stable_linux.x86_64 ~/godot/godot
+        if [ "$ANDROID" = "true" ]; then
+          templates=~/.local/share/godot/export_templates/${V}.stable
+          mkdir -p "$templates"
+          curl -sSfL -o /tmp/templates.tpz "$base/Godot_v${V}-stable_export_templates.tpz"
+          unzip -q -j /tmp/templates.tpz templates/android_release.apk templates/version.txt -d "$templates"
+          rm /tmp/templates.tpz
+        fi
+
+    - name: Put godot on PATH
+      shell: bash
+      run: |
+        mkdir -p ~/.local/bin
+        ln -sf ~/godot/godot ~/.local/bin/godot
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+    - name: Point Godot at the runner's Android SDK and Java
+      if: inputs.android == 'true'
+      shell: bash
+      run: |
+        mkdir -p ~/.config/godot
+        cat > ~/.config/godot/editor_settings-4.5.tres <<EOF
+        [gd_resource type="EditorSettings" format=3]
+
+        [resource]
+        export/android/android_sdk_path = "$ANDROID_HOME"
+        export/android/java_sdk_path = "$JAVA_HOME_17_X64"
+        EOF

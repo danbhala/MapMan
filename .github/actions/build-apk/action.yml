@@ -1,0 +1,76 @@
+name: Build APK
+description: Exports and signs a MapMan APK. Needs the setup-godot action with android "true" first.
+
+inputs:
+  preset:
+    description: Export preset, "Android" (MapMan) or "Android Dev" (MapMan Dev)
+    required: true
+  version-name:
+    description: version/name to stamp into the preset
+    required: true
+  version-code:
+    description: version/code to stamp into the preset (must only ever go up)
+    required: true
+  source:
+    description: Shown in dev builds, e.g. "pr-12", "master", "v1.2.0"
+    required: true
+  output:
+    description: Path of the signed APK to produce
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Stamp version and build info
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+        NAME: ${{ inputs.version-name }}
+        CODE: ${{ inputs.version-code }}
+        SOURCE: ${{ inputs.source }}
+      run: |
+        python3 - <<'PY'
+        import json, os, re, subprocess, datetime
+        path = "godot/export_presets.cfg"
+        text = open(path).read()
+        # Find the [preset.N] section named PRESET and stamp its options section.
+        presets = re.findall(r'\[preset\.(\d+)\]\n\nname="([^"]+)"', text)
+        index = next(i for i, n in presets if n == os.environ["PRESET"])
+        head, sep, rest = text.partition(f"[preset.{index}.options]")
+        body, nxt, tail = rest.partition("\n[preset.")
+        body = re.sub(r'(?m)^version/name=.*$', f'version/name="{os.environ["NAME"]}"', body)
+        body = re.sub(r'(?m)^version/code=.*$', f'version/code={os.environ["CODE"]}', body)
+        open(path, "w").write(head + sep + body + nxt + tail)
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        info = {
+            "version": os.environ["NAME"],
+            "commit": os.environ.get("BUILD_COMMIT") or commit,
+            "built": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+            "source": os.environ["SOURCE"],
+        }
+        json.dump(info, open("godot/build_info.json", "w"))
+        print(info)
+        PY
+
+    - name: Export
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: |
+        mkdir -p godot/build
+        godot --headless --path godot --import
+        godot --headless --path godot --export-release "$PRESET" build/unsigned.apk
+        test -s godot/build/unsigned.apk
+
+    - name: Sign
+      # uber-apk-signer's built-in debug key is the same key every earlier
+      # build used, so phones can install each build over the last one.
+      shell: bash
+      env:
+        OUTPUT: ${{ inputs.output }}
+      run: |
+        curl -sSfL -o /tmp/uber.jar \
+          "https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar"
+        java -jar /tmp/uber.jar -a godot/build/unsigned.apk -o godot/build/signed
+        cp godot/build/signed/*.apk "$OUTPUT"
+        unzip -l "$OUTPUT" | grep -q assets/data/levels.json

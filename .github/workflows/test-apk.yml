@@ -1,0 +1,128 @@
+name: Test APK
+
+# Builds the "MapMan Dev" app (installs alongside the real MapMan, has the DEV
+# menu) for every pull request and for master, and publishes each to its own
+# branch so a phone can download it from a plain link:
+#   PR #12  -> https://github.com/danbhala/MapMan/raw/apk-pr-12/MapMan-Dev.apk
+#   master  -> https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk
+# The PR gets a comment with the link. The branch is deleted when the PR closes.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: test-apk-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    # Same-repo PRs only: forks get a read-only token.
+    if: >-
+      github.event.action != 'closed' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Work out names
+        id: names
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          base=$(cat version.txt)
+          if [ -n "$PR" ]; then
+            echo "source=pr-$PR" >> "$GITHUB_OUTPUT"
+            echo "branch=apk-pr-$PR" >> "$GITHUB_OUTPUT"
+            echo "version=$base-pr.$PR" >> "$GITHUB_OUTPUT"
+          else
+            echo "source=master" >> "$GITHUB_OUTPUT"
+            echo "branch=apk-master" >> "$GITHUB_OUTPUT"
+            echo "version=$base-master" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: ./.github/actions/setup-godot
+        with:
+          android: "true"
+
+      - uses: ./.github/actions/build-apk
+        with:
+          preset: Android Dev
+          version-name: ${{ steps.names.outputs.version }}
+          # Every run of this workflow gets a higher code, so the phone always
+          # accepts the newest test build as an update.
+          version-code: ${{ github.run_number }}
+          source: ${{ steps.names.outputs.source }}
+          output: MapMan-Dev.apk
+
+      - name: Publish to the download branch
+        env:
+          BRANCH: ${{ steps.names.outputs.branch }}
+          VERSION: ${{ steps.names.outputs.version }}
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          dir=$(mktemp -d)
+          cp MapMan-Dev.apk "$dir/"
+          commit=$(git rev-parse --short HEAD)
+          cat > "$dir/README.md" <<EOF
+          # MapMan Dev $VERSION
+
+          Test build of commit $commit. Open this link on your phone to install:
+          https://github.com/$REPO/raw/$BRANCH/MapMan-Dev.apk
+
+          "MapMan Dev" installs alongside MapMan with its own save. Tap DEV (top
+          right) for level select, cheats, tilt tuning and the play log.
+          EOF
+          cd "$dir"
+          git init -q -b "$BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -q -m "chore: test build $VERSION ($commit)"
+          # One commit per branch, replaced each time, so old APKs don't pile up.
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${REPO}.git" "HEAD:refs/heads/$BRANCH"
+
+      - name: Comment the download link on the PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ steps.names.outputs.branch }}
+          VERSION: ${{ steps.names.outputs.version }}
+        run: |
+          marker="<!-- test-apk -->"
+          body="$marker
+          📱 **Test build ready: MapMan Dev $VERSION** (commit $(git rev-parse --short HEAD))
+
+          [Download MapMan-Dev.apk](https://github.com/$REPO/raw/$BRANCH/MapMan-Dev.apk). Open the link on your phone and install. It sits alongside the real MapMan with its own save; tap **DEV** for level select, cheats, tilt tuning and the play log."
+          id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -f body="$body" > /dev/null
+          fi
+
+  cleanup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Delete the PR's download branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh api -X DELETE "repos/$REPO/git/refs/heads/apk-pr-$PR" || echo "nothing to delete"
