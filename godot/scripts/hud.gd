@@ -11,8 +11,8 @@ const LOW_TIME := Color("#ffffff")
 const NORMAL_TIME := Color("#ffffff")
 const TIME_UP := Color("#aeaeae")
 
-static var mono: SystemFont
-static var sans: SystemFont
+static var mono: Font
+static var sans: Font
 
 var level_label: Label
 var score_label: Label
@@ -32,12 +32,12 @@ var time_message_label: Label
 var _effect_textures := {}
 
 
+## Bundled Liberation fonts: metric-compatible with the original's Courier
+## and Arial, and identical on every platform (screenshots compare cleanly).
 static func fonts() -> void:
 	if mono == null:
-		mono = SystemFont.new()
-		mono.font_names = PackedStringArray(["Courier New", "Courier", "Liberation Mono", "monospace"])
-		sans = SystemFont.new()
-		sans.font_names = PackedStringArray(["Arial", "Helvetica", "Liberation Sans", "sans-serif"])
+		mono = load("res://assets/fonts/LiberationMono-Regular.ttf")
+		sans = load("res://assets/fonts/LiberationSans-Regular.ttf")
 
 
 static func make_label(font: Font, size: int, color := Color.WHITE) -> Label:
@@ -64,7 +64,9 @@ func _ready() -> void:
 	fonts()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for n in ["reverse", "vanish", "sticky", "points", "more_time", "less_time", "life", "hide", "unhide"]:
+	for n in [
+		"reverse", "vanish", "sticky", "points", "more_time", "less_time", "life", "hide", "unhide"
+	]:
 		_effect_textures[n] = load("res://assets/effects/%s.png" % n)
 
 	level_label = make_label(mono, 40)
@@ -152,6 +154,7 @@ func _layout_score() -> void:
 
 # --- top row -------------------------------------------------------------
 
+
 func set_level(level: int, count: int) -> void:
 	level_label.text = "L%d/%d" % [level, count]
 
@@ -176,6 +179,7 @@ func show_bar(on: bool) -> void:
 
 # --- bottom bar ----------------------------------------------------------
 
+
 func set_controls_message(text: String, size := 20) -> void:
 	controls_label.text = text
 	controls_label.add_theme_font_size_override("font_size", size)
@@ -198,7 +202,9 @@ func set_timer(seconds: int, fractional: float, visible_timer := true) -> void:
 	if fractional >= 0.0 and fractional <= 3.0:
 		var whole := int(fractional)
 		multiplier = 1.0 + (3.0 - whole + (fractional - whole) * 2.0) * 0.2
-	timer_label.add_theme_font_size_override("font_size", maxi(1, int(TIMER_FONT_SIZE * multiplier)))
+	timer_label.add_theme_font_size_override(
+		"font_size", maxi(1, int(TIMER_FONT_SIZE * multiplier))
+	)
 	if seconds <= 0:
 		timer_label.add_theme_color_override("font_color", TIME_UP)
 	elif seconds <= 3:

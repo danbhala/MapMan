@@ -5,9 +5,9 @@ extends Node2D
 const POINTS_PER_LEVEL := 10
 const INITIAL_LIVES := 3
 const INITIAL_SECONDS := 20.0
-const STOP_TIME := 14.0 / 60.0     # seconds to cross one tile on a gentle tilt
+const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
 const TILT_THRESHOLD := 0.1
-const FLASH_SECONDS := 2.0         # how long "Bonus Points" etc. stay in the bar
+const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
 
@@ -27,8 +27,6 @@ var player: Player
 var hud: Hud
 var menus: Menus
 var tilt := TiltInput.new()
-var _bg: ColorRect
-var _gradient: TextureRect
 
 # game state (names follow the original)
 var game_active := false
@@ -43,6 +41,9 @@ var stuck := false
 var reverse := false
 var vanish := 0
 var end_of_level_points := 0
+
+var _bg: ColorRect
+var _gradient: TextureRect
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -104,7 +105,9 @@ func _load_data() -> void:
 	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/levels.json"))
 	levels = data["levels"]
 	check_point_levels = data["check_points"]
-	tutorial_levels = JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
+	tutorial_levels = (
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
+	)
 
 
 func _layout() -> void:
@@ -123,6 +126,7 @@ func _now() -> float:
 
 
 # --- countdown (clock.py / timer.py) ---------------------------------------
+
 
 func _seconds_remaining() -> int:
 	if _time_left <= 0.0:
@@ -166,6 +170,7 @@ func started() -> bool:
 
 
 # --- main loop -------------------------------------------------------------
+
 
 func _process(delta: float) -> void:
 	if menus.visible or not game_active:
@@ -237,7 +242,9 @@ func set_background() -> void:
 
 
 func set_controls_message() -> void:
-	var shake_word := "shake" if TiltInput.has_accelerometer() or not tilt.touch_steering_enabled() else "tap"
+	var shake_word := (
+		"shake" if TiltInput.has_accelerometer() or not tilt.touch_steering_enabled() else "tap"
+	)
 	if _last_points >= 0.0:
 		hud.show_effect("points")
 		hud.set_controls_message("Bonus Points", 20)
@@ -254,7 +261,9 @@ func set_controls_message() -> void:
 		hud.set_controls_message("Controls reversed &\nsee you again in %d moves" % vanish, 18)
 		hud.show_double_effect("reverse", "vanish")
 	elif reverse and stuck:
-		hud.set_controls_message("Stuck, & controls reversed. %s to release." % shake_word.capitalize(), 18)
+		hud.set_controls_message(
+			"Stuck, & controls reversed. %s to release." % shake_word.capitalize(), 18
+		)
 		hud.show_double_effect("reverse", "sticky")
 	elif reverse and _last_hide >= 0.0 and map.tiles_hidden:
 		hud.set_controls_message("Controls reversed &\nand tiles hidden", 18)
@@ -282,6 +291,7 @@ func set_controls_message() -> void:
 
 # --- movement (move_player / move_player_x / move_player_y) ----------------
 
+
 func move_player(delta: float) -> void:
 	if dead:
 		return
@@ -302,9 +312,13 @@ func move_player(delta: float) -> void:
 
 	var first_x := absf(v.x) > absf(v.y)
 	var face := Callable(player, "face_idle")
-	face = _try_axis(Vector2i.RIGHT if first_x else Vector2i.DOWN, v.x if first_x else v.y, can_move, face)
+	face = _try_axis(
+		Vector2i.RIGHT if first_x else Vector2i.DOWN, v.x if first_x else v.y, can_move, face
+	)
 	if not map.moving and face.is_valid():
-		face = _try_axis(Vector2i.DOWN if first_x else Vector2i.RIGHT, v.y if first_x else v.x, can_move, face)
+		face = _try_axis(
+			Vector2i.DOWN if first_x else Vector2i.RIGHT, v.y if first_x else v.x, can_move, face
+		)
 	if face.is_valid():
 		face.call()
 
@@ -338,6 +352,7 @@ func move(step: Vector2i, seconds: float) -> void:
 
 
 # --- tile rules (update_player) --------------------------------------------
+
 
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
@@ -418,6 +433,7 @@ func _flash(which: String) -> void:
 
 
 # --- level flow ------------------------------------------------------------
+
 
 func _current_level_data() -> Dictionary:
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
@@ -567,6 +583,7 @@ func game_over(show_score := true) -> void:
 
 # --- menus -----------------------------------------------------------------
 
+
 func show_start_menu() -> void:
 	Audio.play_menu()
 	menus.show_main(Save.highscore, Save.has_any_checkpoint())
@@ -637,9 +654,14 @@ func _on_menu_action(act: String) -> void:
 
 # --- input -----------------------------------------------------------------
 
+
 func _can_pause() -> bool:
-	return game_active and not dead and not menus.visible \
+	return (
+		game_active
+		and not dead
+		and not menus.visible
 		and (tutorial or (_timer_running and _seconds_remaining() <= 19))
+	)
 
 
 func _unhandled_input(event: InputEvent) -> void:

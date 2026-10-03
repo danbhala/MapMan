@@ -7,8 +7,8 @@ extends Control
 signal action(name: String)
 
 const BASE_BG := Color("#71c0e2")
-const SCALE := 1.0 / 3.0       # menu art is @3x
-const SPACE := 13.5            # space_x / space_y in points
+const SCALE := 1.0 / 3.0  # menu art is @3x
+const SPACE := 13.5  # space_x / space_y in points
 const PANEL_SIZE := Vector2(1843, 1036)
 const PANEL_H_PTS := 1036.0 / 3.0
 
@@ -39,8 +39,9 @@ func _top() -> float:
 ## Convert the original's point coordinates (origin at the panel centre, y up)
 ## and anchor into a top-left position in the panel's @3x pixel space.
 func _place(node: Control, size_px: Vector2, pos_pts: Vector2, anchor: Vector2) -> void:
-	node.position = Vector2(pos_pts.x * 3.0 - anchor.x * size_px.x,
-		-pos_pts.y * 3.0 - (1.0 - anchor.y) * size_px.y)
+	node.position = Vector2(
+		pos_pts.x * 3.0 - anchor.x * size_px.x, -pos_pts.y * 3.0 - (1.0 - anchor.y) * size_px.y
+	)
 
 
 func _recentre() -> void:
@@ -88,7 +89,9 @@ func _open(tag: String, bg_name: String, fade := true) -> void:
 		_tween.tween_property(_panel, "modulate:a", 1.0, 0.4)
 
 
-func _button(tag: String, act: String, pos_pts: Vector2, anchor: Vector2, enabled := true) -> TextureButton:
+func _button(
+	tag: String, act: String, pos_pts: Vector2, anchor: Vector2, enabled := true
+) -> TextureButton:
 	var b := TextureButton.new()
 	var normal: Texture2D = load("res://assets/buttons/%s.png" % tag)
 	var on: Texture2D = load("res://assets/buttons/%s_on.png" % tag)
@@ -109,7 +112,14 @@ func _button(tag: String, act: String, pos_pts: Vector2, anchor: Vector2, enable
 	return b
 
 
-func _label(text: String, size_pts: float, color: Color, pos_pts: Vector2, anchor: Vector2, font: Font = null) -> Label:
+func _label(
+	text: String,
+	size_pts: float,
+	color: Color,
+	pos_pts: Vector2,
+	anchor: Vector2,
+	font: Font = null
+) -> Label:
 	Hud.fonts()
 	var l := Label.new()
 	l.text = text
@@ -126,11 +136,15 @@ func _label(text: String, size_pts: float, color: Color, pos_pts: Vector2, ancho
 
 
 func _main_menu_button() -> void:
-	var b := _button("main_menu", "main menu", Vector2(0, _bottom() - SPACE / 2.0), Vector2(0.5, 1.0))
+	var b := _button(
+		"main_menu", "main menu", Vector2(0, _bottom() - SPACE / 2.0), Vector2(0.5, 1.0)
+	)
 	b.z_index = 1
 
 
-func _two_buttons(lhs_tag: String, lhs_act: String, rhs_tag: String, rhs_act: String, rhs_enabled := true) -> void:
+func _two_buttons(
+	lhs_tag: String, lhs_act: String, rhs_tag: String, rhs_act: String, rhs_enabled := true
+) -> void:
 	var y := _bottom() + SPACE
 	var lw: float = load("res://assets/buttons/%s.png" % lhs_tag).get_width() / 3.0
 	var rw: float = load("res://assets/buttons/%s.png" % rhs_tag).get_width() / 3.0
@@ -158,7 +172,11 @@ func _gui_input(event: InputEvent) -> void:
 	# Taps on the background (not on a button) for "tap to continue" menus.
 	if _tap_action == "" or Time.get_ticks_msec() / 1000.0 < _tap_ready_at:
 		return
-	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if (
+		event is InputEventMouseButton
+		and not event.pressed
+		and event.button_index == MOUSE_BUTTON_LEFT
+	):
 		accept_event()
 		action.emit(_tap_action)
 
@@ -169,6 +187,7 @@ func _tap_to(act: String, delay := 0.3) -> void:
 
 
 # --- the menus -----------------------------------------------------------
+
 
 func show_main(highscore: int, has_checkpoint: bool) -> void:
 	_open("main", "welcome")
@@ -184,7 +203,13 @@ func show_main(highscore: int, has_checkpoint: bool) -> void:
 	_button("play_from_start", "play from start", Vector2(0, y), Vector2(0.5, 0.0))
 	_first_button = _panel.get_child(_panel.get_child_count() - 1)
 	if highscore > 0:
-		_label("best score %d" % highscore, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
+		_label(
+			"best score %d" % highscore,
+			20,
+			Color.WHITE,
+			Vector2(0, _bottom() - SPACE * 1.2),
+			Vector2(0.5, 1.0)
+		)
 	_focus_first()
 
 
@@ -249,7 +274,9 @@ func show_lose_life(lives: int) -> void:
 func show_game_over(score: int, pb: bool, has_checkpoint: bool) -> void:
 	_open("game_over", "game_over")
 	var cp_tag := "game_over_checkpoint" if has_checkpoint else "game_over_checkpoint_locked"
-	_two_buttons("game_over_restart", "play from start", cp_tag, "restart from checkpoint", has_checkpoint)
+	_two_buttons(
+		"game_over_restart", "play from start", cp_tag, "restart from checkpoint", has_checkpoint
+	)
 	_main_menu_button()
 	var text := ("%d - new PB!" % score) if pb else str(score)
 	_label(text, 30, Color.BLACK, Vector2(0, 35), Vector2(0.5, 0.5))
@@ -276,9 +303,13 @@ func show_restart(reached: Array) -> void:
 
 
 ## Level clear: the three bonuses count down into the score, star by star.
-func show_end_level(score: int, level_bonus: int, time_bonus: int, stars: int, checkpoint: bool) -> void:
+func show_end_level(
+	score: int, level_bonus: int, time_bonus: int, stars: int, checkpoint: bool
+) -> void:
 	_open("end_level", "end_level_checkpoint" if checkpoint else "end_level", false)
-	var score_label := _label("score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
+	var score_label := _label(
+		"score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0)
+	)
 	var rows: Array[StarRow] = []
 	rows.append(StarRow.new(self, level_bonus, _top() - 4.5 * SPACE))
 	rows.append(StarRow.new(self, time_bonus, _top() - 9.0 * SPACE))
@@ -298,7 +329,9 @@ func show_congratulations(score: int, pb: bool) -> void:
 
 func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
 	_open("completion", "completion", false)
-	var score_label := _label("score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
+	var score_label := _label(
+		"score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0)
+	)
 	var rows: Array[StarRow] = []
 	rows.append(StarRow.new(self, completion_bonus, _top() - 5.0 * SPACE))
 	rows.append(StarRow.new(self, lives_bonus, _top() - 12.0 * SPACE))
@@ -316,14 +349,16 @@ func _count_up(rows: Array[StarRow], score: int, score_label: Label, fmt: String
 			var step := 5 if points > StarRow.THRESHOLD else 1
 			points -= step
 			_tween.tween_interval(0.2 if points + step == row.points else 0.1)
-			_tween.tween_callback(func():
-				row.take(step)
-				total[0] += step
-				score_label.text = fmt % total[0]
-				var sz := score_label.get_minimum_size()
-				score_label.size = sz
-				_place(score_label, sz, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
-				Audio.play("star", 0.2))
+			_tween.tween_callback(
+				func():
+					row.take(step)
+					total[0] += step
+					score_label.text = fmt % total[0]
+					var sz := score_label.get_minimum_size()
+					score_label.size = sz
+					_place(score_label, sz, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
+					Audio.play("star", 0.2)
+			)
 
 
 class StarRow:
@@ -365,14 +400,20 @@ class StarRow:
 			label.size = lsz
 			var lw := lsz.x / 3.0
 			var width := (lw + star_w) * 1.1
-			menus._place(label, lsz, Vector2(-0.5 * width + 0.5 * lw, y - 0.1 * 27.0), Vector2(0.5, 0.5))
+			menus._place(
+				label, lsz, Vector2(-0.5 * width + 0.5 * lw, y - 0.1 * 27.0), Vector2(0.5, 0.5)
+			)
 			for i in stars.size():
 				stars[i].visible = i == 0
-			menus._place(stars[0], star_size, Vector2(0.5 * width - 0.5 * star_w, y), Vector2(0.5, 0.5))
+			menus._place(
+				stars[0], star_size, Vector2(0.5 * width - 0.5 * star_w, y), Vector2(0.5, 0.5)
+			)
 		else:
 			label.text = ""
 			var lhs := -0.5 * (remaining * star_w - star_w)
 			for i in stars.size():
 				stars[i].visible = i < remaining
 				if i < remaining:
-					menus._place(stars[i], star_size, Vector2(lhs + i * star_w, y), Vector2(0.5, 0.5))
+					menus._place(
+						stars[i], star_size, Vector2(lhs + i * star_w, y), Vector2(0.5, 0.5)
+					)

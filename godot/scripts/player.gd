@@ -7,6 +7,8 @@ const DEATH_FRAMES := 21
 const FPS := 60.0
 const ASSET_SCALE := 1.0 / 3.0
 
+var is_hidden := true
+
 var _up_idle: Array[Texture2D] = []
 var _down_idle: Array[Texture2D] = []
 var _side_idle: Array[Texture2D] = []
@@ -21,7 +23,6 @@ var _frame := 0
 var _frame_clock := 0.0
 var _flip := false
 var _dying := false
-var is_hidden := true
 
 
 func _ready() -> void:
@@ -61,44 +62,73 @@ func _face(frames: Array[Texture2D], flip := false) -> void:
 	_draw()
 
 
-func face_death() -> void: _face(_death)
-func face_up() -> void: _face(_up)
-func face_down() -> void: _face(_down)
-func face_left() -> void: _face(_side, true)
-func face_right() -> void: _face(_side)
-func face_up_idle() -> void: _face(_up_idle)
-func face_down_idle() -> void: _face(_down_idle)
-func face_left_idle() -> void: _face(_side_idle, true)
-func face_right_idle() -> void: _face(_side_idle)
-func face_idle() -> void: _face(_idle)
+func face_death() -> void:
+	_face(_death)
+
+
+func face_up() -> void:
+	_face(_up)
+
+
+func face_down() -> void:
+	_face(_down)
+
+
+func face_left() -> void:
+	_face(_side, true)
+
+
+func face_right() -> void:
+	_face(_side)
+
+
+func face_up_idle() -> void:
+	_face(_up_idle)
+
+
+func face_down_idle() -> void:
+	_face(_down_idle)
+
+
+func face_left_idle() -> void:
+	_face(_side_idle, true)
+
+
+func face_right_idle() -> void:
+	_face(_side_idle)
+
+
+func face_idle() -> void:
+	_face(_idle)
 
 
 func face_direction(dir: Vector2i, walking: bool) -> void:
-	if dir.x < 0:
-		face_left() if walking else face_left_idle()
-	elif dir.x > 0:
-		face_right() if walking else face_right_idle()
-	elif dir.y < 0:
-		face_up() if walking else face_up_idle()
-	elif dir.y > 0:
-		face_down() if walking else face_down_idle()
-	else:
+	if dir == Vector2i.ZERO:
 		face_idle()
+		return
+	var frames: Array[Texture2D]
+	if dir.x != 0:
+		frames = _side if walking else _side_idle
+	elif dir.y < 0:
+		frames = _up if walking else _up_idle
+	else:
+		frames = _down if walking else _down_idle
+	_face(frames, dir.x < 0)
 
 
 func vanish() -> void:
-	scale = Vector2.ZERO
+	visible = false
 	is_hidden = true
 
 
 func show_player() -> void:
 	is_hidden = false
+	visible = true
 	_draw()
 
 
 func _draw() -> void:
-	if not is_hidden:
-		scale = Vector2(-ASSET_SCALE if _flip else ASSET_SCALE, ASSET_SCALE)
+	scale = Vector2(-ASSET_SCALE if _flip else ASSET_SCALE, ASSET_SCALE)
 	texture = _frames[_frame]
 
 

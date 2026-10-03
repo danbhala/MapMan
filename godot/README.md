@@ -35,10 +35,20 @@ Tilt is calibrated automatically when each level starts, so whatever angle you'r
 
 ## Tests
 
-The autoplay test walks every tutorial and game level along a safe path, then checks losing lives, game over and pausing:
+Everything runs from one script (Godot 4.5 as `godot` on your PATH, or set `GODOT`):
 
 ```
-godot --headless --path godot --script res://tests/autoplay_test.gd
+godot/tools/verify.sh          # lint, import, unit tests, first 10 levels, screenshots
+godot/tools/verify.sh --full   # same, playing all 100 levels
 ```
 
-`tests/screenshots.gd` captures the main screens (needs a display, e.g. `xvfb-run`).
+- `tests/unit/` – [GUT](https://github.com/bitwes/Gut) unit tests, one per tile rule (GUT 9.5 lives in `addons/gut`).
+- `tests/autoplay_test.gd` – a bot walks the tutorial and every level, then checks losing lives, game over and pausing.
+- `tests/screenshots.gd` – renders ten screens and compares them with `tests/baseline/` (needs a display or `xvfb-run`).
+- `tools/level_report.py` – route length and spare seconds for every level.
+
+Linting uses [gdtoolkit](https://pypi.org/project/gdtoolkit) (`pip install "gdtoolkit==4.*"`). GitHub Actions runs the full check on every push and pull request.
+
+## Working with Claude
+
+The repo is set up for Claude Code: `CLAUDE.md` files describe the project, `.claude/skills/` holds `/verify`, `/new-level`, `/new-tile` and `/build-apk`, `.claude/agents/` holds the level-analyst, playtester and reviewer agents, a hook lints every GDScript edit, and `.mcp.json` adds the [godot-mcp](https://github.com/Coding-Solo/godot-mcp) server (set `GODOT_PATH` if Godot isn't found automatically).

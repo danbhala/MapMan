@@ -79,14 +79,22 @@ func _touch_vector() -> Vector2:
 	var v := Vector2.ZERO
 	var w := screen_size.x
 	var h := screen_size.y
-	if _touch_pos.x < w / 4.0: v.x = -strong
-	elif _touch_pos.x < w / 3.0: v.x = -gentle
-	elif _touch_pos.x > 3.0 * w / 4.0: v.x = strong
-	elif _touch_pos.x > 2.0 * w / 3.0: v.x = gentle
-	if _touch_pos.y < h / 4.0: v.y = -strong
-	elif _touch_pos.y < h / 3.0: v.y = -gentle
-	elif _touch_pos.y > 3.0 * h / 4.0: v.y = strong
-	elif _touch_pos.y > 2.0 * h / 3.0: v.y = gentle
+	if _touch_pos.x < w / 4.0:
+		v.x = -strong
+	elif _touch_pos.x < w / 3.0:
+		v.x = -gentle
+	elif _touch_pos.x > 3.0 * w / 4.0:
+		v.x = strong
+	elif _touch_pos.x > 2.0 * w / 3.0:
+		v.x = gentle
+	if _touch_pos.y < h / 4.0:
+		v.y = -strong
+	elif _touch_pos.y < h / 3.0:
+		v.y = -gentle
+	elif _touch_pos.y > 3.0 * h / 4.0:
+		v.y = strong
+	elif _touch_pos.y > 2.0 * h / 3.0:
+		v.y = gentle
 	return v
 
 

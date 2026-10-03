@@ -15,6 +15,7 @@ const APPEAR_TIME := 0.25
 const TILE_W := 32.0
 const TILE_H := 23.0
 
+
 class Tile:
 	var key: Vector2i
 	var type: String
@@ -24,13 +25,14 @@ class Tile:
 	var start_hidden := false
 
 	var blank: bool:
-		get: return sprite == null
+		get:
+			return sprite == null
 
 
-var tiles := {}          # Vector2i -> Tile
+var tiles := {}  # Vector2i -> Tile
 var start_position := Vector2i.ZERO
 var ends: Array[Tile] = []
-var position_key := Vector2i.ZERO   # where the player is (or is moving from)
+var position_key := Vector2i.ZERO  # where the player is (or is moving from)
 var tiles_hidden := false
 var is_checkpoint := false
 var checkpoint_flag: AnimatedSprite2D
@@ -65,8 +67,8 @@ var _rows_total := 0
 var _textures := {}
 var _checkpoint_frames: SpriteFrames
 
-
 # --- texture helpers -----------------------------------------------------
+
 
 func _tex(file_name: String) -> Texture2D:
 	if not _textures.has(file_name):
@@ -88,27 +90,42 @@ func _texture_for(t: String, random_blank := true) -> Texture2D:
 	if vanish_moves(t, _x_hides) > 0:
 		return _tex("vanish.png")
 	match t.to_lower():
-		"b": return _tex("start.png")
-		"h": return _tex("hide.png")
-		"u": return _tex("unhide.png")
-		"s": return _tex("south.png")
-		"e": return _tex("east.png")
-		"w": return _tex("west.png")
-		"n": return _tex("north.png")
+		"b":
+			return _tex("start.png")
+		"h":
+			return _tex("hide.png")
+		"u":
+			return _tex("unhide.png")
+		"s":
+			return _tex("south.png")
+		"e":
+			return _tex("east.png")
+		"w":
+			return _tex("west.png")
+		"n":
+			return _tex("north.png")
 	match t:
-		"p", "@": return _tex("points.png")
-		"d", "!": return _tex("death.png")
-		"l", "+": return _tex("life.png")
-		"m": return _tex("more_time.png")
-		"t": return _tex("less_time.png")
-		"y": return _tex("sticky.png")
-		"r": return _tex("reverse.png")
+		"p", "@":
+			return _tex("points.png")
+		"d", "!":
+			return _tex("death.png")
+		"l", "+":
+			return _tex("life.png")
+		"m":
+			return _tex("more_time.png")
+		"t":
+			return _tex("less_time.png")
+		"y":
+			return _tex("sticky.png")
+		"r":
+			return _tex("reverse.png")
 	if random_blank:
 		return _tex("blank%d.png" % randi_range(1, 4))
 	return _tex("blank1.png")
 
 
 # --- loading -------------------------------------------------------------
+
 
 func unload() -> void:
 	for child in get_children():
@@ -123,8 +140,19 @@ func unload() -> void:
 ## screen_size: the visible viewport, used to centre the map like the original.
 func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1) -> void:
 	unload()
-	for d in [reverses, vanishes, vanish_durations, deaths, lives, stickies,
-			more_times, less_times, points, hides, unhides]:
+	for d in [
+		reverses,
+		vanishes,
+		vanish_durations,
+		deaths,
+		lives,
+		stickies,
+		more_times,
+		less_times,
+		points,
+		hides,
+		unhides
+	]:
 		d.clear()
 
 	tiles_hidden = false
@@ -144,7 +172,7 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	_min_y = screen_size.y / 2.0 - rows.size() * TILE_H / 2.0 + TILE_H * 2.0
 	_min_x = screen_size.x * 0.5 - (max_columns * 0.5) * TILE_W + 0.5 * TILE_W
 
-	var loadings := {}   # loading char -> Array[Tile]
+	var loadings := {}  # loading char -> Array[Tile]
 	var order: Array[Tile] = []
 	var n := rows.size()
 	_rows_total = n
@@ -190,7 +218,9 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	_load_elapsed = 0.0
 
 
-func _add_row(row: int, line: String, max_columns: int, loading_line, loadings: Dictionary, order: Array[Tile]) -> void:
+func _add_row(
+	row: int, line: String, max_columns: int, loading_line, loadings: Dictionary, order: Array[Tile]
+) -> void:
 	_add_tile(" ", Vector2i(-1, row), null, loadings, order)
 	var x := 0
 	for ch in line:
@@ -205,7 +235,7 @@ func _add_row(row: int, line: String, max_columns: int, loading_line, loadings: 
 
 
 func _screen_pos(key: Vector2i, rows_total: int) -> Vector2:
-	var y_up := rows_total - 1 - key.y   # original row index counted from the bottom
+	var y_up := rows_total - 1 - key.y  # original row index counted from the bottom
 	var ox := _min_x + key.x * TILE_W
 	var oy := _min_y + (y_up - 1) * TILE_H
 	return Vector2(ox, _screen_h - oy)
@@ -264,13 +294,21 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 func _appear(node: Node2D, wait: float) -> void:
 	var tw := create_tween()
 	tw.tween_interval(wait)
-	tw.tween_property(node, "scale", Vector2.ONE * ASSET_SCALE, APPEAR_TIME) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	(
+		tw
+		. tween_property(node, "scale", Vector2.ONE * ASSET_SCALE, APPEAR_TIME)
+		. set_trans(Tween.TRANS_BACK)
+		. set_ease(Tween.EASE_OUT)
+	)
 
 
 func _set_start_hidden(tile: Tile) -> void:
 	tile.start_hidden = true
 	tile.can_hide = true
+	# These tiles skip the appear animation, so give them full size now;
+	# visibility alone decides whether they show.
+	if tile.sprite:
+		tile.sprite.scale = Vector2.ONE * ASSET_SCALE
 	_hide_tile(tile)
 
 
@@ -279,7 +317,9 @@ func _add_checkpoint_flag(tile: Tile, wait: float) -> void:
 		_checkpoint_frames = SpriteFrames.new()
 		_checkpoint_frames.set_animation_speed("default", 60.0)
 		for i in range(1, 118):
-			_checkpoint_frames.add_frame("default", load("res://assets/checkpoint/checkpoint%03d.png" % i))
+			_checkpoint_frames.add_frame(
+				"default", load("res://assets/checkpoint/checkpoint%03d.png" % i)
+			)
 	var flag := AnimatedSprite2D.new()
 	flag.sprite_frames = _checkpoint_frames
 	flag.centered = false
@@ -304,14 +344,17 @@ func _process(delta: float) -> void:
 
 # --- hiding --------------------------------------------------------------
 
+
+# Hiding uses visibility, not scale: Godot never stores a scale of exactly
+# zero, so a "scale == 0" check can't tell a hidden tile from a visible one.
 func _hide_tile(tile: Tile) -> void:
 	if tile.can_hide and tile.sprite:
-		tile.sprite.scale = Vector2.ZERO
+		tile.sprite.visible = false
 
 
 func _unhide_tile(tile: Tile) -> void:
-	if tile.sprite and tile.sprite.scale == Vector2.ZERO:
-		tile.sprite.scale = Vector2.ONE * ASSET_SCALE
+	if tile.sprite:
+		tile.sprite.visible = true
 
 
 func unhide_tile_at(key: Vector2i) -> void:
@@ -341,6 +384,7 @@ func reset_hide() -> void:
 
 
 # --- movement ------------------------------------------------------------
+
 
 func get_player_position() -> Vector2:
 	if moving:

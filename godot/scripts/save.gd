@@ -13,6 +13,8 @@ var first_play := true
 var has_completed := false
 ## level number -> best score when that checkpoint was reached
 var checkpoints := {}
+## Tests turn this off so they never overwrite the player's real progress.
+var persist := true
 
 var _cfg := ConfigFile.new()
 
@@ -39,6 +41,8 @@ func load_all() -> void:
 
 
 func save_all() -> void:
+	if not persist:
+		return
 	_cfg.set_value("options", "music", music_on)
 	_cfg.set_value("options", "fx", fx_on)
 	_cfg.set_value("options", "playing_position", playing_position)
