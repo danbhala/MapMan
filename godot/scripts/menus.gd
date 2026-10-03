@@ -18,6 +18,8 @@ var _first_button: Control
 var _tap_action := ""
 var _tap_ready_at := 0.0
 var _tween: Tween
+## Button art with its baked-in text wiped, for buttons the original lacked.
+var _blank_buttons := {}
 
 
 func _ready() -> void:
@@ -110,6 +112,62 @@ func _button(
 	if enabled and _first_button == null:
 		_first_button = b
 	return b
+
+
+## A button in the original's style with our own text: the art of `tag` with
+## its baked-in text wiped, and `text` drawn over it.
+func _text_button(
+	tag: String, text: String, act: String, pos_pts: Vector2, anchor: Vector2
+) -> TextureButton:
+	var b := TextureButton.new()
+	var normal := _blank_button(tag)
+	var on := _blank_button(tag + "_on")
+	b.texture_normal = normal
+	b.texture_pressed = on
+	b.texture_hover = on
+	b.texture_focused = on
+	b.size = normal.get_size()
+	_place(b, normal.get_size(), pos_pts, anchor)
+	b.pressed.connect(func(): action.emit(act))
+	_panel.add_child(b)
+	Hud.fonts()
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", Hud.mono)
+	l.add_theme_font_size_override("font_size", 40)
+	l.add_theme_color_override("font_color", Color.WHITE)
+	# A thin outline in the same colour matches the art's heavier lettering.
+	l.add_theme_color_override("font_outline_color", Color.WHITE)
+	l.add_theme_constant_override("outline_size", 3)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(l)
+	if _first_button == null:
+		_first_button = b
+	return b
+
+
+## Blend each row of the button from its left edge to its right edge, which
+## keeps the art's soft gradient but drops the text in the middle.
+func _blank_button(tag: String) -> Texture2D:
+	if _blank_buttons.has(tag):
+		return _blank_buttons[tag]
+	var img: Image = load("res://assets/buttons/%s.png" % tag).get_image()
+	img.decompress()
+	var w := img.get_width()
+	var margin := int(w * 0.12)
+	for y in img.get_height():
+		var left := img.get_pixel(margin, y)
+		var right := img.get_pixel(w - 1 - margin, y)
+		for x in range(margin, w - margin):
+			var c := left.lerp(right, float(x - margin) / float(w - 1 - 2 * margin))
+			c.a = img.get_pixel(x, y).a
+			img.set_pixel(x, y, c)
+	var tex := ImageTexture.create_from_image(img)
+	_blank_buttons[tag] = tex
+	return tex
 
 
 func _label(
@@ -230,12 +288,14 @@ func show_options() -> void:
 	cover.size = Vector2(1120, 110)
 	cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(cover)
-	_label("sound", 16, Color.BLACK, Vector2(0, 50), Vector2(0.5, 0.5))
+	_label("sound and vibration", 16, Color.BLACK, Vector2(0, 50), Vector2(0.5, 0.5))
 
+	# Three columns: music, sound effects, vibration (the last is ours).
 	var bw := 359.0 / 3.0
 	var bh := 110.0 / 3.0
-	var x_left := -bw - SPACE / 2.0
-	var x_right := SPACE / 2.0
+	var x_left := -bw * 1.5 - SPACE
+	var x_right := -bw * 0.5
+	var x_vib := bw * 0.5 + SPACE
 	var y := _bottom() + SPACE * 2.0
 	var m_off := "options_musicoff" + ("" if Save.music_on else "_active")
 	var m_on := "options_musicon" + ("_active" if Save.music_on else "")
@@ -245,6 +305,11 @@ func show_options() -> void:
 	_button(m_on, "music on", Vector2(x_left, y + bh + SPACE), Vector2.ZERO)
 	_button(f_off, "fx off", Vector2(x_right, y), Vector2.ZERO)
 	_button(f_on, "fx on", Vector2(x_right, y + bh + SPACE), Vector2.ZERO)
+	# The fx buttons' art in the matching on/off state, with our own text.
+	var v_off := "options_fxoff" + ("" if Save.vibration_on else "_active")
+	var v_on := "options_fxon" + ("_active" if Save.vibration_on else "")
+	_text_button(v_off, "vibrate off", "vibration off", Vector2(x_vib, y), Vector2.ZERO)
+	_text_button(v_on, "vibrate on", "vibration on", Vector2(x_vib, y + bh + SPACE), Vector2.ZERO)
 	_main_menu_button()
 	_focus_first()
 

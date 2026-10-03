@@ -66,6 +66,8 @@ func _stream(path: String) -> AudioStream:
 
 
 func play(name: String, volume := 1.0, pitch := 1.0) -> void:
+	# Every effect has a matching buzz, even with sound effects turned off.
+	Haptics.feel(name)
 	if not Save.fx_on or not SFX.has(name):
 		return
 	var p := _sfx_players[_next_sfx]

@@ -168,6 +168,11 @@ func run() -> void:
 	await frames(30)
 	await shot("12_ending_meeting")
 
+	game.game_over(false)
+	game._on_menu_action("options")
+	await frames(40)
+	await shot("13_options")
+
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
 		quit(0)

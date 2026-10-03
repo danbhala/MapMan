@@ -784,6 +784,11 @@ func _on_menu_action(act: String) -> void:
 		"fx on", "fx off":
 			Audio.set_fx_enabled(act == "fx on")
 			menus.show_options()
+		"vibration on", "vibration off":
+			Save.vibration_on = act == "vibration on"
+			Save.save_all()
+			Haptics.feel("toggle")
+			menus.show_options()
 		"main menu":
 			if game_active:
 				game_over(false)
