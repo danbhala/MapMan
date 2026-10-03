@@ -15,8 +15,8 @@ const KEY_TILT := 0.25
 ## shaky reading doesn't set "level" for the whole level.
 const CALIBRATE_SECONDS := 0.25
 ## Readings further than this (in g) from the average so far are a deliberate
-## lean, not hand tremor: they end the averaging instead of joining it. Kept
-## under the start threshold so a lean that moves MapMan is never averaged in.
+## lean, not hand tremor: they end the averaging instead of joining it. Capped
+## at the start threshold so a lean that moves MapMan is never averaged in.
 const CALIBRATE_SPREAD := 0.08
 
 var screen_size := Vector2(667, 375)
@@ -57,7 +57,7 @@ func sample(gravity: Vector3, delta: float) -> void:
 	if _calibrate_left <= 0.0 or gravity.length() < 0.1:
 		return
 	var g := gravity.normalized()
-	if (g - _neutral).length() > CALIBRATE_SPREAD:
+	if (g - _neutral).length() > minf(CALIBRATE_SPREAD, Dev.t("tilt_threshold")):
 		_calibrate_left = 0.0
 		return
 	_sum += g

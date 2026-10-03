@@ -147,12 +147,33 @@ func test_keep_threshold_never_above_start() -> void:
 	assert_true(game.map.moving)
 
 
+func test_keep_threshold_follows_the_way_mapman_went() -> void:
+	# Leaning down-right in a one-row corridor: down is blocked, so MapMan
+	# slides right, and right is the way that keeps going on a gentle lean.
+	game.steer(Vector2(0.12, 0.15), true)
+	assert_true(game.map.moving)
+	_finish_move()
+	game.steer(Vector2(0.08, 0), true)
+	assert_true(game.map.moving)
+
+
+func test_each_attempt_recalibrates_tilt() -> void:
+	Input.set_gravity(Vector3(0, -6.9, -6.9))
+	game.move_player(0.0)
+	Input.set_gravity(Vector3(0, -9.81, 0))
+	game.reset_all(false)
+	game.move_player(0.0)
+	assert_almost_eq(game.tilt._neutral, Vector3(0, -1, 0), Vector3.ONE * 0.001)
+	Input.set_gravity(Vector3.ZERO)
+
+
 func test_unpause_recalibrates_tilt() -> void:
 	Input.set_gravity(Vector3(0, -6.9, -6.9))
 	game.tilt.calibrate()
 	game.show_pause_menu()
 	Input.set_gravity(Vector3(0, -9.81, 0))
 	game._on_menu_action("unpause")
+	game.move_player(0.0)
 	assert_almost_eq(game.tilt._neutral, Vector3(0, -1, 0), Vector3.ONE * 0.001)
 	Input.set_gravity(Vector3.ZERO)
 
