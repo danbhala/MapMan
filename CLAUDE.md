@@ -32,7 +32,8 @@ Other commands, from the repo root:
 Versions are semver (`version.txt`) and come from Conventional Commits; don't
 edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
 
-- PR titles must be conventional (a CI check enforces it): `feat:` new
+- PR titles must be conventional (a CI check enforces it and sets the
+  `type: …` label; add `area: …` labels from `.github/labels.json`): `feat:` new
   gameplay, levels or menus (minor), `fix:` bugs (patch), `feat!:` or a
   `BREAKING CHANGE:` footer for things like an incompatible save format
   (major); `docs:`, `test:`, `ci:`, `chore:`, `refactor:` don't release.
@@ -48,7 +49,8 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
 
 ## Workflow
 
-- Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`.
+- Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit`
+  (every commit), `/open-pr` (every PR: title, body, labels, merging).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
 - Branch per change, PR into master. Commit as the user's GitHub noreply
