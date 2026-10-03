@@ -31,6 +31,10 @@ IMAGE_DIRS = {
     'Man/Idle': 'assets/man/idle',
     'Man/Frames': 'assets/man/frames',
     'Man/Death': 'assets/man/death',
+    'Woman/Idle': 'assets/woman/idle',
+    'Woman/Frames': 'assets/woman/frames',
+    'Vortex': 'assets/vortex',
+    'Hearts': 'assets/hearts',
     'Star': 'assets/star',
     'Heart': 'assets/heart',
     'CheckPoint': 'assets/checkpoint',
@@ -209,6 +213,18 @@ def convert_levels():
         })
     with open(os.path.join(data_dir, 'tutorial.json'), 'w') as f:
         json.dump({'levels': tutorial}, f, indent=1)
+
+    # The bonus map after the last level, where MapWoman waits by the vortex.
+    rows = level_rows(g['completion'])
+    completion = {
+        'rows': rows,
+        'loading': loading_rows(g['completion_loading'], rows),
+        'delay': g['DEFAULT_DELAY'],
+        'x_hides': 0,
+        'checkpoint': False,
+    }
+    with open(os.path.join(data_dir, 'completion.json'), 'w') as f:
+        json.dump(completion, f, indent=1)
 
     print('levels: {0}, tutorial: {1}'.format(len(levels), len(tutorial)))
 

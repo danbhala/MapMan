@@ -153,6 +153,26 @@ func run() -> void:
 	await frames(90)
 	await shot("10_game_over")
 
+	# The ending after the last level: MapWoman waits by the vortex...
+	game.menus.close()
+	game.new_game(game.levels.size())
+	game.end_of_level_points = 0
+	game.next_level()
+	while not game.started():
+		await process_frame
+	await frames(30)
+	await shot("11_ending")
+
+	# ...and they meet when MapMan reaches her.
+	game.map.position_key = Vector2i(3, 8)
+	await frames(30)
+	await shot("12_ending_meeting")
+
+	game.game_over(false)
+	game._on_menu_action("options")
+	await frames(40)
+	await shot("13_options")
+
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
 		quit(0)
