@@ -1,0 +1,124 @@
+class_name Player
+extends Sprite2D
+## MapMan himself. Port of player.py: one frame per 1/60 s, like the original.
+
+const FRAMES := 14
+const DEATH_FRAMES := 21
+const FPS := 60.0
+const ASSET_SCALE := 1.0 / 3.0
+
+var _up_idle: Array[Texture2D] = []
+var _down_idle: Array[Texture2D] = []
+var _side_idle: Array[Texture2D] = []
+var _idle: Array[Texture2D] = []
+var _up: Array[Texture2D] = []
+var _down: Array[Texture2D] = []
+var _side: Array[Texture2D] = []
+var _death: Array[Texture2D] = []
+
+var _frames: Array[Texture2D] = []
+var _frame := 0
+var _frame_clock := 0.0
+var _flip := false
+var _dying := false
+var is_hidden := true
+
+
+func _ready() -> void:
+	_up_idle = [load("res://assets/man/idle/back.png")]
+	_down_idle = [load("res://assets/man/idle/front.png")]
+	_side_idle = [load("res://assets/man/idle/side.png")]
+	_idle = [load("res://assets/man/idle/neutral.png")]
+	_up = _load_frames("back")
+	_down = _load_frames("forward")
+	_side = _load_frames("side")
+	for i in DEATH_FRAMES:
+		var t: Texture2D = load("res://assets/man/death/death%02d.png" % i)
+		_death.append(t)
+		_death.append(t)  # the original shows each death frame twice
+
+	centered = false
+	# anchor (0.5, -0.05) in the original's y-up space: feet just above the tile centre
+	offset = Vector2(-66.0, -240.0 * 1.05)
+	z_index = 10
+	_frames = _idle
+	texture = _idle[0]
+	vanish()
+
+
+func _load_frames(tag: String) -> Array[Texture2D]:
+	var out: Array[Texture2D] = []
+	for i in range(1, FRAMES + 1):
+		out.append(load("res://assets/man/frames/%s%02d.png" % [tag, i]))
+	return out
+
+
+func _face(frames: Array[Texture2D], flip := false) -> void:
+	_dying = frames == _death
+	_flip = flip
+	_frames = frames
+	_frame = 0
+	_draw()
+
+
+func face_death() -> void: _face(_death)
+func face_up() -> void: _face(_up)
+func face_down() -> void: _face(_down)
+func face_left() -> void: _face(_side, true)
+func face_right() -> void: _face(_side)
+func face_up_idle() -> void: _face(_up_idle)
+func face_down_idle() -> void: _face(_down_idle)
+func face_left_idle() -> void: _face(_side_idle, true)
+func face_right_idle() -> void: _face(_side_idle)
+func face_idle() -> void: _face(_idle)
+
+
+func face_direction(dir: Vector2i, walking: bool) -> void:
+	if dir.x < 0:
+		face_left() if walking else face_left_idle()
+	elif dir.x > 0:
+		face_right() if walking else face_right_idle()
+	elif dir.y < 0:
+		face_up() if walking else face_up_idle()
+	elif dir.y > 0:
+		face_down() if walking else face_down_idle()
+	else:
+		face_idle()
+
+
+func vanish() -> void:
+	scale = Vector2.ZERO
+	is_hidden = true
+
+
+func show_player() -> void:
+	is_hidden = false
+	_draw()
+
+
+func _draw() -> void:
+	if not is_hidden:
+		scale = Vector2(-ASSET_SCALE if _flip else ASSET_SCALE, ASSET_SCALE)
+	texture = _frames[_frame]
+
+
+## Move to a screen position and advance the animation by elapsed time.
+func update_at(pos: Vector2, delta: float) -> void:
+	position = pos
+	_frame_clock += delta
+	while _frame_clock >= 1.0 / FPS:
+		_frame_clock -= 1.0 / FPS
+		if _dying:
+			_frame = mini(_frame + 1, _frames.size() - 1)
+		else:
+			_frame = (_frame + 1) % _frames.size()
+	_draw()
+
+
+func on_last_frame() -> bool:
+	return _frame == _frames.size() - 1
+
+
+## True once the death animation has played through.
+func death_finished() -> bool:
+	return _dying and on_last_frame()
