@@ -11,10 +11,19 @@ extends RefCounted
 ## in the dev menu (Dev.tuning); their defaults live in dev.gd.
 ## What keys/gamepad count as: a firm tilt, so MapMan moves at full speed.
 const KEY_TILT := 0.25
+## After calibrating, keep averaging the device angle for this long so one
+## shaky reading doesn't set "level" for the whole level.
+const CALIBRATE_SECONDS := 0.25
+## Readings further than this (in g) from the average so far are a deliberate
+## lean, not hand tremor: they end the averaging instead of joining it. Kept
+## under the start threshold so a lean that moves MapMan is never averaged in.
+const CALIBRATE_SPREAD := 0.08
 
 var screen_size := Vector2(667, 375)
 var _neutral := Vector3.ZERO
 var _has_neutral := false
+var _sum := Vector3.ZERO
+var _calibrate_left := 0.0
 var _touch_active := false
 var _touch_pos := Vector2.ZERO
 var _shake_key_latch := false
@@ -24,12 +33,40 @@ static func has_accelerometer() -> bool:
 	return OS.has_feature("mobile") and Input.get_gravity().length() > 0.1
 
 
-## Use the current device angle as "level". Called when each level starts,
-## replacing the original's fixed sitting/standing offsets.
+## Use the current device angle as "level". Called when each level starts and
+## when the game is unpaused, replacing the original's fixed sitting/standing
+## offsets. Readings over the next CALIBRATE_SECONDS are averaged in.
 func calibrate() -> void:
-	var g := Input.get_gravity()
-	_has_neutral = g.length() > 0.1
-	_neutral = g
+	calibrate_to(Input.get_gravity())
+
+
+func calibrate_to(gravity: Vector3) -> void:
+	_has_neutral = gravity.length() > 0.1
+	_neutral = gravity.normalized() if _has_neutral else Vector3.ZERO
+	_sum = _neutral
+	_calibrate_left = CALIBRATE_SECONDS if _has_neutral else 0.0
+
+
+## Call once per frame while playing.
+func update(delta: float) -> void:
+	if _calibrate_left > 0.0:
+		sample(Input.get_gravity(), delta)
+
+
+func sample(gravity: Vector3, delta: float) -> void:
+	if _calibrate_left <= 0.0 or gravity.length() < 0.1:
+		return
+	var g := gravity.normalized()
+	if (g - _neutral).length() > CALIBRATE_SPREAD:
+		_calibrate_left = 0.0
+		return
+	_sum += g
+	_neutral = _sum.normalized()
+	_calibrate_left -= delta
+
+
+func calibrating() -> bool:
+	return _calibrate_left > 0.0
 
 
 func touch(pressed: bool, pos: Vector2) -> void:

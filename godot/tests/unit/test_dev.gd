@@ -109,6 +109,54 @@ func test_fast_threshold_decides_the_speed() -> void:
 	assert_almost_eq(game.map._move_seconds, game.STOP_TIME * 0.5, 0.001, "fast above 0.2 g")
 
 
+func _finish_move() -> void:
+	game.map.update_move(1.0)
+	game.update_player(0.0)
+
+
+func test_keep_threshold_keeps_a_held_lean_moving() -> void:
+	# 0.08 g is under the 0.1 start threshold but over the 0.07 keep one.
+	game.steer(Vector2(0.08, 0), true)
+	assert_false(game.map.moving, "a gentle lean doesn't start a move")
+	game.steer(Vector2(0.15, 0), true)
+	assert_true(game.map.moving, "a firm lean does")
+	_finish_move()
+	game.steer(Vector2(0.08, 0), true)
+	assert_true(game.map.moving, "easing off a little keeps going")
+	_finish_move()
+	game.steer(Vector2(0.05, 0), true)
+	assert_false(game.map.moving, "below the keep threshold stops")
+	game.steer(Vector2(0.08, 0), true)
+	assert_false(game.map.moving, "after stopping, it needs the start threshold again")
+
+
+func test_keep_threshold_is_only_for_the_held_direction() -> void:
+	game.steer(Vector2(0.15, 0), true)
+	_finish_move()
+	game.steer(Vector2(-0.08, 0), true)
+	assert_false(game.map.moving, "the other way needs the start threshold")
+	game.steer(Vector2(0, 0.08), true)
+	assert_false(game.map.moving, "so does a new axis")
+
+
+func test_keep_threshold_never_above_start() -> void:
+	Dev.tuning.keep_threshold = 0.3
+	game.steer(Vector2(0.15, 0), true)
+	_finish_move()
+	game.steer(Vector2(0.15, 0), true)
+	assert_true(game.map.moving)
+
+
+func test_unpause_recalibrates_tilt() -> void:
+	Input.set_gravity(Vector3(0, -6.9, -6.9))
+	game.tilt.calibrate()
+	game.show_pause_menu()
+	Input.set_gravity(Vector3(0, -9.81, 0))
+	game._on_menu_action("unpause")
+	assert_almost_eq(game.tilt._neutral, Vector3(0, -1, 0), Vector3.ONE * 0.001)
+	Input.set_gravity(Vector3.ZERO)
+
+
 func test_play_log_records_wins_deaths_and_timeouts() -> void:
 	game.move(Vector2i.RIGHT, 0.1)
 	game.map.update_move(1.0)

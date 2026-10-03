@@ -121,3 +121,37 @@ func test_portrait_and_missing_gravity_do_not_break() -> void:
 	assert_true(v.is_finite())
 	assert_eq(TiltInput.steer_from_gravity(Vector3.ZERO, side), Vector2.ZERO)
 	assert_eq(TiltInput.steer_from_gravity(side, Vector3.ZERO), Vector2.ZERO)
+
+
+func test_calibration_averages_hand_tremor() -> void:
+	# A shaky first reading is evened out by the readings that follow.
+	var t := TiltInput.new()
+	t.calibrate_to(_gravity(60, 1.5))
+	for i in 20:
+		t.sample(_gravity(60, -1.5 if i % 2 == 0 else 1.5), 1.0 / 60.0)
+	assert_lt(TiltInput.steer_from_gravity(_gravity(60), t._neutral).length(), 0.012)
+	assert_false(t.calibrating(), "averaging stops after a quarter second")
+	t.sample(_gravity(60, 2), 1.0 / 60.0)
+	assert_lt(TiltInput.steer_from_gravity(_gravity(60), t._neutral).length(), 0.012)
+
+
+func test_calibration_ignores_a_quick_lean() -> void:
+	# Leaning to move straight away ends the averaging; the lean isn't
+	# taken as part of "level".
+	var t := TiltInput.new()
+	t.calibrate_to(_gravity(45))
+	t.sample(_gravity(45), 1.0 / 60.0)
+	t.sample(_gravity(60), 1.0 / 60.0)
+	assert_false(t.calibrating())
+	t.sample(_gravity(60), 1.0 / 60.0)
+	assert_almost_eq(
+		TiltInput.steer_from_gravity(_gravity(60), t._neutral).y, sin(deg_to_rad(15)), 0.001
+	)
+
+
+func test_calibration_without_a_sensor() -> void:
+	var t := TiltInput.new()
+	t.calibrate_to(Vector3.ZERO)
+	assert_false(t.calibrating())
+	t.sample(_gravity(45), 1.0 / 60.0)
+	assert_eq(t._neutral, Vector3.ZERO)

@@ -46,6 +46,8 @@ var _bg: ColorRect
 var _gradient: TextureRect
 
 var _moves := 0  # moves made in this attempt at the level, for the play log
+## The direction the player was last steering, so it only needs keep_threshold.
+var _held_step := Vector2i.ZERO
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -205,6 +207,7 @@ func loaded() -> void:
 	if started():
 		return
 	tilt.calibrate()
+	_held_step = Vector2i.ZERO
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
 	if not tutorial:
@@ -314,32 +317,45 @@ func move_player(delta: float) -> void:
 		map.update_move(delta)
 		return
 
-	var can_move := started() and not stuck
-	var v := tilt.get_vector()
+	tilt.update(delta)
+	steer(tilt.get_vector(), started() and not stuck)
 
+
+## Moves or turns MapMan for a steering vector (see TiltInput.get_vector).
+func steer(v: Vector2, can_move: bool) -> void:
+	var held := _held_step
+	_held_step = Vector2i.ZERO
 	var first_x := absf(v.x) > absf(v.y)
 	var face := Callable(player, "face_idle")
 	face = _try_axis(
-		Vector2i.RIGHT if first_x else Vector2i.DOWN, v.x if first_x else v.y, can_move, face
+		Vector2i.RIGHT if first_x else Vector2i.DOWN, v.x if first_x else v.y, can_move, face, held
 	)
 	if not map.moving and face.is_valid():
 		face = _try_axis(
-			Vector2i.DOWN if first_x else Vector2i.RIGHT, v.y if first_x else v.x, can_move, face
+			Vector2i.DOWN if first_x else Vector2i.RIGHT,
+			v.y if first_x else v.x,
+			can_move,
+			face,
+			held
 		)
 	if face.is_valid():
 		face.call()
 
 
 ## Returns the idle facing to use, or an invalid Callable once a move started.
-func _try_axis(axis: Vector2i, value: float, can_move: bool, face: Callable) -> Callable:
+## A lean already steering that way only has to stay above keep_threshold,
+## so hand tremor around tilt_threshold doesn't make MapMan stutter.
+func _try_axis(
+	axis: Vector2i, value: float, can_move: bool, face: Callable, held: Vector2i
+) -> Callable:
+	var step := axis if value > 0.0 else -axis
 	var threshold: float = Dev.t("tilt_threshold")
-	var step := Vector2i.ZERO
-	if value > threshold:
-		step = axis
-	elif value < -threshold:
-		step = -axis
-	else:
+	if step == held:
+		threshold = minf(threshold, Dev.t("keep_threshold"))
+	if absf(value) <= threshold:
 		return face
+	if _held_step == Vector2i.ZERO:
+		_held_step = step
 	var seconds := STOP_TIME * (0.5 if absf(value) > Dev.t("fast_threshold") else 1.0)
 	if can_move:
 		move(step, seconds)
@@ -667,6 +683,9 @@ func _on_menu_action(act: String) -> void:
 		"unpause":
 			menus.close()
 			paused = false
+			# The player may hold the phone differently after a pause.
+			tilt.calibrate()
+			_held_step = Vector2i.ZERO
 			if not tutorial and started() == false and map.loaded():
 				_timer_start()
 		"completion done":
