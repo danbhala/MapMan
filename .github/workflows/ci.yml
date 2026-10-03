@@ -5,9 +5,6 @@ on:
     branches: [master]
   pull_request:
 
-env:
-  GODOT_VERSION: 4.5.1
-
 jobs:
   verify:
     runs-on: ubuntu-24.04
@@ -25,29 +22,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1-mesa-dri
 
-      - name: Cache Godot
-        id: godot-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/godot
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Download Godot
-        if: steps.godot-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ~/godot
-          curl -sSfL -o /tmp/godot.zip \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d ~/godot
-          mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
+      - uses: ./.github/actions/setup-godot
 
       - name: Verify (lint, import, unit tests, all levels, screenshots)
         env:
-          GODOT: ${{ github.workspace }}/../godot-bin
           VERIFY_OUT: ${{ runner.temp }}/verify
-        run: |
-          ln -sf ~/godot/godot "$GODOT"
-          godot/tools/verify.sh --full
+        run: godot/tools/verify.sh --full
 
       - name: Level difficulty report
         if: always()

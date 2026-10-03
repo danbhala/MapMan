@@ -73,6 +73,9 @@ to PR titles exactly.
    from it. To add a new label, add it to that file in the same PR, and the
    Labels workflow will create it on merge.
 9. **Report** the PR link, title, labels, and anything the user should check.
+   For changes to try on the phone, wait for the Test APK workflow's comment
+   on the PR and give the user its download link (MapMan Dev installs next to
+   the real app, so testing never touches their real save).
 
 ## Merging
 

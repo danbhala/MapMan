@@ -55,5 +55,9 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
 - Branch per change, PR into master. Commit as the user's GitHub noreply
   address (`2726152+danbhala@users.noreply.github.com`); their email is private.
+- Every PR gets a "MapMan Dev" test APK (Test APK workflow) and a comment with
+  its download link; master's latest is at
+  `https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk`. Point the
+  user at the PR's link when a change needs trying on the phone.
 - The user plays on an Android phone (OnePlus 12). Tilt, shake and feel can
   only be judged there: say what to try on the phone after gameplay changes.
