@@ -58,10 +58,12 @@ func get_vector() -> Vector2:
 func _tilt_vector() -> Vector2:
 	if not _has_neutral:
 		calibrate()
-	# Godot reports the reaction to gravity, rotated to the screen orientation,
-	# with +x to the right of the screen and +y towards its top edge.
+	# Godot reports gravity pointing at the ground, already rotated to the
+	# screen: +x towards the screen's right edge, +y towards its top edge.
+	# Tipping the right edge down makes x grow (go right); tipping the top
+	# edge down makes y grow (go up, which is -y on screen).
 	var d := (Input.get_gravity() - _neutral) / 9.81
-	var v := Vector2(-d.x, d.y)
+	var v := Vector2(d.x, -d.y)
 	if INVERT_X:
 		v.x = -v.x
 	if INVERT_Y:

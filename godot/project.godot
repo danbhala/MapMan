@@ -79,6 +79,11 @@ pause={
 ]
 }
 
+[input_devices]
+
+sensors/enable_accelerometer=true
+sensors/enable_gravity=true
+
 [rendering]
 
 renderer/rendering_method="mobile"
