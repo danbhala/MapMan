@@ -1,12 +1,15 @@
 class_name Player
 extends Sprite2D
 ## MapMan himself. Port of player.py: one frame per 1/60 s, like the original.
+## Also draws MapWoman (completion.py's MapWoman) with `art = "woman"`.
 
 const FRAMES := 14
 const DEATH_FRAMES := 21
 const FPS := 60.0
 const ASSET_SCALE := 1.0 / 3.0
 
+## Art folder under res://assets/: "man" or "woman". Set before adding to the tree.
+var art := "man"
 var is_hidden := true
 
 var _up_idle: Array[Texture2D] = []
@@ -26,17 +29,19 @@ var _dying := false
 
 
 func _ready() -> void:
-	_up_idle = [load("res://assets/man/idle/back.png")]
-	_down_idle = [load("res://assets/man/idle/front.png")]
-	_side_idle = [load("res://assets/man/idle/side.png")]
-	_idle = [load("res://assets/man/idle/neutral.png")]
+	var idle_dir := "res://assets/%s/idle/" % art
+	_up_idle = [load(idle_dir + "back.png")]
+	_down_idle = [load(idle_dir + "front.png")]
+	_side_idle = [load(idle_dir + "side.png")]
+	_idle = [load(idle_dir + "neutral.png")]
 	_up = _load_frames("back")
 	_down = _load_frames("forward")
 	_side = _load_frames("side")
-	for i in DEATH_FRAMES:
-		var t: Texture2D = load("res://assets/man/death/death%02d.png" % i)
-		_death.append(t)
-		_death.append(t)  # the original shows each death frame twice
+	if art == "man":  # MapWoman never dies
+		for i in DEATH_FRAMES:
+			var t: Texture2D = load("res://assets/man/death/death%02d.png" % i)
+			_death.append(t)
+			_death.append(t)  # the original shows each death frame twice
 
 	centered = false
 	# anchor (0.5, -0.05) in the original's y-up space: feet just above the tile centre
@@ -50,7 +55,7 @@ func _ready() -> void:
 func _load_frames(tag: String) -> Array[Texture2D]:
 	var out: Array[Texture2D] = []
 	for i in range(1, FRAMES + 1):
-		out.append(load("res://assets/man/frames/%s%02d.png" % [tag, i]))
+		out.append(load("res://assets/%s/frames/%s%02d.png" % [art, tag, i]))
 	return out
 
 

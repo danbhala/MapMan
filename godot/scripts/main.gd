@@ -2,6 +2,9 @@ extends Node2D
 ## Game controller. Port of the Game scene in map_man.py: level flow, the
 ## per-frame movement and tile rules, lives, score, timer and menus.
 
+## The ending: MapMan walks up to MapWoman, they meet, then walk out together.
+enum EndingPhase { WAITING, MEETING, LEAVING }
+
 const POINTS_PER_LEVEL := 10
 const INITIAL_LIVES := 3
 const INITIAL_SECONDS := 20.0
@@ -9,6 +12,7 @@ const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
+const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
 
 const BASE_BG := Color("#71c0e2")
 const REVERSE_BG := Color("#e28c9b")
@@ -19,6 +23,7 @@ const HIDDEN_BG := Color("#b1aaea")
 
 var levels: Array = []
 var tutorial_levels: Array = []
+var completion_level: Dictionary = {}
 var check_point_levels: Array = []
 
 var map: LevelMap
@@ -32,6 +37,8 @@ var dev_panel: DevPanel
 var game_active := false
 var paused := false
 var tutorial := false
+## Playing the bonus map after the last level, where MapWoman waits.
+var completed := false
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -48,6 +55,14 @@ var _gradient: TextureRect
 var _moves := 0  # moves made in this attempt at the level, for the play log
 ## The direction the player was last steering, so it only needs keep_threshold.
 var _held_step := Vector2i.ZERO
+
+# the ending (completion.py): MapWoman, the vortex and the hearts
+var _woman: Player
+var _vortex: LoopingSprite
+var _hearts: LoopingSprite
+var _woman_key := Vector2i.ZERO
+var _ending_phase := EndingPhase.WAITING
+var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 
@@ -86,6 +101,16 @@ func _ready() -> void:
 	add_child(map)
 	player = Player.new()
 	add_child(player)
+	_vortex = LoopingSprite.new("vortex", 90)
+	_vortex.z_index = 9
+	add_child(_vortex)
+	_woman = Player.new()
+	_woman.art = "woman"
+	_woman.z_index = 11
+	add_child(_woman)
+	_hearts = LoopingSprite.new("hearts", 90)
+	_hearts.z_index = 20
+	add_child(_hearts)
 
 	var hud_layer := CanvasLayer.new()
 	hud_layer.layer = 5
@@ -117,6 +142,9 @@ func _load_data() -> void:
 	check_point_levels = data["check_points"]
 	tutorial_levels = (
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
+	)
+	completion_level = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/completion.json")
 	)
 
 
@@ -175,7 +203,7 @@ func _update_timer(delta: float) -> void:
 
 
 func started() -> bool:
-	if tutorial:
+	if tutorial or completed:
 		return map.loaded()
 	return _timer_running
 
@@ -222,7 +250,7 @@ func _update_stats() -> void:
 
 
 func set_time_message(time_left: int) -> void:
-	if tutorial:
+	if tutorial or completed:
 		hud.set_time_message("")
 	elif time_left > 19 and started():
 		hud.set_time_message("go!")
@@ -318,11 +346,20 @@ func move_player(delta: float) -> void:
 	if stuck and tilt.shook():
 		stuck = false
 
+	if completed:
+		_update_ending(delta)
+
 	if map.moving:
 		map.update_move(delta)
 		return
 
 	tilt.update(delta)
+	if completed and _ending_phase != EndingPhase.WAITING:
+		# MapMan stops to face MapWoman, then they walk out together.
+		if _ending_phase == EndingPhase.LEAVING:
+			move(Vector2i.RIGHT, STOP_TIME)
+			player.face_direction(Vector2i.RIGHT, true)
+		return
 	steer(tilt.get_vector(), started() and not stuck)
 
 
@@ -463,10 +500,67 @@ func _flash(which: String) -> void:
 	set(which, _now())
 
 
+# --- the ending (completion.py) ------------------------------------------
+
+
+func _start_ending() -> void:
+	# MapWoman waits on the bottom path, four tiles in, like the original's (4, 1).
+	_woman_key = Vector2i(4, completion_level["rows"].size() - 2)
+	_ending_phase = EndingPhase.WAITING
+	_ending_clock = 0.0
+	_woman.face_idle()
+	_vortex.restart()
+	_hearts.restart()
+
+
+func _hide_ending() -> void:
+	_woman.vanish()
+	_vortex.visible = false
+	_hearts.visible = false
+
+
+func _update_ending(delta: float) -> void:
+	var woman_pos: Vector2 = map.tiles[_woman_key].position
+	_vortex.position = map.ends[0].position
+	_vortex.visible = true
+	_vortex.advance(delta)
+	if _woman.is_hidden and _ending_phase == EndingPhase.WAITING:
+		_woman.show_player()
+	match _ending_phase:
+		EndingPhase.WAITING:
+			var at := map.position_key
+			if at.y == _woman_key.y and absi(at.x - _woman_key.x) <= 1:
+				_ending_phase = EndingPhase.MEETING
+				_ending_clock = 0.0
+				player.face_right_idle()
+				_woman.face_left_idle()
+				_hearts.position = woman_pos + Vector2(-LevelMap.TILE_W * 0.5, -80.0)
+				_hearts.visible = true
+				Audio.pause_music(3.0)
+				Audio.play("love")
+			_woman.update_at(woman_pos, delta)
+		EndingPhase.MEETING:
+			_ending_clock += delta
+			_hearts.advance(delta)
+			_woman.update_at(woman_pos, delta)
+			if _ending_clock >= MEETING_SECONDS:
+				_ending_phase = EndingPhase.LEAVING
+				_hearts.visible = false
+				_woman.face_right()
+		EndingPhase.LEAVING:
+			# She walks a tile ahead of him, and steps into the vortex first.
+			var pos := map.get_player_position() + Vector2(LevelMap.TILE_W, 0)
+			_woman.update_at(pos, delta)
+			if pos.x > _vortex.position.x:
+				_woman.vanish()
+
+
 # --- level flow ------------------------------------------------------------
 
 
 func _current_level_data() -> Dictionary:
+	if completed:
+		return completion_level
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
 
 
@@ -474,9 +568,15 @@ func load_level() -> void:
 	_timer_stop()
 	_timer_reset()
 	player.vanish()
+	_hide_ending()
 	var data := _current_level_data()
 	map.load_level(data, _screen_size())
-	if tutorial:
+	if completed:
+		hud.set_tutorial_text("")
+		hud.set_timer(0, -1.0, false)
+		hud.set_time_message("")
+		_start_ending()
+	elif tutorial:
 		hud.set_tutorial_text(data.get("description", ""))
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
@@ -514,6 +614,12 @@ func reset_all(reset_stars := true) -> void:
 
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
+	if completed:
+		# Into the vortex: on to the completion scoring.
+		Audio.play("end_level")
+		_hide_ending()
+		show_game_complete()
+		return
 	if not tutorial:
 		Dev.record(level, "win", _time_left, _moves)
 	if check_point:
@@ -547,8 +653,11 @@ func finish_advancing_level() -> void:
 			level = 1
 			hud.show_stats(true)
 		else:
-			show_game_complete()
-			return
+			# Past the last level: the bonus map where MapWoman waits.
+			completed = true
+			Save.has_completed = true
+			Save.save_all()
+			hud.show_stats(false)
 	load_level()
 	reset_all()
 
@@ -569,6 +678,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	completed = false
 	score = 0
 	level = start_level
 	lives = INITIAL_LIVES
@@ -609,6 +719,8 @@ func game_over(show_score := true) -> void:
 	hud.show_stats(false)
 	map.unload()
 	player.vanish()
+	_hide_ending()
+	completed = false
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -718,7 +830,7 @@ func _can_pause() -> bool:
 		game_active
 		and not dead
 		and not menus.visible
-		and (tutorial or (_timer_running and _seconds_remaining() <= 19))
+		and (tutorial or completed or (_timer_running and _seconds_remaining() <= 19))
 	)
 
 

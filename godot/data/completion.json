@@ -1,0 +1,29 @@
+{
+ "rows": [
+  " bccccccc",
+  "        c",
+  "        c",
+  "        c",
+  " cccccccc",
+  " c",
+  " c",
+  " c",
+  " ccccccce",
+  " "
+ ],
+ "loading": [
+  " abcdefgh",
+  "        i",
+  "        i",
+  "        i",
+  " qponmlkj",
+  " r",
+  " r",
+  " r",
+  " stuvwxyz",
+  " "
+ ],
+ "delay": 0.05,
+ "x_hides": 0,
+ "checkpoint": false
+}
