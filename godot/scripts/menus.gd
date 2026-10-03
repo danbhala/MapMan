@@ -412,8 +412,10 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	heading_cover.size = Vector2(680, 70)
 	heading_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(heading_cover)
-	# Sits where the art's own titles do, just above the panel.
-	_label("PRACTICE", 38, Color.WHITE, Vector2(0, 87), Vector2(0.5, 0.0), Hud.sans_bold)
+	# Like every title in the art: letters about 84 px tall at @3x, standing
+	# right on the panel's top edge (art row 260, so y = -258 here).
+	var title := _label("PRACTICE", 39, Color.WHITE, Vector2.ZERO, Vector2(0.5, 0.0), Hud.sans_bold)
+	title.position.y = -258.0 - Hud.sans_bold.get_ascent(117)
 	var first := page * PRACTICE_PAGE + 1
 	var last := mini(first + PRACTICE_PAGE - 1, count)
 	var heading := note if note != "" else "levels %d-%d" % [first, last]
