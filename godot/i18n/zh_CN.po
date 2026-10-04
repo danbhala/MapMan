@@ -587,22 +587,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "小心毒地砖，踩到就会失去一条生命。"
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"离开这些地砖后，它们就会碎裂掉落。\n"
+"没有回头路，所以请提前规划路线。"
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "这些地砖会增加或减少你的时间。每关结束时，剩余时间会换算成奖励分。"
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "这些地砖会让其他地砖消失再重现。地砖隐藏时仍然可以踩，所以要记住它们的位置。"
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "你会时不时遇到检查点。每到达一个检查点，就可以从那里重新开始，而不必回到起点。"
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "游戏中点击屏幕即可暂停。换了握持姿势？点击角落的指示器，即可将当前角度设为新的中心。"
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "一切就绪，前往出口开始游戏吧。玩得开心！"
 

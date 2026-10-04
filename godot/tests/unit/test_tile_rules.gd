@@ -212,3 +212,66 @@ func test_start_hidden_tiles_appear_when_unhidden() -> void:
 	_step_on(1)
 	assert_true(tile.sprite.visible, "unhide tile reveals it")
 	assert_almost_eq(tile.sprite.scale.x, 1.0 / 3.0, 0.001, "at full size")
+
+
+## Walk from column x one tile right, in one frame, applying the rules on the way.
+func _walk_right_from(x: int) -> void:
+	game.map.position_key = Vector2i(x, game.map.start_position.y)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)  # the first moving frame: the tile left behind breaks
+	game.map.update_move(1.0)
+	game.update_player(0.0)  # landed
+
+
+func test_crumble_tile_breaks_once_stepped_off() -> void:
+	_start("bkcw")
+	_walk_right_from(0)
+	assert_true(game.map.on(game.map.crumbles), "a crumble tile holds while MapMan stands on it")
+	_walk_right_from(1)
+	assert_eq(game.map.position_key, Vector2i(2, 0))
+	assert_true(game.map.broken.has(Vector2i(1, 0)), "stepping off breaks it")
+	assert_false(game.map.crumbles[Vector2i(1, 0)], "it is used up")
+	game.move(Vector2i.LEFT, 0.1)
+	assert_false(game.map.moving, "a broken tile can't be stepped back onto")
+	assert_eq(game.map.safe_route(), [] as Array[Vector2i], "a route never crosses the gap")
+
+
+func test_crumble_tile_is_hidden_once_fallen() -> void:
+	Save.reduce_motion = true  # skip the fall: the tile is gone at once
+	_start("bkcw")
+	_walk_right_from(0)
+	_walk_right_from(1)
+	var sprite: Sprite2D = game.map.tiles[Vector2i(1, 0)].sprite
+	assert_false(sprite.visible, "the tile is gone from the sheet")
+	_start("bhkuw")
+	_step_on(1)
+	game.map.crumble(Vector2i(2, 0))
+	_step_on(3)
+	assert_false(
+		game.map.tiles[Vector2i(2, 0)].sprite.visible, "unhiding doesn't bring a broken tile back"
+	)
+	Save.reduce_motion = false
+
+
+func test_crumble_tile_falls_then_goes() -> void:
+	_start("bkcw")
+	_walk_right_from(0)
+	_walk_right_from(1)
+	var tile = game.map.tiles[Vector2i(1, 0)]
+	assert_true(tile.sprite.visible, "it is still falling")
+	assert_true(game.map._falls.has(tile.key))
+	game.map._falls[tile.key].custom_step(LevelMap.FALL_TIME + 0.1)
+	assert_false(tile.sprite.visible, "and gone once it has fallen")
+
+
+func test_crumble_tiles_come_back_after_a_death() -> void:
+	_start("bkcw")
+	_walk_right_from(0)
+	_walk_right_from(1)
+	game.reset_all(false)
+	var tile = game.map.tiles[Vector2i(1, 0)]
+	assert_true(game.map.broken.is_empty(), "nothing is broken on the next try")
+	assert_true(game.map.crumbles[tile.key], "the crumble tile is whole again")
+	assert_true(tile.sprite.visible, "and back on the sheet")
+	assert_eq(tile.sprite.position, tile.position, "in its place")
+	assert_almost_eq(tile.sprite.modulate.a, LevelMap.TILE_ALPHA, 0.001)

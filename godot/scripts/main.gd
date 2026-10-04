@@ -518,6 +518,9 @@ func move(step: Vector2i, seconds: float) -> void:
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
 	if map.moving:
+		if not _was_moving and map.crumbles.get(map.moving_from(), false):
+			Audio.play("crumble")  # the tile he just left falls away behind him
+			map.crumble(map.moving_from())
 		_was_moving = true
 		return
 	if _was_moving:

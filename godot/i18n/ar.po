@@ -622,22 +622,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "احذر البلاطات السامة، فإن دست عليها خسرت روحًا."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"تتفتت هذه البلاطات بعد أن تغادرها.\n"
+"لا عودة إلى الوراء، فخطط لطريقك مسبقًا."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "هذه البلاطات تمنحك وقتًا إضافيًا أو تخسرك وقتًا. ستحصل على نقاط مكافأة مقابل الوقت المتبقي عند إنهاء كل مستوى."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "هذه البلاطات تجعل بلاطات أخرى تختفي وتظهر من جديد. يمكنك الدوس على البلاطات المخفية، فتذكر أماكنها."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "ستصادف نقطة تفتيش بين الحين والآخر. كلما بلغت نقطة تفتيش أمكنك البدء منها بدلًا من العودة إلى البداية."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "انقر الشاشة أثناء اللعب للإيقاف المؤقت. غيّرت طريقة إمساك جهازك؟ انقر المؤشر في الزاوية لتجعلها المركز الجديد."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "أنت جاهز، توجه إلى الخروج لبدء اللعبة. استمتع!"
 
