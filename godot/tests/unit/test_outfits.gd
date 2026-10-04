@@ -7,7 +7,7 @@ extends GutTest
 
 const Sheets := preload("res://tools/wardrobe_sheets.gd")
 ## The paper, and a tile on it (white at 80% over the paper).
-const PAPER := Color("#16407a")
+const PAPER := Blueprint.FIELD
 const TILE := Color("#d0d9e4")
 ## How far a look may reach from the tile's centre: up, and to either side.
 const MAX_UP := 110.0
@@ -133,6 +133,10 @@ func test_a_hat_flies_off_as_he_dies() -> void:
 	for id in _hat_looks():
 		var p := _wearing(id)
 		var standing := p.measure()
+		# Early in the death the hat is lifting off: higher than on his head.
+		p.dead = 0.3
+		var flying := p.measure()
+		assert_lt(flying.position.y, standing.position.y, id + ": lifts off his head first")
 		p.dead = 0.98
 		var dying := p.measure()
 		assert_gt(dying.position.y, standing.position.y, id + ": lower once he is swallowed")

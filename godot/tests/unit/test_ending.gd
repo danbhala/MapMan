@@ -12,6 +12,10 @@ func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
 	Dev.enabled = false
+	# The pause sheet draws him: not in whatever this machine's save wears.
+	Save.worn = "classic"
+	Save.released.clear()
+	Save.seen.clear()
 
 
 func after_each() -> void:

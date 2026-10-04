@@ -89,8 +89,31 @@ func test_ids_are_unique_and_known_to_the_outfits() -> void:
 	var ids := Wardrobe.ids()
 	for id in ids:
 		assert_eq(ids.count(id), 1, "one look called " + id)
+		# A misspelt id in a part file would quietly draw as Classic.
+		if id != "classic" and id != "mapwoman":
+			assert_true(_outfits_know(id), id + ": the outfits colour or draw it")
 	assert_eq(ids[0], "classic")
 	assert_eq(ids[-1], "mapwoman", "MapWoman comes last, for finishing")
+
+
+## Whether the outfits do anything for a look: its own colours, or a part in
+## some layer, drawn with a measuring pen on the pose a Player leaves in it.
+func _outfits_know(id: String) -> bool:
+	if not Outfits.palette(id).is_empty():
+		return true
+	var p := Player.new()
+	p.outfit = id
+	p.measure()
+	var pen: OutfitPen = p._pen
+	pen.begin(p, true)
+	pen.set_frame(Vector2.ZERO, 0.0, Vector2.ONE)
+	for layer in Outfits.Layer.values():
+		Outfits.draw(pen, layer, id)
+	var drawn := pen.bounds.has_area()
+	drawn = Outfits.head_shape(pen, id, Color.WHITE) or drawn
+	drawn = Outfits.eyes(pen, id, Color.WHITE) or drawn
+	p.free()
+	return drawn
 
 
 func test_rarer_looks_come_later() -> void:
@@ -153,13 +176,18 @@ func test_a_finished_save_gets_every_look() -> void:
 
 
 func test_the_wardrobe_round_trips() -> void:
-	_save_file(
-		{
-			"progress": {"furthest_level": 12},
-			"wardrobe":
-			{"worn": "signal_red", "released": ["party_hat", "signal_red"], "seen": ["party_hat"]},
-		}
-	)
+	Save.furthest_level = 12
+	Save.release("party_hat")
+	Save.release("signal_red")
+	Save.wear("signal_red")
+	Save.seen.assign(["party_hat"])
+	# Written the way the game writes it, into a file of the test's own.
+	Save.persist = true
+	Save.save_all(OLD_SAVE)
+	Save.persist = false
+	Save.worn = "classic"
+	Save.released.clear()
+	Save.seen.clear()
 	Save.load_all(OLD_SAVE)
 	assert_eq(Save.worn, "signal_red")
 	assert_eq(Save.released, ["party_hat", "signal_red"] as Array[String])
@@ -260,11 +288,14 @@ func test_wearing_from_the_wardrobe() -> void:
 	assert_eq(Save.worn, "shades", "a look not released stays in the wardrobe")
 
 
-func test_opening_the_wardrobe_sees_everything_in_it() -> void:
+func test_leaving_the_wardrobe_has_seen_everything_in_it() -> void:
 	_game()
 	Save.release("party_hat")
 	Save.release("signal_red")
 	assert_eq(Save.unseen(), 2)
 	game._on_menu_action("wardrobe")
 	assert_eq(game.menus.current, "wardrobe")
-	assert_eq(Save.unseen(), 0)
+	game._on_menu_action("wear party_hat")
+	assert_eq(Save.unseen(), 2, "still marked new while the sheet is open")
+	game._on_menu_action("main menu")
+	assert_eq(Save.unseen(), 0, "seen once the sheet is left")

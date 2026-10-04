@@ -124,7 +124,8 @@ func load_all(path := PATH) -> void:
 		worn = "classic"
 
 
-func save_all() -> void:
+## path: tests write to a file of their own; the game uses PATH.
+func save_all(path := PATH) -> void:
 	if not persist:
 		return
 	_cfg.set_value("options", "music", music_on)
@@ -142,7 +143,7 @@ func save_all() -> void:
 	_cfg.set_value("wardrobe", "worn", worn)
 	_cfg.set_value("wardrobe", "released", released)
 	_cfg.set_value("wardrobe", "seen", seen)
-	_cfg.save(PATH)
+	_cfg.save(path)
 
 
 func checkpoint_reached(level: int, score: int) -> void:
@@ -222,19 +223,16 @@ func unseen() -> int:
 	return n
 
 
-## Releases every look the progress has earned (a save from before the
-## wardrobe, or a level skipped in a dev build); returns the ones added.
-func sync_wardrobe() -> Array[String]:
-	var added: Array[String] = []
+## Releases every look the progress has earned: a save from before the
+## wardrobe, or a level skipped in a dev build.
+func sync_wardrobe() -> void:
 	for id in Wardrobe.earned(furthest_level, has_completed):
 		if not is_released(id):
 			released.append(id)
-			added.append(id)
-	return added
 
 
 ## The known looks in a list read from the save, each once.
-func _looks(saved) -> Array[String]:
+func _looks(saved: Variant) -> Array[String]:
 	var out: Array[String] = []
 	if saved is Array:
 		for id in saved:

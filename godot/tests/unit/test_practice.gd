@@ -147,6 +147,10 @@ func test_old_saves_count_checkpoints_as_reached() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	Save.checkpoints.clear()
 	Save.has_completed = false
+	# The finished save released every look: leave the wardrobe as found.
+	Save.released.clear()
+	Save.seen.clear()
+	Save.worn = "classic"
 
 
 func test_practising_the_last_level_never_starts_the_ending() -> void:
