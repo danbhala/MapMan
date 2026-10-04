@@ -17,6 +17,7 @@ const DEFAULT_TUNING := {
 	"keep_threshold": 0.07,  # tilt that keeps moving the same way (new; not in the original)
 	"fast_threshold": 0.2,  # tilt above which moves are twice as fast
 	"shake_threshold": 0.4,  # user acceleration (in g) that frees a sticky tile
+	"guard_hold": 0.25,  # seconds at rest before a death step counts, with the assists on (new)
 	"invert_x": false,
 	"invert_y": false,
 }

@@ -247,6 +247,18 @@ msgstr "NOTA: AGGIRA LE CASELLE MORTALI"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "NOTA: T-0:20 PER TAVOLA · PRENDI LA VIA PIÙ BREVE"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "NOTA: LE CASELLE MORTALI NASCOSTE SONO SEGNATE"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "NOTA: LA VIA SICURA VIENE TRACCIATA A OGNI TENTATIVO"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "SALTA QUESTA TAVOLA"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "DA RIFARE"

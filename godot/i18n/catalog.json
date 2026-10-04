@@ -360,6 +360,21 @@
       "max": 60
     },
     {
+      "id": "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON",
+      "note": "Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries",
+      "max": 60
+    },
+    {
+      "id": "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS",
+      "note": "Lost-life small print: a dashed line shows the safe route for a moment at the start of every try",
+      "max": 60
+    },
+    {
+      "id": "SKIP THIS SHEET",
+      "note": "Lost-life row, offered after many lives lost on one level: go on to the next level without points",
+      "max": 31
+    },
+    {
       "id": "REWORK",
       "note": "Rubber stamp on the lost-life sheet",
       "max": 10
