@@ -218,6 +218,13 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_mouse_seen = true
+	# The focus ring is for keys and gamepads; a finger or a mouse hides it.
+	if event is InputEventKey or event is InputEventJoypadButton:
+		Blueprint.show_focus(true)
+	elif event is InputEventJoypadMotion and absf(event.axis_value) > 0.5:
+		Blueprint.show_focus(true)
+	elif event is InputEventMouseButton or event is InputEventScreenTouch:
+		Blueprint.show_focus(false)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -861,15 +868,23 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 
 ## Level clear: the bonuses are added into the score one row at a time.
+## seconds_left: the clock at the exit, shown as the time bonus's quantity.
 func show_end_level(
-	score: int, level_bonus: int, time_bonus: int, stars: int, checkpoint: bool, level := 0
+	score: int,
+	level_bonus: int,
+	time_bonus: int,
+	stars: int,
+	checkpoint: bool,
+	level := 0,
+	seconds_left := -1
 ) -> void:
 	var title: String = (TEXT.checkpoint_title if checkpoint else TEXT.inspection_title) % level
 	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
 	_columns([TEXT.col_item, TEXT.col_qty, TEXT.col_value], [LIST_X, 226], true)
+	var clock := seconds_left if seconds_left >= 0 else time_bonus * 2
 	var specs := [
 		[TEXT.level_bonus, "1", level_bonus],
-		[TEXT.time_bonus, TEXT.seconds % time_bonus, time_bonus],
+		[TEXT.time_bonus, TEXT.seconds % clock, time_bonus],
 	]
 	if stars > 0:
 		specs.append([TEXT.stars_collected, str(stars), stars])

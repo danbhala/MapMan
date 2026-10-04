@@ -671,7 +671,9 @@ func advance_level(check_point: bool) -> void:
 		return
 	var time_bonus := _seconds_remaining() / 2
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
-	menus.show_end_level(score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level)
+	menus.show_end_level(
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, _seconds_remaining()
+	)
 
 
 func next_level() -> void:

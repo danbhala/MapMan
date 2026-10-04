@@ -95,7 +95,7 @@ func run() -> void:
 
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
-	await frames(40)
+	await frames(70)
 	await shot("01_main_menu")
 
 	game._on_menu_action("play game")
@@ -112,7 +112,7 @@ func run() -> void:
 	Input.action_release("move_left")
 
 	game.show_pause_menu()
-	await frames(30)
+	await frames(70)
 	await shot("05_pause")
 	game._on_menu_action("unpause")
 
@@ -154,7 +154,7 @@ func run() -> void:
 	await frames(40)
 
 	game.advance_level(false)
-	await frames(80)
+	await frames(200)  # the inspection table counts up, then PASSED lands
 	await shot("08_level_clear")
 	game._on_menu_action("next level")
 
@@ -163,6 +163,7 @@ func run() -> void:
 	game.load_level()
 	game.reset_all()
 	game.hud.show_stats(false)
+	game.hud.show_level(true)  # as new_game() does for the tutorial
 	await frames(60)
 	await shot("09_tutorial")
 
@@ -197,21 +198,21 @@ func run() -> void:
 
 	game.game_over(false)
 	game._on_menu_action("options")
-	await frames(40)
+	await frames(70)
 	await shot("13_options")
 
 	# Practice: levels reached so far, with bests on some of them.
 	save.furthest_level = 23
 	save.bests = {21: {"time": 7, "stars": 1}, 22: {"time": 12, "stars": 0}}
 	game._on_menu_action("practice")
-	await frames(40)
+	await frames(90)
 	await shot("14_practice")
 
 	# The remaining sheets: checkpoints, confirm quit, first run.
 	save.checkpoints = {10: 120, 30: 400}
 	game._on_menu_action("main menu")
 	game._on_menu_action("restart from checkpoint")
-	await frames(40)
+	await frames(80)
 	await shot("18_checkpoints")
 	game._on_menu_action("main menu")
 	game._on_menu_action("play game")
@@ -219,12 +220,12 @@ func run() -> void:
 		await process_frame
 	game.show_pause_menu()
 	game._on_menu_action("confirm quit")
-	await frames(40)
+	await frames(70)
 	await shot("19_confirm_quit")
 	game._on_menu_action("end game")
 	save.first_play = true
 	game._on_menu_action("play from start")
-	await frames(40)
+	await frames(70)
 	await shot("20_first_play")
 
 	if failures.is_empty():

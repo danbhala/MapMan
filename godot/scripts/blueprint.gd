@@ -27,10 +27,15 @@ const GRID_STEP := 25.0
 const INSET := 12.0
 const FRAME_WIDTH := 1.5
 const FONT_PATH := "res://assets/fonts/JetBrainsMono-Variable.ttf"
+## The star, heart and skull JetBrains Mono lacks, from a DejaVu Sans subset,
+## so they draw the same on every machine instead of from a system font.
+const SYMBOLS_PATH := "res://assets/fonts/MapManSymbols.ttf"
 const STAMP_ROTATION := -0.12
 
 static var _fonts := {}
 static var _theme: Theme
+static var _focus_ring: StyleBox
+static var _focus_none: StyleBox
 
 
 ## JetBrains Mono at a weight (400 regular .. 800 extra bold).
@@ -41,6 +46,8 @@ static func mono(weight := 500) -> Font:
 		v.variation_opentype = {
 			TextServerManager.get_primary_interface().name_to_tag("wght"): weight
 		}
+		var symbols: Font = load(SYMBOLS_PATH)
+		v.fallbacks = [symbols]
 		_fonts[weight] = v
 	return _fonts[weight]
 
@@ -82,19 +89,28 @@ static func theme() -> Theme:
 		focus.draw_center = false
 		focus.border_color = INK
 		focus.set_border_width_all(1)
+		_focus_ring = focus
+		_focus_none = StyleBoxEmpty.new()
 		var disabled: StyleBoxFlat = normal.duplicate()
 		disabled.border_color = DIM
 		_theme.set_stylebox("normal", "Button", normal)
 		_theme.set_stylebox("hover", "Button", hover)
 		_theme.set_stylebox("pressed", "Button", pressed)
 		_theme.set_stylebox("hover_pressed", "Button", pressed)
-		_theme.set_stylebox("focus", "Button", focus)
+		# The ring only shows once a key or a gamepad is used (show_focus).
+		_theme.set_stylebox("focus", "Button", _focus_none)
 		_theme.set_stylebox("disabled", "Button", disabled)
 		for n in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 			_theme.set_color(n, "Button", INK)
 		_theme.set_color("font_hover_pressed_color", "Button", INK)
 		_theme.set_color("font_disabled_color", "Button", DIM)
 	return _theme
+
+
+## Draw the focus ring on the focused button: on for keys and gamepads, off
+## for touch and the mouse, where a ring round the first row only confuses.
+static func show_focus(on: bool) -> void:
+	theme().set_stylebox("focus", "Button", _focus_ring if on else _focus_none)
 
 
 # --- building blocks ----------------------------------------------------------
