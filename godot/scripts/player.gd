@@ -27,6 +27,8 @@ const DEATH_SECONDS := 0.7
 const FEET_LIFT := 4.0
 ## Steps per second of walking, as a phase rate.
 const STRIDE := 9.0
+## Walking towards or away from us, how far each foot lifts in turn.
+const STEP_LIFT := 8.0
 
 ## "man" or "woman": whether the figure wears MapWoman's bow. Read each draw,
 ## so the ending can turn the figure waiting there into either.
@@ -44,6 +46,9 @@ var look := Vector2.ZERO
 var auto_look := true
 ## 0 standing .. 1 walking. Eases towards the facing's walk state.
 var walking := 0.0
+## 0 front or back on .. 1 side on. Seen side on the legs swing; seen front
+## or back on they lift and drop in turn, as the sprite's frames did.
+var side_on := 0.0
 ## Lands on a tile: a squash that springs back.
 var squash := 0.0
 ## 0 free .. 1 wrapped in cobweb (a sticky tile).
@@ -259,6 +264,7 @@ func update_at(pos: Vector2, delta: float) -> void:
 ## Advance the animation by elapsed time without moving.
 func tick(delta: float) -> void:
 	walking = move_toward(walking, _walk_target, delta * 6.0)
+	side_on = move_toward(side_on, 1.0 if _facing.x != 0 else 0.0, delta * 8.0)
 	_phase += delta * STRIDE * walking
 	_idle_clock += delta
 	if auto_look:
@@ -313,7 +319,7 @@ func _paint(measuring: bool) -> Rect2:
 	var sy := 1.0 - squash * 0.18
 	var sx := 1.0 + squash * 0.18
 	var swing := sin(_phase) * 0.5 * walking
-	var lean := (look.x * 0.05 + walking * 0.08) * signf(fx)
+	var lean := (look.x * 0.05 + walking * side_on * 0.08) * signf(fx)
 	var pal := {"body": BODY_COLOR, "head": HEAD_COLOR, "eyes": EYE_COLOR}
 	pal.merge(Outfits.palette(outfit), true)
 	var body: Color = pal.body
@@ -349,7 +355,13 @@ func _paint(measuring: bool) -> Rect2:
 		var a := swing * side
 		var hip := Vector2(side * 5.0, (-27.0 - bob) * sy + drop)
 		pen.hips.append(hip)
-		pen.feet.append(hip + Vector2(sin(a) * 22.0, cos(a) * 27.0 * sy) * leg)
+		# Front or back on, each foot rises under its own hip, tucking in a
+		# little, while the other stays down: the legs never cross.
+		var lift := maxf(0.0, sin(_phase) * side) * STEP_LIFT * walking
+		var step := Vector2(-side * lift * 0.2, 27.0 - lift)
+		var stride := Vector2(sin(a) * 22.0, cos(a) * 27.0)
+		var foot := step.lerp(stride, side_on)
+		pen.feet.append(hip + Vector2(foot.x, foot.y * sy) * leg)
 	var pts := PackedVector2Array()
 	for i in 25:
 		var ang := PI * i / 24.0
