@@ -55,7 +55,8 @@ runs:
       # macos-15 image defaults to Xcode 16.
       shell: bash
       run: |
-        xcode=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | python3 -c '
+        shopt -s nullglob
+        xcode=$(printf '%s\n' /Applications/Xcode_26*.app | python3 -c '
         import re, sys
         apps = [l.strip() for l in sys.stdin if re.search(r"Xcode_[\d.]+\.app$", l.strip())]
         key = lambda a: [int(n) for n in re.findall(r"\d+", a.rsplit("_", 1)[1])]
