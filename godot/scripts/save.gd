@@ -79,6 +79,9 @@ func set_locale(code: String) -> void:
 
 ## path: tests load an old save from elsewhere; the game uses PATH.
 func load_all(path := PATH) -> void:
+	# A fresh file each time: ConfigFile.load() keeps keys from a file loaded
+	# before, which a second load (tests load old saves) would inherit.
+	_cfg = ConfigFile.new()
 	if _cfg.load(path) != OK:
 		return
 	music_on = _cfg.get_value("options", "music", true)

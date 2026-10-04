@@ -65,10 +65,13 @@ static func ids() -> Array[String]:
 	return out
 
 
-## The look the first clear of `level` releases, or "".
+## The look the first clear of `level` releases, or "". MapWoman isn't a
+## level's: she comes with finishing the game.
 static func released_at(level: int) -> String:
+	if level <= 0 or level >= THE_END:
+		return ""
 	for entry: Dictionary in LOOKS:
-		if entry.level == level and level > 0:
+		if entry.level == level:
 			return entry.id
 	return ""
 
