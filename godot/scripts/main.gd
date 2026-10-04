@@ -27,8 +27,12 @@ var levels: Array = []
 var tutorial_levels: Array = []
 var completion_level: Dictionary = {}
 var check_point_levels: Array = []
+## Journeys (research prototype): data/journeys.json, played with journey >= 0.
+var journeys: Array = []
+var journey := -1
+var journey_done := false
 
-var map: LevelMap
+var map: JourneyMap
 var player: Player
 var hud: Hud
 var menus: Menus
@@ -89,6 +93,13 @@ var _last_less_time := -1.0
 var _last_life := -1.0
 var _last_hide := -1.0
 
+# journeys
+var _window: Control
+var _key_badge: JourneyMap.KeyBadge
+var _key_plan: JourneyMap.KeyPlan
+var _journey_note := ""
+var _journey_note_at := -100.0
+
 
 func _ready() -> void:
 	_load_data()
@@ -103,8 +114,15 @@ func _ready() -> void:
 	bg_layer.add_child(_bg)
 	_grid = Blueprint.grid(bg_layer, _screen_size())
 
-	map = LevelMap.new()
-	add_child(map)
+	# The map sits in a window that clips it to one room on a journey.
+	_window = Control.new()
+	_window.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_window)
+	map = JourneyMap.new()
+	map.window = _window
+	_window.add_child(map)
+	map.room_entered.connect(_on_room_entered)
+	map.door_bumped.connect(_on_door_bumped)
 	player = Player.new()
 	add_child(player)
 	_vortex = LoopingSprite.new("vortex", 90)
@@ -123,6 +141,13 @@ func _ready() -> void:
 	add_child(hud_layer)
 	hud = Hud.new()
 	hud_layer.add_child(hud)
+	_key_plan = JourneyMap.KeyPlan.new()
+	_key_plan.map = map
+	_key_plan.position = Vector2(_screen_size().x - 100, 64)
+	hud_layer.add_child(_key_plan)
+	_key_badge = JourneyMap.KeyBadge.new()
+	_key_badge.z_index = 12
+	add_child(_key_badge)
 
 	var menu_layer := CanvasLayer.new()
 	menu_layer.layer = 10
@@ -151,6 +176,9 @@ func _load_data() -> void:
 	)
 	completion_level = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/completion.json")
+	)
+	journeys = (
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/journeys.json"))["journeys"]
 	)
 
 
@@ -218,10 +246,16 @@ func started() -> bool:
 
 
 func _process(delta: float) -> void:
+	_key_badge.visible = game_active and map.journey and map.carrying > 0 and not player.is_hidden
+	_key_badge.position = player.position + Vector2(16, -58)
 	if menus.visible or not game_active:
 		return
 
-	_update_timer(delta)
+	if journey_done:
+		player.update_at(map.get_player_position(), delta)
+		return
+	if not map.sliding():
+		_update_timer(delta)
 
 	if dead:
 		if map.moving:  # a step the clock cut short still lands on its tile
@@ -252,7 +286,12 @@ func loaded() -> void:
 
 
 func _update_stats() -> void:
-	if tutorial:
+	if journey >= 0:
+		hud._set_text(
+			hud.level_label,
+			"JOURNEY %d · SHEET %s" % [journey + 1, map.room_names().get(map.room, "")]
+		)
+	elif tutorial:
 		hud.set_tutorial_level(level, tutorial_levels.size())
 	else:
 		hud.set_level(level, levels.size())
@@ -263,6 +302,8 @@ func _update_stats() -> void:
 func set_time_message(time_left: int) -> void:
 	if tutorial or completed:
 		hud.set_time_message("")
+	elif journey >= 0:
+		hud.set_time_message(tr("GO!") if time_left > 19 and started() else "")
 	elif time_left > 19 and started():
 		hud.set_time_message(tr("GO!"))
 	elif _low_time:
@@ -346,6 +387,9 @@ func set_controls_message() -> void:
 		else:
 			hud.show_effect("unhide")
 			hud.set_controls_message(tr("TILES UNHIDDEN"))
+	elif journey >= 0 and _now() - _journey_note_at < 3.0:
+		hud.set_controls_message(_journey_note)
+		hud.clear_effect()
 	else:
 		hud.set_controls_message("")
 		hud.clear_effect()
@@ -486,6 +530,13 @@ func update_player(delta: float) -> void:
 			map.unhide_tiles()
 		_flash("_last_hide")
 
+	if map.on(map.keys):
+		Audio.play("life")
+		map.take_key()
+		map.float_text("+ KEY", Blueprint.GOLD)
+		player.cheer()
+		_journey_flash("KEY FOUND: TAKE IT TO THE DOOR")
+
 	if map.on(map.points):
 		Audio.play("points")
 		map.clear(map.points)
@@ -599,6 +650,8 @@ func _update_ending(delta: float) -> void:
 func _current_level_data() -> Dictionary:
 	if completed:
 		return completion_level
+	if journey >= 0:
+		return journeys[journey]
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
 
 
@@ -623,7 +676,7 @@ func load_level() -> void:
 		hud.set_timer(0, -1.0, true)
 		hud.blank_timer()
 		hud.set_time_message(tr("GET READY..."))
-		if not practice:
+		if not practice and journey < 0:
 			Save.level_reached(level)
 	_update_stats()
 
@@ -661,6 +714,12 @@ func advance_level(check_point: bool) -> void:
 		_hide_ending()
 		show_game_complete()
 		return
+	if journey >= 0:
+		# Prototype: no clear sheet for journeys yet, just the note.
+		Audio.play("end_level")
+		journey_done = true
+		_journey_flash("JOURNEY %d COMPLETE" % (journey + 1))
+		return
 	if not tutorial:
 		var new_best := false
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
@@ -693,6 +752,10 @@ func advance_level(check_point: bool) -> void:
 
 
 func next_level() -> void:
+	if journey >= 0:
+		game_over(false)
+		show_start_menu()
+		return
 	if not tutorial:
 		score += end_of_level_points
 		if map.is_checkpoint:
@@ -737,6 +800,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	journey = -1
 	completed = false
 	practice = false
 	player.outfit = Save.worn
@@ -803,6 +867,42 @@ func game_over(show_score := true) -> void:
 
 
 # --- dev menu ----------------------------------------------------------------
+
+
+## Start a journey (research prototype): lives and score as in the main game.
+func start_journey(i: int) -> void:
+	menus.close()
+	new_game(1)
+	journey_done = false
+	journey = clampi(i, 0, journeys.size() - 1)
+	load_level()
+	reset_all()
+
+
+func _on_room_entered(_room: Vector2i, first_time: bool) -> void:
+	# Every sheet has its own clock.
+	_time_left = INITIAL_SECONDS
+	_update_stats()
+	var name: String = map.room_names().get(map.room, "")
+	if first_time:
+		_journey_flash("SHEET %s" % name)
+	elif map.tiles_hidden:
+		_journey_flash("SHEET %s · STILL HIDDEN" % name)
+	else:
+		_journey_flash("BACK ON SHEET %s" % name)
+	set_background()
+
+
+func _journey_flash(note: String) -> void:
+	_journey_note = note
+	_journey_note_at = _now()
+	for name in ["_last_hide", "_last_points", "_last_more_time", "_last_less_time", "_last_life"]:
+		set(name, -1.0)
+	set_controls_message()
+
+
+func _on_door_bumped() -> void:
+	_journey_flash("LOCKED: FIND THE KEY")
 
 
 ## Start a normal game at any level (dev menu).
@@ -954,6 +1054,9 @@ func _on_menu_action(act: String) -> void:
 				var code := act.get_slice(" ", 1)
 				Save.set_locale("" if code == "system" else code)
 				menus.show_language()
+			elif act.begins_with("journey "):
+				menus.close()
+				start_journey(int(act.get_slice(" ", 1)) - 1)
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):

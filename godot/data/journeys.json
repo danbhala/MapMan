@@ -1,0 +1,51 @@
+{
+ "journeys": [
+  {
+   "name": "the long way round",
+   "room_size": [
+    15,
+    8
+   ],
+   "rows": [
+    "------------------------------",
+    "-----------------Kcccd-cccc---",
+    "-----------------d--cc-c--c---",
+    "-----------------ccdc--cd-c---",
+    "------------------c-cccc--cc--",
+    "------------------cccd-d---c--",
+    "-------------------------ccc--",
+    "-------------------------c----",
+    "-------------------------c----",
+    "-wDcccccp--------ccc-----c----",
+    "-------c---------c-c-c-cic!---",
+    "--cccc-c---------!-!-c!c--cc--",
+    "--c--ccccccccccchcic!c!i---c--",
+    "--c----------------c---c---c--",
+    "-bc-------------cc!iccic!ccc--",
+    "------------------------------"
+   ],
+   "loading": [
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "z56789abczzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzazzzzzzzzzzzzzzzzzzzzzz",
+    "zz4567z9zzzzzzzzzzzzzzzzzzzzzz",
+    "zz3zz6789abcdefzzzzzzzzzzzzzzz",
+    "zz2zzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "z01zzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+   ],
+   "delay": 0.03,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  }
+ ]
+}
