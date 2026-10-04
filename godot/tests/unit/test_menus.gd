@@ -29,6 +29,7 @@ func before_each() -> void:
 func after_each() -> void:
 	Save.reduce_motion = false
 	Save.fx_on = true
+	Save.set_locale("")  # pressing every language button leaves the last one on
 
 
 ## Press every enabled button on the open sheet, top to bottom, left to right.
@@ -65,8 +66,31 @@ func test_first_run() -> void:
 func test_options_toggle_the_current_state() -> void:
 	game.menus.show_options()
 	assert_eq(
-		_press_all(), ["music off", "fx on", "vibration off", "reduce motion off", "main menu"]
+		_press_all(),
+		["music off", "fx on", "vibration off", "reduce motion off", "language", "main menu"]
 	)
+
+
+func test_language_sheet_lists_every_language() -> void:
+	game.menus.show_language()
+	var expected: Array[String] = ["language system"]
+	for entry in Menus.LANGUAGES:
+		expected.append("language " + entry[0])
+	expected.append("options")
+	assert_eq(_press_all(), expected)
+
+
+func test_picking_a_language_saves_it_and_stays_on_the_sheet() -> void:
+	game._on_menu_action("language es")
+	assert_eq(Save.locale, "es")
+	assert_eq(TranslationServer.get_locale(), "es")
+	assert_eq(game.menus.current, "language")
+	game._on_menu_action("language system")
+	assert_eq(Save.locale, "", "back to the phone's language")
+	var phone := TranslationServer.standardize_locale(OS.get_locale())
+	assert_eq(TranslationServer.get_locale(), phone)
+	game.go_back()
+	assert_eq(game.menus.current, "options", "back goes to the options sheet")
 
 
 func test_pause_and_confirm() -> void:

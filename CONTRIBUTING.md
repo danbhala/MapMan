@@ -35,7 +35,7 @@ Write `feat` and `fix` subjects for players: they become release notes.
   own save and has a DEV menu (level select, cheats, tilt tuning, play log).
   The latest master build is always at
   https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk
-- release-please keeps a `chore(main): release X.Y.Z` PR open. Merging it tags
+- release-please keeps a `chore(master): release X.Y.Z` PR open. Merging it tags
   the release, publishes it on GitHub with the APK, and updates
   https://github.com/danbhala/MapMan/raw/android-build/MapMan.apk
 

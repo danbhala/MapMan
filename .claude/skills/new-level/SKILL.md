@@ -14,7 +14,9 @@ characters), optional `loading` (same shape as `rows`; tiles appear in the
 sort order of their loading character, `*` = start hidden), `delay` (seconds
 between appear groups, default 0.05), `x_hides` (moves an `x` tile hides
 MapMan, default 25), `checkpoint` (bool; also list it in `check_points`),
-`message` (shown in the bar for the first 5 seconds).
+`message` (shown in the bar for the first 5 seconds; it is shown through
+`tr()`, uppercased, so add it to `godot/i18n/catalog.json` and every
+`godot/i18n/<locale>.json` and run `python3 godot/tools/i18n.py`).
 
 | Char | Tile | Char | Tile |
 | --- | --- | --- | --- |

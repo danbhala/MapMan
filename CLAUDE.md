@@ -25,7 +25,12 @@ Other commands, from the repo root:
 - Import after adding assets: `godot --headless --path godot --import`
 - Unit tests only: `godot --headless --path godot -s addons/gut/gut_cmdln.gd`
 - Level difficulty numbers: `python3 godot/tools/level_report.py [levels]`
-- Lint: `cd godot && gdlint scripts tests && gdformat --check scripts tests`
+- Every screen in every language, with a layout check:
+  `godot/tools/i18n_shots.sh [out dir] [locales]` (local only; look at the
+  contact sheets it writes). After editing a translation: `python3
+  godot/tools/i18n.py`, and `python3 godot/tools/subset_fonts.py <noto dir>`
+  if it uses new Arabic or CJK characters.
+- Lint: `cd godot && gdlint scripts tests tools && gdformat --check scripts tests tools`
 
 ## Commits and releases
 
@@ -42,15 +47,17 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   (`gh api -X PUT repos/danbhala/mapman/pulls/N/merge -f merge_method=squash
   -f commit_title="<PR title> (#N)"`). Commit messages on branches should be
   conventional too.
-- release-please keeps a "chore(main): release X.Y.Z" PR open with the next
+- release-please keeps a "chore(master): release X.Y.Z" PR open with the next
   version and changelog. Merging it tags `vX.Y.Z`, publishes the GitHub
   Release, and the Release workflow attaches the APK and refreshes the
-  `android-build` branch. Only merge it when the user asks for a release.
+  `android-build` branch. Only merge it when the user asks for a release, and
+  follow the `/release` skill: squash merges only, or the changelog doubles up.
 
 ## Workflow
 
 - Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit`
-  (every commit), `/open-pr` (every PR: title, body, labels, merging).
+  (every commit), `/open-pr` (every PR: title, body, labels), `/release`
+  (merging and shipping).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
 - Issues come from templates (bug, level, feature) with conventional titles;

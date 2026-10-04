@@ -2,6 +2,9 @@ extends Node
 ## Persistent player data: options, best score, completed checkpoints.
 ## Replaces the dot-files the Pythonista version wrote next to the script.
 
+## The language on screen changed (use_locale).
+signal locale_changed
+
 const PATH := "user://mapman.cfg"
 
 var music_on := true
@@ -9,6 +12,8 @@ var fx_on := true
 var vibration_on := true
 ## Skip the decorative animation (stamps, sheets drawing on, tiles folding).
 var reduce_motion := false
+## Locale code of the chosen language, or "" to follow the phone's.
+var locale := ""
 ## "sitting" or "standing": how far the phone is tilted back when neutral.
 var playing_position := "sitting"
 var highscore := 0
@@ -28,6 +33,41 @@ var _cfg := ConfigFile.new()
 
 func _ready() -> void:
 	load_all()
+	apply_locale()
+
+
+## Use the chosen language, or the phone's when none is chosen.
+func apply_locale() -> void:
+	use_locale(locale if locale != "" else OS.get_locale())
+
+
+## Show the game in `code` without changing the choice: apply_locale() picks
+## the code, tests pass one to stand in for the phone's.
+func use_locale(code: String) -> void:
+	TranslationServer.set_locale(code)
+	Blueprint.prefer_script(shown_locale())
+	locale_changed.emit()
+
+
+## The language on screen: that of the translation closest to the locale in
+## force, or English when there is none for it.
+func shown_locale() -> String:
+	var t := TranslationServer.get_translation_object(TranslationServer.get_locale())
+	return t.locale if t != null else "en"
+
+
+## Whether the language on screen reads right to left: Arabic does, English
+## shown on a Hebrew phone does not.
+func reads_rtl() -> bool:
+	var ts := TextServerManager.get_primary_interface()
+	return ts.is_locale_right_to_left(shown_locale())
+
+
+## Switch language for good: "" follows the phone again.
+func set_locale(code: String) -> void:
+	locale = code
+	apply_locale()
+	save_all()
 
 
 ## path: tests load an old save from elsewhere; the game uses PATH.
@@ -38,6 +78,10 @@ func load_all(path := PATH) -> void:
 	fx_on = _cfg.get_value("options", "fx", true)
 	vibration_on = _cfg.get_value("options", "vibration", true)
 	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
+	locale = _cfg.get_value("options", "locale", "")
+	# A language this build no longer ships falls back to the phone's.
+	if locale != "" and locale != "en" and locale not in TranslationServer.get_loaded_locales():
+		locale = ""
 	playing_position = _cfg.get_value("options", "playing_position", "sitting")
 	if playing_position not in ["sitting", "standing"]:
 		playing_position = "sitting"
@@ -70,6 +114,7 @@ func save_all() -> void:
 	_cfg.set_value("options", "fx", fx_on)
 	_cfg.set_value("options", "vibration", vibration_on)
 	_cfg.set_value("options", "reduce_motion", reduce_motion)
+	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)
 	_cfg.set_value("progress", "highscore", highscore)
 	_cfg.set_value("progress", "first_play", first_play)

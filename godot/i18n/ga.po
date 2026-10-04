@@ -1,0 +1,619 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MapMan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ga\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);\n"
+
+#. Header of every menu sheet: the game name, the sheet number (%s, e.g. 001 or P-02), the sheet title (%s). Keep MAPMAN. Blueprint drawing-sheet vocabulary throughout.
+msgid "MAPMAN  —  SHEET %s  —  %s"
+msgstr "MAPMAN  —  BILEOG %s  —  %s"
+
+#. Title block, three lines: revision (%s is a version like 1.3.0), scale, sheet number (%s). Each line at most 11 characters.
+msgid ""
+"REV %s\n"
+"SCALE 1:3\n"
+"SHEET %s"
+msgstr ""
+"LEAG %s\n"
+"SCÁLA 1:3\n"
+"BIL. %s"
+
+#. Column heading over a parts list
+msgid "ITEM"
+msgstr "MÍR"
+
+#. Column heading over a parts list
+msgid "DESCRIPTION"
+msgstr "CUR SÍOS"
+
+#. Column heading on the options sheet
+msgid "PARAMETER"
+msgstr "PARAIMÉADAR"
+
+#. Column heading
+msgid "VALUE"
+msgstr "LUACH"
+
+#. Column heading: quantity
+msgid "QTY"
+msgstr "LÍON"
+
+#. Row that goes back to the main menu (sheet 001). Keep the '<  ' prefix.
+msgid "<  RETURN TO SHEET 001"
+msgstr "<  FILL AR BHILEOG 001"
+
+#. Sheet title and a row text
+msgid "MAIN MENU"
+msgstr "PRÍOMH-ROGHCHLÁR"
+
+#. Label of the total row on a score table
+msgid "TOTAL"
+msgstr "IOMLÁN"
+
+#. Small print prefix; %s is a sentence
+msgid "NOTE: %s"
+msgstr "NÓTA: %s"
+
+#. Sheet title
+msgid "FIRST RUN"
+msgstr "AN CHÉAD RITH"
+
+#. Sheet title and a row text
+msgid "OPTIONS"
+msgstr "ROGHANNA"
+
+#. Sheet title
+msgid "PAUSED"
+msgstr "AR SOS"
+
+#. Sheet title (confirm quitting)
+msgid "CONFIRM"
+msgstr "DEIMHNIÚ"
+
+#. Sheet title when a life is lost; defect as on an inspection report
+msgid "LEVEL %d — DEFECT"
+msgstr "LEIBHÉAL %d — LOCHT"
+
+#. Sheet title
+msgid "GAME OVER"
+msgstr "CLUICHE THART"
+
+#. Sheet title: pick a checkpoint to restart from
+msgid "CHECKPOINTS"
+msgstr "SEICPHOINTÍ"
+
+#. Sheet title: practice mode, a range of levels
+msgid "PRACTICE — LEVELS %d–%d"
+msgstr "CLEACHTADH — LEIBHÉIL %d–%d"
+
+#. Sheet title after clearing a level: the score is 'inspected'
+msgid "LEVEL %d — INSPECTION"
+msgstr "LEIBHÉAL %d — INIÚCHADH"
+
+#. Sheet title after clearing a checkpoint level
+msgid "LEVEL %d — CHECKPOINT"
+msgstr "LEIBHÉAL %d — SEICPHOINTE"
+
+#. Sheet title after finishing the game
+msgid "CONGRATULATIONS"
+msgstr "COMHGHAIRDEAS"
+
+#. Sheet title: final score table
+msgid "FINAL INSPECTION"
+msgstr "INIÚCHADH DEIRIDH"
+
+#. Options row and the language sheet's title
+msgid "LANGUAGE"
+msgstr "TEANGA"
+
+#. Options value and a box on the language sheet: follow the phone's language; the value column holds 17 characters
+msgid "PHONE'S LANGUAGE"
+msgstr "TEANGA AN FHÓIN"
+
+#. Main menu row
+msgid "PLAY FROM START"
+msgstr "IMIR ÓN TÚS"
+
+#. Main menu row
+msgid "CONTINUE FROM CHECKPOINT"
+msgstr "LEAN AR AGHAIDH ÓN SEICPHOINTE"
+
+#. Main menu row
+msgid "PRACTICE A LEVEL"
+msgstr "CLEACHTAIGH LEIBHÉAL"
+
+#. Main menu row
+msgid "TUTORIAL"
+msgstr "TEAGASCÁN"
+
+#. Main menu small print
+msgid "BEST SCORE %d"
+msgstr "SCÓR IS FEARR %d"
+
+#. Main menu small print, n is 100
+msgid "%d LEVEL"
+msgid_plural "%d LEVELS"
+msgstr[0] "%d LEIBHÉAL"
+msgstr[1] "%d LEIBHÉAL"
+msgstr[2] "%d LEIBHÉAL"
+msgstr[3] "%d LEIBHÉAL"
+msgstr[4] "%d LEIBHÉAL"
+
+#. First run sheet, small print
+msgid "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE"
+msgstr "AN CHÉAD UAIR AGAT? NÍ THÓGANN AN TEAGASCÁN ACH NÓIMÉAD"
+
+#. First run row
+msgid "TAKE THE TUTORIAL"
+msgstr "DÉAN AN TEAGASCÁN"
+
+#. First run row
+msgid "SKIP TO THE GAME"
+msgstr "LÉIM GO DTÍ AN CLUICHE"
+
+#. Options row (a toggle)
+msgid "MUSIC"
+msgstr "CEOL"
+
+#. Options row (a toggle)
+msgid "SOUND EFFECTS"
+msgstr "MAISÍOCHTAÍ FUAIME"
+
+#. Options row (a toggle)
+msgid "VIBRATION"
+msgstr "CREATHADH"
+
+#. Options row: turns decorative animation off
+msgid "REDUCE MOTION"
+msgstr "LAGHDAIGH GLUAISNE"
+
+#. Pause sheet status line; work suspended as on a drawing office note
+msgid "WORK SUSPENDED AT LEVEL %d"
+msgstr "OBAIR AR FIONRAÍ AG LEIBHÉAL %d"
+
+#. Appended to the status line: minutes:seconds left on the clock. Keep the leading ' · ' and T-%d:%02d.
+msgid " · T-%d:%02d REMAINING"
+msgstr " · T-%d:%02d FÁGTHA"
+
+#. Pause sheet status line in the tutorial
+msgid "WORK SUSPENDED · TUTORIAL"
+msgstr "OBAIR AR FIONRAÍ · TEAGASCÁN"
+
+#. Pause sheet status line on the final map
+msgid "WORK SUSPENDED · FINAL SHEET"
+msgstr "OBAIR AR FIONRAÍ · BILEOG DHEIRIDH"
+
+#. Pause row
+msgid "RESUME"
+msgstr "LEAN AR AGHAIDH"
+
+#. Pause row
+msgid "END GAME"
+msgstr "CRÍOCHNAIGH AN CLUICHE"
+
+#. Pause row
+msgid "END TUTORIAL"
+msgstr "CRÍOCHNAIGH AN TEAGASCÁN"
+
+#. Pause sheet small print
+msgid "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NÓTA: CLAON LE BOGADH · TAPÁIL AN BHILEOG LE SOS A GHLACADH"
+
+#. Rubber stamp on the pause sheet; one or two short words
+msgid "ON HOLD"
+msgstr "AR STAD"
+
+#. Confirm sheet, two lines
+msgid ""
+"END THIS GAME?\n"
+"PROGRESS SINCE THE LAST CHECKPOINT IS LOST"
+msgstr ""
+"AN CLUICHE SEO A CHRÍOCHNÚ?\n"
+"CAILLFEAR GACH DUL CHUN CINN ÓN SEICPHOINTE"
+
+#. Confirm row
+msgid "NO, KEEP PLAYING"
+msgstr "NÍ hEA, LEAN AG IMIRT"
+
+#. Confirm row
+msgid "YES, END THE GAME"
+msgstr "SEA, CRÍOCHNAIGH AN CLUICHE"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: STEPPED ON A DEATH TILE"
+msgstr "LOCHT: SEASADH AR THÍL BHÁIS"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: OUT OF TIME"
+msgstr "LOCHT: AN tAM ISTIGH"
+
+#. Lost-life sheet label, discs follow
+msgid "LIVES REMAINING"
+msgstr "BEATHAÍ FÁGTHA"
+
+#. Lost-life row
+msgid "TRY AGAIN FROM THE START TILE"
+msgstr "TRIAIL ARÍS ÓN TÍL THOSAIGH"
+
+#. Lost-life small print
+msgid "NOTE: ROUTE AROUND THE DEATH TILES"
+msgstr "NÓTA: TÉIGH TIMPEALL AR NA TÍLEANNA BÁIS"
+
+#. Lost-life small print after a timeout: 20 seconds per level
+msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
+msgstr "NÓTA: T-0:20 AR GACH BILEOG · GABH AN tSLÍ GHEARR"
+
+#. Rubber stamp on the lost-life sheet
+msgid "REWORK"
+msgstr "ATHOIBRIÚ"
+
+#. Game over label
+msgid "FINAL SCORE"
+msgstr "SCÓR DEIRIDH"
+
+#. Game over small print
+msgid "PREVIOUS BEST  %d"
+msgstr "BUAIC ROIMHE SEO  %d"
+
+#. Game over row
+msgid "RESTART FROM A CHECKPOINT"
+msgstr "ATOSAIGH Ó SHEICPHOINTE"
+
+#. Rubber stamp: a new high score
+msgid "NEW BEST"
+msgstr "BUAIC NUA"
+
+#. Checkpoints sheet heading
+msgid "RESTART FROM A SAVED CHECKPOINT"
+msgstr "ATOSAIGH Ó SHEICPHOINTE SÁBHÁILTE"
+
+#. Checkpoint cell: reached and saved
+msgid "SAVED"
+msgstr "SÁBHÁILTE"
+
+#. Cell: not reached yet
+msgid "LOCKED"
+msgstr "FAOI GHLAS"
+
+#. Practice grid column pair heading: level ('part' of the drawing) and best result. Keep the three spaces.
+msgid "PART   BEST"
+msgstr "PÁIRT   BUAIC"
+
+#. Level cell label, L for level; keep short
+msgid "L%02d"
+msgstr "L%02d"
+
+#. Best in a practice cell: seconds left, star count. Keep ★.
+msgid "%ds ★%d"
+msgstr "%ds ★%d"
+
+#. Seconds, short unit
+msgid "%ds"
+msgstr "%ds"
+
+#. Practice caption: page x of y
+msgid "SHEET %d OF %d"
+msgstr "BILEOG %d AS %d"
+
+#. Practice caption: levels unlocked
+msgid "%d PART RELEASED"
+msgid_plural "%d PARTS RELEASED"
+msgstr[0] "%d PHÁIRT SCAOILTE"
+msgstr[1] "%d PHÁIRT SCAOILTE"
+msgstr[2] "%d PHÁIRT SCAOILTE"
+msgstr[3] "%d bPÁIRT SCAOILTE"
+msgstr[4] "%d PÁIRT SCAOILTE"
+
+#. Score table row
+msgid "LEVEL BONUS"
+msgstr "BÓNAS LEIBHÉIL"
+
+#. Score table row
+msgid "TIME BONUS"
+msgstr "BÓNAS AMA"
+
+#. Score table row
+msgid "STARS COLLECTED"
+msgstr "RÉALTAÍ BAILITHE"
+
+#. Seconds with a space, quantity column
+msgid "%d s"
+msgstr "%d s"
+
+#. Level clear small print; next level number
+msgid "TAP TO CONTINUE TO SHEET %03d"
+msgstr "TAPÁIL LE DUL AR AGHAIDH GO BILEOG %03d"
+
+#. Level 100 clear small print
+msgid "TAP TO CONTINUE TO THE FINAL SHEET"
+msgstr "TAPÁIL LE DUL GO DTÍ AN BHILEOG DHEIRIDH"
+
+#. Checkpoint level clear small print
+msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
+msgstr "SEICPHOINTE SÁBHÁILTE · ATOSAIGH AS SEO AM AR BITH"
+
+#. Rubber stamp on a cleared level
+msgid "PASSED"
+msgstr "PAS"
+
+#. Congratulations small print
+msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
+msgstr "AN 100 BILEOG AR FAD FAOFA · GACH LEIBHÉAL AR FÁIL LE CLEACHTADH"
+
+#. Final score table row
+msgid "SCORE AT LEVEL 100"
+msgstr "SCÓR AG LEIBHÉAL 100"
+
+#. Final score table row
+msgid "COMPLETION BONUS"
+msgstr "BÓNAS CRÍOCHNAITHE"
+
+#. Final score table row: 50 points per life left
+msgid "LIVES REMAINING ×50"
+msgstr "BEATHAÍ FÁGTHA ×50"
+
+#. Final inspection small print
+msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
+msgstr "AN 100 BILEOG AR FAD FAOFA · GO RAIBH MAITH AGAT AS IMIRT"
+
+#. Rubber stamp on the final sheet
+msgid "APPROVED"
+msgstr "FAOFA"
+
+#. HUD header: level number / level count
+msgid "SHEET %03d / %d"
+msgstr "BILEOG %03d / %d"
+
+#. HUD header in the tutorial
+msgid "TUTORIAL %d / %d"
+msgstr "TEAGASCÁN %d / %d"
+
+#. HUD note at level start
+msgid "GO!"
+msgstr "AR AGHAIDH!"
+
+#. HUD note, three seconds left
+msgid "HURRY UP!"
+msgstr "DÉAN DEIFIR!"
+
+#. HUD note while the level loads
+msgid "GET READY..."
+msgstr "BÍ RÉIDH..."
+
+#. HUD note on level 1
+msgid "TILT TO MOVE"
+msgstr "CLAON LE BOGADH"
+
+#. HUD note: a star was collected
+msgid "BONUS POINTS"
+msgstr "POINTÍ BÓNAIS"
+
+#. HUD note
+msgid "EXTRA TIME"
+msgstr "AM BREISE"
+
+#. HUD note
+msgid "TIME LOST"
+msgstr "AM CAILLTE"
+
+#. HUD note
+msgid "EXTRA LIFE"
+msgstr "BEATHA BHREISE"
+
+#. HUD note: tilt directions are mirrored
+msgid "CONTROLS REVERSED"
+msgstr "RIALTÁIN DROIM AR AIS"
+
+#. HUD note
+msgid "TILES HIDDEN"
+msgstr "TÍLEANNA I bhFOLACH"
+
+#. HUD note: the hidden tiles are back
+msgid "TILES UNHIDDEN"
+msgstr "TÍLEANNA AR AIS"
+
+#. HUD note while MapMan is invisible
+msgid "SEE YOU AGAIN IN %d MOVE"
+msgid_plural "SEE YOU AGAIN IN %d MOVES"
+msgstr[0] "SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[1] "SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[2] "SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[3] "SLÁN! AR AIS I gCEANN %d mBOGADH"
+msgstr[4] "SLÁN! AR AIS I gCEANN %d BOGADH"
+
+#. HUD note, two lines, both effects at once
+msgid ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVE"
+msgid_plural ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVES"
+msgstr[0] ""
+"RIALTÁIN DROIM AR AIS &\n"
+"SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[1] ""
+"RIALTÁIN DROIM AR AIS &\n"
+"SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[2] ""
+"RIALTÁIN DROIM AR AIS &\n"
+"SLÁN! AR AIS I gCEANN %d BHOGADH"
+msgstr[3] ""
+"RIALTÁIN DROIM AR AIS &\n"
+"SLÁN! AR AIS I gCEANN %d mBOGADH"
+msgstr[4] ""
+"RIALTÁIN DROIM AR AIS &\n"
+"SLÁN! AR AIS I gCEANN %d BOGADH"
+
+#. HUD note, two lines
+msgid ""
+"CONTROLS REVERSED &\n"
+"TILES HIDDEN"
+msgstr ""
+"RIALTÁIN DROIM AR AIS &\n"
+"TÍLEANNA I bhFOLACH"
+
+#. HUD note: caught in a cobweb; shake the phone
+msgid "STUCK, SHAKE TO RELEASE"
+msgstr "I SÁINN, CROITH LE hÉALÚ"
+
+#. HUD note on a desktop without sensors
+msgid "STUCK, TAP TO RELEASE"
+msgstr "I SÁINN, TAPÁIL LE hÉALÚ"
+
+#. HUD note, both effects
+msgid "STUCK & CONTROLS REVERSED. SHAKE TO RELEASE."
+msgstr "I SÁINN, RIALTÁIN DROIM AR AIS. CROITH LE hÉALÚ."
+
+#. HUD note, both effects, desktop
+msgid "STUCK & CONTROLS REVERSED. TAP TO RELEASE."
+msgstr "I SÁINN, RIALTÁIN DROIM AR AIS. TAPÁIL LE hÉALÚ."
+
+#. Practice result caption: seconds left on the clock
+msgid "LEVEL %d: %ds LEFT"
+msgstr "LEIBHÉAL %d: %ds FÁGTHA"
+
+#. Practice result caption
+msgid "LEVEL %d: %ds LEFT, NEW BEST!"
+msgstr "LEIBHÉAL %d: %ds, BUAIC NUA!"
+
+#. Floating note on an extra-time tile: five seconds
+msgid "+5 S"
+msgstr "+5 S"
+
+#. Floating note on a time-loss tile; keep the minus sign U+2212
+msgid "−5 S"
+msgstr "−5 S"
+
+#. Screen reader name of the practice page arrow
+msgid "Previous page"
+msgstr "An leathanach roimhe seo"
+
+#. Screen reader name
+msgid "Next page"
+msgstr "An chéad leathanach eile"
+
+#. Screen reader name of a practice cell
+msgid "Level %d"
+msgstr "Leibhéal %d"
+
+#. Screen reader name
+msgid "Level %d, locked"
+msgstr "Leibhéal %d, faoi ghlas"
+
+#. Screen reader name of a checkpoint cell
+msgid "Restart after level %d"
+msgstr "Atosaigh tar éis leibhéal %d"
+
+#. Screen reader name
+msgid "Checkpoint at level %d, not reached"
+msgstr "Seicphointe leibhéal %d, gan sroicheadh"
+
+#. Screen reader state of a toggle
+msgid "on"
+msgstr "air"
+
+#. Screen reader state of a toggle
+msgid "off"
+msgstr "as"
+
+#. Screen reader
+msgid "%d life remaining"
+msgid_plural "%d lives remaining"
+msgstr[0] "%d bheatha fágtha"
+msgstr[1] "%d bheatha fágtha"
+msgstr[2] "%d bheatha fágtha"
+msgstr[3] "%d mbeatha fágtha"
+msgstr[4] "%d beatha fágtha"
+
+#. Screen reader name of the HUD level label
+msgid "Level"
+msgstr "Leibhéal"
+
+#. Screen reader name
+msgid "Score"
+msgstr "Scór"
+
+#. Screen reader name
+msgid "Lives"
+msgstr "Beathaí"
+
+#. Screen reader name
+msgid "Time left"
+msgstr "Am fágtha"
+
+#. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
+msgid ""
+"Tilt your device to move around the map.\n"
+"Head for the exit tile to progress to the next level."
+msgstr ""
+"Claon do ghléas le bogadh timpeall na léarscáile.\n"
+"Déan ar an tíl amach le dul ar aghaidh go dtí an chéad leibhéal eile."
+
+#. Tutorial lesson 2
+msgid ""
+"Stepping on this tile will reverse the controls.\n"
+"Step on another and they go back to normal."
+msgstr ""
+"Má sheasann tú ar an tíl seo, cuirfear na rialtáin droim ar ais.\n"
+"Seas ar cheann eile agus beidh siad mar a bhí arís."
+
+#. Tutorial lesson 3
+msgid ""
+"Stepping on this tile will make Map Man disappear.\n"
+"Don't worry, after a few moves he will show up again."
+msgstr ""
+"Má sheasann tú ar an tíl seo, imeoidh Map Man as radharc.\n"
+"Ná bí buartha, beidh sé le feiceáil arís tar éis cúpla bogadh."
+
+#. Tutorial lesson 4
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Shake your device to free him and get moving again."
+msgstr ""
+"Má sheasann tú ar an tíl seo, rachaidh Map Man i sáinn.\n"
+"Croith do ghléas lena shaoradh agus bog leat arís."
+
+#. Tutorial lesson 5
+msgid ""
+"Watch out for bonus points,\n"
+"although you may have to go out of your way to get them."
+msgstr ""
+"Bí ag faire amach do phointí bónais,\n"
+"cé go mb'fhéidir go gcaithfeá dul as do bhealach lena bhfáil"
+
+#. Tutorial lesson 6
+msgid ""
+"Also keep an eye out for extra lives,\n"
+"but take care as they will take you\n"
+"even more off course than bonus points."
+msgstr ""
+"Coinnigh súil amach freisin do bheathaí breise,\n"
+"ach bí cúramach, tabharfaidh siad\n"
+"níos faide fós as do bhealach thú ná na pointí bónais"
+
+#. Tutorial lesson 7
+msgid "Be careful of the poison tiles: if you step on them you will lose a life."
+msgstr "Seachain na tíleanna nimhe: má sheasann tú orthu, caillfidh tú beatha."
+
+#. Tutorial lesson 8
+msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
+msgstr "Tabharfaidh na tíleanna seo am breise duit nó bainfidh siad am díot. Gheobhaidh tú pointí bónais as an am a bheidh fágtha ar an gclog ag deireadh gach leibhéil."
+
+#. Tutorial lesson 9
+msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+msgstr "Cuireann na tíleanna seo tíleanna eile as radharc agus ar ais arís. Is féidir seasamh fós ar na tíleanna atá i bhfolach, mar sin cuimhnigh cá bhfuil siad."
+
+#. Tutorial lesson 10
+msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
+msgstr "Anois is arís tiocfaidh tú ar sheicphointe. Gach uair a shroicheann tú seicphointe is féidir leat atosú as sin in áit dul ar ais go dtí an tús."
+
+#. Tutorial lesson 11
+msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
+msgstr "Má theastaíonn sos uait, tapáil an scáileán le linn imeartha chun an cluiche a chur ar sos. Agus é ar sos, is féidir leat leanúint ar aghaidh nó an cluiche a fhágáil."
+
+#. Tutorial lesson 12
+msgid "You're all set, head for the exit to start the game. Have fun!"
+msgstr "Tá tú réidh anois, déan ar an mbealach amach chun an cluiche a thosú. Bain sult as!"

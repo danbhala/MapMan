@@ -20,6 +20,7 @@ const VANISH_COLOR := Blueprint.LILAC
 const STUCK_COLOR := Blueprint.GOLD
 const DEATH_COLOR := Blueprint.PINK
 const HIDDEN_COLOR := Blueprint.MINT
+## The notes that float up from a tile as it is collected (the time ones translate).
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
@@ -263,11 +264,12 @@ func set_time_message(time_left: int) -> void:
 	if tutorial or completed:
 		hud.set_time_message("")
 	elif time_left > 19 and started():
-		hud.set_time_message("go!")
+		hud.set_time_message(tr("GO!"))
 	elif _low_time:
-		hud.set_time_message("hurry up!")
+		hud.set_time_message(tr("HURRY UP!"))
 	elif time_left > 15 and started() and String(levels[level - 1].get("message", "")) != "":
-		hud.set_time_message(levels[level - 1]["message"])
+		# Level messages are lowercase in the data; the sheets use capitals.
+		hud.set_time_message(tr(String(levels[level - 1]["message"]).to_upper()))
 	else:
 		hud.set_time_message("")
 
@@ -293,57 +295,60 @@ func set_background() -> void:
 	_grid.queue_redraw()
 
 
+## The notes are English msgids that tr() translates (see i18n/catalog.json).
 func set_controls_message() -> void:
-	var shake_word := (
-		"shake" if TiltInput.has_accelerometer() or not tilt.touch_steering_enabled() else "tap"
-	)
+	var shake := TiltInput.has_accelerometer() or not tilt.touch_steering_enabled()
 	if _last_points >= 0.0:
 		hud.show_effect("points")
-		hud.set_controls_message("Bonus Points", 20)
+		hud.set_controls_message(tr("BONUS POINTS"))
 	elif _last_more_time >= 0.0:
 		hud.show_effect("more_time")
-		hud.set_controls_message("Extra Time", 20)
+		hud.set_controls_message(tr("EXTRA TIME"))
 	elif _last_less_time >= 0.0:
 		hud.show_effect("less_time")
-		hud.set_controls_message("Time Lost", 20)
+		hud.set_controls_message(tr("TIME LOST"))
 	elif _last_life >= 0.0:
 		hud.show_effect("life")
-		hud.set_controls_message("Extra Life", 20)
+		hud.set_controls_message(tr("EXTRA LIFE"))
 	elif reverse and vanish > 0:
-		hud.set_controls_message("Controls reversed &\n" + _see_you(vanish), 18)
+		var note := tr_n(
+			"CONTROLS REVERSED &\nSEE YOU AGAIN IN %d MOVE",
+			"CONTROLS REVERSED &\nSEE YOU AGAIN IN %d MOVES",
+			vanish
+		)
+		hud.set_controls_message(note % vanish)
 		hud.show_double_effect("reverse", "vanish")
 	elif reverse and stuck:
-		hud.set_controls_message(
-			"Stuck, & controls reversed. %s to release." % shake_word.capitalize(), 18
-		)
+		if shake:
+			hud.set_controls_message(tr("STUCK & CONTROLS REVERSED. SHAKE TO RELEASE."))
+		else:
+			hud.set_controls_message(tr("STUCK & CONTROLS REVERSED. TAP TO RELEASE."))
 		hud.show_double_effect("reverse", "sticky")
 	elif reverse and _last_hide >= 0.0 and map.tiles_hidden:
-		hud.set_controls_message("Controls reversed &\ntiles hidden", 18)
+		hud.set_controls_message(tr("CONTROLS REVERSED &\nTILES HIDDEN"))
 		hud.show_double_effect("reverse", "hide")
 	elif stuck:
-		hud.set_controls_message("Stuck, %s to release" % shake_word, 20)
+		hud.set_controls_message(
+			tr("STUCK, SHAKE TO RELEASE" if shake else "STUCK, TAP TO RELEASE")
+		)
 		hud.show_effect("sticky")
 	elif reverse:
-		hud.set_controls_message("Controls reversed", 20)
+		hud.set_controls_message(tr("CONTROLS REVERSED"))
 		hud.show_effect("reverse")
 	elif vanish > 0:
-		hud.set_controls_message(_see_you(vanish, true), 18)
+		var note := tr_n("SEE YOU AGAIN IN %d MOVE", "SEE YOU AGAIN IN %d MOVES", vanish)
+		hud.set_controls_message(note % vanish)
 		hud.show_effect("vanish")
 	elif _last_hide >= 0.0:
 		if map.tiles_hidden:
 			hud.show_effect("hide")
-			hud.set_controls_message("Tiles hidden", 20)
+			hud.set_controls_message(tr("TILES HIDDEN"))
 		else:
 			hud.show_effect("unhide")
-			hud.set_controls_message("Tiles unhidden", 20)
+			hud.set_controls_message(tr("TILES UNHIDDEN"))
 	else:
 		hud.set_controls_message("")
 		hud.clear_effect()
-
-
-func _see_you(n: int, capital := false) -> String:
-	var text := "see you again in %d move%s" % [n, "" if n == 1 else "s"]
-	return text.left(1).to_upper() + text.substr(1) if capital else text
 
 
 # --- movement (move_player / move_player_x / move_player_y) ----------------
@@ -510,13 +515,13 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.more_times):
 		map.clear(map.more_times)
-		map.float_text(FLOATS.more_time, Blueprint.INK)
+		map.float_text(tr(FLOATS.more_time), Blueprint.INK)
 		_time_left += 5.0
 		_flash("_last_more_time")
 
 	if map.on(map.less_times):
 		map.clear(map.less_times)
-		map.float_text(FLOATS.less_time, Blueprint.PINK)
+		map.float_text(tr(FLOATS.less_time), Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
 
@@ -608,14 +613,14 @@ func load_level() -> void:
 		hud.set_time_message("")
 		_start_ending()
 	elif tutorial:
-		hud.set_tutorial_text(data.get("description", ""))
+		hud.set_tutorial_text(tr(data.get("description", "")))
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
 	else:
 		hud.set_tutorial_text("")
 		hud.set_timer(0, -1.0, true)
 		hud.blank_timer()
-		hud.set_time_message("get ready...")
+		hud.set_time_message(tr("GET READY..."))
 		if not practice:
 			Save.level_reached(level)
 	_update_stats()
@@ -660,12 +665,8 @@ func advance_level(check_point: bool) -> void:
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
 		if practice:
 			Audio.play("end_level")
-			_end_practice(
-				(
-					"level %d: %ds left%s"
-					% [level, _seconds_remaining(), ", new best!" if new_best else ""]
-				)
-			)
+			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
+			_end_practice(note % [level, _seconds_remaining()])
 			return
 		Dev.record(level, "win", _time_left, _moves)
 	if check_point:
@@ -886,6 +887,8 @@ func _on_menu_action(act: String) -> void:
 			Save.reduce_motion = act == "reduce motion on"
 			Save.save_all()
 			menus.show_options()
+		"language":
+			menus.show_language()
 		"main menu":
 			if game_active:
 				game_over(false)
@@ -928,7 +931,12 @@ func _on_menu_action(act: String) -> void:
 			set_background()
 			menus.show_congratulations(score, pb)
 		_:
-			if act.begins_with("practice page "):
+			if act.begins_with("language "):
+				# "language system" follows the phone; otherwise a locale code.
+				var code := act.get_slice(" ", 1)
+				Save.set_locale("" if code == "system" else code)
+				menus.show_language()
+			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):
 				menus.close()
@@ -993,6 +1001,8 @@ func go_back() -> void:
 			_on_menu_action("unpause")
 		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
+		"language":
+			_on_menu_action("options")
 		"main":
 			get_tree().quit()
 		# Tap-to-continue screens (life lost, level clear, completion scoring)

@@ -30,6 +30,24 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
   let a cheat work when `Dev.enabled` is false.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
+- Languages: every player-facing string is an English msgid passed to `tr()`
+  (plurals through `tr_n()`), listed with a note and a width budget in
+  `i18n/catalog.json`. Translations are `i18n/<locale>.json`; `tools/i18n.py`
+  turns them into the `.po` files `project.godot` loads (run it after editing,
+  `--check` in CI). `tools/subset_fonts.py` cuts Noto Sans fonts down to the
+  characters the translations use (`assets/fonts/i18n/`), so add a glyph source
+  there before adding a script. `Save.locale` is the chosen language ("" follows
+  the phone); Arabic mirrors the sheets (`Menus._mx()`, with Godot's own
+  mirroring off in `project.godot`). `tests/unit/test_i18n.gd` checks the
+  catalog, the translations, the glyphs and, through `tools/layout_check.gd`,
+  that every sheet and HUD state lays out in every language: text fits the
+  box it was given (`Blueprint.fit()` remembers it), stays in the frame and
+  crosses no other text. `tools/i18n_shots.sh` runs the same rules with
+  pictures of every screen in every language (local only, about two minutes).
+- Blueprint labels and buttons join the tree before they are sized: a Control
+  sized outside the tree measures its text with the default theme's font and
+  keeps that box. Figures ("+10", "T-0:20") are forced left-to-right
+  (`Blueprint.direction()`) so they don't flip on an Arabic phone.
 - Tile art is the original @3x set, drawn at scale 1/3 (the menu, button and
   character art is no longer used). Fonts are bundled (JetBrains Mono,
   Liberation; OFL) so screenshots match on every machine.
@@ -59,7 +77,7 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 - `tests/unit/` – GUT tests, one per tile rule; add one for every new rule.
 - `tests/autoplay_test.gd` – a bot walks every level along a safe route; the
   proof that all levels are still solvable.
-- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of twenty
+- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of two dozen
   screens. Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
 - `tools/record_tour.sh` records a video tour (menus, a level, pause, level
   clear, a lost life) with Godot's Movie Maker mode, for showing changes.

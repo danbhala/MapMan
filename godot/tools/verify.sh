@@ -48,10 +48,18 @@ if ! command -v "$GODOT" >/dev/null 2>&1; then
 fi
 
 if command -v gdlint >/dev/null 2>&1; then
-  step lint gdlint scripts tests
-  step format gdformat --check scripts tests
+  step lint gdlint scripts tests tools
+  step format gdformat --check scripts tests tools
 else
   skip lint "gdtoolkit not installed: pip install 'gdtoolkit==4.*'"
+fi
+
+# The translations: every language has every string, and the .po files are
+# what i18n/*.json say.
+if command -v python3 >/dev/null 2>&1; then
+  step i18n python3 tools/i18n.py --check
+else
+  skip i18n "python3 not installed"
 fi
 
 step import "$GODOT" --headless --path . --import

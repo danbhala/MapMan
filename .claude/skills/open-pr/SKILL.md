@@ -79,8 +79,10 @@ to PR titles exactly.
 
 ## Merging
 
-Only merge when the user asks. Wait for the checks (`MapMan checks` and
-`PR title`) to pass, then squash with the PR title as the commit title:
+Only merge when the user asks, and follow the `/release` skill for the whole
+flow (squash only; a merge commit doubles up the changelog). Wait for the
+checks (`MapMan checks` and `PR title`) to pass, then squash with the PR
+title as the commit title:
 
 ```
 gh api -X PUT repos/danbhala/mapman/pulls/<N>/merge -f merge_method=squash \

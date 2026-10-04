@@ -14,7 +14,7 @@ const TUTORIAL_SIZE := 12
 const TIMER_SPAN := 20.0
 const TIMER_LENGTH := 150.0
 
-## Every word the HUD shows (plain English until translation comes).
+## Every word the HUD shows, as the English msgid tr() translates (i18n/).
 const TEXT := {
 	"sheet": "SHEET %03d / %d",
 	"tutorial_sheet": "TUTORIAL %d / %d",
@@ -83,6 +83,8 @@ static func make_icon(path: String, size: Vector2) -> TextureRect:
 
 
 func _ready() -> void:
+	# Every string here is translated once, with tr(); Godot must not try again.
+	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	fonts()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -96,17 +98,14 @@ func _ready() -> void:
 	header = Blueprint.rect(self, Blueprint.STRIP, Vector2.ZERO, Vector2.ZERO)
 	level_label = Blueprint.label(header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	level_label.accessibility_name = TEXT.a11y_level
 	score_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	score_label.accessibility_name = TEXT.a11y_score
 	lives_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_RIGHT
 	)
 	lives_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lives_label.accessibility_name = TEXT.a11y_lives
 
 	bar = Blueprint.rect(self, Blueprint.BAR, Vector2.ZERO, Vector2.ZERO)
 	effect_single = TextureRect.new()
@@ -140,10 +139,19 @@ func _ready() -> void:
 	bar.add_child(timer_line)
 	timer_label = Blueprint.label(bar, "", TIMER_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	timer_label.accessibility_name = TEXT.a11y_time
+	_name_for_readers()
+	Save.locale_changed.connect(_name_for_readers)
 
 	get_viewport().size_changed.connect(layout)
 	layout()
+
+
+## What a screen reader calls each figure, in the language on screen.
+func _name_for_readers() -> void:
+	level_label.accessibility_name = tr(TEXT.a11y_level)
+	score_label.accessibility_name = tr(TEXT.a11y_score)
+	lives_label.accessibility_name = tr(TEXT.a11y_lives)
+	timer_label.accessibility_name = tr(TEXT.a11y_time)
 
 
 func layout() -> void:
@@ -156,23 +164,22 @@ func layout() -> void:
 	header.position = Vector2(inner_x, inset + 1.0)
 	header.size = Vector2(inner_w, HEADER_HEIGHT)
 	level_label.position = Vector2(12, 0)
-	level_label.size = Vector2(200, HEADER_HEIGHT)
+	Blueprint.fit(level_label, Vector2(200, HEADER_HEIGHT))
 	score_label.position = Vector2(0, 0)
-	score_label.size = Vector2(inner_w, HEADER_HEIGHT)
+	Blueprint.fit(score_label, Vector2(inner_w, HEADER_HEIGHT))
 	header_note.position = Vector2(212, 0)
-	header_note.size = Vector2(inner_w - 212 - 132, HEADER_HEIGHT)
+	Blueprint.fit(header_note, Vector2(inner_w - 212 - 132, HEADER_HEIGHT))
 	lives_label.position = Vector2(inner_w - 12 - 120, 0)
-	lives_label.size = Vector2(120, HEADER_HEIGHT)
+	Blueprint.fit(lives_label, Vector2(120, HEADER_HEIGHT))
 
 	bar.position = Vector2(inner_x, s.y - inset - 1.0 - BAR_HEIGHT)
 	bar.size = Vector2(inner_w, BAR_HEIGHT)
-	var timer_w := TIMER_LENGTH + 80.0
-	timer_label.size = Vector2(70, BAR_HEIGHT)
+	Blueprint.fit(timer_label, Vector2(70, BAR_HEIGHT))
 	timer_label.position = Vector2(inner_w - 12 - 70, 0)
 	timer_line.position = Vector2(inner_w - 12 - 70 - 10 - TIMER_LENGTH, BAR_HEIGHT / 2.0)
-	_layout_note(inner_w - timer_w)
+	_layout_note(timer_line.position.x)
 	tutorial_label.position = Vector2(12, 0)
-	tutorial_label.size = Vector2(inner_w - 24, BAR_HEIGHT)
+	Blueprint.fit(tutorial_label, Vector2(inner_w - 24, BAR_HEIGHT))
 
 
 func _layout_note(width_to_timer: float) -> void:
@@ -182,7 +189,7 @@ func _layout_note(width_to_timer: float) -> void:
 	elif effect_top.visible:
 		x = 60.0
 	note_label.position = Vector2(x, 0)
-	note_label.size = Vector2(width_to_timer - x - 8.0, BAR_HEIGHT)
+	Blueprint.fit(note_label, Vector2(width_to_timer - x - 8.0, BAR_HEIGHT))
 
 
 ## The frame, note and countdown take the colour of the current effect.
@@ -198,20 +205,26 @@ func set_state_color(color: Color) -> void:
 # --- header -------------------------------------------------------------
 
 
+## A label's text, reading the way the text does (Blueprint.direction).
+static func _set_text(label: Label, text: String) -> void:
+	label.text = text
+	label.text_direction = Blueprint.direction(text)
+
+
 func set_level(level: int, count: int) -> void:
-	level_label.text = TEXT.sheet % [level, count]
+	_set_text(level_label, tr(TEXT.sheet) % [level, count])
 
 
 func set_tutorial_level(level: int, count: int) -> void:
-	level_label.text = TEXT.tutorial_sheet % [level, count]
+	_set_text(level_label, tr(TEXT.tutorial_sheet) % [level, count])
 
 
 func set_score(score: int) -> void:
-	score_label.text = TEXT.score % score
+	_set_text(score_label, TEXT.score % score)
 
 
 func set_lives(lives: int) -> void:
-	lives_label.text = TEXT.lives % lives
+	_set_text(lives_label, TEXT.lives % lives)
 
 
 func show_stats(on: bool) -> void:
@@ -235,32 +248,37 @@ func show_bar(on: bool) -> void:
 
 ## The note shows the controls message if there is one, else the time message.
 ## During the tutorial the bar belongs to the lesson, so the note (without
-## its icon) sits in the header strip instead.
+## its icon) sits in the header strip instead. Messages arrive translated and
+## already in the sheet's capitals.
 func _refresh_note() -> void:
 	var text := _controls_text if _controls_text != "" else _time_text
-	note_label.text = "" if _tutorial else text
-	header_note.text = text if _tutorial else ""
+	_set_text(note_label, "" if _tutorial else text)
+	_set_text(header_note, text if _tutorial else "")
+	# Right-to-left languages read the note from the right edge of its box.
+	var side := HORIZONTAL_ALIGNMENT_RIGHT if Save.reads_rtl() else HORIZONTAL_ALIGNMENT_LEFT
+	note_label.horizontal_alignment = side
+	tutorial_label.horizontal_alignment = side
 	_show_icons(not _tutorial)
 
 
 func set_controls_message(text: String, _size := 20) -> void:
-	_controls_text = text.to_upper()
+	_controls_text = text
 	_refresh_note()
 
 
 func set_tutorial_text(text: String) -> void:
 	# The lesson fills the bar on two wrapped lines; its own line breaks would
 	# make a third. No countdown runs during it.
-	tutorial_label.text = text.replace("\n", " ")
+	_set_text(tutorial_label, text.replace("\n", " "))
 	_tutorial = text != ""
 	var s := get_viewport_rect().size
 	var inner_w := s.x - 2.0 * (Blueprint.INSET + 1.0)
-	_layout_note(inner_w if _tutorial else inner_w - TIMER_LENGTH - 80.0)
+	_layout_note(inner_w if _tutorial else timer_line.position.x)
 	_refresh_note()
 
 
 func set_time_message(text: String, _size := 30) -> void:
-	_time_text = text.to_upper()
+	_time_text = text
 	_refresh_note()
 
 
@@ -268,7 +286,7 @@ func set_time_message(text: String, _size := 30) -> void:
 func set_timer(seconds: int, fractional: float, visible_timer := true) -> void:
 	timer_label.visible = visible_timer
 	timer_line.visible = visible_timer
-	timer_label.text = "T-0:%02d" % seconds
+	_set_text(timer_label, "T-0:%02d" % seconds)
 	var multiplier := 1.0
 	if fractional >= 0.0 and fractional <= 3.0:
 		var whole := int(fractional)

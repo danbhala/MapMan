@@ -1,0 +1,626 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MapMan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+
+#. Header of every menu sheet: the game name, the sheet number (%s, e.g. 001 or P-02), the sheet title (%s). Keep MAPMAN. Blueprint drawing-sheet vocabulary throughout.
+msgid "MAPMAN  —  SHEET %s  —  %s"
+msgstr "MAPMAN  —  لوحة %s  —  %s"
+
+#. Title block, three lines: revision (%s is a version like 1.3.0), scale, sheet number (%s). Each line at most 11 characters.
+msgid ""
+"REV %s\n"
+"SCALE 1:3\n"
+"SHEET %s"
+msgstr ""
+"إصدار %s\n"
+"مقياس 1:3\n"
+"لوحة %s"
+
+#. Column heading over a parts list
+msgid "ITEM"
+msgstr "البند"
+
+#. Column heading over a parts list
+msgid "DESCRIPTION"
+msgstr "الوصف"
+
+#. Column heading on the options sheet
+msgid "PARAMETER"
+msgstr "الإعداد"
+
+#. Column heading
+msgid "VALUE"
+msgstr "القيمة"
+
+#. Column heading: quantity
+msgid "QTY"
+msgstr "الكمية"
+
+#. Row that goes back to the main menu (sheet 001). Keep the '<  ' prefix.
+msgid "<  RETURN TO SHEET 001"
+msgstr "<  العودة إلى اللوحة 001"
+
+#. Sheet title and a row text
+msgid "MAIN MENU"
+msgstr "القائمة الرئيسية"
+
+#. Label of the total row on a score table
+msgid "TOTAL"
+msgstr "المجموع"
+
+#. Small print prefix; %s is a sentence
+msgid "NOTE: %s"
+msgstr "ملاحظة: %s"
+
+#. Sheet title
+msgid "FIRST RUN"
+msgstr "التشغيل الأول"
+
+#. Sheet title and a row text
+msgid "OPTIONS"
+msgstr "الخيارات"
+
+#. Sheet title
+msgid "PAUSED"
+msgstr "إيقاف مؤقت"
+
+#. Sheet title (confirm quitting)
+msgid "CONFIRM"
+msgstr "تأكيد"
+
+#. Sheet title when a life is lost; defect as on an inspection report
+msgid "LEVEL %d — DEFECT"
+msgstr "المستوى %d — عيب"
+
+#. Sheet title
+msgid "GAME OVER"
+msgstr "انتهت اللعبة"
+
+#. Sheet title: pick a checkpoint to restart from
+msgid "CHECKPOINTS"
+msgstr "نقاط التفتيش"
+
+#. Sheet title: practice mode, a range of levels
+msgid "PRACTICE — LEVELS %d–%d"
+msgstr "تدريب — المستويات %d–%d"
+
+#. Sheet title after clearing a level: the score is 'inspected'
+msgid "LEVEL %d — INSPECTION"
+msgstr "المستوى %d — فحص"
+
+#. Sheet title after clearing a checkpoint level
+msgid "LEVEL %d — CHECKPOINT"
+msgstr "المستوى %d — نقطة تفتيش"
+
+#. Sheet title after finishing the game
+msgid "CONGRATULATIONS"
+msgstr "تهانينا"
+
+#. Sheet title: final score table
+msgid "FINAL INSPECTION"
+msgstr "الفحص النهائي"
+
+#. Options row and the language sheet's title
+msgid "LANGUAGE"
+msgstr "اللغة"
+
+#. Options value and a box on the language sheet: follow the phone's language; the value column holds 17 characters
+msgid "PHONE'S LANGUAGE"
+msgstr "لغة الهاتف"
+
+#. Main menu row
+msgid "PLAY FROM START"
+msgstr "اللعب من البداية"
+
+#. Main menu row
+msgid "CONTINUE FROM CHECKPOINT"
+msgstr "متابعة من نقطة التفتيش"
+
+#. Main menu row
+msgid "PRACTICE A LEVEL"
+msgstr "تدريب على مستوى"
+
+#. Main menu row
+msgid "TUTORIAL"
+msgstr "الدرس التعليمي"
+
+#. Main menu small print
+msgid "BEST SCORE %d"
+msgstr "أفضل نتيجة %d"
+
+#. Main menu small print, n is 100
+msgid "%d LEVEL"
+msgid_plural "%d LEVELS"
+msgstr[0] "%d مستويات"
+msgstr[1] "%d مستوى"
+msgstr[2] "%d مستويان"
+msgstr[3] "%d مستويات"
+msgstr[4] "%d مستوى"
+msgstr[5] "%d مستوى"
+
+#. First run sheet, small print
+msgid "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE"
+msgstr "جديد على MAPMAN؟ الدرس التعليمي يستغرق دقيقة"
+
+#. First run row
+msgid "TAKE THE TUTORIAL"
+msgstr "خوض الدرس التعليمي"
+
+#. First run row
+msgid "SKIP TO THE GAME"
+msgstr "تخطي الدرس وبدء اللعبة"
+
+#. Options row (a toggle)
+msgid "MUSIC"
+msgstr "الموسيقى"
+
+#. Options row (a toggle)
+msgid "SOUND EFFECTS"
+msgstr "المؤثرات الصوتية"
+
+#. Options row (a toggle)
+msgid "VIBRATION"
+msgstr "الاهتزاز"
+
+#. Options row: turns decorative animation off
+msgid "REDUCE MOTION"
+msgstr "تقليل الحركة"
+
+#. Pause sheet status line; work suspended as on a drawing office note
+msgid "WORK SUSPENDED AT LEVEL %d"
+msgstr "العمل متوقف عند المستوى %d"
+
+#. Appended to the status line: minutes:seconds left on the clock. Keep the leading ' · ' and T-%d:%02d.
+msgid " · T-%d:%02d REMAINING"
+msgstr " · المتبقي T-%d:%02d"
+
+#. Pause sheet status line in the tutorial
+msgid "WORK SUSPENDED · TUTORIAL"
+msgstr "العمل متوقف · الدرس التعليمي"
+
+#. Pause sheet status line on the final map
+msgid "WORK SUSPENDED · FINAL SHEET"
+msgstr "العمل متوقف · اللوحة الأخيرة"
+
+#. Pause row
+msgid "RESUME"
+msgstr "استئناف"
+
+#. Pause row
+msgid "END GAME"
+msgstr "إنهاء اللعبة"
+
+#. Pause row
+msgid "END TUTORIAL"
+msgstr "إنهاء الدرس التعليمي"
+
+#. Pause sheet small print
+msgid "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "ملاحظة: أمِل الهاتف للتحرك · انقر اللوحة للإيقاف المؤقت"
+
+#. Rubber stamp on the pause sheet; one or two short words
+msgid "ON HOLD"
+msgstr "معلق"
+
+#. Confirm sheet, two lines
+msgid ""
+"END THIS GAME?\n"
+"PROGRESS SINCE THE LAST CHECKPOINT IS LOST"
+msgstr ""
+"إنهاء هذه اللعبة؟\n"
+"سيضيع التقدم منذ آخر نقطة تفتيش"
+
+#. Confirm row
+msgid "NO, KEEP PLAYING"
+msgstr "لا، متابعة اللعب"
+
+#. Confirm row
+msgid "YES, END THE GAME"
+msgstr "نعم، إنهاء اللعبة"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: STEPPED ON A DEATH TILE"
+msgstr "عيب: الدوس على بلاطة سامة"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: OUT OF TIME"
+msgstr "عيب: نفاد الوقت"
+
+#. Lost-life sheet label, discs follow
+msgid "LIVES REMAINING"
+msgstr "الأرواح المتبقية"
+
+#. Lost-life row
+msgid "TRY AGAIN FROM THE START TILE"
+msgstr "محاولة أخرى من بلاطة البداية"
+
+#. Lost-life small print
+msgid "NOTE: ROUTE AROUND THE DEATH TILES"
+msgstr "ملاحظة: تجنب البلاطات السامة"
+
+#. Lost-life small print after a timeout: 20 seconds per level
+msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
+msgstr "ملاحظة: T-0:20 لكل لوحة · اسلك الطريق الأقصر"
+
+#. Rubber stamp on the lost-life sheet
+msgid "REWORK"
+msgstr "إعادة عمل"
+
+#. Game over label
+msgid "FINAL SCORE"
+msgstr "النتيجة النهائية"
+
+#. Game over small print
+msgid "PREVIOUS BEST  %d"
+msgstr "أفضل نتيجة سابقة  %d"
+
+#. Game over row
+msgid "RESTART FROM A CHECKPOINT"
+msgstr "إعادة البدء من نقطة تفتيش"
+
+#. Rubber stamp: a new high score
+msgid "NEW BEST"
+msgstr "رقم قياسي"
+
+#. Checkpoints sheet heading
+msgid "RESTART FROM A SAVED CHECKPOINT"
+msgstr "إعادة البدء من نقطة تفتيش محفوظة"
+
+#. Checkpoint cell: reached and saved
+msgid "SAVED"
+msgstr "محفوظ"
+
+#. Cell: not reached yet
+msgid "LOCKED"
+msgstr "مقفل"
+
+#. Practice grid column pair heading: level ('part' of the drawing) and best result. Keep the three spaces.
+msgid "PART   BEST"
+msgstr "قطعة   الأفضل"
+
+#. Level cell label, L for level; keep short
+msgid "L%02d"
+msgstr "L%02d"
+
+#. Best in a practice cell: seconds left, star count. Keep ★.
+msgid "%ds ★%d"
+msgstr "%d ث ★%d"
+
+#. Seconds, short unit
+msgid "%ds"
+msgstr "%d ث"
+
+#. Practice caption: page x of y
+msgid "SHEET %d OF %d"
+msgstr "لوحة %d من %d"
+
+#. Practice caption: levels unlocked
+msgid "%d PART RELEASED"
+msgid_plural "%d PARTS RELEASED"
+msgstr[0] "%d قطع متاحة"
+msgstr[1] "%d قطعة متاحة"
+msgstr[2] "%d قطعتان متاحتان"
+msgstr[3] "%d قطع متاحة"
+msgstr[4] "%d قطعة متاحة"
+msgstr[5] "%d قطعة متاحة"
+
+#. Score table row
+msgid "LEVEL BONUS"
+msgstr "مكافأة المستوى"
+
+#. Score table row
+msgid "TIME BONUS"
+msgstr "مكافأة الوقت"
+
+#. Score table row
+msgid "STARS COLLECTED"
+msgstr "النجوم الملتقطة"
+
+#. Seconds with a space, quantity column
+msgid "%d s"
+msgstr "%d ث"
+
+#. Level clear small print; next level number
+msgid "TAP TO CONTINUE TO SHEET %03d"
+msgstr "انقر للمتابعة إلى اللوحة %03d"
+
+#. Level 100 clear small print
+msgid "TAP TO CONTINUE TO THE FINAL SHEET"
+msgstr "انقر للمتابعة إلى اللوحة الأخيرة"
+
+#. Checkpoint level clear small print
+msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
+msgstr "تم حفظ نقطة التفتيش · يمكنك البدء من هنا في أي وقت"
+
+#. Rubber stamp on a cleared level
+msgid "PASSED"
+msgstr "مقبول"
+
+#. Congratulations small print
+msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
+msgstr "تم اعتماد اللوحات الـ100 جميعها · كل المستويات متاحة في التدريب"
+
+#. Final score table row
+msgid "SCORE AT LEVEL 100"
+msgstr "نتيجة المستوى 100"
+
+#. Final score table row
+msgid "COMPLETION BONUS"
+msgstr "مكافأة الإكمال"
+
+#. Final score table row: 50 points per life left
+msgid "LIVES REMAINING ×50"
+msgstr "الأرواح المتبقية ×50"
+
+#. Final inspection small print
+msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
+msgstr "تم اعتماد اللوحات الـ100 جميعها · شكرًا على اللعب"
+
+#. Rubber stamp on the final sheet
+msgid "APPROVED"
+msgstr "معتمد"
+
+#. HUD header: level number / level count
+msgid "SHEET %03d / %d"
+msgstr "لوحة %03d / %d"
+
+#. HUD header in the tutorial
+msgid "TUTORIAL %d / %d"
+msgstr "درس %d / %d"
+
+#. HUD note at level start
+msgid "GO!"
+msgstr "انطلق!"
+
+#. HUD note, three seconds left
+msgid "HURRY UP!"
+msgstr "أسرع!"
+
+#. HUD note while the level loads
+msgid "GET READY..."
+msgstr "استعد..."
+
+#. HUD note on level 1
+msgid "TILT TO MOVE"
+msgstr "أمِل الهاتف للتحرك"
+
+#. HUD note: a star was collected
+msgid "BONUS POINTS"
+msgstr "نقاط مكافأة"
+
+#. HUD note
+msgid "EXTRA TIME"
+msgstr "وقت إضافي"
+
+#. HUD note
+msgid "TIME LOST"
+msgstr "خسارة وقت"
+
+#. HUD note
+msgid "EXTRA LIFE"
+msgstr "روح إضافية"
+
+#. HUD note: tilt directions are mirrored
+msgid "CONTROLS REVERSED"
+msgstr "التحكم معكوس"
+
+#. HUD note
+msgid "TILES HIDDEN"
+msgstr "البلاطات مخفية"
+
+#. HUD note: the hidden tiles are back
+msgid "TILES UNHIDDEN"
+msgstr "عادت البلاطات للظهور"
+
+#. HUD note while MapMan is invisible
+msgid "SEE YOU AGAIN IN %d MOVE"
+msgid_plural "SEE YOU AGAIN IN %d MOVES"
+msgstr[0] "نراك بعد %d خطوات"
+msgstr[1] "نراك بعد %d خطوة"
+msgstr[2] "نراك بعد %d خطوتين"
+msgstr[3] "نراك بعد %d خطوات"
+msgstr[4] "نراك بعد %d خطوة"
+msgstr[5] "نراك بعد %d خطوة"
+
+#. HUD note, two lines, both effects at once
+msgid ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVE"
+msgid_plural ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVES"
+msgstr[0] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوات"
+msgstr[1] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوة"
+msgstr[2] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوتين"
+msgstr[3] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوات"
+msgstr[4] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوة"
+msgstr[5] ""
+"التحكم معكوس &\n"
+"نراك بعد %d خطوة"
+
+#. HUD note, two lines
+msgid ""
+"CONTROLS REVERSED &\n"
+"TILES HIDDEN"
+msgstr ""
+"التحكم معكوس &\n"
+"البلاطات مخفية"
+
+#. HUD note: caught in a cobweb; shake the phone
+msgid "STUCK, SHAKE TO RELEASE"
+msgstr "عالق، هز الهاتف للتحرر"
+
+#. HUD note on a desktop without sensors
+msgid "STUCK, TAP TO RELEASE"
+msgstr "عالق، انقر للتحرر"
+
+#. HUD note, both effects
+msgid "STUCK & CONTROLS REVERSED. SHAKE TO RELEASE."
+msgstr "عالق & التحكم معكوس. هز الهاتف للتحرر."
+
+#. HUD note, both effects, desktop
+msgid "STUCK & CONTROLS REVERSED. TAP TO RELEASE."
+msgstr "عالق & التحكم معكوس. انقر للتحرر."
+
+#. Practice result caption: seconds left on the clock
+msgid "LEVEL %d: %ds LEFT"
+msgstr "المستوى %d: بقي %d ث"
+
+#. Practice result caption
+msgid "LEVEL %d: %ds LEFT, NEW BEST!"
+msgstr "المستوى %d: بقي %d ث، قياسي!"
+
+#. Floating note on an extra-time tile: five seconds
+msgid "+5 S"
+msgstr "+5 ث"
+
+#. Floating note on a time-loss tile; keep the minus sign U+2212
+msgid "−5 S"
+msgstr "−5 ث"
+
+#. Screen reader name of the practice page arrow
+msgid "Previous page"
+msgstr "الصفحة السابقة"
+
+#. Screen reader name
+msgid "Next page"
+msgstr "الصفحة التالية"
+
+#. Screen reader name of a practice cell
+msgid "Level %d"
+msgstr "المستوى %d"
+
+#. Screen reader name
+msgid "Level %d, locked"
+msgstr "المستوى %d، مقفل"
+
+#. Screen reader name of a checkpoint cell
+msgid "Restart after level %d"
+msgstr "إعادة البدء بعد المستوى %d"
+
+#. Screen reader name
+msgid "Checkpoint at level %d, not reached"
+msgstr "نقطة تفتيش المستوى %d، لم يتم بلوغها"
+
+#. Screen reader state of a toggle
+msgid "on"
+msgstr "تشغيل"
+
+#. Screen reader state of a toggle
+msgid "off"
+msgstr "إيقاف"
+
+#. Screen reader
+msgid "%d life remaining"
+msgid_plural "%d lives remaining"
+msgstr[0] "%d أرواح متبقية"
+msgstr[1] "%d روح متبقية"
+msgstr[2] "%d روحان متبقيتان"
+msgstr[3] "%d أرواح متبقية"
+msgstr[4] "%d روح متبقية"
+msgstr[5] "%d روح متبقية"
+
+#. Screen reader name of the HUD level label
+msgid "Level"
+msgstr "المستوى"
+
+#. Screen reader name
+msgid "Score"
+msgstr "النتيجة"
+
+#. Screen reader name
+msgid "Lives"
+msgstr "الأرواح"
+
+#. Screen reader name
+msgid "Time left"
+msgstr "الوقت المتبقي"
+
+#. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
+msgid ""
+"Tilt your device to move around the map.\n"
+"Head for the exit tile to progress to the next level."
+msgstr ""
+"أمِل جهازك لتتحرك في الخريطة.\n"
+"توجه إلى بلاطة الخروج للانتقال إلى المستوى التالي."
+
+#. Tutorial lesson 2
+msgid ""
+"Stepping on this tile will reverse the controls.\n"
+"Step on another and they go back to normal."
+msgstr ""
+"الدوس على هذه البلاطة يعكس التحكم.\n"
+"إن دست على أخرى مثلها عاد إلى طبيعته."
+
+#. Tutorial lesson 3
+msgid ""
+"Stepping on this tile will make Map Man disappear.\n"
+"Don't worry, after a few moves he will show up again."
+msgstr ""
+"الدوس على هذه البلاطة يجعل Map Man يختفي.\n"
+"لا تقلق، سيظهر مجددًا بعد بضع خطوات."
+
+#. Tutorial lesson 4
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Shake your device to free him and get moving again."
+msgstr ""
+"الدوس على هذه البلاطة يجعل Map Man يعلق.\n"
+"هز جهازك لتحريره والانطلاق من جديد."
+
+#. Tutorial lesson 5
+msgid ""
+"Watch out for bonus points,\n"
+"although you may have to go out of your way to get them."
+msgstr ""
+"انتبه لنقاط المكافأة،\n"
+"لكن قد تضطر إلى الابتعاد عن طريقك للحصول عليها"
+
+#. Tutorial lesson 6
+msgid ""
+"Also keep an eye out for extra lives,\n"
+"but take care as they will take you\n"
+"even more off course than bonus points."
+msgstr ""
+"انتبه أيضًا للأرواح الإضافية،\n"
+"لكن احذر، فهي تبعدك عن طريقك\n"
+"أكثر من نقاط المكافأة"
+
+#. Tutorial lesson 7
+msgid "Be careful of the poison tiles: if you step on them you will lose a life."
+msgstr "احذر البلاطات السامة، فإن دست عليها خسرت روحًا."
+
+#. Tutorial lesson 8
+msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
+msgstr "هذه البلاطات تمنحك وقتًا إضافيًا أو تخسرك وقتًا. ستحصل على نقاط مكافأة مقابل الوقت المتبقي عند إنهاء كل مستوى."
+
+#. Tutorial lesson 9
+msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+msgstr "هذه البلاطات تجعل بلاطات أخرى تختفي وتظهر من جديد. يمكنك الدوس على البلاطات المخفية، فتذكر أماكنها."
+
+#. Tutorial lesson 10
+msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
+msgstr "ستصادف نقطة تفتيش بين الحين والآخر. كلما بلغت نقطة تفتيش أمكنك البدء منها بدلًا من العودة إلى البداية."
+
+#. Tutorial lesson 11
+msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
+msgstr "إن احتجت إلى استراحة، انقر الشاشة أثناء اللعب للإيقاف المؤقت. بعدها يمكنك استئناف اللعب أو الخروج من اللعبة."
+
+#. Tutorial lesson 12
+msgid "You're all set, head for the exit to start the game. Have fun!"
+msgstr "أنت جاهز، توجه إلى الخروج لبدء اللعبة. استمتع!"

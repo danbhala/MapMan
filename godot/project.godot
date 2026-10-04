@@ -17,6 +17,13 @@ config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://assets/man/idle/front.png"
 config/quit_on_go_back=false
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://i18n/es.po", "res://i18n/pt_BR.po", "res://i18n/fr.po", "res://i18n/it.po", "res://i18n/de.po", "res://i18n/ga.po", "res://i18n/ru.po", "res://i18n/tr.po", "res://i18n/id.po", "res://i18n/ja.po", "res://i18n/ko.po", "res://i18n/zh_CN.po", "res://i18n/zh_TW.po", "res://i18n/ar.po")
+rendering/root_node_layout_direction=1
+# ICU line-break rules on the phone too, so Japanese and Chinese wrap as on the desktop.
+locale/include_text_server_data=true
+
 [autoload]
 
 Save="*res://scripts/save.gd"

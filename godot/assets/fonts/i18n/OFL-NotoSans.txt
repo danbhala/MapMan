@@ -1,0 +1,7 @@
+Noto Sans Arabic, Noto Sans JP, Noto Sans KR, Noto Sans SC, Noto Sans TC
+Copyright 2022 The Noto Project Authors (https://github.com/notofonts)
+
+The *-Subset files here are cut down by tools/subset_fonts.py to the
+characters the translations in i18n/ use, keeping the weight axis. They are
+licensed under the SIL Open Font License, Version 1.1, the same licence as
+JetBrains Mono: see OFL-JetBrainsMono.txt in the folder above for the text.
