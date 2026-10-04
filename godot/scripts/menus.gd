@@ -32,6 +32,9 @@ const CHIP_PAD := 10.0
 const CHIP_GAP := 8.0
 const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
+## The options sheet's rows: seven of them, a little tighter than TAP_HEIGHT.
+const OPTIONS_TOP := 78.0
+const OPTIONS_PITCH := 40.0
 ## Where MapMan stands, how big he is, and his height in his own units as
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
@@ -86,7 +89,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -595,9 +598,10 @@ func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array =
 
 ## The way back to the main menu, as the last row of a sheet; from a level
 ## clear, the way back to it (sheet `level`).
-func _return_item(y: float, level := 0) -> void:
+func _return_item(y: float, height := Blueprint.TAP_HEIGHT, level := 0) -> void:
 	var text: String = _t("return_to") % level if level > 0 else _t("return_item")
-	var b := Blueprint.item(_panel, text, Vector2(_mx(LIST_X, LIST_W), y))
+	var pos := Vector2(_mx(LIST_X, LIST_W), y)
+	var b := Blueprint.item(_panel, text, pos, Vector2(LIST_W, height))
 	b.alignment = _align()
 	if level > 0:
 		b.accessibility_name = _sentence(_t("inspection_title") % level)
@@ -899,30 +903,35 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
-	var acts := ["music", "fx", "vibration", "reduce motion"]
+	var states := [
+		Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.tilt_gauge
+	]
+	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
 	for i in acts.size():
 		var on: bool = states[i]
-		var b := _value_row(names[i], TEXT.on if on else TEXT.off, 80 + i * 44)
+		var b := _value_row(names[i], TEXT.on if on else TEXT.off, OPTIONS_TOP + i * OPTIONS_PITCH)
 		var state: String = _t("a11y_on") if on else _t("a11y_off")
 		b.accessibility_name = TEXT.a11y_toggle % [_sentence(names[i]), state]
 		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
 		b.pressed.connect(_remember_row.bind(i))
 		if i == refocus:
 			_first_button = b
-	var lang := _value_row(_t("language_title"), _language_name(Save.locale), 80 + acts.size() * 44)
+	var lang := _value_row(
+		_t("language_title"), _language_name(Save.locale), OPTIONS_TOP + acts.size() * OPTIONS_PITCH
+	)
 	_connect(lang, "language")
-	_return_item(80 + (acts.size() + 1) * 44)
+	_return_item(OPTIONS_TOP + (acts.size() + 1) * OPTIONS_PITCH, OPTIONS_PITCH)
 	_hero_on("tilt")
 	_focus_first()
 
 
 ## An options row: the parameter on the left, its value in the VALUE column.
 func _value_row(name: String, value: String, y: float) -> Button:
-	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y))
+	var size := Vector2(LIST_W, OPTIONS_PITCH)
+	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size)
 	b.alignment = _align()
 	# The value column runs from 20 characters in to the row's far margin, at
 	# the mirror image on a right-to-left sheet.
@@ -933,7 +942,7 @@ func _value_row(name: String, value: String, y: float) -> Button:
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	Blueprint.fit(l, Vector2(w, Blueprint.TAP_HEIGHT))
+	Blueprint.fit(l, Vector2(w, OPTIONS_PITCH))
 	_reveal(b)
 	return b
 

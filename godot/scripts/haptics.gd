@@ -20,6 +20,7 @@ const PATTERNS := {
 	"lose_life": [250, 1.0],
 	"toggle": [40, 0.6],  # turning vibration on in the options
 	"stamp": [60, 0.9],  # a rubber stamp landing on a menu sheet
+	"recentre": [25, 0.5],  # tapping the tilt gauge to take a new level
 }
 
 ## The last buzz requested, for tests: [name, milliseconds, strength].

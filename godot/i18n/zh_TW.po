@@ -166,6 +166,10 @@ msgstr "震動"
 msgid "REDUCE MOTION"
 msgstr "減少動態效果"
 
+#. Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted
+msgid "TILT GAUGE"
+msgstr "傾斜指示器"
+
 #. Pause sheet status line; work suspended as on a drawing office note
 msgid "WORK SUSPENDED AT LEVEL %d"
 msgstr "第%d關停工中"
@@ -534,11 +538,11 @@ msgstr "剩餘時間"
 
 #. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
 msgid ""
-"Tilt your device to move around the map.\n"
-"Head for the exit tile to progress to the next level."
+"Tilt your device to move around the map and head for the exit tile.\n"
+"The gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
 msgstr ""
-"傾斜裝置即可在地圖中移動。\n"
-"前往出口地磚即可進入下一關。"
+"傾斜裝置即可移動，前往出口地磚。\n"
+"角落的指示器顯示傾斜程度：超過虛線圈走路，超過實線圈奔跑。"
 
 #. Tutorial lesson 2
 msgid ""
@@ -599,8 +603,8 @@ msgid "Every so often you'll come across a checkpoint. Each time you reach a che
 msgstr "你會不時遇到檢查點。每到達一個檢查點，就可以從那裡重新開始，而不必回到起點。"
 
 #. Tutorial lesson 11
-msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
-msgstr "想休息時，在遊戲中點一下螢幕即可暫停。暫停後可以選擇繼續遊戲或離開遊戲。"
+msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+msgstr "遊戲中點一下螢幕即可暫停。換了握持姿勢？點一下角落的指示器，即可將目前角度設為新的中心。"
 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
