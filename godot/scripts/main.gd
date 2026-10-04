@@ -34,6 +34,9 @@ var hud: Hud
 var menus: Menus
 var tilt := TiltInput.new()
 var dev_panel: DevPanel
+var gauge: TiltGauge
+## Show the tilt gauge without an accelerometer (screenshots, desktop tests).
+var show_gauge_anyway := false
 
 # game state (names follow the original)
 var game_active := false
@@ -123,6 +126,10 @@ func _ready() -> void:
 	add_child(hud_layer)
 	hud = Hud.new()
 	hud_layer.add_child(hud)
+	gauge = TiltGauge.new()
+	gauge.visible = false
+	hud_layer.add_child(gauge)
+	gauge.recentre.connect(recentre)
 
 	var menu_layer := CanvasLayer.new()
 	menu_layer.layer = 10
@@ -157,6 +164,7 @@ func _load_data() -> void:
 func _layout() -> void:
 	var s := get_viewport_rect().size
 	tilt.screen_size = s
+	gauge.place(s)
 	_grid.size = s
 	_grid.queue_redraw()
 
@@ -218,6 +226,7 @@ func started() -> bool:
 
 
 func _process(delta: float) -> void:
+	_update_gauge(delta)
 	if menus.visible or not game_active:
 		return
 
@@ -249,6 +258,41 @@ func loaded() -> void:
 	if not tutorial:
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
+
+
+## The tilt gauge shows while playing, on phones that tilt, unless turned off.
+func _update_gauge(delta: float) -> void:
+	gauge.visible = (
+		game_active
+		and not menus.visible
+		and Save.tilt_gauge
+		and (TiltInput.has_accelerometer() or show_gauge_anyway)
+	)
+	if not gauge.visible:
+		return
+	gauge.steer = tilt.get_vector()
+	gauge.pace = pace(gauge.steer)
+	gauge.near_player(player.position, delta)
+
+
+## Tapping the gauge: the way the phone is held now becomes level.
+func recentre() -> void:
+	tilt.calibrate()
+	_held_step = Vector2i.ZERO
+	gauge.ripple()
+	Haptics.feel("recentre")
+
+
+## What steering vector `v` does, by the rule in _try_axis(): 0 MapMan stays
+## put, 1 he walks, 2 he runs.
+func pace(v: Vector2) -> int:
+	var lean := maxf(absf(v.x), absf(v.y))
+	var start: float = Dev.t("tilt_threshold")
+	if _held_step != Vector2i.ZERO:
+		start = minf(start, Dev.t("keep_threshold"))
+	if lean <= start:
+		return 0
+	return 2 if lean > Dev.t("fast_threshold") else 1
 
 
 func _update_stats() -> void:
@@ -894,6 +938,10 @@ func _on_menu_action(act: String) -> void:
 			menus.show_options()
 		"reduce motion on", "reduce motion off":
 			Save.reduce_motion = act == "reduce motion on"
+			Save.save_all()
+			menus.show_options()
+		"tilt gauge on", "tilt gauge off":
+			Save.tilt_gauge = act == "tilt gauge on"
 			Save.save_all()
 			menus.show_options()
 		"language":
