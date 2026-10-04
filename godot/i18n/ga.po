@@ -617,3 +617,196 @@ msgstr "Má theastaíonn sos uait, tapáil an scáileán le linn imeartha chun a
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tá tú réidh anois, déan ar an mbealach amach chun an cluiche a thosú. Bain sult as!"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is
+msgid "CLASSIC"
+msgstr "CLASAICEACH"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PARTY HAT"
+msgstr "HATA CÓISIRE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red
+msgid "SIGNAL RED"
+msgstr "DEARG LASRACH"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom
+msgid "BOBBLE HAT"
+msgstr "HATA OLLA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car
+msgid "RACING GREEN"
+msgstr "GLAS RÁSA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses
+msgid "SHADES"
+msgstr "SPÉACLAÍ DUBHA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing
+msgid "BLUEPRINT"
+msgstr "GORMCHLÓ"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "COWBOY"
+msgstr "BUACHAILL BÓ"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest
+msgid "HARD HAT"
+msgstr "CLOGAD CRUA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "TOP HAT"
+msgstr "HATA ARD"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline
+msgid "NEON"
+msgstr "NEON"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "DOCTOR"
+msgstr "DOCHTÚIR"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PIRATE"
+msgstr "FOGHLAÍ MARA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head
+msgid "PUMPKIN HEAD"
+msgstr "CEANN PUIMCÍN"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SKELETON"
+msgstr "CNÁMHARLACH"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map
+msgid "EXPLORER"
+msgstr "TAISCÉALAÍ"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ASTRONAUT"
+msgstr "SPÁSAIRE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ROBOT"
+msgstr "RÓBAT"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SUPERHERO"
+msgstr "SÁRLAOCH"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "WIZARD"
+msgstr "DRAOI"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold
+msgid "SOLID GOLD"
+msgstr "ÓR GLAN"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept
+msgid "MAPWOMAN"
+msgstr "MAPWOMAN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "COMMON"
+msgstr "COITIANTA"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "UNCOMMON"
+msgstr "NEAMHGHNÁCH"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "RARE"
+msgstr "ANNAMH"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "EPIC"
+msgstr "EIPICIÚIL"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "LEGENDARY"
+msgstr "FINSCÉALACH"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "SPECIAL"
+msgstr "SPEISIALTA"
+
+#. Main menu row and sheet title: where MapMan's looks are kept and chosen
+msgid "WARDROBE"
+msgstr "VARDRÚS"
+
+#. Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number
+msgid "%d OF %d RELEASED"
+msgid_plural "%d OF %d RELEASED"
+msgstr[0] "%d AS %d SCAOILTE"
+msgstr[1] "%d AS %d SCAOILTE"
+msgstr[2] "%d AS %d SCAOILTE"
+msgstr[3] "%d AS %d SCAOILTE"
+msgstr[4] "%d AS %d SCAOILTE"
+
+#. Wardrobe note: tap a released look to put it on
+msgid "TAP ONE TO WEAR IT"
+msgstr "TAPÁIL LENA CHAITHEAMH"
+
+#. Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short
+msgid "LV %d"
+msgstr "L. %d"
+
+#. Wardrobe cell for Classic: in the wardrobe from the start
+msgid "START"
+msgstr "TÚS"
+
+#. Wardrobe cell for MapWoman: released by finishing the game
+msgid "THE END"
+msgstr "CRÍOCH"
+
+#. Rubber stamp: the look MapMan is wearing
+msgid "WORN"
+msgstr "IN ÚSÁID"
+
+#. Small tag on the main menu: a look not yet seen in the wardrobe
+msgid "NEW"
+msgstr "NUA"
+
+#. Wardrobe: when this look was released
+msgid "RELEASED AT LEVEL %d"
+msgstr "SCAOILTE AG LEIBHÉAL %d"
+
+#. Wardrobe: Classic's line
+msgid "IN THE WARDROBE FROM THE START"
+msgstr "SA VARDRÚS ÓN TÚS"
+
+#. Wardrobe: MapWoman's line
+msgid "RELEASED FOR FINISHING THE GAME"
+msgstr "SCAOILTE AG DEIREADH AN CHLUICHE"
+
+#. Slip on the level-clear sheet: a look was just released
+msgid "NEW IN THE WARDROBE"
+msgstr "NUA SA VARDRÚS"
+
+#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
+msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
+msgstr "CAITH É ÓN VARDRÚS AR BHILEOG 001"
+
+#. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
+msgid "MAPWOMAN JOINS THE WARDROBE"
+msgstr "TÁ MAPWOMAN SA VARDRÚS ANOIS"
+
+#. Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN
+msgid "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END"
+msgstr "IMIR MAR Í: FANANN MAPMAN LEAT AG AN DEIREADH"
+
+#. Screen reader name of the main menu's wardrobe row
+msgid "Wardrobe, %d of %d released"
+msgstr "Vardrús, %d as %d scaoilte"
+
+#. Screen reader: a look's name, and that MapMan wears it
+msgid "%s, worn"
+msgstr "%s, in úsáid"
+
+#. Screen reader: a look not released yet
+msgid "Locked, released at level %d"
+msgstr "Faoi ghlas, scaoilfear ag leibhéal %d"
+
+#. Screen reader: MapWoman before the game is finished
+msgid "Locked, released for finishing the game"
+msgstr "Faoi ghlas, scaoilfear ag an deireadh"

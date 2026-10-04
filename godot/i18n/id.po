@@ -589,3 +589,192 @@ msgstr "Kalau butuh istirahat, ketuk layar saat bermain untuk jeda. Saat dijeda 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Semua siap, menujulah ke pintu keluar untuk memulai permainan. Selamat bersenang-senang!"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is
+msgid "CLASSIC"
+msgstr "KLASIK"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PARTY HAT"
+msgstr "TOPI PESTA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red
+msgid "SIGNAL RED"
+msgstr "MERAH MENYALA"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom
+msgid "BOBBLE HAT"
+msgstr "KUPLUK"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car
+msgid "RACING GREEN"
+msgstr "HIJAU BALAP"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses
+msgid "SHADES"
+msgstr "KACAMATA HITAM"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing
+msgid "BLUEPRINT"
+msgstr "CETAK BIRU"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "COWBOY"
+msgstr "KOBOI"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest
+msgid "HARD HAT"
+msgstr "HELM PROYEK"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "TOP HAT"
+msgstr "TOPI TINGGI"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline
+msgid "NEON"
+msgstr "NEON"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "DOCTOR"
+msgstr "DOKTER"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PIRATE"
+msgstr "BAJAK LAUT"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head
+msgid "PUMPKIN HEAD"
+msgstr "KEPALA LABU"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SKELETON"
+msgstr "TENGKORAK"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map
+msgid "EXPLORER"
+msgstr "PENJELAJAH"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ASTRONAUT"
+msgstr "ASTRONAUT"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ROBOT"
+msgstr "ROBOT"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SUPERHERO"
+msgstr "PAHLAWAN SUPER"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "WIZARD"
+msgstr "PENYIHIR"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold
+msgid "SOLID GOLD"
+msgstr "EMAS MURNI"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept
+msgid "MAPWOMAN"
+msgstr "MAPWOMAN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "COMMON"
+msgstr "BIASA"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "UNCOMMON"
+msgstr "TAK BIASA"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "RARE"
+msgstr "LANGKA"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "EPIC"
+msgstr "EPIK"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "LEGENDARY"
+msgstr "LEGENDARIS"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "SPECIAL"
+msgstr "SPESIAL"
+
+#. Main menu row and sheet title: where MapMan's looks are kept and chosen
+msgid "WARDROBE"
+msgstr "LEMARI BAJU"
+
+#. Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number
+msgid "%d OF %d RELEASED"
+msgid_plural "%d OF %d RELEASED"
+msgstr[0] "%d DARI %d DIRILIS"
+
+#. Wardrobe note: tap a released look to put it on
+msgid "TAP ONE TO WEAR IT"
+msgstr "KETUK UNTUK MEMAKAINYA"
+
+#. Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short
+msgid "LV %d"
+msgstr "LV %d"
+
+#. Wardrobe cell for Classic: in the wardrobe from the start
+msgid "START"
+msgstr "AWAL"
+
+#. Wardrobe cell for MapWoman: released by finishing the game
+msgid "THE END"
+msgstr "TAMAT"
+
+#. Rubber stamp: the look MapMan is wearing
+msgid "WORN"
+msgstr "DIPAKAI"
+
+#. Small tag on the main menu: a look not yet seen in the wardrobe
+msgid "NEW"
+msgstr "BARU"
+
+#. Wardrobe: when this look was released
+msgid "RELEASED AT LEVEL %d"
+msgstr "DIRILIS DI LEVEL %d"
+
+#. Wardrobe: Classic's line
+msgid "IN THE WARDROBE FROM THE START"
+msgstr "DI LEMARI BAJU SEJAK AWAL"
+
+#. Wardrobe: MapWoman's line
+msgid "RELEASED FOR FINISHING THE GAME"
+msgstr "DIRILIS SETELAH PERMAINAN TAMAT"
+
+#. Slip on the level-clear sheet: a look was just released
+msgid "NEW IN THE WARDROBE"
+msgstr "BARU DI LEMARI BAJU"
+
+#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
+msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
+msgstr "PAKAI DARI LEMARI BAJU DI LEMBAR 001"
+
+#. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
+msgid "MAPWOMAN JOINS THE WARDROBE"
+msgstr "MAPWOMAN HADIR DI LEMARI BAJU"
+
+#. Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN
+msgid "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END"
+msgstr "MAIN SEBAGAI DIA: MAPMAN MENUNGGUMU DI AKHIR"
+
+#. Screen reader name of the main menu's wardrobe row
+msgid "Wardrobe, %d of %d released"
+msgstr "Lemari baju, %d dari %d dirilis"
+
+#. Screen reader: a look's name, and that MapMan wears it
+msgid "%s, worn"
+msgstr "%s, dipakai"
+
+#. Screen reader: a look not released yet
+msgid "Locked, released at level %d"
+msgstr "Terkunci, dirilis di level %d"
+
+#. Screen reader: MapWoman before the game is finished
+msgid "Locked, released for finishing the game"
+msgstr "Terkunci, dirilis setelah permainan tamat"

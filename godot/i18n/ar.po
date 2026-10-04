@@ -624,3 +624,197 @@ msgstr "إن احتجت إلى استراحة، انقر الشاشة أثناء
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "أنت جاهز، توجه إلى الخروج لبدء اللعبة. استمتع!"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is
+msgid "CLASSIC"
+msgstr "كلاسيكي"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PARTY HAT"
+msgstr "قبعة الحفلة"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red
+msgid "SIGNAL RED"
+msgstr "أحمر ساطع"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom
+msgid "BOBBLE HAT"
+msgstr "قبعة صوفية"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car
+msgid "RACING GREEN"
+msgstr "أخضر السباق"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses
+msgid "SHADES"
+msgstr "نظارة شمسية"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing
+msgid "BLUEPRINT"
+msgstr "مخطط هندسي"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "COWBOY"
+msgstr "راعي البقر"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest
+msgid "HARD HAT"
+msgstr "خوذة البناء"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "TOP HAT"
+msgstr "قبعة عالية"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline
+msgid "NEON"
+msgstr "نيون"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "DOCTOR"
+msgstr "طبيب"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PIRATE"
+msgstr "قرصان"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head
+msgid "PUMPKIN HEAD"
+msgstr "رأس اليقطين"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SKELETON"
+msgstr "هيكل عظمي"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map
+msgid "EXPLORER"
+msgstr "مستكشف"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ASTRONAUT"
+msgstr "رائد فضاء"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ROBOT"
+msgstr "روبوت"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SUPERHERO"
+msgstr "بطل خارق"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "WIZARD"
+msgstr "ساحر"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold
+msgid "SOLID GOLD"
+msgstr "ذهب خالص"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept
+msgid "MAPWOMAN"
+msgstr "MAPWOMAN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "COMMON"
+msgstr "عادي"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "UNCOMMON"
+msgstr "غير شائع"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "RARE"
+msgstr "نادر"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "EPIC"
+msgstr "ملحمي"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "LEGENDARY"
+msgstr "أسطوري"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "SPECIAL"
+msgstr "خاص"
+
+#. Main menu row and sheet title: where MapMan's looks are kept and chosen
+msgid "WARDROBE"
+msgstr "خزانة الملابس"
+
+#. Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number
+msgid "%d OF %d RELEASED"
+msgid_plural "%d OF %d RELEASED"
+msgstr[0] "%d من أصل %d متاحة"
+msgstr[1] "%d من أصل %d متاحة"
+msgstr[2] "%d من أصل %d متاحة"
+msgstr[3] "%d من أصل %d متاحة"
+msgstr[4] "%d من أصل %d متاحة"
+msgstr[5] "%d من أصل %d متاحة"
+
+#. Wardrobe note: tap a released look to put it on
+msgid "TAP ONE TO WEAR IT"
+msgstr "انقر على مظهر لارتدائه"
+
+#. Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short
+msgid "LV %d"
+msgstr "Lv.%d"
+
+#. Wardrobe cell for Classic: in the wardrobe from the start
+msgid "START"
+msgstr "البداية"
+
+#. Wardrobe cell for MapWoman: released by finishing the game
+msgid "THE END"
+msgstr "النهاية"
+
+#. Rubber stamp: the look MapMan is wearing
+msgid "WORN"
+msgstr "مرتدى"
+
+#. Small tag on the main menu: a look not yet seen in the wardrobe
+msgid "NEW"
+msgstr "جديد"
+
+#. Wardrobe: when this look was released
+msgid "RELEASED AT LEVEL %d"
+msgstr "يتاح في المستوى %d"
+
+#. Wardrobe: Classic's line
+msgid "IN THE WARDROBE FROM THE START"
+msgstr "في الخزانة منذ البداية"
+
+#. Wardrobe: MapWoman's line
+msgid "RELEASED FOR FINISHING THE GAME"
+msgstr "يتاح عند إنهاء اللعبة"
+
+#. Slip on the level-clear sheet: a look was just released
+msgid "NEW IN THE WARDROBE"
+msgstr "جديد في الخزانة"
+
+#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
+msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
+msgstr "ارتده من الخزانة في اللوحة 001"
+
+#. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
+msgid "MAPWOMAN JOINS THE WARDROBE"
+msgstr "انضمت MAPWOMAN إلى الخزانة"
+
+#. Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN
+msgid "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END"
+msgstr "العب بها: ينتظرك MAPMAN في النهاية"
+
+#. Screen reader name of the main menu's wardrobe row
+msgid "Wardrobe, %d of %d released"
+msgstr "الخزانة، %d من أصل %d متاحة"
+
+#. Screen reader: a look's name, and that MapMan wears it
+msgid "%s, worn"
+msgstr "%s، مرتدى"
+
+#. Screen reader: a look not released yet
+msgid "Locked, released at level %d"
+msgstr "مقفل، يتاح في المستوى %d"
+
+#. Screen reader: MapWoman before the game is finished
+msgid "Locked, released for finishing the game"
+msgstr "مقفل، يتاح عند إنهاء اللعبة"

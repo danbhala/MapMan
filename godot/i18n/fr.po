@@ -596,3 +596,193 @@ msgstr "Besoin d'une pause ? Touchez l'écran pendant la partie. Une fois en pau
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tout est prêt : rejoignez la sortie pour commencer la partie. Amusez-vous bien !"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is
+msgid "CLASSIC"
+msgstr "CLASSIQUE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PARTY HAT"
+msgstr "CHAPEAU FESTIF"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red
+msgid "SIGNAL RED"
+msgstr "ROUGE SIGNAL"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom
+msgid "BOBBLE HAT"
+msgstr "BONNET"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car
+msgid "RACING GREEN"
+msgstr "VERT ANGLAIS"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses
+msgid "SHADES"
+msgstr "VERRES FUMÉS"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing
+msgid "BLUEPRINT"
+msgstr "PLAN"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "COWBOY"
+msgstr "COW-BOY"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest
+msgid "HARD HAT"
+msgstr "CASQUE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "TOP HAT"
+msgstr "HAUT-DE-FORME"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline
+msgid "NEON"
+msgstr "NÉON"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "DOCTOR"
+msgstr "DOCTEUR"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PIRATE"
+msgstr "PIRATE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head
+msgid "PUMPKIN HEAD"
+msgstr "CITROUILLE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SKELETON"
+msgstr "SQUELETTE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map
+msgid "EXPLORER"
+msgstr "EXPLORATEUR"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ASTRONAUT"
+msgstr "ASTRONAUTE"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ROBOT"
+msgstr "ROBOT"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SUPERHERO"
+msgstr "SUPER-HÉROS"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "WIZARD"
+msgstr "MAGICIEN"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold
+msgid "SOLID GOLD"
+msgstr "OR MASSIF"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept
+msgid "MAPWOMAN"
+msgstr "MAPWOMAN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "COMMON"
+msgstr "COMMUN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "UNCOMMON"
+msgstr "PEU COMMUN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "RARE"
+msgstr "RARE"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "EPIC"
+msgstr "ÉPIQUE"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "LEGENDARY"
+msgstr "LÉGENDAIRE"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "SPECIAL"
+msgstr "SPÉCIAL"
+
+#. Main menu row and sheet title: where MapMan's looks are kept and chosen
+msgid "WARDROBE"
+msgstr "GARDE-ROBE"
+
+#. Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number
+msgid "%d OF %d RELEASED"
+msgid_plural "%d OF %d RELEASED"
+msgstr[0] "%d SUR %d DÉBLOQUÉ"
+msgstr[1] "%d SUR %d DÉBLOQUÉS"
+
+#. Wardrobe note: tap a released look to put it on
+msgid "TAP ONE TO WEAR IT"
+msgstr "TOUCHEZ POUR LE PORTER"
+
+#. Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short
+msgid "LV %d"
+msgstr "N. %d"
+
+#. Wardrobe cell for Classic: in the wardrobe from the start
+msgid "START"
+msgstr "DÉBUT"
+
+#. Wardrobe cell for MapWoman: released by finishing the game
+msgid "THE END"
+msgstr "FIN"
+
+#. Rubber stamp: the look MapMan is wearing
+msgid "WORN"
+msgstr "PORTÉ"
+
+#. Small tag on the main menu: a look not yet seen in the wardrobe
+msgid "NEW"
+msgstr "NOUV."
+
+#. Wardrobe: when this look was released
+msgid "RELEASED AT LEVEL %d"
+msgstr "DÉBLOCAGE AU NIVEAU %d"
+
+#. Wardrobe: Classic's line
+msgid "IN THE WARDROBE FROM THE START"
+msgstr "DISPONIBLE DÈS LE DÉBUT"
+
+#. Wardrobe: MapWoman's line
+msgid "RELEASED FOR FINISHING THE GAME"
+msgstr "DÉBLOCAGE EN FIN DE JEU"
+
+#. Slip on the level-clear sheet: a look was just released
+msgid "NEW IN THE WARDROBE"
+msgstr "NOUVEAU LOOK DÉBLOQUÉ"
+
+#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
+msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
+msgstr "PORTEZ-LE VIA LA GARDE-ROBE, PLANCHE 001"
+
+#. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
+msgid "MAPWOMAN JOINS THE WARDROBE"
+msgstr "MAPWOMAN REJOINT LA GARDE-ROBE"
+
+#. Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN
+msgid "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END"
+msgstr "INCARNEZ-LA : MAPMAN VOUS ATTEND À LA FIN"
+
+#. Screen reader name of the main menu's wardrobe row
+msgid "Wardrobe, %d of %d released"
+msgstr "Garde-robe, %d sur %d débloqués"
+
+#. Screen reader: a look's name, and that MapMan wears it
+msgid "%s, worn"
+msgstr "%s, porté"
+
+#. Screen reader: a look not released yet
+msgid "Locked, released at level %d"
+msgstr "Verrouillé, déblocage au niveau %d"
+
+#. Screen reader: MapWoman before the game is finished
+msgid "Locked, released for finishing the game"
+msgstr "Verrouillé, déblocage en fin de jeu"
