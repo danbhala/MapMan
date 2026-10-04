@@ -17,6 +17,7 @@
   {"name": "area: art", "color": "f9d0c4", "description": "Sprites, tiles, effects images"},
   {"name": "area: audio", "color": "d4c5f9", "description": "Music and sound effects"},
   {"name": "area: android", "color": "0e8a16", "description": "Phone build, tilt, sensors, install"},
+  {"name": "area: ios", "color": "a2a2a2", "description": "iPhone build, TestFlight, iOS behaviour"},
   {"name": "area: tests", "color": "bfdadc", "description": "Unit tests, autoplay bot, screenshots"},
   {"name": "area: tooling", "color": "bfdadc", "description": "CI, release automation, Claude Code setup"},
   {"name": "needs phone test", "color": "e99695", "description": "Feel, tilt or shake must be checked on a real phone before release"}

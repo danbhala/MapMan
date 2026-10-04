@@ -21,36 +21,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Stamp version and build info
-      shell: bash
-      env:
-        PRESET: ${{ inputs.preset }}
-        NAME: ${{ inputs.version-name }}
-        CODE: ${{ inputs.version-code }}
-        SOURCE: ${{ inputs.source }}
-      run: |
-        python3 - <<'PY'
-        import json, os, re, subprocess, datetime
-        path = "godot/export_presets.cfg"
-        text = open(path).read()
-        # Find the [preset.N] section named PRESET and stamp its options section.
-        presets = re.findall(r'\[preset\.(\d+)\]\n\nname="([^"]+)"', text)
-        index = next(i for i, n in presets if n == os.environ["PRESET"])
-        head, sep, rest = text.partition(f"[preset.{index}.options]")
-        body, nxt, tail = rest.partition("\n[preset.")
-        body = re.sub(r'(?m)^version/name=.*$', f'version/name="{os.environ["NAME"]}"', body)
-        body = re.sub(r'(?m)^version/code=.*$', f'version/code={os.environ["CODE"]}', body)
-        open(path, "w").write(head + sep + body + nxt + tail)
-        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-        info = {
-            "version": os.environ["NAME"],
-            "commit": os.environ.get("BUILD_COMMIT") or commit,
-            "built": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-            "source": os.environ["SOURCE"],
-        }
-        json.dump(info, open("godot/build_info.json", "w"))
-        print(info)
-        PY
+    - uses: ./.github/actions/stamp-version
+      with:
+        preset: ${{ inputs.preset }}
+        version-name: ${{ inputs.version-name }}
+        build-number: ${{ inputs.version-code }}
+        source: ${{ inputs.source }}
 
     - name: Export
       shell: bash

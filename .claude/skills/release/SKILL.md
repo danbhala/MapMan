@@ -17,7 +17,7 @@ with a merge commit) produces wrong versions or duplicated release notes.
 1. **The feature PR is ready.** Its title is conventional (`/open-pr`), the
    checks on its latest commit are green (`verify`, `build`, `Conventional PR
    title`), `mergeable_state` is `clean`, and if it carries `needs phone test`
-   the user has tried the Test APK from the PR comment. A PR you opened in a
+   the user has tried the test APK from the PR comment. A PR you opened in a
    session is yours to drive to this state (`/verify`, fixes, baselines).
 
 2. **Squash-merge it, with the PR title as the commit title.** This is the

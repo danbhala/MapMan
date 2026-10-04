@@ -1,0 +1,186 @@
+name: Build IPA
+description: >-
+  Exports, signs and (optionally) uploads a MapMan iOS build to TestFlight.
+  Runs on macOS and needs the setup-godot action with ios "true" first.
+  Signing is manual with the Apple Distribution certificate from the secrets
+  and an App Store provisioning profile that fastlane sigh fetches (creating it
+  the first time) with the App Store Connect API key, so no profile is stored.
+
+inputs:
+  preset:
+    description: Export preset, "iOS" (MapMan) or "iOS Dev" (MapMan Dev)
+    required: true
+  bundle-id:
+    description: The preset's bundle identifier, e.g. com.danbhala.mapman.dev
+    required: true
+  version-name:
+    description: Full version, e.g. "1.2.0-pr.16" (TestFlight shows the plain 1.2.0)
+    required: true
+  build-number:
+    description: application/version; must only ever go up per app
+    required: true
+  source:
+    description: Shown in dev builds, e.g. "pr-12", "master", "v1.2.0"
+    required: true
+  output:
+    description: Path of the .ipa to produce
+    required: true
+  upload:
+    description: Upload the .ipa to TestFlight
+    default: "true"
+  team-id:
+    required: true
+    description: Apple Developer team ID (secret APPLE_TEAM_ID)
+  issuer-id:
+    required: true
+    description: App Store Connect API issuer ID (secret APPSTORE_ISSUER_ID)
+  key-id:
+    required: true
+    description: App Store Connect API key ID (secret APPSTORE_KEY_ID)
+  private-key:
+    required: true
+    description: The API key's .p8 text (secret APPSTORE_PRIVATE_KEY)
+  certificate-p12:
+    required: true
+    description: Apple Distribution certificate and key as base64 .p12 (secret IOS_DIST_CERT_P12_BASE64)
+  certificate-password:
+    required: true
+    description: The .p12's password (secret IOS_DIST_CERT_PASSWORD)
+
+runs:
+  using: composite
+  steps:
+    - name: Install the certificate and the API key
+      shell: bash
+      env:
+        P12: ${{ inputs.certificate-p12 }}
+        P12_PASSWORD: ${{ inputs.certificate-password }}
+        KEY_ID: ${{ inputs.key-id }}
+        ISSUER_ID: ${{ inputs.issuer-id }}
+        PRIVATE_KEY: ${{ inputs.private-key }}
+      run: |
+        keychain="$RUNNER_TEMP/mapman.keychain-db"
+        kc_password=$(uuidgen)
+        echo "MAPMAN_KEYCHAIN=$keychain" >> "$GITHUB_ENV"
+        security create-keychain -p "$kc_password" "$keychain"
+        security set-keychain-settings -lut 3600 "$keychain"
+        security unlock-keychain -p "$kc_password" "$keychain"
+        printf '%s' "$P12" | base64 --decode > "$RUNNER_TEMP/dist.p12"
+        security import "$RUNNER_TEMP/dist.p12" -k "$keychain" -P "$P12_PASSWORD" \
+          -A -t cert -f pkcs12
+        rm "$RUNNER_TEMP/dist.p12"
+        security set-key-partition-list -S apple-tool:,apple: -k "$kc_password" "$keychain" > /dev/null
+        # Search this keychain first, then the usual ones.
+        security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+        security find-identity -v -p codesigning "$keychain" | grep -q "Apple Distribution" || {
+          echo "::error::IOS_DIST_CERT_P12_BASE64 holds no Apple Distribution identity"; exit 1; }
+
+        # altool looks for the key in ~/private_keys; fastlane takes a JSON file.
+        mkdir -p ~/private_keys
+        printf '%s\n' "$PRIVATE_KEY" > ~/private_keys/AuthKey_${KEY_ID}.p8
+        python3 - <<'PY'
+        import json, os
+        json.dump({
+            "key_id": os.environ["KEY_ID"],
+            "issuer_id": os.environ["ISSUER_ID"],
+            "key": os.environ["PRIVATE_KEY"],
+            "in_house": False,
+        }, open(os.path.join(os.environ["RUNNER_TEMP"], "asc_api_key.json"), "w"))
+        PY
+
+    - name: Fetch the App Store provisioning profile
+      id: profile
+      shell: bash
+      env:
+        BUNDLE_ID: ${{ inputs.bundle-id }}
+        TEAM_ID: ${{ inputs.team-id }}
+      run: |
+        dir="$RUNNER_TEMP/profiles"
+        mkdir -p "$dir"
+        # Fetches the newest valid App Store profile for the app that matches the
+        # installed certificate, and creates one if there is none.
+        fastlane sigh --api_key_path "$RUNNER_TEMP/asc_api_key.json" \
+          --app_identifier "$BUNDLE_ID" --team_id "$TEAM_ID" \
+          --output_path "$dir" --filename app.mobileprovision --skip_install true
+        security cms -D -i "$dir/app.mobileprovision" > "$dir/app.plist"
+        uuid=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$dir/app.plist")
+        # Xcode 16 reads profiles from UserData; older ones from MobileDevice.
+        for d in "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles" \
+                 "$HOME/Library/MobileDevice/Provisioning Profiles"; do
+          mkdir -p "$d"
+          cp "$dir/app.mobileprovision" "$d/$uuid.mobileprovision"
+        done
+        echo "uuid=$uuid" >> "$GITHUB_OUTPUT"
+
+    - uses: ./.github/actions/stamp-version
+      with:
+        preset: ${{ inputs.preset }}
+        version-name: ${{ inputs.version-name }}
+        build-number: ${{ inputs.build-number }}
+        source: ${{ inputs.source }}
+        options: |
+          application/app_store_team_id="${{ inputs.team-id }}"
+          application/provisioning_profile_uuid_release="${{ steps.profile.outputs.uuid }}"
+
+    - name: Export the Xcode project
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: |
+        rm -rf godot/build/ios
+        mkdir -p godot/build/ios
+        godot --headless --path godot --import
+        godot --headless --path godot --export-release "$PRESET" build/ios/MapMan.xcodeproj
+        test -d godot/build/ios/MapMan.xcodeproj
+
+    - name: Archive and export the .ipa
+      shell: bash
+      env:
+        BUNDLE_ID: ${{ inputs.bundle-id }}
+        TEAM_ID: ${{ inputs.team-id }}
+        UUID: ${{ steps.profile.outputs.uuid }}
+        OUTPUT: ${{ inputs.output }}
+      run: |
+        cd godot/build/ios
+        xcodebuild -project MapMan.xcodeproj -scheme MapMan -configuration Release \
+          -destination "generic/platform=iOS" -archivePath MapMan.xcarchive \
+          OTHER_CODE_SIGN_FLAGS="--keychain $MAPMAN_KEYCHAIN" \
+          archive | tail -n 40
+        test -d MapMan.xcarchive
+        cat > exportOptions.plist <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>method</key><string>app-store-connect</string>
+          <key>teamID</key><string>$TEAM_ID</string>
+          <key>signingStyle</key><string>manual</string>
+          <key>signingCertificate</key><string>Apple Distribution</string>
+          <key>provisioningProfiles</key>
+          <dict><key>$BUNDLE_ID</key><string>$UUID</string></dict>
+          <key>uploadSymbols</key><false/>
+        </dict>
+        </plist>
+        EOF
+        xcodebuild -exportArchive -archivePath MapMan.xcarchive \
+          -exportOptionsPlist exportOptions.plist -exportPath export | tail -n 20
+        cp export/*.ipa "$GITHUB_WORKSPACE/$OUTPUT"
+        unzip -l "$GITHUB_WORKSPACE/$OUTPUT" | grep -q '\.pck$'
+
+    - name: Upload to TestFlight
+      if: inputs.upload == 'true'
+      shell: bash
+      env:
+        KEY_ID: ${{ inputs.key-id }}
+        ISSUER_ID: ${{ inputs.issuer-id }}
+        OUTPUT: ${{ inputs.output }}
+      run: |
+        xcrun altool --upload-app --type ios -f "$OUTPUT" \
+          --apiKey "$KEY_ID" --apiIssuer "$ISSUER_ID"
+
+    - name: Remove the keychain and the API key
+      if: always()
+      shell: bash
+      run: |
+        [ -n "${MAPMAN_KEYCHAIN:-}" ] && security delete-keychain "$MAPMAN_KEYCHAIN" || true
+        rm -rf ~/private_keys "$RUNNER_TEMP/asc_api_key.json" "$RUNNER_TEMP/profiles"
