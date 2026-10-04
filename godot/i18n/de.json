@@ -198,10 +198,7 @@
   "Locked, released for finishing the game": "Gesperrt, Freigabe fürs Durchspielen",
   "WEAR IT": "ANZIEHEN",
   "NEXT LEVEL": "NÄCHSTES LEVEL",
-  "LEVEL %d — READY": "LEVEL %d — BEREIT",
-  "T-%d:%02d ON THE CLOCK": "T-%d:%02d AUF DER UHR",
-  "YOUR BEST %s": "DEIN REKORD %s",
-  "START LEVEL %d": "LEVEL %d STARTEN",
-  "TAP THE SHEET TO START": "BLATT ANTIPPEN ZUM STARTEN",
-  "<  RETURN TO SHEET %03d": "<  ZURÜCK ZU BLATT %03d"
+  "<  RETURN TO SHEET %03d": "<  ZURÜCK ZU BLATT %03d",
+  "NEXT": "WEITER",
+  "MENU": "MENÜ"
 }

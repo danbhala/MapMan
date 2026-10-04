@@ -135,8 +135,6 @@ func run() -> void:
 	say("level clear")
 	await hold(3.0)
 	game._on_menu_action("next level")
-	if game.menus.current == "ready":
-		game._on_menu_action("start level")
 
 	say("level 2")
 	await wait_until(func(): return game._timer_running)

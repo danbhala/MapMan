@@ -1,24 +1,32 @@
 class_name ClearSheet
 extends RefCounted
-## The sheets between two levels of the main game: the level clear, where the
-## bonuses count into the score and NEXT LEVEL and MAIN MENU come up, and the
-## ready sheet, where the next level waits until the player starts it (with
-## the wardrobe a tap away). Static functions that build onto the Menus sheet
-## they are given, with its own helpers, as WardrobeSheet does; their words
-## are in Menus.TEXT.
+## The level clear of the main game: the bonuses count into the score, then
+## NEXT, WARDROBE and MAIN MENU come up under the total. Static functions that
+## build onto the Menus sheet they are given, with its own helpers, as
+## WardrobeSheet does; their words are in Menus.TEXT. The count-up serves
+## the final inspection too.
 
-## The level clear: where its table starts and its pitch (tighter than
-## Menus.ROW_H, to make room for its two buttons side by side), the buttons'
-## row and width, and the small print when no slip takes its place.
+## Where its table starts and its pitch (tighter than Menus.ROW_H, to make
+## room for the buttons), the buttons' row, their widths in reading order
+## with the gap between them, and the small print when no slip takes its place.
 const ROWS_Y := 80.0
 const PITCH := 30.0
 const BUTTONS_Y := 232.0
-const BUTTON_W := 186.0
+const BUTTON_WS := [112.0, 126.0, 126.0]
+const GAP := 8.0
+const BUTTON_FONT := 14
 const NOTE_Y := 296.0
+
+## The count-up: each row's figure and the TOTAL climb together in at most
+## TICKS ticks this far apart, so a big bonus takes no longer than a small
+## one, and the ticks rise in pitch by up to TICK_RISE on the way to the total.
+const TICKS := 16
+const TICK := 0.05
+const TICK_RISE := 0.6
 
 
 ## Level clear: the bonuses are added into the score one row at a time, then
-## NEXT LEVEL and MAIN MENU come up under the total. A tap before then
+## NEXT, WARDROBE and MAIN MENU come up under the total. A tap before then
 ## finishes the count; after it, a tap goes on to the next level. `args` are
 ## Menus.show_end_level's: score, level_bonus, time_bonus, stars, checkpoint,
 ## level, seconds_left (the clock at the exit, the time bonus's quantity),
@@ -34,6 +42,9 @@ static func end_level(m: Menus, args: Array) -> void:
 	var seconds_left: int = args[6]
 	var last: bool = args[7]
 	var released: String = args[8]
+	# The question before quitting from here numbers itself after this sheet.
+	m._level = level
+	m._tutorial = false
 	var title: String = (
 		(m._t("checkpoint_title") if checkpoint else m._t("inspection_title")) % level
 	)
@@ -56,15 +67,19 @@ static func end_level(m: Menus, args: Array) -> void:
 	var total := m._total(y + 4, str(score))
 	if checkpoint:
 		m._note(m._t("checkpoint_saved"), y + 40, Blueprint.GOLD, 11)
-	var buttons: Array[Button] = [
-		_side_button(m, 0, m._t("next_level"), "next level"),
-		_side_button(m, 1, m._t("main_menu"), "leave clear"),
-	]
+	var texts := [m._t("next"), m.tr(WardrobeSheet.TEXT.title), m._t("menu")]
+	var a11y := [m._t("next_level"), texts[1], m._t("main_menu")]
+	var acts := ["next level", "clear wardrobe", "leave clear"]
+	var buttons: Array[Button] = []
+	var x := Menus.LIST_X
+	for i in acts.size():
+		buttons.append(_side_button(m, x, BUTTON_WS[i], texts[i], a11y[i], acts[i]))
+		x += BUTTON_WS[i] + GAP
 	if released != "":
 		WardrobeSheet.release_slip(m, released)
 	else:
 		m._note(m._t("tap_final") if last else m._t("tap_next") % (level + 1), NOTE_Y)
-	m._hero_on("right")
+	m._hero_on("tilt")
 	var passed := Vector2(470, m._over_head(90, Menus.HERO_POS.y))
 	if m._animate:
 		# Out of reach until the count is in: a tap until then finishes it.
@@ -83,37 +98,77 @@ static func end_level(m: Menus, args: Array) -> void:
 		m._tap_to("next level")
 		m._first_button = buttons[0]
 		m._focus_first()
-	m._count_up(total, score, rows, all_in)
+	count_up(m, total, score, rows, all_in)
 
 
-## One of the level clear's two buttons, side by side under the TOTAL: `i` 0
-## on the reading side.
-static func _side_button(m: Menus, i: int, text: String, act: String) -> Button:
-	var x := Menus.LIST_X + i * (Menus.LIST_W - BUTTON_W)
-	var pos := Vector2(m._mx(x, BUTTON_W), BUTTONS_Y)
-	var b := Blueprint.item(m._panel, text, pos, Vector2(BUTTON_W, Blueprint.TAP_HEIGHT))
+## One of the level clear's buttons, side by side under the TOTAL, `w` wide
+## from `x` (mirrored on a right-to-left sheet).
+static func _side_button(
+	m: Menus, x: float, w: float, text: String, a11y: String, act: String
+) -> Button:
+	var pos := Vector2(m._mx(x, w), BUTTONS_Y)
+	var b := Blueprint.item(m._panel, text, pos, Vector2(w, Blueprint.TAP_HEIGHT))
+	b.add_theme_font_size_override("font_size", BUTTON_FONT)
 	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	b.accessibility_name = m._sentence(text)
+	b.accessibility_name = m._sentence(a11y)
 	m._connect(b, act)
 	return b
 
 
-## Before a level of the main game, a moment to get ready (and to change
-## look): the clock the level gives, the best time on it, and MapMan in the
-## look he wears. Tapping the sheet, or a shake, starts the level.
-static func ready_sheet(m: Menus, level: int, seconds: int, best: Dictionary) -> void:
-	m._level = level
-	m._tutorial = false
-	m._open("ready", "%03d" % level, m._t("ready_title") % level)
-	@warning_ignore("integer_division")
-	var parts: Array[String] = [m._t("on_the_clock") % [seconds / 60, seconds % 60]]
-	if not best.is_empty():
-		parts.append(m._t("your_best") % m._best_text({level: best}, level, true))
-	m._note(" · ".join(parts), Menus.LIST_TOP, Blueprint.FAINT, 11)
-	m._item(1, m._t("start_level") % level, "start level", 90)
-	m._item(2, m.tr(WardrobeSheet.TEXT.title), "wardrobe", 138)
-	m._item(3, m._t("main_menu"), "leave ready", 186)
-	m._note(m._t("tap_start"), 250)
-	m._hero_on("tilt")
-	m._tap_to("start level")
-	m._focus_first()
+## The TOTAL counts up from `start` as each row is revealed in turn, the
+## row's own figure counting up from +0 with it; `rows` are [{"node":
+## CanvasItem, "points": int, "value": Label (optional)}]. When it's all in
+## the total gives a bump and `then` runs (at once with reduced motion).
+static func count_up(m: Menus, label: Label, start: int, rows: Array, then: Callable) -> void:
+	var all := 0
+	for r in rows:
+		all += r.points
+	if not m._animate:
+		label.text = str(start + all)
+		then.call()
+		return
+	var tw := m.create_tween()
+	m._tweens.append(tw)
+	tw.tween_interval(Menus.DRAW_ON)
+	var done := 0
+	for r in rows:
+		var node: CanvasItem = r.node
+		node.modulate.a = 0.0
+		var value: Label = r.get("value")
+		var points: int = r.points
+		if value != null and points > 0:
+			value.text = Menus.TEXT.plus % 0
+		tw.tween_callback(func(): Blueprint.reveal(node))
+		tw.tween_interval(0.2)
+		var ticks := mini(points, TICKS)
+		for i in ticks:
+			@warning_ignore("integer_division")
+			var upto := points * (i + 1) / ticks
+			var pitch := 1.0 + TICK_RISE * float(done + upto) / float(all)
+			tw.tween_interval(TICK)
+			tw.tween_callback(_tick.bind(label, start + done + upto, value, upto, pitch))
+		done += points
+	tw.tween_callback(_bump.bind(m, label))
+	tw.tween_interval(0.2)
+	tw.tween_callback(then)
+
+
+static func _tick(label: Label, total: int, value: Label, upto: int, pitch: float) -> void:
+	label.text = str(total)
+	if value != null:
+		value.text = Menus.TEXT.plus % upto
+	Audio.play("star", 0.2, pitch)
+
+
+## The total swells and settles back, from its reading edge, as it lands.
+static func _bump(m: Menus, label: Label) -> void:
+	label.pivot_offset = Vector2(0.0 if m._rtl else label.size.x, label.size.y / 2.0)
+	var tw := m.create_tween()
+	m._tweens.append(tw)
+	(
+		tw
+		. tween_property(label, "scale", Vector2.ONE, 0.3)
+		. from(Vector2.ONE * 1.35)
+		. set_trans(Tween.TRANS_BACK)
+		. set_ease(Tween.EASE_OUT)
+	)

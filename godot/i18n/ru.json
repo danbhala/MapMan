@@ -204,10 +204,7 @@
   "Locked, released for finishing the game": "Закрыто, выпуск за прохождение игры",
   "WEAR IT": "НАДЕТЬ",
   "NEXT LEVEL": "ДАЛЕЕ",
-  "LEVEL %d — READY": "УРОВЕНЬ %d — ГОТОВ",
-  "T-%d:%02d ON THE CLOCK": "T-%d:%02d НА ЧАСАХ",
-  "YOUR BEST %s": "ВАШ РЕКОРД %s",
-  "START LEVEL %d": "НАЧАТЬ УРОВЕНЬ %d",
-  "TAP THE SHEET TO START": "КОСНИТЕСЬ ЛИСТА, ЧТОБЫ НАЧАТЬ",
-  "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d"
+  "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d",
+  "NEXT": "ДАЛЕЕ",
+  "MENU": "МЕНЮ"
 }

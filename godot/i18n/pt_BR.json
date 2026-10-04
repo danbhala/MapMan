@@ -198,10 +198,7 @@
   "Locked, released for finishing the game": "Bloqueado, liberação ao terminar o jogo",
   "WEAR IT": "VESTIR",
   "NEXT LEVEL": "PRÓXIMO NÍVEL",
-  "LEVEL %d — READY": "NÍVEL %d — PRONTO",
-  "T-%d:%02d ON THE CLOCK": "T-%d:%02d NO RELÓGIO",
-  "YOUR BEST %s": "SEU RECORDE %s",
-  "START LEVEL %d": "COMEÇAR NÍVEL %d",
-  "TAP THE SHEET TO START": "TOQUE NA FOLHA PARA COMEÇAR",
-  "<  RETURN TO SHEET %03d": "<  VOLTAR À FOLHA %03d"
+  "<  RETURN TO SHEET %03d": "<  VOLTAR À FOLHA %03d",
+  "NEXT": "PRÓXIMO",
+  "MENU": "MENU"
 }

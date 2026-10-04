@@ -165,8 +165,6 @@ func run() -> void:
 	await frames(200)  # the inspection table counts up, then PASSED lands
 	await shot("08_level_clear")
 	game._on_menu_action("next level")
-	if game.menus.current == "ready":
-		game._on_menu_action("start level")
 
 	game.level = 3
 	game.tutorial = true
@@ -262,8 +260,6 @@ func run() -> void:
 	await frames(200)
 	await shot("23_level_clear_ru")
 	game._on_menu_action("next level")
-	if game.menus.current == "ready":
-		game._on_menu_action("start level")
 	save.set_locale("ar")
 	game.load_level()
 	game.reset_all()

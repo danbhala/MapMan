@@ -216,10 +216,7 @@
   "Locked, released for finishing the game": "Faoi ghlas, scaoilfear ag an deireadh",
   "WEAR IT": "CAITH É",
   "NEXT LEVEL": "AR AGHAIDH",
-  "LEVEL %d — READY": "LEIBHÉAL %d — RÉIDH",
-  "T-%d:%02d ON THE CLOCK": "T-%d:%02d AR AN gCLOG",
-  "YOUR BEST %s": "DO BHUAIC %s",
-  "START LEVEL %d": "TOSAIGH LEIBHÉAL %d",
-  "TAP THE SHEET TO START": "TAPÁIL AN BHILEOG LE TOSÚ",
-  "<  RETURN TO SHEET %03d": "<  FILL AR BHILEOG %03d"
+  "<  RETURN TO SHEET %03d": "<  FILL AR BHILEOG %03d",
+  "NEXT": "AR AGHAIDH",
+  "MENU": "ROGHCHLÁR"
 }

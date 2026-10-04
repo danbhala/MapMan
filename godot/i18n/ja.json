@@ -192,10 +192,7 @@
   "Locked, released for finishing the game": "未開放、ゲームクリアで解放",
   "WEAR IT": "着る",
   "NEXT LEVEL": "次のレベル",
-  "LEVEL %d — READY": "レベル%d — 準備",
-  "T-%d:%02d ON THE CLOCK": "時間 T-%d:%02d",
-  "YOUR BEST %s": "ベスト %s",
-  "START LEVEL %d": "レベル%dを開始",
-  "TAP THE SHEET TO START": "図面をタップして開始",
-  "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る"
+  "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る",
+  "NEXT": "次へ",
+  "MENU": "メニュー"
 }

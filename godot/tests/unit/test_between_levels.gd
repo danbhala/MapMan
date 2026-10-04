@@ -1,6 +1,6 @@
 extends GutTest
-## Between two levels of the main game: the level clear's buttons and its
-## WEAR IT slip, and the ready sheet the next level waits behind.
+## Between two levels of the main game: the level clear's NEXT, WARDROBE and
+## MAIN MENU, and its WEAR IT slip.
 
 const MAIN_SCENE := preload("res://scenes/main.tscn")
 
@@ -48,39 +48,35 @@ func _clear(level: int) -> void:
 	assert_eq(game.menus.current, "end_level")
 
 
-func test_next_level_waits_on_the_ready_sheet() -> void:
+func test_next_goes_straight_into_the_next_level() -> void:
 	_clear(3)
 	var points: int = game.end_of_level_points
 	game._on_menu_action("next level")
-	assert_eq(game.menus.current, "ready")
+	assert_eq(game.menus.current, "")
 	assert_eq(game.level, 4)
 	assert_eq(game.score, points, "the level's points are in")
-	assert_eq(Save.furthest_level, 4, "the next level opens in practice")
-	assert_false(game._timer_running, "the clock waits")
-	game._on_menu_action("start level")
-	assert_eq(game.menus.current, "")
 	assert_eq(game._current_level_data().number, 4)
-	game.map._load_elapsed = game.map._load_time
-	game.loaded()
-	assert_true(game._timer_running, "and runs once it is started")
+	assert_false(game._between)
 
 
-func test_wardrobe_from_the_ready_sheet_comes_back_to_it() -> void:
+func test_wardrobe_from_the_level_clear_comes_back_to_it() -> void:
 	Save.released.assign(["party_hat"])
 	_clear(3)
-	game._on_menu_action("next level")
-	game._on_menu_action("wardrobe")
+	game._on_menu_action("clear wardrobe")
 	assert_eq(game.menus.current, "wardrobe")
 	game._on_menu_action("wear party_hat")
 	assert_eq(game.menus.current, "wardrobe", "a look tapped stays on the sheet")
 	assert_eq(game.player.outfit, "party_hat", "he plays in it")
 	game.go_back()
-	assert_eq(game.menus.current, "ready", "back goes to the ready sheet")
+	assert_eq(game.menus.current, "end_level", "back goes to the level clear")
 	assert_eq(game.menus._hero.outfit, "party_hat")
+	assert_eq(game.level, 3, "nothing banked yet")
 	assert_true(game.game_active, "the game goes on")
-	game._on_menu_action("wardrobe")
-	game._on_menu_action("ready")
-	assert_eq(game.menus.current, "ready", "so does the sheet's last row")
+	game._on_menu_action("clear wardrobe")
+	game._on_menu_action("back to clear")
+	assert_eq(game.menus.current, "end_level", "so does the sheet's last row")
+	game._on_menu_action("next level")
+	assert_eq(game.level, 4)
 
 
 func test_main_menu_from_the_level_clear_asks_first() -> void:
@@ -88,14 +84,13 @@ func test_main_menu_from_the_level_clear_asks_first() -> void:
 	game._on_menu_action("leave clear")
 	assert_eq(game.menus.current, "confirm_quit")
 	game.go_back()
-	assert_eq(game.menus.current, "ready", "no: on to the ready sheet")
-	assert_eq(game.level, 4, "the level cleared still counts")
-	game._on_menu_action("leave ready")
-	assert_eq(game.menus.current, "confirm_quit")
+	assert_eq(game.menus.current, "end_level", "no: back to the level clear")
+	game._on_menu_action("leave clear")
 	game._on_menu_action("end game")
 	assert_eq(game.menus.current, "main")
 	assert_false(game.game_active)
 	assert_false(game._between)
+	assert_eq(Save.furthest_level, 4, "the next level opens in practice")
 
 
 func test_leaving_a_checkpoint_level_keeps_its_checkpoint() -> void:
@@ -104,15 +99,6 @@ func test_leaving_a_checkpoint_level_keeps_its_checkpoint() -> void:
 	game._on_menu_action("leave clear")
 	game._on_menu_action("end game")
 	assert_true(Save.checkpoints.has(3), "continue from it later")
-
-
-func test_back_on_the_ready_sheet_asks_before_quitting() -> void:
-	_clear(3)
-	game._on_menu_action("next level")
-	game.go_back()
-	assert_eq(game.menus.current, "confirm_quit")
-	game.go_back()
-	assert_eq(game.menus.current, "ready")
 
 
 func test_wear_it_on_the_level_clear() -> void:
@@ -128,11 +114,11 @@ func test_wear_it_on_the_level_clear() -> void:
 		texts.append(l.text)
 	assert_has(texts, tr("WORN"), "the slip says so")
 	var buttons: Array = game.menus._panel.find_children("*", "Button", true, false)
-	assert_eq(buttons.size(), 2, "and WEAR IT is gone")
+	assert_eq(buttons.size(), 3, "and WEAR IT is gone")
 
 
-func test_the_last_level_goes_straight_to_the_end() -> void:
+func test_the_last_level_goes_on_to_the_end() -> void:
 	_clear(10)
 	game._on_menu_action("next level")
-	assert_eq(game.menus.current, "", "no ready sheet before the bonus map")
+	assert_eq(game.menus.current, "")
 	assert_true(game.completed)

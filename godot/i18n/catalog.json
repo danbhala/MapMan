@@ -457,8 +457,18 @@
     },
     {
       "id": "NEXT LEVEL",
-      "note": "Level clear button, beside MAIN MENU: on to the next level",
+      "note": "Level clear: what NEXT does, for screen readers",
       "max": 16
+    },
+    {
+      "id": "NEXT",
+      "note": "Level clear button, first of three side by side: on to the next level",
+      "max": 10
+    },
+    {
+      "id": "MENU",
+      "note": "Level clear button, last of three side by side: back to the main menu (asks first)",
+      "max": 12
     },
     {
       "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
@@ -471,33 +481,8 @@
       "max": 10
     },
     {
-      "id": "LEVEL %d — READY",
-      "note": "Sheet title before a level starts; level number",
-      "max": 26
-    },
-    {
-      "id": "T-%d:%02d ON THE CLOCK",
-      "note": "Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d",
-      "max": 24
-    },
-    {
-      "id": "YOUR BEST %s",
-      "note": "Ready sheet small print: the best time on this level, e.g. 9s ★1",
-      "max": 20
-    },
-    {
-      "id": "START LEVEL %d",
-      "note": "Ready sheet row: start the level; level number",
-      "max": 30
-    },
-    {
-      "id": "TAP THE SHEET TO START",
-      "note": "Ready sheet small print",
-      "max": 40
-    },
-    {
       "id": "<  RETURN TO SHEET %03d",
-      "note": "Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number",
+      "note": "Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number",
       "max": 30
     },
     {

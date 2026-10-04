@@ -192,10 +192,7 @@
   "Locked, released for finishing the game": "Kilitli, oyunu bitirince yayınlanır",
   "WEAR IT": "GİY",
   "NEXT LEVEL": "SONRAKİ BÖLÜM",
-  "LEVEL %d — READY": "BÖLÜM %d — HAZIR",
-  "T-%d:%02d ON THE CLOCK": "SÜRE T-%d:%02d",
-  "YOUR BEST %s": "REKORUN %s",
-  "START LEVEL %d": "%d. BÖLÜMÜ BAŞLAT",
-  "TAP THE SHEET TO START": "BAŞLAMAK İÇİN PAFTAYA DOKUN",
-  "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN"
+  "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN",
+  "NEXT": "SONRAKİ",
+  "MENU": "MENÜ"
 }

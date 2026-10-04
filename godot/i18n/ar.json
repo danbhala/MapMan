@@ -222,10 +222,7 @@
   "Locked, released for finishing the game": "مقفل، يتاح عند إنهاء اللعبة",
   "WEAR IT": "ارتدِه",
   "NEXT LEVEL": "المستوى التالي",
-  "LEVEL %d — READY": "المستوى %d — جاهز",
-  "T-%d:%02d ON THE CLOCK": "T-%d:%02d على الساعة",
-  "YOUR BEST %s": "أفضل وقت لك %s",
-  "START LEVEL %d": "ابدأ المستوى %d",
-  "TAP THE SHEET TO START": "انقر اللوحة للبدء",
-  "<  RETURN TO SHEET %03d": "<  العودة إلى اللوحة %03d"
+  "<  RETURN TO SHEET %03d": "<  العودة إلى اللوحة %03d",
+  "NEXT": "التالي",
+  "MENU": "القائمة"
 }

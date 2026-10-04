@@ -192,10 +192,7 @@
   "Locked, released for finishing the game": "잠김, 게임 클리어 시 해금",
   "WEAR IT": "입기",
   "NEXT LEVEL": "다음 레벨",
-  "LEVEL %d — READY": "레벨 %d — 준비",
-  "T-%d:%02d ON THE CLOCK": "제한 시간 T-%d:%02d",
-  "YOUR BEST %s": "최고 기록 %s",
-  "START LEVEL %d": "레벨 %d 시작",
-  "TAP THE SHEET TO START": "도면을 탭하여 시작",
-  "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기"
+  "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기",
+  "NEXT": "다음",
+  "MENU": "메뉴"
 }

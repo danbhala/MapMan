@@ -192,10 +192,7 @@
   "Locked, released for finishing the game": "未解鎖，破關後解鎖",
   "WEAR IT": "穿上",
   "NEXT LEVEL": "下一關",
-  "LEVEL %d — READY": "第%d關 — 準備",
-  "T-%d:%02d ON THE CLOCK": "時間 T-%d:%02d",
-  "YOUR BEST %s": "你的最佳 %s",
-  "START LEVEL %d": "開始第%d關",
-  "TAP THE SHEET TO START": "點一下圖面開始",
-  "<  RETURN TO SHEET %03d": "<  返回圖面 %03d"
+  "<  RETURN TO SHEET %03d": "<  返回圖面 %03d",
+  "NEXT": "下一關",
+  "MENU": "選單"
 }

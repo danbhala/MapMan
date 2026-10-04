@@ -327,9 +327,17 @@ msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ЛИСТУ %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ФИНАЛЬНОМУ ЛИСТУ"
 
-#. Level clear button, beside MAIN MENU: on to the next level
+#. Level clear: what NEXT does, for screen readers
 msgid "NEXT LEVEL"
 msgstr "ДАЛЕЕ"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "ДАЛЕЕ"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "МЕНЮ"
 
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
@@ -339,27 +347,7 @@ msgstr "КОНТРОЛЬНАЯ ТОЧКА СОХРАНЕНА · СТАРТ ОТ�
 msgid "PASSED"
 msgstr "ПРИНЯТО"
 
-#. Sheet title before a level starts; level number
-msgid "LEVEL %d — READY"
-msgstr "УРОВЕНЬ %d — ГОТОВ"
-
-#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
-msgid "T-%d:%02d ON THE CLOCK"
-msgstr "T-%d:%02d НА ЧАСАХ"
-
-#. Ready sheet small print: the best time on this level, e.g. 9s ★1
-msgid "YOUR BEST %s"
-msgstr "ВАШ РЕКОРД %s"
-
-#. Ready sheet row: start the level; level number
-msgid "START LEVEL %d"
-msgstr "НАЧАТЬ УРОВЕНЬ %d"
-
-#. Ready sheet small print
-msgid "TAP THE SHEET TO START"
-msgstr "КОСНИТЕСЬ ЛИСТА, ЧТОБЫ НАЧАТЬ"
-
-#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
 msgid "<  RETURN TO SHEET %03d"
 msgstr "<  НАЗАД К ЛИСТУ %03d"
 
