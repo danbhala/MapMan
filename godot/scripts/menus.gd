@@ -422,7 +422,8 @@ func _connect(b: Button, act: String, enabled := true) -> void:
 ## A row of the parts list, numbered from 1, that reports `act`.
 func _item(index: int, text: String, act: String, y: float, enabled := true) -> Button:
 	var pos := Vector2(LIST_X, y)
-	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, Vector2(LIST_W, 40), enabled)
+	var size := Vector2(LIST_W, Blueprint.TAP_HEIGHT)
+	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, size, enabled)
 	b.accessibility_name = _sentence(text)
 	_connect(b, act, enabled)
 	_reveal(b)
