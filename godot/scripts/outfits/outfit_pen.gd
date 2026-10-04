@@ -27,6 +27,12 @@ const RISE := 6.0
 ## How wide the soft line round a filled shape's edge is: a hairline, so the
 ## line's own antialiasing softens the edge without the shape growing.
 const EDGE := 0.02
+## Drawing calls get coordinates this many times finer, and the frame scales
+## them back down. Godot's antialiasing blurs about one unit of the
+## coordinates it is given, so at his own units it smeared edges over the
+## four or so phone pixels a unit covers in the game; at a quarter unit it is
+## about one pixel.
+const FINE := 4.0
 
 var canvas: CanvasItem
 var measuring := false
@@ -82,7 +88,7 @@ func set_frame(origin: Vector2, rotation: float, scale: Vector2) -> void:
 	var s := sin(rotation)
 	_xf = Transform2D(Vector2(c * scale.x, s * scale.y), Vector2(-s * scale.x, c * scale.y), origin)
 	if not measuring:
-		canvas.draw_set_transform(origin, rotation, scale)
+		canvas.draw_set_transform(origin, rotation, scale / FINE)
 
 
 # --- the pose -------------------------------------------------------------------
@@ -158,12 +164,12 @@ func poly(pts: PackedVector2Array, c: Color) -> void:
 	if measuring:
 		_grow(pts, 0.0)
 		return
-	canvas.draw_colored_polygon(pts, col(c))
+	var fine := _fine(pts)
+	canvas.draw_colored_polygon(fine, col(c))
 	# Filled polygons have hard, stepped edges; a thin antialiased line round
 	# the edge softens them like the legs (lines) and dots.
-	var edge := pts.duplicate()
-	edge.append(pts[0])
-	canvas.draw_polyline(edge, col(c), EDGE, true)
+	fine.append(fine[0])
+	canvas.draw_polyline(fine, col(c), EDGE * FINE, true)
 
 
 ## A closed outline.
@@ -179,28 +185,28 @@ func polyline(pts: PackedVector2Array, c: Color, width: float) -> void:
 	if measuring:
 		_grow(pts, width / 2.0)
 		return
-	canvas.draw_polyline(pts, col(c), width, true)
+	canvas.draw_polyline(_fine(pts), col(c), width * FINE, true)
 
 
 func line(from: Vector2, to: Vector2, c: Color, width: float) -> void:
 	if measuring:
 		_grow(PackedVector2Array([from, to]), width / 2.0)
 		return
-	canvas.draw_line(from, to, col(c), width, true)
+	canvas.draw_line(from * FINE, to * FINE, col(c), width * FINE, true)
 
 
 func dot(at: Vector2, radius: float, c: Color) -> void:
 	if measuring:
 		_grow(PackedVector2Array([at]), radius)
 		return
-	canvas.draw_circle(at, radius, col(c), true, -1.0, true)
+	canvas.draw_circle(at * FINE, radius * FINE, col(c), true, -1.0, true)
 
 
 func arc(centre: Vector2, radius: float, from: float, to: float, c: Color, width: float) -> void:
 	if measuring:
 		_grow(PackedVector2Array([centre]), radius + width / 2.0)
 		return
-	canvas.draw_arc(centre, radius, from, to, 48, col(c), width, true)
+	canvas.draw_arc(centre * FINE, radius * FINE, from, to, 48, col(c), width * FINE, true)
 
 
 ## The two classic eyes, as Player has always drawn them.
@@ -211,8 +217,8 @@ func classic_eyes(c: Color) -> void:
 	for side: float in [-1.0, 1.0]:
 		var e := eye(side)
 		var pts := PackedVector2Array()
-		for k in 12:
-			var a := TAU * k / 12.0
+		for k in 24:
+			var a := TAU * k / 24.0
 			pts.append(e + Vector2(cos(a) * 2.4, sin(a) * 2.4 * open))
 		poly(pts, c)
 
@@ -410,6 +416,14 @@ static func rotated(pts: Array, pivot: Vector2, angle: float) -> PackedVector2Ar
 	var out := PackedVector2Array()
 	for v: Vector2 in pts:
 		out.append(pivot + (v - pivot).rotated(angle))
+	return out
+
+
+static func _fine(pts: PackedVector2Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	out.resize(pts.size())
+	for i in pts.size():
+		out[i] = pts[i] * FINE
 	return out
 
 

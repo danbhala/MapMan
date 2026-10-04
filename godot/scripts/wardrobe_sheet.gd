@@ -373,19 +373,26 @@ class HiddenLines:
 		_dashes(Blueprint.box_points(Vector2.ZERO, size), frame_colour, 0.6, 3.0, 2.0)
 		# The rest is in his own units (Player): the feet a little above the
 		# point he stands on, the bell of a body, the round head.
-		draw_set_transform(
-			feet + Vector2(0, -Player.FEET_LIFT * figure_scale), 0.0, Vector2.ONE * figure_scale
-		)
+		var s := figure_scale * Player.FIGURE_SCALE
+		draw_set_transform(feet + Vector2(0, -Player.FEET_LIFT * figure_scale), 0.0, Vector2(s, s))
+		var hem := OutfitPen.HEM - OutfitPen.RISE
 		for side: float in [-1.0, 1.0]:
-			var leg := PackedVector2Array([Vector2(side * 5.0, -27.0), Vector2(side * 5.0, 0.0)])
+			var leg := PackedVector2Array(
+				[Vector2(side * 7.5, hem - 1.0), Vector2(side * 7.5, 0.0)]
+			)
 			_dashes(leg, colour, 1.6, 4.0, 3.0)
 		var bell := PackedVector2Array()
+		var tall := OutfitPen.HEM - OutfitPen.BODY_TOP
 		for i in 25:
 			var a := PI * i / 24.0
-			bell.append(Vector2(cos(a) * 18.0, -26.0 - sin(a) * 30.0))
-		bell.append(bell[0])
+			bell.append(Vector2(cos(a) * OutfitPen.BODY_HALF, -sin(a) * tall))
+		for i in range(1, 25):
+			var a := PI * i / 24.0
+			bell.append(Vector2(-cos(a) * OutfitPen.BODY_HALF, sin(a) * OutfitPen.LIP))
+		for i in bell.size():
+			bell[i].y += hem
 		_dashes(bell, colour, 1.6, 4.0, 3.0)
-		var head := Vector2(0, -62)
+		var head := Vector2(0, -62 - OutfitPen.RISE)
 		_dashes(Blueprint.ellipse_points(head, 15.0, 15.0, 24), colour, 1.6, 4.0, 3.0)
 		var font := Blueprint.mono(800)
 		draw_string(font, head + Vector2(-6.6, 7.6), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, colour)
