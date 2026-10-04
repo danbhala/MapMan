@@ -250,6 +250,18 @@ msgstr "NÓTA: TÉIGH TIMPEALL AR NA TÍLEANNA BÁIS"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "NÓTA: T-0:20 AR GACH BILEOG · GABH AN tSLÍ GHEARR"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "NÓTA: TÁ NA TÍLEANNA BÁIS FOLAITHE MARCÁILTE FEASTA"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "NÓTA: SCEITSEÁILTEAR AN tSLÍ SHÁBHÁILTE AG TÚS GACH IARRACHTA"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "LÉIM THAR AN mBILEOG SEO"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "ATHOIBRIÚ"

@@ -251,6 +251,18 @@ msgstr "ملاحظة: تجنب البلاطات السامة"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "ملاحظة: T-0:20 لكل لوحة · اسلك الطريق الأقصر"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "ملاحظة: البلاطات السامة المخفية صارت معلمة"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "ملاحظة: يرسم الطريق الآمن عند بداية كل محاولة"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "تخطي هذه اللوحة"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "إعادة عمل"
