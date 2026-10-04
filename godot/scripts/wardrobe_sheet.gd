@@ -44,12 +44,13 @@ const TIER_COLOURS := {
 	"special": Blueprint.GOLD,
 }
 ## The WARDROBE row on the main menu, under MapMan and clear of the title
-## block on a 16:9 screen; the room its count takes at the far end (five
-## figures); the NEW tag's far edge and top.
+## block on a 16:9 screen: room for the catalog's 12 letters of WARDROBE
+## (GUARDA-ROUPA) beside its count, which takes this much at the far end
+## (five figures); the NEW tag's far edge and top.
 const ROW_POS := Vector2(436, 246)
-const ROW_SIZE := Vector2(180, Blueprint.TAP_HEIGHT)
+const ROW_SIZE := Vector2(196, Blueprint.TAP_HEIGHT)
 const COUNT_W := 52.0
-const TAG_END := 624.0
+const TAG_END := 640.0
 const TAG_Y := 236.0
 ## Sheet 001-D: a cell per look, six to a row from the parts list's edge.
 const COLUMNS := 6
