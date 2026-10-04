@@ -30,7 +30,7 @@ Other commands, from the repo root:
   contact sheets it writes). After editing a translation: `python3
   godot/tools/i18n.py`, and `python3 godot/tools/subset_fonts.py <noto dir>`
   if it uses new Arabic or CJK characters.
-- Lint: `cd godot && gdlint scripts tests && gdformat --check scripts tests`
+- Lint: `cd godot && gdlint scripts tests tools && gdformat --check scripts tests tools`
 
 ## Commits and releases
 
