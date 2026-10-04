@@ -46,8 +46,13 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `Dev.enabled`: the "Android Dev" and "iOS Dev" export presets (feature tag
   `dev`, app "MapMan Dev" through `config/name.dev`, package/bundle ID
   `com.danbhala.mapman.dev`, own save) or any debug run.
-  `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
+  `scripts/dev_panel.gd` is the DEV button, dev menu and tilt readout. Never
   let a cheat work when `Dev.enabled` is false.
+- `scripts/tilt_gauge.gd` is the players' tilt gauge in the field's
+  bottom-right corner (Options "TILT GAUGE", `Save.tilt_gauge`); tapping it
+  recentres (`main.gd` `recentre()`) and never reaches the field, so it never
+  pauses. It only shows on phones with an accelerometer; tests and
+  screenshots set `show_gauge_anyway`.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
 - Languages: every player-facing string is an English msgid passed to `tr()`
   (plurals through `tr_n()`), listed with a note and a width budget in

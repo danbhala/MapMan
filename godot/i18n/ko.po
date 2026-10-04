@@ -166,6 +166,10 @@ msgstr "진동"
 msgid "REDUCE MOTION"
 msgstr "동작 줄이기"
 
+#. Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted
+msgid "TILT GAUGE"
+msgstr "기울기 게이지"
+
 #. Pause sheet status line; work suspended as on a drawing office note
 msgid "WORK SUSPENDED AT LEVEL %d"
 msgstr "레벨 %d에서 작업 중단"
@@ -530,11 +534,11 @@ msgstr "남은 시간"
 
 #. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
 msgid ""
-"Tilt your device to move around the map.\n"
-"Head for the exit tile to progress to the next level."
+"Tilt your device to move around the map and head for the exit tile.\n"
+"The gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
 msgstr ""
-"기기를 기울여 맵을 돌아다니세요.\n"
-"출구 타일로 가면 다음 레벨로 넘어갑니다."
+"기기를 기울여 이동하고 출구 타일로 가세요.\n"
+"구석의 게이지가 기울기를 보여 줍니다: 점선 원은 걷기, 실선 원은 달리기."
 
 #. Tutorial lesson 2
 msgid ""
@@ -595,8 +599,8 @@ msgid "Every so often you'll come across a checkpoint. Each time you reach a che
 msgstr "가끔 체크포인트가 나타납니다. 체크포인트에 도달할 때마다 처음으로 돌아가는 대신 거기서 다시 시작할 수 있습니다."
 
 #. Tutorial lesson 11
-msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
-msgstr "쉬고 싶다면 플레이 중에 화면을 탭하여 일시정지하세요. 일시정지 중에는 플레이를 재개하거나 게임을 종료할 수 있습니다."
+msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+msgstr "플레이 중 화면을 탭하면 일시정지됩니다. 기기를 다르게 잡았다면 구석의 게이지를 탭해 그 자세를 새 중심으로 정하세요."
 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
