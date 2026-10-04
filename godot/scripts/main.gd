@@ -12,6 +12,10 @@ const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
+## How faint the best-run ghost is beside the player.
+const GHOST_ALPHA := 0.35
+## The most tries at one level the replay keeps (the latest).
+const MAX_TRIES := 60
 const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
 
 ## The frame, grid and notes take an effect's colour while it is on.
@@ -79,6 +83,19 @@ var _practice_page := 0
 ## Between levels of the main game: the next level waits behind the ready
 ## sheet (or the wardrobe, or the question before quitting, opened from it).
 var _between := false
+
+# tries (RunRecord): the one being played and its clock, every try at this
+# level so far (for the level clear's replay), the best run beside the player
+# as a ghost, and the replay while it plays
+var _run: RunRecord
+var _run_clock := 0.0
+var _tries: Array[RunRecord] = []
+var _tries_level := 0
+var _ghost: Player
+var _ghost_run: RunRecord
+var _ghost_dir := Vector2i(9, 9)
+var _ghost_moving := false
+var _replay: Replay
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -221,7 +238,7 @@ func started() -> bool:
 
 
 func _process(delta: float) -> void:
-	if menus.visible or not game_active:
+	if _replay or menus.visible or not game_active:
 		return
 
 	_update_timer(delta)
@@ -233,8 +250,10 @@ func _process(delta: float) -> void:
 		if player.death_finished():
 			finish_lose_life()
 	elif started():
+		_run_clock += delta
 		move_player(delta)
 		update_player(delta)
+		_update_ghost(delta)
 		_update_stats()
 		var time_left := _seconds_remaining()
 		set_time_message(time_left)
@@ -250,6 +269,7 @@ func loaded() -> void:
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
 	if not tutorial:
+		_begin_try()
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
@@ -439,11 +459,130 @@ func _try_axis(
 func move(step: Vector2i, seconds: float) -> void:
 	map.move(-step if reverse else step, seconds)
 	if map.moving:
+		if _run:
+			_run.add_step(_run_clock, -step if reverse else step, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
 		if vanish > 0:
 			vanish -= 1
+
+
+# --- tries, the replay and the best-run ghost ----------------------------------
+
+
+## A new try at the level begins as its clock starts: recorded for the replay,
+## with the level's best run beside it when the ghost is on.
+func _begin_try() -> void:
+	if completed:
+		return
+	if level != _tries_level:
+		_tries.clear()
+		_tries_level = level
+	_run = RunRecord.new()
+	_run_clock = 0.0
+	_ghost_run = null
+	if Save.ghost_on and Save.ghosts.has(level):
+		_ghost_run = RunRecord.decode(Save.ghosts[level])
+	if _ghost_run and _ghost == null:
+		# Made when first needed: a Player draws on the random numbers, and
+		# a game without a ghost keeps the same ones (screenshots).
+		_ghost = Player.new()
+		add_child(_ghost)
+		_ghost.z_index = 9  # behind MapMan (Player._ready() sets 10)
+	_hide_ghost()
+	_ghost_dir = Vector2i(9, 9)
+
+
+## The try ends ("win", "death", "timeout"; "" drops it unfinished) and joins
+## the level's tries; returns it, or null when none was going.
+func _end_try(how: String) -> RunRecord:
+	_ghost_run = null
+	_hide_ghost()
+	var run := _run
+	_run = null
+	if run == null or how == "":
+		return null
+	run.finish(_run_clock, how, _time_left)
+	_tries.append(run)
+	if _tries.size() > MAX_TRIES:
+		_tries.pop_front()
+	return run
+
+
+## The best run walks the level alongside, faint, on the same clock.
+func _update_ghost(delta: float) -> void:
+	if _ghost_run == null:
+		return
+	if _run_clock >= _ghost_run.end_time:
+		# At the exit (or where it ended): his run is done.
+		_ghost_run = null
+		_hide_ghost()
+		return
+	var at := _ghost_run.at(map.start_position, _run_clock)
+	if not map.tiles.has(at.key) or not map.tiles.has(at.next):
+		_ghost_run = null
+		_hide_ghost()
+		return
+	if _ghost.is_hidden:
+		_ghost.outfit = player.outfit
+		_ghost.reset_pose()
+		_ghost.is_hidden = false
+		_ghost.visible = true
+	var a: Vector2 = map.tiles[at.key].position
+	_ghost.update_at(a.lerp(map.tiles[at.next].position, at.share), delta)
+	_ghost.modulate.a = GHOST_ALPHA
+	if at.dir != _ghost_dir or at.moving != _ghost_moving:
+		if at.dir == Vector2i.ZERO:
+			_ghost.face_idle()
+		else:
+			_ghost.face_direction(at.dir, at.moving)
+		_ghost_dir = at.dir
+		_ghost_moving = at.moving
+
+
+func _hide_ghost() -> void:
+	if _ghost:
+		_ghost.vanish()
+
+
+## Whether the level clear can offer a replay: the latest try won it, on
+## foot (a level can't be won without a step, but tests skip them).
+func _replayable() -> bool:
+	if _tries.is_empty() or _tries_level != level:
+		return false
+	return _tries[-1].won() and _tries[-1].step_count() > 0
+
+
+## WATCH REPLAY: the level again, every try on it at once. The level clear
+## waits, hidden, and comes back when the replay ends or is tapped away.
+func _start_replay() -> void:
+	if _replay or not _replayable():
+		return
+	menus.visible = false
+	hud.visible = false
+	player.vanish()
+	map.load_level(_current_level_data(), _screen_size())
+	_replay = Replay.new()
+	add_child(_replay)
+	var n := _tries.size()
+	_replay.setup(
+		map,
+		_tries,
+		player.outfit,
+		tr("REPLAY — LEVEL %d") % level,
+		tr_n("%d TRY", "%d TRIES", n) % n
+	)
+	_replay.finished.connect(_end_replay)
+
+
+func _end_replay() -> void:
+	if _replay == null:
+		return
+	_replay.queue_free()
+	_replay = null
+	hud.visible = true
+	menus.redraw()
 
 
 # --- tile rules (update_player) --------------------------------------------
@@ -666,8 +805,11 @@ func advance_level(check_point: bool) -> void:
 		return
 	if not tutorial:
 		var new_best := false
+		var run := _end_try("win")
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
+			if run:
+				Save.record_ghost(level, run)
 		if practice:
 			Audio.play("end_level")
 			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
@@ -691,7 +833,16 @@ func advance_level(check_point: bool) -> void:
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
+		score,
+		POINTS_PER_LEVEL,
+		time_bonus,
+		stars,
+		check_point,
+		level,
+		clock,
+		last,
+		released,
+		_tries.size() if _replayable() else 0
 	)
 
 
@@ -768,6 +919,8 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	completed = false
 	practice = false
 	_between = false
+	_tries.clear()
+	_end_try("")
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -785,6 +938,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
+	_end_try(reason)
 	if not tutorial and not practice:
 		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
@@ -818,6 +972,7 @@ func game_over(show_score := true) -> void:
 	map.unload()
 	player.vanish()
 	_hide_ending()
+	_end_try("")
 	completed = false
 	practice = false
 	_between = false
@@ -922,6 +1077,10 @@ func _on_menu_action(act: String) -> void:
 			Save.save_all()
 			Haptics.feel("toggle")
 			menus.show_options()
+		"ghost on", "ghost off":
+			Save.ghost_on = act == "ghost on"
+			Save.save_all()
+			menus.show_options()
 		"reduce motion on", "reduce motion off":
 			Save.reduce_motion = act == "reduce motion on"
 			Save.save_all()
@@ -960,6 +1119,8 @@ func _on_menu_action(act: String) -> void:
 				_start_next_level()
 		"start level":
 			_start_next_level()
+		"replay":
+			_start_replay()
 		"ready":
 			if menus.current == "wardrobe":
 				Save.mark_seen()
@@ -1037,6 +1198,13 @@ func _can_pause() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _replay:
+		# A tap, or back, ends the replay early.
+		var tapped: bool = event is InputEventMouseButton and not event.pressed
+		if tapped or event.is_action_pressed("pause") or event.is_action_pressed("ui_accept"):
+			_end_replay()
+			get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("pause") and _can_pause():
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
@@ -1068,6 +1236,9 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if _replay:
+		_end_replay()
+		return
 	if dev_panel and dev_panel.is_open():
 		dev_panel.close()
 		return

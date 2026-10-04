@@ -25,6 +25,8 @@ const LIST_W := 380.0
 const TEXT_X := 52.0
 const CHAR_W := 9.6
 const LIST_TOP := 60.0
+## The options rows' pitch: a touch under a tap's height, to fit them all.
+const OPTIONS_PITCH := 39.0
 ## Boxes that flow across the sheet (the language names): text size, the
 ## padding either side of it, the gap between boxes, and the row they fill.
 const CHIP_SIZE := 15
@@ -92,7 +94,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -939,23 +941,24 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
-	var acts := ["music", "fx", "vibration", "reduce motion"]
+	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.ghost_on]
+	var acts := ["music", "fx", "vibration", "reduce motion", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
 	for i in acts.size():
 		var on: bool = states[i]
-		var b := _value_row(names[i], TEXT.on if on else TEXT.off, 80 + i * 44)
+		var b := _value_row(names[i], TEXT.on if on else TEXT.off, 80 + i * OPTIONS_PITCH)
 		var state: String = _t("a11y_on") if on else _t("a11y_off")
 		b.accessibility_name = TEXT.a11y_toggle % [_sentence(names[i]), state]
 		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
 		b.pressed.connect(_remember_row.bind(i))
 		if i == refocus:
 			_first_button = b
-	var lang := _value_row(_t("language_title"), _language_name(Save.locale), 80 + acts.size() * 44)
+	var lang_y := 80 + acts.size() * OPTIONS_PITCH
+	var lang := _value_row(_t("language_title"), _language_name(Save.locale), lang_y)
 	_connect(lang, "language")
-	_return_item(80 + (acts.size() + 1) * 44)
+	_return_item(lang_y + OPTIONS_PITCH)
 	_hero_on("tilt")
 	_focus_first()
 
@@ -1232,7 +1235,8 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT
-## LEVEL and MAIN MENU. released: the look this first clear released, if any.
+## LEVEL and MAIN MENU. released: the look this first clear released, if any;
+## tries: how many tries the replay would show (0: no WATCH REPLAY).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1242,11 +1246,12 @@ func show_end_level(
 	level := 0,
 	seconds_left := -1,
 	last := false,
-	released := ""
+	released := "",
+	tries := 0
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	ClearSheet.end_level(self, args + [last, released])
-	_redraw = show_end_level.bindv(args + [last, released])
+	ClearSheet.end_level(self, args + [last, released, tries])
+	_redraw = show_end_level.bindv(args + [last, released, tries])
 
 
 ## Before a level of the main game (ClearSheet): ready when the player is.

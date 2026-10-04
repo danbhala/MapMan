@@ -40,6 +40,14 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   level and opens the ready sheet, and the next level only loads on START
   (`main.gd` `_between`). The wardrobe and the quit question opened from
   there come back to it.
+- Tries (`scripts/run_record.gd`): `main.gd` records every try at a level
+  as tile steps and when each began on its run clock (no tilt: a step is
+  always a whole tile at one of two speeds), about two bytes a step. The
+  level clear's WATCH REPLAY plays every try of the level at once
+  (`scripts/replay.gd`), and the best win of each level (most time left) is
+  saved in `Save.ghosts` and walks beside MapMan as a faint ghost when
+  `Save.ghost_on` (Options: BEST-RUN GHOST). The ghost Player is only made
+  when a level has one: a Player draws on the random numbers.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

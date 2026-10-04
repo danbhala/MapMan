@@ -18,6 +18,7 @@ func before_each() -> void:
 	Save.reduce_motion = true  # sheets settle at once
 	Save.music_on = true
 	Save.fx_on = false
+	Save.ghost_on = true
 	Save.vibration_on = true
 	_wardrobe([])
 	game = MAIN_SCENE.instantiate()
@@ -101,7 +102,15 @@ func test_options_toggle_the_current_state() -> void:
 	game.menus.show_options()
 	assert_eq(
 		_press_all(),
-		["music off", "fx on", "vibration off", "reduce motion off", "language", "main menu"]
+		[
+			"music off",
+			"fx on",
+			"vibration off",
+			"reduce motion off",
+			"ghost off",
+			"language",
+			"main menu"
+		]
 	)
 
 

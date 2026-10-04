@@ -197,5 +197,11 @@
   "YOUR BEST %s": "최고 기록 %s",
   "START LEVEL %d": "레벨 %d 시작",
   "TAP THE SHEET TO START": "도면을 탭하여 시작",
-  "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기"
+  "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기",
+  "WATCH REPLAY": "리플레이 보기",
+  "REPLAY — LEVEL %d": "리플레이 — 레벨 %d",
+  "BEST-RUN GHOST": "최고 기록 고스트",
+  "%d TRY": [
+    "도전 %d번"
+  ]
 }

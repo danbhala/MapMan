@@ -209,5 +209,13 @@
   "YOUR BEST %s": "ВАШ РЕКОРД %s",
   "START LEVEL %d": "НАЧАТЬ УРОВЕНЬ %d",
   "TAP THE SHEET TO START": "КОСНИТЕСЬ ЛИСТА, ЧТОБЫ НАЧАТЬ",
-  "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d"
+  "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d",
+  "WATCH REPLAY": "ПОВТОР",
+  "REPLAY — LEVEL %d": "ПОВТОР — УРОВЕНЬ %d",
+  "BEST-RUN GHOST": "ПРИЗРАК РЕКОРДА",
+  "%d TRY": [
+    "%d ПОПЫТКА",
+    "%d ПОПЫТКИ",
+    "%d ПОПЫТОК"
+  ]
 }

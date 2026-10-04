@@ -96,6 +96,10 @@ func run() -> void:
 	save.worn = "classic"
 	save.released.clear()
 	save.seen.clear()
+	# No best-run ghosts: a level cleared for one screen would walk beside
+	# MapMan in the next (and draw on the random numbers).
+	save.ghosts.clear()
+	save.ghost_on = false
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	game = load("res://scenes/main.tscn").instantiate()

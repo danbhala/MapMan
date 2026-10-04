@@ -197,5 +197,11 @@
   "YOUR BEST %s": "ベスト %s",
   "START LEVEL %d": "レベル%dを開始",
   "TAP THE SHEET TO START": "図面をタップして開始",
-  "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る"
+  "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る",
+  "WATCH REPLAY": "リプレイを見る",
+  "REPLAY — LEVEL %d": "リプレイ — レベル%d",
+  "BEST-RUN GHOST": "ベスト記録の再現",
+  "%d TRY": [
+    "%d回のトライ"
+  ]
 }

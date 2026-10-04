@@ -197,5 +197,11 @@
   "YOUR BEST %s": "REKORUN %s",
   "START LEVEL %d": "%d. BÖLÜMÜ BAŞLAT",
   "TAP THE SHEET TO START": "BAŞLAMAK İÇİN PAFTAYA DOKUN",
-  "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN"
+  "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN",
+  "WATCH REPLAY": "TEKRARI İZLE",
+  "REPLAY — LEVEL %d": "TEKRAR — BÖLÜM %d",
+  "BEST-RUN GHOST": "REKOR HAYALETİ",
+  "%d TRY": [
+    "%d DENEME"
+  ]
 }

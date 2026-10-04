@@ -806,3 +806,20 @@ msgstr "Kilitli, %d. bölümde yayınlanır"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Kilitli, oyunu bitirince yayınlanır"
+
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "TEKRARI İZLE"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "TEKRAR — BÖLÜM %d"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "%d DENEME"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "REKOR HAYALETİ"

@@ -197,5 +197,11 @@
   "YOUR BEST %s": "你的最佳 %s",
   "START LEVEL %d": "開始第%d關",
   "TAP THE SHEET TO START": "點一下圖面開始",
-  "<  RETURN TO SHEET %03d": "<  返回圖面 %03d"
+  "<  RETURN TO SHEET %03d": "<  返回圖面 %03d",
+  "WATCH REPLAY": "回放",
+  "REPLAY — LEVEL %d": "回放 — 第%d關",
+  "BEST-RUN GHOST": "最佳紀錄回放",
+  "%d TRY": [
+    "%d次"
+  ]
 }
