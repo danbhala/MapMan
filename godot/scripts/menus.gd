@@ -32,20 +32,26 @@ const CHIP_PAD := 10.0
 const CHIP_GAP := 8.0
 const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
-## Where MapMan stands, how big he is, and his height in his own units.
+## Where MapMan stands, how big he is, and his height in his own units as
+## Classic; the dimension line measures the look he wears with
+## Player.standing_height().
 const HERO_POS := Vector2(520, 230)
 const HERO_SCALE := 1.2
 const HERO_HEIGHT := 77.0
+## How far down the sheet the pair at the end stand.
+const PAIR_FEET := 232.0
 ## The resting tilt follows the phone at this rate (per second); a lean away
 ## from it turns his eyes this much, and they get there at this rate.
 const REST_RATE := 0.4
 const LOOK_GAIN := 4.0
 const LOOK_RATE := 8.0
 ## Seconds for the frame to draw on, before a stamp may land on it, and for a
-## stamp to fall (Blueprint.stamp) until it hits the sheet.
+## stamp to fall (Blueprint.stamp) until it hits the sheet. A stamp over
+## MapMan's head reaches this far below where it is placed, askew.
 const DRAW_ON := 0.5
 const STAMP_DELAY := 0.45
 const STAMP_FALL := 0.16
+const STAMP_DEPTH := 42.0
 ## The total counts up a point per tick, five at a time past BIG_ROW points.
 const TICK := 0.1
 const BIG_ROW := 50
@@ -200,6 +206,7 @@ var _frame: Line2D
 var _header: Label
 var _block: Control
 var _hero: Player
+## Who the hero stands with at the end: MapWoman, or MapMan when she is worn.
 var _woman: Player
 ## "tilt" (eyes follow the tilt, or the mouse), "down" (head hung), "right",
 ## or "pair" (the two of them, facing each other).
@@ -711,6 +718,14 @@ func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, chee
 	tw.tween_callback(_cheer).set_delay(delay + STAMP_FALL)
 
 
+## The y of a stamp placed at `y` over MapMan's head, his feet at `feet`:
+## higher when the look he wears stands taller than Classic, so it never
+## covers his hat.
+func _over_head(y: float, feet: float) -> float:
+	var top := feet - (Player.standing_height(Save.worn) + Player.FEET_LIFT) * HERO_SCALE
+	return minf(y, top - STAMP_DEPTH)
+
+
 ## Wide eyes and a hop (just the eyes with reduced motion: nothing landed).
 func _cheer() -> void:
 	for p in [_hero, _woman]:
@@ -725,9 +740,15 @@ func _cheer() -> void:
 # --- the hero ---------------------------------------------------------------------
 
 
-func _figure(art: String, pos: Vector2) -> Player:
+## MapMan in the look he wears (docs/wardrobe), or in `look` when given;
+## with art "woman", MapWoman.
+func _figure(art: String, pos: Vector2, look := "") -> Player:
 	var p := Player.new()
 	p.art = art
+	if look != "":
+		p.outfit = look
+	elif art == "man":
+		p.outfit = Save.worn
 	p.position = pos
 	p.scale = Vector2.ONE * HERO_SCALE
 	_panel.add_child(p)
@@ -750,10 +771,11 @@ func _hero_on(mode: String) -> void:
 		_hero.auto_look = false
 
 
-## A dimension line from his feet to the top of his head.
+## A dimension line from his feet to the top of his head, or of his hat.
 func _dimension(at: Vector2) -> void:
 	var x := at.x + (-50.0 if _rtl else 50.0)
-	var top := at.y - (HERO_HEIGHT + Player.FEET_LIFT) * HERO_SCALE
+	var height := Player.standing_height(Save.worn)
+	var top := at.y - (height + Player.FEET_LIFT) * HERO_SCALE
 	var feet := at.y - Player.FEET_LIFT * HERO_SCALE
 	var c := Blueprint.FAINT
 	Blueprint.line(_panel, PackedVector2Array([Vector2(x, top), Vector2(x, feet)]), c)
@@ -768,12 +790,14 @@ func _dimension(at: Vector2) -> void:
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 
 
-## MapMan and MapWoman together, facing each other, as at the end.
+## MapMan and MapWoman together, facing each other, as at the end. Wearing
+## MapWoman, she is the hero and MapMan, as he is, stands with her.
 func _pair_on() -> void:
 	var ellipse := Blueprint.ellipse_points(Vector2(_mx(500, 0), 236), 60, 14)
 	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
-	_hero = _figure("man", Vector2(_mx(478, 0), 232))
-	_woman = _figure("woman", Vector2(_mx(524, 0), 232))
+	_hero = _figure("man", Vector2(_mx(478, 0), PAIR_FEET))
+	var partner := "man" if Save.worn == "mapwoman" else "woman"
+	_woman = _figure(partner, Vector2(_mx(524, 0), PAIR_FEET), "classic")
 	# They face each other, whichever side each stands on.
 	if _rtl:
 		_hero.flip = -1.0
@@ -837,6 +861,7 @@ func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
 	if not parts.is_empty():
 		_note(_t("note") % " · ".join(parts), 308)
 	_hero_on("tilt")
+	WardrobeSheet.main_menu_row(self)
 	_focus_first()
 
 
@@ -898,16 +923,15 @@ func _language_name(code: String) -> String:
 	return _t("phone_language")
 
 
+## 001-D: the wardrobe, every look to wear (WardrobeSheet). A released one
+## reports "wear <id>".
+func show_wardrobe() -> void:
+	WardrobeSheet.build(self)
+
+
 ## The language sheet: the phone's language, then every language in its own
 ## name, as boxes that flow across the sheet, the current one marked. Picking
 ## one reports "language <code>".
-## 001-D: the wardrobe (docs/wardrobe).
-func show_wardrobe() -> void:
-	_open("wardrobe", "001-D", "")
-	_return_item(306)
-	_focus_first()
-
-
 func show_language() -> void:
 	_open("language", TEXT.language_number, _t("language_title"))
 	var choices: Array = [["system", _t("phone_language")]]
@@ -1144,6 +1168,7 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 ## Level clear: the bonuses are added into the score one row at a time.
 ## seconds_left: the clock at the exit, shown as the time bonus's quantity.
 ## last: this was level 100, so the final sheet comes next.
+## released: the look this first clear released, if any, for a slip.
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1153,7 +1178,7 @@ func show_end_level(
 	level := 0,
 	seconds_left := -1,
 	last := false,
-	_released := ""
+	released := ""
 ) -> void:
 	var title: String = (_t("checkpoint_title") if checkpoint else _t("inspection_title")) % level
 	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
@@ -1175,19 +1200,23 @@ func show_end_level(
 		_note(_t("checkpoint_saved"), 244, Blueprint.GOLD, 11)
 	_note(_t("tap_final") if last else _t("tap_next") % (level + 1), 264, Blueprint.FAINT, 11)
 	_hero_on("right")
-	_count_up(
-		total, score, rows, func(): _stamp(_t("passed"), Vector2(470, 90), Blueprint.GOLD, 0.0)
-	)
+	if released != "":
+		WardrobeSheet.release_slip(self, released)
+	var passed := Vector2(470, _over_head(90, HERO_POS.y))
+	_count_up(total, score, rows, func(): _stamp(_t("passed"), passed, Blueprint.GOLD, 0.0))
 	_tap_to("next level")
 
 
-func show_congratulations(score: int, pb: bool, _released := "") -> void:
+## released: "mapwoman" when finishing the game this time released her.
+func show_congratulations(score: int, pb: bool, released := "") -> void:
 	_open("congratulations", TEXT.end_sheet, _t("congratulations_title"), Blueprint.GOLD)
 	_score_block(score, 0)
 	_rule(182)
 	_item(1, _t("main_menu"), "main menu", 192)
 	_note(_t("congratulations_note"), 300)
 	_pair_on()
+	if released == "mapwoman":
+		WardrobeSheet.mapwoman_slip(self)
 	if pb:
 		_stamp(_t("new_best"), Vector2(220, 100), Blueprint.GOLD)
 	_focus_first()
@@ -1210,7 +1239,6 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 	var total := _total(y + 4, str(score))
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
 	_pair_on()
-	_count_up(
-		total, score, rows, func(): _stamp(_t("approved"), Vector2(458, 84), Blueprint.GOLD, 0.0)
-	)
+	var approved := Vector2(458, _over_head(84, PAIR_FEET))
+	_count_up(total, score, rows, func(): _stamp(_t("approved"), approved, Blueprint.GOLD, 0.0))
 	_tap_to("completion done")

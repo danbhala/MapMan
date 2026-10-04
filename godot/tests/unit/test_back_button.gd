@@ -14,6 +14,7 @@ func before_all() -> void:
 
 
 func before_each() -> void:
+	_empty_wardrobe()  # whatever the save on this machine has
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
 	game.levels = [
@@ -27,6 +28,16 @@ func before_each() -> void:
 			"message": "",
 		}
 	]
+
+
+func after_each() -> void:
+	_empty_wardrobe()
+
+
+func _empty_wardrobe() -> void:
+	Save.worn = "classic"
+	Save.released.clear()
+	Save.seen.clear()
 
 
 func _play() -> void:
@@ -67,12 +78,24 @@ func test_back_from_quit_question_resumes() -> void:
 
 
 func test_back_from_sub_menus_goes_to_main_menu() -> void:
-	for act in ["options", "restart from checkpoint"]:
+	for act in ["options", "restart from checkpoint", "wardrobe"]:
 		game.show_start_menu()
 		game._on_menu_action(act)
 		assert_ne(game.menus.current, "main", act)
 		game.go_back()
 		assert_eq(game.menus.current, "main", act)
+
+
+func test_back_from_the_wardrobe_keeps_the_look_on() -> void:
+	Save.released.assign(["party_hat"])
+	game.show_start_menu()
+	game._on_menu_action("wardrobe")
+	game._on_menu_action("wear party_hat")
+	assert_eq(game.menus.current, "wardrobe")
+	game.go_back()
+	assert_eq(game.menus.current, "main")
+	assert_eq(Save.worn, "party_hat")
+	assert_eq(game.menus._hero.outfit, "party_hat", "he wears it on the main menu")
 
 
 func test_back_from_game_over_goes_to_main_menu() -> void:
