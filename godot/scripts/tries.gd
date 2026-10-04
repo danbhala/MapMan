@@ -15,12 +15,13 @@ var run: RunRecord
 var clock := 0.0
 
 
-## A try at `at_level` begins, its clock at zero.
-func begin(at_level: int) -> void:
+## A try at `at_level` begins in `look` (a Wardrobe id), its clock at zero.
+func begin(at_level: int, look := "classic") -> void:
 	if at_level != level:
 		list.clear()
 		level = at_level
 	run = RunRecord.new()
+	run.outfit = look
 	clock = 0.0
 
 

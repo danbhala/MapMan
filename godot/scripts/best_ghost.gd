@@ -17,10 +17,11 @@ func _ready() -> void:
 	z_index = 9  # behind MapMan (10)
 
 
-## Walks `best` (null for none) from the next follow(), in `look`.
+## Walks `best` (null for none) from the next follow(), in the look he wore
+## for it (`look` if the record has none the wardrobe knows).
 func start(best: RunRecord, look: String) -> void:
 	run = best
-	outfit = look
+	outfit = best.outfit if best and Wardrobe.is_look(best.outfit) else look
 	_dir = Vector2i(9, 9)
 	vanish()
 

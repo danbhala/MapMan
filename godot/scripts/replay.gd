@@ -28,11 +28,9 @@ var _clock_label: Label
 
 
 ## Plays `tries` (the winning one last) on `map`, which has the level loaded
-## or loading, with every MapMan in `outfit`. `title` and `subtitle` head the
-## screen.
-func setup(
-	map: LevelMap, try_list: Array[RunRecord], outfit: String, title: String, subtitle: String
-) -> void:
+## or loading, each MapMan in the look he wore for that try. `title` and
+## `subtitle` head the screen.
+func setup(map: LevelMap, try_list: Array[RunRecord], title: String, subtitle: String) -> void:
 	_map = map
 	tries = try_list
 	_start = map.start_position
@@ -40,7 +38,7 @@ func setup(
 	for r in tries:
 		_length = maxf(_length, r.end_time + (0.0 if r.won() else FALL_SECONDS))
 		var g := Player.new()
-		g.outfit = outfit
+		g.outfit = r.outfit if Wardrobe.is_look(r.outfit) else "classic"
 		add_child(g)
 		g.z_index = 11 if r.won() else 10
 		_ghosts.append(g)

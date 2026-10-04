@@ -535,7 +535,7 @@ func move(step: Vector2i, seconds: float) -> void:
 func _begin_try() -> void:
 	if completed:
 		return
-	_tries.begin(level)
+	_tries.begin(level, player.outfit)
 	var best: RunRecord = null
 	if Save.ghost_on and Save.ghosts.has(level):
 		best = RunRecord.decode(Save.ghosts[level])
@@ -566,11 +566,7 @@ func _start_replay() -> void:
 	add_child(_replay)
 	var n := _tries.list.size()
 	_replay.setup(
-		map,
-		_tries.list,
-		player.outfit,
-		tr("REPLAY — LEVEL %d") % level,
-		tr_n("%d TRY", "%d TRIES", n) % n
+		map, _tries.list, tr("REPLAY — LEVEL %d") % level, tr_n("%d TRY", "%d TRIES", n) % n
 	)
 	_replay.finished.connect(_end_replay)
 

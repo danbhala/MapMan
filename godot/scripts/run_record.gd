@@ -14,7 +14,8 @@ const STEP_SECONDS := 14.0 / 60.0
 const DIRS: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 ## How a try ended, as stored.
 const RESULTS: Array[String] = ["", "win", "death", "timeout"]
-const VERSION := 1
+## 2 added the look he wore; 1 (no look) still reads, as "classic".
+const VERSION := 2
 
 static var _base64 := RegEx.create_from_string("^[A-Za-z0-9+/]+={0,2}$")
 
@@ -28,6 +29,8 @@ var result := ""
 var end_time := 0.0
 ## The level clock left at the end of a win: the best run keeps the most.
 var time_left := 0.0
+## The look he wore (a Wardrobe id), so the replay and the ghost wear it too.
+var outfit := "classic"
 
 
 ## A step from `t` on the run clock, `step` in screen directions (the way he
@@ -106,12 +109,15 @@ func end_key(start: Vector2i) -> Vector2i:
 	return key
 
 
-## A compact text for the save: a version byte, how it ended, then times in
-## hundredths of a second as differences (varints) and one byte per step.
-## About two bytes a step.
+## A compact text for the save: a version byte, how it ended, the time left,
+## the look (a length byte and its id), then times in hundredths of a second
+## as differences (varints) and one byte per step. About two bytes a step.
 func encode() -> String:
 	var out := PackedByteArray([VERSION, RESULTS.find(result)])
 	_varint(out, roundi(time_left * 100.0))
+	var look := outfit.to_utf8_buffer().slice(0, 255)
+	out.append(look.size())
+	out.append_array(look)
 	var last := 0
 	for i in times.size():
 		var cs := roundi(times[i] * 100.0)
@@ -129,12 +135,19 @@ static func decode(text: String) -> RunRecord:
 	if text.length() % 4 != 0 or not _base64.search(text):
 		return null
 	var raw := Marshalls.base64_to_raw(text)
-	if raw.size() < 3 or raw[0] != VERSION or raw[1] >= RESULTS.size():
+	if raw.size() < 3 or raw[0] < 1 or raw[0] > VERSION or raw[1] >= RESULTS.size():
 		return null
 	var r := RunRecord.new()
 	r.result = RESULTS[raw[1]]
 	var pos := [2]
 	r.time_left = _read_varint(raw, pos) / 100.0
+	r.outfit = ""  # version 1 kept no look: the ghost wears the current one
+	if raw[0] >= 2:
+		if pos[0] >= raw.size() or pos[0] + 1 + raw[pos[0]] > raw.size():
+			return null
+		var n: int = raw[pos[0]]
+		r.outfit = raw.slice(pos[0] + 1, pos[0] + 1 + n).get_string_from_utf8()
+		pos[0] += 1 + n
 	var cs := 0
 	while pos[0] < raw.size():
 		var gap := _read_varint(raw, pos)

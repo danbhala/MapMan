@@ -66,15 +66,27 @@ func test_a_record_round_trips_through_its_save_text() -> void:
 	r.add_step(0.64, Vector2i.DOWN, STEP * 0.5)
 	r.add_step(3.0, Vector2i.LEFT, STEP)
 	r.finish(3.5, "win", 16.25)
+	r.outfit = "party_hat"
 	var back := RunRecord.decode(r.encode())
 	assert_not_null(back)
 	assert_eq(back.result, "win")
+	assert_eq(back.outfit, "party_hat", "the look he wore")
 	assert_eq(back.steps, r.steps, "directions and speeds")
 	for i in r.times.size():
 		assert_almost_eq(back.times[i], r.times[i], 0.006)
 	assert_almost_eq(back.end_time, 3.5, 0.006)
 	assert_almost_eq(back.time_left, 16.25, 0.006)
-	assert_lt(r.encode().length(), 20, "a few bytes a step")
+	assert_lt(r.encode().length(), 36, "a few bytes a step")
+
+
+func test_a_record_from_before_looks_were_kept_still_reads() -> void:
+	# version 1: a win, 2.00 s left, one step right at 0.40 s, ended at 1.00 s
+	var v1 := Marshalls.raw_to_base64(PackedByteArray([1, 1, 200, 1, 40, 0, 60]))
+	var back := RunRecord.decode(v1)
+	assert_not_null(back)
+	assert_eq(back.step_count(), 1)
+	assert_eq(back.outfit, "", "no look kept")
+	assert_almost_eq(back.end_time, 1.0, 0.006)
 
 
 func test_rubbish_is_not_a_record() -> void:
@@ -146,6 +158,27 @@ func test_the_replay_plays_and_comes_back_to_the_level_clear() -> void:
 	assert_true(game.menus.visible)
 	assert_eq(game.menus.current, "end_level", "on the same level clear")
 	assert_eq(game.level, 2, "the level isn't banked yet")
+
+
+func test_each_try_replays_in_the_look_he_wore_for_it() -> void:
+	game.new_game(2)
+	game.player.outfit = "party_hat"
+	_start_try()
+	_step(Vector2i.LEFT)
+	game.lose_life("death")
+	game.finish_lose_life()
+	game._on_menu_action("try again")
+	game.player.outfit = "classic"
+	_start_try()
+	for i in 3:
+		_step(Vector2i.RIGHT)
+	game.advance_level(false)
+	assert_eq(game._tries.list[0].outfit, "party_hat")
+	game._on_menu_action("replay")
+	var replay: Replay = game._replay
+	assert_eq(replay._ghosts[0].outfit, "party_hat", "the lost try")
+	assert_eq(replay._ghosts[1].outfit, "classic", "the win")
+	assert_eq(RunRecord.decode(Save.ghosts[2]).outfit, "classic", "the ghost keeps its look")
 
 
 func test_the_replay_ends_by_itself() -> void:
