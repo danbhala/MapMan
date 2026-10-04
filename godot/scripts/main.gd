@@ -76,8 +76,6 @@ var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 var _practice_page := 0
-## Finishing the game this time released MapWoman: the last sheet says so.
-var _mapwoman_released := false
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -716,7 +714,7 @@ func finish_advancing_level() -> void:
 			# the game releases her into the wardrobe.
 			completed = true
 			Save.has_completed = true
-			_mapwoman_released = Save.release("mapwoman")
+			Save.release("mapwoman")
 			Save.save_all()
 			hud.show_stats(false)
 	load_level()
@@ -946,8 +944,10 @@ func _on_menu_action(act: String) -> void:
 			hud.show_bar(false)
 			hud.show_stats(false)
 			set_background()
-			menus.show_congratulations(score, pb, "mapwoman" if _mapwoman_released else "")
-			_mapwoman_released = false
+			# Her slip shows until the wardrobe has been looked at, so leaving
+			# the ending before the vortex the first time doesn't lose it.
+			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
+			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
 		_:
 			if act.begins_with("language "):
 				# "language system" follows the phone; otherwise a locale code.

@@ -266,7 +266,12 @@ func test_finishing_the_game_releases_mapwoman() -> void:
 	game.next_level()
 	assert_true(game.completed)
 	assert_true(Save.is_released("mapwoman"))
-	assert_true(game._mapwoman_released, "so the last sheet can say so")
+	game._on_menu_action("completion done")
+	assert_eq(game.menus.current, "congratulations")
+	var texts := []
+	for l in game.menus.find_children("*", "Label", true, false):
+		texts.append(l.text)
+	assert_has(texts, tr("MAPWOMAN JOINS THE WARDROBE"), "and the last sheet says so")
 
 
 func test_a_new_game_wears_the_worn_look() -> void:
