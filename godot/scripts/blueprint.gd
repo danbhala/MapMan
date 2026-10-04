@@ -147,18 +147,45 @@ static func label(
 	align := HORIZONTAL_ALIGNMENT_LEFT
 ) -> Label:
 	var l := Label.new()
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Into the tree before it is sized: a control sized outside the tree
+	# measures its text with the default theme's font, and keeps that box.
+	parent.add_child(l)
 	l.text = text
 	l.position = pos
 	l.add_theme_font_override("font", mono(weight))
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	l.horizontal_alignment = align
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.text_direction = direction(text)
 	if width > 0.0:
-		l.size.x = width
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	parent.add_child(l)
+		fit(l, Vector2(width, l.size.y))
 	return l
+
+
+## The way a text reads: right-to-left scripts decide for themselves, and
+## everything else (figures like "+10" or "T-0:20" included) reads left to
+## right, whatever the phone's language.
+static func direction(text: String) -> Control.TextDirection:
+	for ch in text:
+		var c := ch.unicode_at(0)
+		var rtl: bool = (
+			(c >= 0x0590 and c <= 0x08FF)
+			or (c >= 0xFB1D and c <= 0xFDFF)
+			or (c >= 0xFE70 and c <= 0xFEFF)
+		)
+		if rtl:
+			return Control.TEXT_DIRECTION_AUTO
+	return Control.TEXT_DIRECTION_LTR
+
+
+## Size a control to the box it was given, and remember the box: a control
+## grows to hold its text, so the layout check (tools/layout_check.gd) needs
+## the size that was meant.
+static func fit(c: Control, size: Vector2) -> void:
+	c.set_meta("fit", size)
+	c.size = size
 
 
 ## A row of the parts list: "01    PLAY FROM START", with a rule under it.
@@ -166,16 +193,17 @@ static func item(
 	parent: Node, text: String, pos: Vector2, size := Vector2(380, TAP_HEIGHT), enabled := true
 ) -> Button:
 	var b := Button.new()
-	b.text = text
 	b.theme = theme()
+	parent.add_child(b)
+	b.text = text
+	b.text_direction = direction(text)
 	b.position = pos
-	b.size = size
+	fit(b, size)
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.disabled = not enabled
 	if not enabled:
 		b.focus_mode = Control.FOCUS_NONE
 	b.accessibility_name = text.strip_edges()
-	parent.add_child(b)
 	return b
 
 

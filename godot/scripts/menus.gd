@@ -25,6 +25,12 @@ const LIST_W := 380.0
 const TEXT_X := 52.0
 const CHAR_W := 9.6
 const LIST_TOP := 60.0
+## Boxes that flow across the sheet (the language names): text size, the
+## padding either side of it, the gap between boxes, and the row they fill.
+const CHIP_SIZE := 15
+const CHIP_PAD := 10.0
+const CHIP_GAP := 8.0
+const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
 ## Where MapMan stands, how big he is, and his height in his own units.
 const HERO_POS := Vector2(520, 230)
@@ -228,6 +234,8 @@ var _rtl := false
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	# Every string here is translated once, with tr(); Godot must not try again.
+	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -330,6 +338,9 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 	_frame = Blueprint.line(self, Blueprint.frame_points(vp), frame_color, Blueprint.FRAME_WIDTH)
 	var heading: String = _t("header") % [number, title]
 	_header = Blueprint.label(self, heading, 14, Blueprint.INK, Vector2.ZERO, 700)
+	# "MAPMAN — SHEET 001 — TITLE" starts with Latin letters, so the text
+	# itself must say which way the sheet reads.
+	_header.text_direction = Control.TEXT_DIRECTION_RTL if _rtl else Control.TEXT_DIRECTION_AUTO
 	_header.accessibility_name = _sentence(title)
 	_block = _title_block(number, frame_color)
 	_panel = Control.new()
@@ -454,19 +465,25 @@ func _reveal(node: CanvasItem, pitch := 0.07) -> void:
 	_cascade += pitch
 
 
-## Faint column headings over a list, like ITEM and DESCRIPTION. The last one
-## can sit flush with the list's right edge.
+## Faint column headings over a list, like ITEM and DESCRIPTION, each with
+## the room up to the next one. The last can sit flush with the list's right
+## edge, as the value column does.
 func _columns(names: Array, xs: Array, right_last := false) -> void:
 	var row := _row(LIST_TOP, 16)
+	var end := LIST_X + LIST_W
 	for i in names.size():
 		if right_last and i == names.size() - 1:
-			# The value column ends flush with the list's far edge.
-			var l := _text(row, names[i], 11, Blueprint.FAINT, LIST_X + LIST_W - 120.0, 0, 120.0)
+			var l := _text(row, names[i], 11, Blueprint.FAINT, end - 120.0, 0, 120.0)
 			l.horizontal_alignment = (
 				HORIZONTAL_ALIGNMENT_LEFT if _rtl else HORIZONTAL_ALIGNMENT_RIGHT
 			)
-		else:
-			_text(row, names[i], 11, Blueprint.FAINT, xs[i], 0, 160.0)
+			continue
+		var next := end
+		if i + 1 < xs.size():
+			next = xs[i + 1]
+		elif right_last:
+			next = end - 120.0
+		_text(row, names[i], 11, Blueprint.FAINT, xs[i], 0, next - xs[i] - 8.0)
 	_reveal(row)
 
 
@@ -574,6 +591,7 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 	var b := Button.new()
 	b.theme = Blueprint.theme()
 	b.text = text
+	b.text_direction = Blueprint.direction(text)
 	b.add_theme_font_size_override("font_size", 12)
 	b.alignment = align
 	if _rtl:
@@ -582,11 +600,11 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 			if align == HORIZONTAL_ALIGNMENT_LEFT
 			else HORIZONTAL_ALIGNMENT_LEFT
 		)
-	b.position = Vector2(_mx(x, 102), 266)
-	b.size = Vector2(102, Blueprint.TAP_HEIGHT)
 	b.accessibility_name = a11y
 	_clear_button(b)
 	_panel.add_child(b)
+	b.position = Vector2(_mx(x, 102), 266)
+	Blueprint.fit(b, Vector2(102, Blueprint.TAP_HEIGHT))
 	_connect(b, act)
 	_reveal(b)
 
@@ -867,26 +885,66 @@ func _language_name(code: String) -> String:
 
 
 ## The language sheet: the phone's language, then every language in its own
-## name, the current one marked. Picking one reports "language <code>".
+## name, as boxes that flow across the sheet, the current one marked. Picking
+## one reports "language <code>".
 func show_language() -> void:
 	_open("language", TEXT.language_number, _t("language_title"))
 	var choices: Array = [["system", _t("phone_language")]]
-	for entry in LANGUAGES:
-		choices.append(entry)
-	for i in choices.size():
-		var code: String = choices[i][0]
-		var name: String = choices[i][1]
+	choices.append_array(LANGUAGES)
+	var x := LIST_X
+	var y := 72.0
+	for choice in choices:
+		var code: String = choice[0]
+		var name: String = choice[1]
 		var chosen := (Save.locale == "" and code == "system") or Save.locale == code
-		@warning_ignore("integer_division")
-		var pos := Vector2(LIST_X + (i % 3) * 128, 72 + (i / 3) * 48)
-		var detail: String = TEXT.on if chosen else ""
-		_cell(pos, Vector2(120, Blueprint.TAP_HEIGHT), true, name, detail, "language " + code, name)
-	var back := Blueprint.item(_panel, "<  " + _t("options_title"), Vector2(LIST_X, 318))
+		var text: String = TEXT.on + " " + name if chosen else name
+		var font := Blueprint.mono(700 if chosen else 400)
+		var text_w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, CHIP_SIZE).x
+		var w := ceilf(text_w) + 2.0 * CHIP_PAD
+		if x + w > LIST_X + CHIP_ROW_W:
+			x = LIST_X
+			y += Blueprint.TAP_HEIGHT + CHIP_GAP
+		_chip(Vector2(x, y), w, text, "language " + code, name, chosen)
+		x += w + CHIP_GAP
+	var back_pos := Vector2(_mx(LIST_X, LIST_W), 318)
+	var back := Blueprint.item(_panel, "<  " + _t("options_title"), back_pos)
+	back.alignment = _align()
 	back.accessibility_name = _sentence(_t("options_title"))
 	_connect(back, "options")
 	_reveal(back)
-	_hero_on("tilt")
 	_focus_first()
+
+
+## A box in a flowing row of choices, `w` wide, its text centred; the chosen
+## one is filled and bold. The whole box is a button.
+func _chip(pos: Vector2, w: float, text: String, act: String, a11y: String, chosen: bool) -> Button:
+	var size := Vector2(w, Blueprint.TAP_HEIGHT)
+	var box := Control.new()
+	box.position = Vector2(_mx(pos.x, w), pos.y)
+	box.size = size
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(box)
+	if chosen:
+		Blueprint.rect(box, Blueprint.HOVER, Vector2.ONE, size - Vector2(2, 2))
+	var width := 1.2 if chosen else 0.8
+	Blueprint.line(box, Blueprint.box_points(Vector2.ZERO, size), Blueprint.INK, width)
+	var inner := w - 2.0 * CHIP_PAD
+	var l := Blueprint.label(
+		box, text, CHIP_SIZE, Blueprint.INK, Vector2(CHIP_PAD, 0), 700 if chosen else 400, inner
+	)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	Blueprint.fit(l, Vector2(inner, size.y))
+	var b := Button.new()
+	b.theme = Blueprint.theme()
+	b.size = size
+	b.accessibility_name = a11y
+	_clear_button(b)
+	box.add_child(b)
+	_connect(b, act)
+	_reveal(box, 0.03)
+	return b
 
 
 func _remember_row(row: int) -> void:
@@ -1022,8 +1080,9 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 			a11y
 		)
 	var pages := ceili(float(count) / PRACTICE_PAGE)
+	# On a right-to-left sheet the earlier page is on the right, pointed at.
 	if page > 0:
-		var text: String = TEXT.previous_page % page
+		var text: String = (TEXT.next_page if _rtl else TEXT.previous_page) % page
 		_arrow(
 			text,
 			"practice page %d" % (page - 1),
@@ -1032,7 +1091,7 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 			_t("a11y_previous")
 		)
 	if page < pages - 1:
-		var text: String = TEXT.next_page % (page + 2)
+		var text: String = (TEXT.previous_page if _rtl else TEXT.next_page) % (page + 2)
 		_arrow(
 			text, "practice page %d" % (page + 1), 330, HORIZONTAL_ALIGNMENT_RIGHT, _t("a11y_next")
 		)
@@ -1040,7 +1099,7 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	caption += " · " + _tn("released", mini(furthest, count))
 	if note != "":
 		caption = note
-	var pos := Vector2(130, 281)
+	var pos := Vector2(_mx(130, 200.0), 281)
 	var l := Blueprint.label(
 		_panel, caption, 10, Blueprint.FAINT, pos, 500, 200.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
