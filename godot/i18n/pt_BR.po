@@ -1,0 +1,598 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MapMan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Header of every menu sheet: the game name, the sheet number (%s, e.g. 001 or P-02), the sheet title (%s). Keep MAPMAN. Blueprint drawing-sheet vocabulary throughout.
+msgid "MAPMAN  —  SHEET %s  —  %s"
+msgstr "MAPMAN  —  FOLHA %s  —  %s"
+
+#. Title block, three lines: revision (%s is a version like 1.3.0), scale, sheet number (%s). Each line at most 11 characters.
+msgid ""
+"REV %s\n"
+"SCALE 1:3\n"
+"SHEET %s"
+msgstr ""
+"REV %s\n"
+"ESCALA 1:3\n"
+"FOLHA %s"
+
+#. Column heading over a parts list
+msgid "ITEM"
+msgstr "ITEM"
+
+#. Column heading over a parts list
+msgid "DESCRIPTION"
+msgstr "DESCRIÇÃO"
+
+#. Column heading on the options sheet
+msgid "PARAMETER"
+msgstr "PARÂMETRO"
+
+#. Column heading
+msgid "VALUE"
+msgstr "VALOR"
+
+#. Column heading: quantity
+msgid "QTY"
+msgstr "QTD."
+
+#. Row that goes back to the main menu (sheet 001). Keep the '<  ' prefix.
+msgid "<  RETURN TO SHEET 001"
+msgstr "<  VOLTAR À FOLHA 001"
+
+#. Sheet title and a row text
+msgid "MAIN MENU"
+msgstr "MENU PRINCIPAL"
+
+#. Label of the total row on a score table
+msgid "TOTAL"
+msgstr "TOTAL"
+
+#. Small print prefix; %s is a sentence
+msgid "NOTE: %s"
+msgstr "NOTA: %s"
+
+#. Sheet title
+msgid "FIRST RUN"
+msgstr "PRIMEIRA EXECUÇÃO"
+
+#. Sheet title and a row text
+msgid "OPTIONS"
+msgstr "OPÇÕES"
+
+#. Sheet title
+msgid "PAUSED"
+msgstr "PAUSADO"
+
+#. Sheet title (confirm quitting)
+msgid "CONFIRM"
+msgstr "CONFIRMAÇÃO"
+
+#. Sheet title when a life is lost; defect as on an inspection report
+msgid "LEVEL %d — DEFECT"
+msgstr "NÍVEL %d — DEFEITO"
+
+#. Sheet title
+msgid "GAME OVER"
+msgstr "FIM DE JOGO"
+
+#. Sheet title: pick a checkpoint to restart from
+msgid "CHECKPOINTS"
+msgstr "CHECKPOINTS"
+
+#. Sheet title: practice mode, a range of levels
+msgid "PRACTICE — LEVELS %d–%d"
+msgstr "PRÁTICA — NÍVEIS %d–%d"
+
+#. Sheet title after clearing a level: the score is 'inspected'
+msgid "LEVEL %d — INSPECTION"
+msgstr "NÍVEL %d — INSPEÇÃO"
+
+#. Sheet title after clearing a checkpoint level
+msgid "LEVEL %d — CHECKPOINT"
+msgstr "NÍVEL %d — CHECKPOINT"
+
+#. Sheet title after finishing the game
+msgid "CONGRATULATIONS"
+msgstr "PARABÉNS"
+
+#. Sheet title: final score table
+msgid "FINAL INSPECTION"
+msgstr "INSPEÇÃO FINAL"
+
+#. Options row and the language sheet's title
+msgid "LANGUAGE"
+msgstr "IDIOMA"
+
+#. Language sheet: follow the phone's system language
+msgid "PHONE'S LANGUAGE"
+msgstr "IDIOMA DO CELULAR"
+
+#. Main menu row
+msgid "PLAY FROM START"
+msgstr "JOGAR DO INÍCIO"
+
+#. Main menu row
+msgid "CONTINUE FROM CHECKPOINT"
+msgstr "CONTINUAR DO CHECKPOINT"
+
+#. Main menu row
+msgid "PRACTICE A LEVEL"
+msgstr "PRATICAR UM NÍVEL"
+
+#. Main menu row
+msgid "TUTORIAL"
+msgstr "TUTORIAL"
+
+#. Main menu small print
+msgid "BEST SCORE %d"
+msgstr "MELHOR PONTUAÇÃO %d"
+
+#. Main menu small print, n is 100
+msgid "%d LEVEL"
+msgid_plural "%d LEVELS"
+msgstr[0] "%d NÍVEL"
+msgstr[1] "%d NÍVEIS"
+
+#. First run sheet, small print
+msgid "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE"
+msgstr "PRIMEIRA VEZ NO MAPMAN? O TUTORIAL LEVA UM MINUTO"
+
+#. First run row
+msgid "TAKE THE TUTORIAL"
+msgstr "FAZER O TUTORIAL"
+
+#. First run row
+msgid "SKIP TO THE GAME"
+msgstr "PULAR PARA O JOGO"
+
+#. Options row (a toggle)
+msgid "MUSIC"
+msgstr "MÚSICA"
+
+#. Options row (a toggle)
+msgid "SOUND EFFECTS"
+msgstr "EFEITOS SONOROS"
+
+#. Options row (a toggle)
+msgid "VIBRATION"
+msgstr "VIBRAÇÃO"
+
+#. Options row: turns decorative animation off
+msgid "REDUCE MOTION"
+msgstr "REDUZIR MOVIMENTO"
+
+#. Pause sheet status line; work suspended as on a drawing office note
+msgid "WORK SUSPENDED AT LEVEL %d"
+msgstr "TRABALHO SUSPENSO NO NÍVEL %d"
+
+#. Appended to the status line: minutes:seconds left on the clock. Keep the leading ' · ' and T-%d:%02d.
+msgid " · T-%d:%02d REMAINING"
+msgstr " · RESTAM T-%d:%02d"
+
+#. Pause sheet status line in the tutorial
+msgid "WORK SUSPENDED · TUTORIAL"
+msgstr "TRABALHO SUSPENSO · TUTORIAL"
+
+#. Pause sheet status line on the final map
+msgid "WORK SUSPENDED · FINAL SHEET"
+msgstr "TRABALHO SUSPENSO · FOLHA FINAL"
+
+#. Pause row
+msgid "RESUME"
+msgstr "RETOMAR"
+
+#. Pause row
+msgid "END GAME"
+msgstr "ENCERRAR JOGO"
+
+#. Pause row
+msgid "END TUTORIAL"
+msgstr "ENCERRAR TUTORIAL"
+
+#. Pause sheet small print
+msgid "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NOTA: INCLINE PARA MOVER · TOQUE NA FOLHA PARA PAUSAR"
+
+#. Rubber stamp on the pause sheet; one or two short words
+msgid "ON HOLD"
+msgstr "EM ESPERA"
+
+#. Confirm sheet, two lines
+msgid ""
+"END THIS GAME?\n"
+"PROGRESS SINCE THE LAST CHECKPOINT IS LOST"
+msgstr ""
+"ENCERRAR ESTE JOGO?\n"
+"O PROGRESSO DESDE O ÚLTIMO CHECKPOINT SERÁ PERDIDO"
+
+#. Confirm row
+msgid "NO, KEEP PLAYING"
+msgstr "NÃO, CONTINUAR JOGANDO"
+
+#. Confirm row
+msgid "YES, END THE GAME"
+msgstr "SIM, ENCERRAR O JOGO"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: STEPPED ON A DEATH TILE"
+msgstr "DEFEITO: PISOU EM UM BLOCO MORTAL"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: OUT OF TIME"
+msgstr "DEFEITO: TEMPO ESGOTADO"
+
+#. Lost-life sheet label, discs follow
+msgid "LIVES REMAINING"
+msgstr "VIDAS RESTANTES"
+
+#. Lost-life row
+msgid "TRY AGAIN FROM THE START TILE"
+msgstr "TENTAR DE NOVO DO BLOCO INICIAL"
+
+#. Lost-life small print
+msgid "NOTE: ROUTE AROUND THE DEATH TILES"
+msgstr "NOTA: DESVIE DOS BLOCOS MORTAIS"
+
+#. Lost-life small print after a timeout: 20 seconds per level
+msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
+msgstr "NOTA: T-0:20 POR FOLHA · PEGUE O CAMINHO MAIS CURTO"
+
+#. Rubber stamp on the lost-life sheet
+msgid "REWORK"
+msgstr "RETRABALHO"
+
+#. Game over label
+msgid "FINAL SCORE"
+msgstr "PONTUAÇÃO FINAL"
+
+#. Game over small print
+msgid "PREVIOUS BEST  %d"
+msgstr "MELHOR ANTERIOR  %d"
+
+#. Game over row
+msgid "RESTART FROM A CHECKPOINT"
+msgstr "REINICIAR DE UM CHECKPOINT"
+
+#. Rubber stamp: a new high score
+msgid "NEW BEST"
+msgstr "RECORDE"
+
+#. Checkpoints sheet heading
+msgid "RESTART FROM A SAVED CHECKPOINT"
+msgstr "REINICIAR DE UM CHECKPOINT SALVO"
+
+#. Checkpoint cell: reached and saved
+msgid "SAVED"
+msgstr "SALVO"
+
+#. Cell: not reached yet
+msgid "LOCKED"
+msgstr "BLOQUEADO"
+
+#. Practice grid column pair heading: level ('part' of the drawing) and best result. Keep the three spaces.
+msgid "PART   BEST"
+msgstr "PEÇA   MELHOR"
+
+#. Level cell label, L for level; keep short
+msgid "L%02d"
+msgstr "L%02d"
+
+#. Best in a practice cell: seconds left, star count. Keep ★.
+msgid "%ds ★%d"
+msgstr "%ds ★%d"
+
+#. Seconds, short unit
+msgid "%ds"
+msgstr "%ds"
+
+#. Practice caption: page x of y
+msgid "SHEET %d OF %d"
+msgstr "FOLHA %d DE %d"
+
+#. Practice caption: levels unlocked
+msgid "%d PART RELEASED"
+msgid_plural "%d PARTS RELEASED"
+msgstr[0] "%d PEÇA LIBERADA"
+msgstr[1] "%d PEÇAS LIBERADAS"
+
+#. Score table row
+msgid "LEVEL BONUS"
+msgstr "BÔNUS DE NÍVEL"
+
+#. Score table row
+msgid "TIME BONUS"
+msgstr "BÔNUS DE TEMPO"
+
+#. Score table row
+msgid "STARS COLLECTED"
+msgstr "ESTRELAS COLETADAS"
+
+#. Seconds with a space, quantity column
+msgid "%d s"
+msgstr "%d s"
+
+#. Level clear small print; next level number
+msgid "TAP TO CONTINUE TO SHEET %03d"
+msgstr "TOQUE PARA IR À FOLHA %03d"
+
+#. Level 100 clear small print
+msgid "TAP TO CONTINUE TO THE FINAL SHEET"
+msgstr "TOQUE PARA IR À FOLHA FINAL"
+
+#. Checkpoint level clear small print
+msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
+msgstr "CHECKPOINT SALVO · REINICIE DAQUI QUANDO QUISER"
+
+#. Rubber stamp on a cleared level
+msgid "PASSED"
+msgstr "APROVADO"
+
+#. Congratulations small print
+msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
+msgstr "AS 100 FOLHAS HOMOLOGADAS · TODOS OS NÍVEIS LIBERADOS NA PRÁTICA"
+
+#. Final score table row
+msgid "SCORE AT LEVEL 100"
+msgstr "PONTOS NO NÍVEL 100"
+
+#. Final score table row
+msgid "COMPLETION BONUS"
+msgstr "BÔNUS DE CONCLUSÃO"
+
+#. Final score table row: 50 points per life left
+msgid "LIVES REMAINING ×50"
+msgstr "VIDAS RESTANTES ×50"
+
+#. Final inspection small print
+msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
+msgstr "AS 100 FOLHAS HOMOLOGADAS · OBRIGADO POR JOGAR"
+
+#. Rubber stamp on the final sheet
+msgid "APPROVED"
+msgstr "HOMOLOGADO"
+
+#. HUD header: level number / level count
+msgid "SHEET %03d / %d"
+msgstr "FOLHA %03d / %d"
+
+#. HUD header in the tutorial
+msgid "TUTORIAL %d / %d"
+msgstr "TUTORIAL %d / %d"
+
+#. HUD note at level start
+msgid "GO!"
+msgstr "VAI!"
+
+#. HUD note, three seconds left
+msgid "HURRY UP!"
+msgstr "RÁPIDO!"
+
+#. HUD note while the level loads
+msgid "GET READY..."
+msgstr "PREPARE-SE..."
+
+#. HUD note on level 1
+msgid "TILT TO MOVE"
+msgstr "INCLINE PARA MOVER"
+
+#. HUD note: a star was collected
+msgid "BONUS POINTS"
+msgstr "PONTOS BÔNUS"
+
+#. HUD note
+msgid "EXTRA TIME"
+msgstr "TEMPO EXTRA"
+
+#. HUD note
+msgid "TIME LOST"
+msgstr "TEMPO PERDIDO"
+
+#. HUD note
+msgid "EXTRA LIFE"
+msgstr "VIDA EXTRA"
+
+#. HUD note: tilt directions are mirrored
+msgid "CONTROLS REVERSED"
+msgstr "CONTROLES INVERTIDOS"
+
+#. HUD note
+msgid "TILES HIDDEN"
+msgstr "BLOCOS OCULTOS"
+
+#. HUD note: the hidden tiles are back
+msgid "TILES UNHIDDEN"
+msgstr "BLOCOS REVELADOS"
+
+#. HUD note while MapMan is invisible
+msgid "SEE YOU AGAIN IN %d MOVE"
+msgid_plural "SEE YOU AGAIN IN %d MOVES"
+msgstr[0] "VOLTO EM %d MOVIMENTO"
+msgstr[1] "VOLTO EM %d MOVIMENTOS"
+
+#. HUD note, two lines, both effects at once
+msgid ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVE"
+msgid_plural ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVES"
+msgstr[0] ""
+"CONTROLES INVERTIDOS E\n"
+"VOLTO EM %d MOVIMENTO"
+msgstr[1] ""
+"CONTROLES INVERTIDOS E\n"
+"VOLTO EM %d MOVIMENTOS"
+
+#. HUD note, two lines
+msgid ""
+"CONTROLS REVERSED &\n"
+"TILES HIDDEN"
+msgstr ""
+"CONTROLES INVERTIDOS E\n"
+"BLOCOS OCULTOS"
+
+#. HUD note: caught in a cobweb; shake the phone
+msgid "STUCK, SHAKE TO RELEASE"
+msgstr "PRESO, AGITE PARA SOLTAR"
+
+#. HUD note on a desktop without sensors
+msgid "STUCK, TAP TO RELEASE"
+msgstr "PRESO, TOQUE PARA SOLTAR"
+
+#. HUD note, both effects
+msgid "STUCK & CONTROLS REVERSED. SHAKE TO RELEASE."
+msgstr "PRESO E CONTROLES INVERTIDOS. AGITE PARA SOLTAR."
+
+#. HUD note, both effects, desktop
+msgid "STUCK & CONTROLS REVERSED. TAP TO RELEASE."
+msgstr "PRESO E CONTROLES INVERTIDOS. TOQUE PARA SOLTAR."
+
+#. Practice result caption: seconds left on the clock
+msgid "LEVEL %d: %ds LEFT"
+msgstr "NÍVEL %d: RESTAM %ds"
+
+#. Practice result caption
+msgid "LEVEL %d: %ds LEFT, NEW BEST!"
+msgstr "NÍVEL %d: %ds, NOVO RECORDE!"
+
+#. Floating note on an extra-time tile: five seconds
+msgid "+5 S"
+msgstr "+5 S"
+
+#. Floating note on a time-loss tile; keep the minus sign U+2212
+msgid "−5 S"
+msgstr "−5 S"
+
+#. Screen reader name of the practice page arrow
+msgid "Previous page"
+msgstr "Página anterior"
+
+#. Screen reader name
+msgid "Next page"
+msgstr "Próxima página"
+
+#. Screen reader name of a practice cell
+msgid "Level %d"
+msgstr "Nível %d"
+
+#. Screen reader name
+msgid "Level %d, locked"
+msgstr "Nível %d, bloqueado"
+
+#. Screen reader name of a checkpoint cell
+msgid "Restart after level %d"
+msgstr "Reiniciar após o nível %d"
+
+#. Screen reader name
+msgid "Checkpoint at level %d, not reached"
+msgstr "Checkpoint no nível %d, não alcançado"
+
+#. Screen reader state of a toggle
+msgid "on"
+msgstr "ativado"
+
+#. Screen reader state of a toggle
+msgid "off"
+msgstr "desativado"
+
+#. Screen reader
+msgid "%d life remaining"
+msgid_plural "%d lives remaining"
+msgstr[0] "%d vida restante"
+msgstr[1] "%d vidas restantes"
+
+#. Screen reader name of the HUD level label
+msgid "Level"
+msgstr "Nível"
+
+#. Screen reader name
+msgid "Score"
+msgstr "Pontuação"
+
+#. Screen reader name
+msgid "Lives"
+msgstr "Vidas"
+
+#. Screen reader name
+msgid "Time left"
+msgstr "Tempo restante"
+
+#. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
+msgid ""
+"Tilt your device to move around the map.\n"
+"Head for the exit tile to progress to the next level."
+msgstr ""
+"Incline o celular para se mover pelo mapa.\n"
+"Vá até o bloco de saída para avançar ao próximo nível."
+
+#. Tutorial lesson 2
+msgid ""
+"Stepping on this tile will reverse the controls.\n"
+"Step on another and they go back to normal."
+msgstr ""
+"Pisar neste bloco inverte os controles.\n"
+"Pise em outro e eles voltam ao normal."
+
+#. Tutorial lesson 3
+msgid ""
+"Stepping on this tile will make Map Man disappear.\n"
+"Don't worry, after a few moves he will show up again."
+msgstr ""
+"Pisar neste bloco faz o Map Man desaparecer.\n"
+"Não se preocupe, após alguns movimentos ele reaparece."
+
+#. Tutorial lesson 4
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Shake your device to free him and get moving again."
+msgstr ""
+"Pisar neste bloco deixa o Map Man preso.\n"
+"Agite o celular para soltá-lo e seguir em frente."
+
+#. Tutorial lesson 5
+msgid ""
+"Watch out for bonus points,\n"
+"although you may have to go out of your way to get them."
+msgstr ""
+"Fique de olho nos pontos bônus,\n"
+"mas talvez precise sair do caminho para pegá-los."
+
+#. Tutorial lesson 6
+msgid ""
+"Also keep an eye out for extra lives,\n"
+"but take care as they will take you\n"
+"even more off course than bonus points."
+msgstr ""
+"Fique de olho também nas vidas extras,\n"
+"mas cuidado, elas vão desviar você\n"
+"ainda mais que os pontos bônus."
+
+#. Tutorial lesson 7
+msgid "Be careful of the poison tiles: if you step on them you will lose a life."
+msgstr "Cuidado com os blocos venenosos: se pisar neles, você perde uma vida."
+
+#. Tutorial lesson 8
+msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
+msgstr "Estes blocos dão tempo extra ou tiram tempo de você. Ao terminar cada nível, o tempo restante no relógio vira pontos bônus."
+
+#. Tutorial lesson 9
+msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+msgstr "Estes blocos fazem outros blocos sumir e reaparecer. Mesmo ocultos, você ainda pode pisar neles, então lembre onde estão."
+
+#. Tutorial lesson 10
+msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
+msgstr "De vez em quando você encontra um checkpoint. Ao alcançar um checkpoint, você pode reiniciar dali em vez de voltar ao começo."
+
+#. Tutorial lesson 11
+msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
+msgstr "Se precisar de uma pausa, toque na tela durante o jogo para pausar. Na pausa, você pode retomar ou sair do jogo."
+
+#. Tutorial lesson 12
+msgid "You're all set, head for the exit to start the game. Have fun!"
+msgstr "Tudo pronto: vá até a saída para começar o jogo. Divirta-se!"

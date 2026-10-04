@@ -10,6 +10,10 @@ basic punctuation) and writes small variable fonts (the weight axis survives,
 so bold headers and stamps still work) into godot/assets/fonts/i18n/.
 Rerun it whenever a translation changes; test_i18n.gd fails if a character
 has no glyph in any bundled font. Needs fonttools (pip install fonttools brotli).
+
+Each subset also takes JetBrains Mono's vertical metrics: Godot sizes a line
+by the tallest font in the fallback chain, so Noto Sans Arabic's deep
+descender (0.74 em) would otherwise push every line apart, in every language.
 """
 import glob
 import json
@@ -17,9 +21,12 @@ import os
 import subprocess
 import sys
 
+from fontTools.ttLib import TTFont
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 I18N = os.path.join(HERE, "..", "i18n")
 OUT = os.path.join(HERE, "..", "assets", "fonts", "i18n")
+MAIN_FONT = os.path.join(HERE, "..", "assets", "fonts", "JetBrainsMono-Variable.ttf")
 
 # Output name -> (source file, locales whose text it serves)
 FONTS = {
@@ -47,6 +54,22 @@ def text_of(locale):
     return "".join(chars)
 
 
+def match_line_metrics(path, main_path):
+    """Give the font at `path` the main font's ascent and descent, in its em."""
+    main = TTFont(main_path)
+    font = TTFont(path)
+    scale = font["head"].unitsPerEm / main["head"].unitsPerEm
+    ascent = round(main["hhea"].ascent * scale)
+    descent = round(main["hhea"].descent * scale)  # negative
+    hhea, os2 = font["hhea"], font["OS/2"]
+    hhea.ascent, hhea.descent, hhea.lineGap = ascent, descent, 0
+    os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap = ascent, descent, 0
+    os2.usWinAscent, os2.usWinDescent = ascent, -descent
+    if os2.version >= 4:
+        os2.fsSelection |= 1 << 7  # USE_TYPO_METRICS, as JetBrains Mono sets it
+    font.save(path)
+
+
 def main(src_dir):
     os.makedirs(OUT, exist_ok=True)
     for name, (source, locales) in FONTS.items():
@@ -62,6 +85,7 @@ def main(src_dir):
             "--unicodes=" + unicodes_arg, "--output-file=" + out,
             "--name-IDs=*", "--no-hinting", "--layout-features=*",
         ])
+        match_line_metrics(out, MAIN_FONT)
         print("%s: %d characters, %d KB" % (name, len(unicodes), os.path.getsize(out) // 1024))
 
 

@@ -189,6 +189,11 @@ COPY_FIXES = {
     'off course then bonus': 'off course than bonus',
     'Be careful for the poison': 'Be careful of the poison',
     'These tile causes': 'These tiles cause',
+    "Don't worry after": "Don't worry, after",
+    'bonus points,\n although': 'bonus points,\nalthough',
+    'to get them': 'to get them.',
+    'than bonus points': 'than bonus points.',
+    'poison tiles, if': 'poison tiles: if',
 }
 
 

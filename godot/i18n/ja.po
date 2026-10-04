@@ -1,0 +1,591 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MapMan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Header of every menu sheet: the game name, the sheet number (%s, e.g. 001 or P-02), the sheet title (%s). Keep MAPMAN. Blueprint drawing-sheet vocabulary throughout.
+msgid "MAPMAN  —  SHEET %s  —  %s"
+msgstr "MAPMAN  —  図面 %s  —  %s"
+
+#. Title block, three lines: revision (%s is a version like 1.3.0), scale, sheet number (%s). Each line at most 11 characters.
+msgid ""
+"REV %s\n"
+"SCALE 1:3\n"
+"SHEET %s"
+msgstr ""
+"改訂 %s\n"
+"尺度 1:3\n"
+"図番 %s"
+
+#. Column heading over a parts list
+msgid "ITEM"
+msgstr "項目"
+
+#. Column heading over a parts list
+msgid "DESCRIPTION"
+msgstr "名称"
+
+#. Column heading on the options sheet
+msgid "PARAMETER"
+msgstr "パラメータ"
+
+#. Column heading
+msgid "VALUE"
+msgstr "値"
+
+#. Column heading: quantity
+msgid "QTY"
+msgstr "数量"
+
+#. Row that goes back to the main menu (sheet 001). Keep the '<  ' prefix.
+msgid "<  RETURN TO SHEET 001"
+msgstr "<  図面 001 へ戻る"
+
+#. Sheet title and a row text
+msgid "MAIN MENU"
+msgstr "メインメニュー"
+
+#. Label of the total row on a score table
+msgid "TOTAL"
+msgstr "合計"
+
+#. Small print prefix; %s is a sentence
+msgid "NOTE: %s"
+msgstr "注記：%s"
+
+#. Sheet title
+msgid "FIRST RUN"
+msgstr "初回起動"
+
+#. Sheet title and a row text
+msgid "OPTIONS"
+msgstr "設定"
+
+#. Sheet title
+msgid "PAUSED"
+msgstr "一時停止"
+
+#. Sheet title (confirm quitting)
+msgid "CONFIRM"
+msgstr "確認"
+
+#. Sheet title when a life is lost; defect as on an inspection report
+msgid "LEVEL %d — DEFECT"
+msgstr "レベル%d — 不良"
+
+#. Sheet title
+msgid "GAME OVER"
+msgstr "ゲームオーバー"
+
+#. Sheet title: pick a checkpoint to restart from
+msgid "CHECKPOINTS"
+msgstr "チェックポイント"
+
+#. Sheet title: practice mode, a range of levels
+msgid "PRACTICE — LEVELS %d–%d"
+msgstr "練習 — レベル%d–%d"
+
+#. Sheet title after clearing a level: the score is 'inspected'
+msgid "LEVEL %d — INSPECTION"
+msgstr "レベル%d — 検査"
+
+#. Sheet title after clearing a checkpoint level
+msgid "LEVEL %d — CHECKPOINT"
+msgstr "レベル%d — チェックポイント"
+
+#. Sheet title after finishing the game
+msgid "CONGRATULATIONS"
+msgstr "おめでとうございます"
+
+#. Sheet title: final score table
+msgid "FINAL INSPECTION"
+msgstr "最終検査"
+
+#. Options row and the language sheet's title
+msgid "LANGUAGE"
+msgstr "言語"
+
+#. Language sheet: follow the phone's system language
+msgid "PHONE'S LANGUAGE"
+msgstr "端末の言語"
+
+#. Main menu row
+msgid "PLAY FROM START"
+msgstr "最初からプレイ"
+
+#. Main menu row
+msgid "CONTINUE FROM CHECKPOINT"
+msgstr "チェックポイントから続ける"
+
+#. Main menu row
+msgid "PRACTICE A LEVEL"
+msgstr "レベル練習"
+
+#. Main menu row
+msgid "TUTORIAL"
+msgstr "チュートリアル"
+
+#. Main menu small print
+msgid "BEST SCORE %d"
+msgstr "ベストスコア %d"
+
+#. Main menu small print, n is 100
+msgid "%d LEVEL"
+msgid_plural "%d LEVELS"
+msgstr[0] "全%dレベル"
+
+#. First run sheet, small print
+msgid "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE"
+msgstr "MAPMANは初めて？チュートリアルは1分で終わります"
+
+#. First run row
+msgid "TAKE THE TUTORIAL"
+msgstr "チュートリアルを始める"
+
+#. First run row
+msgid "SKIP TO THE GAME"
+msgstr "飛ばしてゲームへ"
+
+#. Options row (a toggle)
+msgid "MUSIC"
+msgstr "音楽"
+
+#. Options row (a toggle)
+msgid "SOUND EFFECTS"
+msgstr "効果音"
+
+#. Options row (a toggle)
+msgid "VIBRATION"
+msgstr "振動"
+
+#. Options row: turns decorative animation off
+msgid "REDUCE MOTION"
+msgstr "演出を減らす"
+
+#. Pause sheet status line; work suspended as on a drawing office note
+msgid "WORK SUSPENDED AT LEVEL %d"
+msgstr "レベル%dにて作業中断"
+
+#. Appended to the status line: minutes:seconds left on the clock. Keep the leading ' · ' and T-%d:%02d.
+msgid " · T-%d:%02d REMAINING"
+msgstr " · 残り T-%d:%02d"
+
+#. Pause sheet status line in the tutorial
+msgid "WORK SUSPENDED · TUTORIAL"
+msgstr "作業中断 · チュートリアル"
+
+#. Pause sheet status line on the final map
+msgid "WORK SUSPENDED · FINAL SHEET"
+msgstr "作業中断 · 最終図面"
+
+#. Pause row
+msgid "RESUME"
+msgstr "再開"
+
+#. Pause row
+msgid "END GAME"
+msgstr "ゲームを終了"
+
+#. Pause row
+msgid "END TUTORIAL"
+msgstr "チュートリアルを終了"
+
+#. Pause sheet small print
+msgid "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "注記：傾けて移動 · 図面をタップで一時停止"
+
+#. Rubber stamp on the pause sheet; one or two short words
+msgid "ON HOLD"
+msgstr "保留"
+
+#. Confirm sheet, two lines
+msgid ""
+"END THIS GAME?\n"
+"PROGRESS SINCE THE LAST CHECKPOINT IS LOST"
+msgstr ""
+"ゲームを終了しますか？\n"
+"前回のチェックポイント以降の進行状況は失われます"
+
+#. Confirm row
+msgid "NO, KEEP PLAYING"
+msgstr "いいえ、続ける"
+
+#. Confirm row
+msgid "YES, END THE GAME"
+msgstr "はい、終了する"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: STEPPED ON A DEATH TILE"
+msgstr "不良：毒タイルを踏んだ"
+
+#. Lost-life sheet, cause line
+msgid "DEFECT: OUT OF TIME"
+msgstr "不良：時間切れ"
+
+#. Lost-life sheet label, discs follow
+msgid "LIVES REMAINING"
+msgstr "残機"
+
+#. Lost-life row
+msgid "TRY AGAIN FROM THE START TILE"
+msgstr "スタートタイルからやり直す"
+
+#. Lost-life small print
+msgid "NOTE: ROUTE AROUND THE DEATH TILES"
+msgstr "注記：毒タイルを迂回せよ"
+
+#. Lost-life small print after a timeout: 20 seconds per level
+msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
+msgstr "注記：図面1枚につき T-0:20 · 近道せよ"
+
+#. Rubber stamp on the lost-life sheet
+msgid "REWORK"
+msgstr "手直し"
+
+#. Game over label
+msgid "FINAL SCORE"
+msgstr "最終スコア"
+
+#. Game over small print
+msgid "PREVIOUS BEST  %d"
+msgstr "これまでのベスト  %d"
+
+#. Game over row
+msgid "RESTART FROM A CHECKPOINT"
+msgstr "チェックポイントから再開"
+
+#. Rubber stamp: a new high score
+msgid "NEW BEST"
+msgstr "新記録"
+
+#. Checkpoints sheet heading
+msgid "RESTART FROM A SAVED CHECKPOINT"
+msgstr "保存済みチェックポイントから再開"
+
+#. Checkpoint cell: reached and saved
+msgid "SAVED"
+msgstr "保存済"
+
+#. Cell: not reached yet
+msgid "LOCKED"
+msgstr "未開放"
+
+#. Practice grid column pair heading: level ('part' of the drawing) and best result. Keep the three spaces.
+msgid "PART   BEST"
+msgstr "部品   ベスト"
+
+#. Level cell label, L for level; keep short
+msgid "L%02d"
+msgstr "L%02d"
+
+#. Best in a practice cell: seconds left, star count. Keep ★.
+msgid "%ds ★%d"
+msgstr "%d秒 ★%d"
+
+#. Seconds, short unit
+msgid "%ds"
+msgstr "%d秒"
+
+#. Practice caption: page x of y
+msgid "SHEET %d OF %d"
+msgstr "図面 %d / %d"
+
+#. Practice caption: levels unlocked
+msgid "%d PART RELEASED"
+msgid_plural "%d PARTS RELEASED"
+msgstr[0] "部品%d点 解放済み"
+
+#. Score table row
+msgid "LEVEL BONUS"
+msgstr "レベルボーナス"
+
+#. Score table row
+msgid "TIME BONUS"
+msgstr "タイムボーナス"
+
+#. Score table row
+msgid "STARS COLLECTED"
+msgstr "獲得した星"
+
+#. Seconds with a space, quantity column
+msgid "%d s"
+msgstr "%d秒"
+
+#. Level clear small print; next level number
+msgid "TAP TO CONTINUE TO SHEET %03d"
+msgstr "タップして図面 %03d へ"
+
+#. Level 100 clear small print
+msgid "TAP TO CONTINUE TO THE FINAL SHEET"
+msgstr "タップして最終図面へ"
+
+#. Checkpoint level clear small print
+msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
+msgstr "チェックポイント保存済 · いつでもここから再開可能"
+
+#. Rubber stamp on a cleared level
+msgid "PASSED"
+msgstr "合格"
+
+#. Congratulations small print
+msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
+msgstr "全100図面承認済 · 練習モードで全レベル開放"
+
+#. Final score table row
+msgid "SCORE AT LEVEL 100"
+msgstr "レベル100のスコア"
+
+#. Final score table row
+msgid "COMPLETION BONUS"
+msgstr "クリアボーナス"
+
+#. Final score table row: 50 points per life left
+msgid "LIVES REMAINING ×50"
+msgstr "残機 ×50"
+
+#. Final inspection small print
+msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
+msgstr "全100図面承認済 · 遊んでくれてありがとう"
+
+#. Rubber stamp on the final sheet
+msgid "APPROVED"
+msgstr "承認"
+
+#. HUD header: level number / level count
+msgid "SHEET %03d / %d"
+msgstr "図面 %03d / %d"
+
+#. HUD header in the tutorial
+msgid "TUTORIAL %d / %d"
+msgstr "レッスン %d / %d"
+
+#. HUD note at level start
+msgid "GO!"
+msgstr "スタート！"
+
+#. HUD note, three seconds left
+msgid "HURRY UP!"
+msgstr "急げ！"
+
+#. HUD note while the level loads
+msgid "GET READY..."
+msgstr "よーい…"
+
+#. HUD note on level 1
+msgid "TILT TO MOVE"
+msgstr "傾けて移動"
+
+#. HUD note: a star was collected
+msgid "BONUS POINTS"
+msgstr "ボーナスポイント"
+
+#. HUD note
+msgid "EXTRA TIME"
+msgstr "時間追加"
+
+#. HUD note
+msgid "TIME LOST"
+msgstr "時間減少"
+
+#. HUD note
+msgid "EXTRA LIFE"
+msgstr "残機追加"
+
+#. HUD note: tilt directions are mirrored
+msgid "CONTROLS REVERSED"
+msgstr "操作反転"
+
+#. HUD note
+msgid "TILES HIDDEN"
+msgstr "タイル非表示"
+
+#. HUD note: the hidden tiles are back
+msgid "TILES UNHIDDEN"
+msgstr "タイル再表示"
+
+#. HUD note while MapMan is invisible
+msgid "SEE YOU AGAIN IN %d MOVE"
+msgid_plural "SEE YOU AGAIN IN %d MOVES"
+msgstr[0] "あと%d歩で再登場"
+
+#. HUD note, two lines, both effects at once
+msgid ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVE"
+msgid_plural ""
+"CONTROLS REVERSED &\n"
+"SEE YOU AGAIN IN %d MOVES"
+msgstr[0] ""
+"操作反転 &\n"
+"あと%d歩で再登場"
+
+#. HUD note, two lines
+msgid ""
+"CONTROLS REVERSED &\n"
+"TILES HIDDEN"
+msgstr ""
+"操作反転 &\n"
+"タイル非表示"
+
+#. HUD note: caught in a cobweb; shake the phone
+msgid "STUCK, SHAKE TO RELEASE"
+msgstr "動けない、端末を振って解除"
+
+#. HUD note on a desktop without sensors
+msgid "STUCK, TAP TO RELEASE"
+msgstr "動けない、タップで解除"
+
+#. HUD note, both effects
+msgid "STUCK & CONTROLS REVERSED. SHAKE TO RELEASE."
+msgstr "動けない & 操作反転。端末を振って解除。"
+
+#. HUD note, both effects, desktop
+msgid "STUCK & CONTROLS REVERSED. TAP TO RELEASE."
+msgstr "動けない & 操作反転。タップで解除。"
+
+#. Practice result caption: seconds left on the clock
+msgid "LEVEL %d: %ds LEFT"
+msgstr "レベル%d：残り%d秒"
+
+#. Practice result caption
+msgid "LEVEL %d: %ds LEFT, NEW BEST!"
+msgstr "レベル%d：残り%d秒、新記録！"
+
+#. Floating note on an extra-time tile: five seconds
+msgid "+5 S"
+msgstr "+5秒"
+
+#. Floating note on a time-loss tile; keep the minus sign U+2212
+msgid "−5 S"
+msgstr "−5秒"
+
+#. Screen reader name of the practice page arrow
+msgid "Previous page"
+msgstr "前のページ"
+
+#. Screen reader name
+msgid "Next page"
+msgstr "次のページ"
+
+#. Screen reader name of a practice cell
+msgid "Level %d"
+msgstr "レベル%d"
+
+#. Screen reader name
+msgid "Level %d, locked"
+msgstr "レベル%d、未開放"
+
+#. Screen reader name of a checkpoint cell
+msgid "Restart after level %d"
+msgstr "レベル%dの後から再開"
+
+#. Screen reader name
+msgid "Checkpoint at level %d, not reached"
+msgstr "レベル%dのチェックポイント、未到達"
+
+#. Screen reader state of a toggle
+msgid "on"
+msgstr "オン"
+
+#. Screen reader state of a toggle
+msgid "off"
+msgstr "オフ"
+
+#. Screen reader
+msgid "%d life remaining"
+msgid_plural "%d lives remaining"
+msgstr[0] "残り%d機"
+
+#. Screen reader name of the HUD level label
+msgid "Level"
+msgstr "レベル"
+
+#. Screen reader name
+msgid "Score"
+msgstr "スコア"
+
+#. Screen reader name
+msgid "Lives"
+msgstr "残機"
+
+#. Screen reader name
+msgid "Time left"
+msgstr "残り時間"
+
+#. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
+msgid ""
+"Tilt your device to move around the map.\n"
+"Head for the exit tile to progress to the next level."
+msgstr ""
+"端末を傾けてマップを移動します。\n"
+"出口のタイルへ向かうと次のレベルに進めます。"
+
+#. Tutorial lesson 2
+msgid ""
+"Stepping on this tile will reverse the controls.\n"
+"Step on another and they go back to normal."
+msgstr ""
+"このタイルを踏むと操作が反転します。\n"
+"もう一つ踏むと元に戻ります。"
+
+#. Tutorial lesson 3
+msgid ""
+"Stepping on this tile will make Map Man disappear.\n"
+"Don't worry, after a few moves he will show up again."
+msgstr ""
+"このタイルを踏むとMap Manが姿を消します。\n"
+"心配無用、数歩進めばまた現れます。"
+
+#. Tutorial lesson 4
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Shake your device to free him and get moving again."
+msgstr ""
+"このタイルを踏むとMap Manが動けなくなります。\n"
+"端末を振って解放し、また動き出しましょう。"
+
+#. Tutorial lesson 5
+msgid ""
+"Watch out for bonus points,\n"
+"although you may have to go out of your way to get them."
+msgstr ""
+"ボーナスポイントもお見逃しなく。\n"
+"ただし取りに行くには遠回りが必要かも。"
+
+#. Tutorial lesson 6
+msgid ""
+"Also keep an eye out for extra lives,\n"
+"but take care as they will take you\n"
+"even more off course than bonus points."
+msgstr ""
+"残機が増えるタイルにも注目。\n"
+"ただしボーナスポイント以上に\n"
+"大きく遠回りになるので注意。"
+
+#. Tutorial lesson 7
+msgid "Be careful of the poison tiles: if you step on them you will lose a life."
+msgstr "毒タイルに注意。踏むと残機が1つ減ります。"
+
+#. Tutorial lesson 8
+msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
+msgstr "これらのタイルは時間を増やしたり減らしたりします。各レベルをクリアすると残り時間に応じてボーナスポイントが入ります。"
+
+#. Tutorial lesson 9
+msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+msgstr "このタイルは他のタイルを消したり再表示したりします。消えている間も踏めるので、場所を覚えておきましょう。"
+
+#. Tutorial lesson 10
+msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
+msgstr "時々チェックポイントがあります。到達するたびに、最初からではなくそこから再開できるようになります。"
+
+#. Tutorial lesson 11
+msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
+msgstr "休憩したいときはプレイ中に画面をタップすると一時停止します。一時停止中はプレイ再開かゲーム終了を選べます。"
+
+#. Tutorial lesson 12
+msgid "You're all set, head for the exit to start the game. Have fun!"
+msgstr "準備完了。出口へ向かってゲームを始めましょう。楽しんで！"

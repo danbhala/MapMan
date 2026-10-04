@@ -201,22 +201,22 @@
     {
       "id": "PLAY FROM START",
       "note": "Main menu row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "CONTINUE FROM CHECKPOINT",
       "note": "Main menu row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "PRACTICE A LEVEL",
       "note": "Main menu row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "TUTORIAL",
       "note": "Main menu row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "BEST SCORE %d",
@@ -237,12 +237,12 @@
     {
       "id": "TAKE THE TUTORIAL",
       "note": "First run row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "SKIP TO THE GAME",
       "note": "First run row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "MUSIC",
@@ -287,17 +287,17 @@
     {
       "id": "RESUME",
       "note": "Pause row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "END GAME",
       "note": "Pause row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "END TUTORIAL",
       "note": "Pause row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE",
@@ -317,12 +317,12 @@
     {
       "id": "NO, KEEP PLAYING",
       "note": "Confirm row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "YES, END THE GAME",
       "note": "Confirm row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "DEFECT: STEPPED ON A DEATH TILE",
@@ -342,7 +342,7 @@
     {
       "id": "TRY AGAIN FROM THE START TILE",
       "note": "Lost-life row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "NOTE: ROUTE AROUND THE DEATH TILES",
@@ -372,7 +372,7 @@
     {
       "id": "RESTART FROM A CHECKPOINT",
       "note": "Game over row",
-      "max": 33
+      "max": 31
     },
     {
       "id": "NEW BEST",
@@ -694,7 +694,7 @@
       "max": 170
     },
     {
-      "id": "Stepping on this tile will make Map Man disappear.\nDon't worry after a few moves he will show up again.",
+      "id": "Stepping on this tile will make Map Man disappear.\nDon't worry, after a few moves he will show up again.",
       "note": "Tutorial lesson 3",
       "max": 170
     },
@@ -704,17 +704,17 @@
       "max": 170
     },
     {
-      "id": "Watch out for bonus points,\n although you may have to go out of your way to get them",
+      "id": "Watch out for bonus points,\nalthough you may have to go out of your way to get them.",
       "note": "Tutorial lesson 5",
       "max": 170
     },
     {
-      "id": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points",
+      "id": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.",
       "note": "Tutorial lesson 6",
       "max": 170
     },
     {
-      "id": "Be careful of the poison tiles, if you step on them you will lose a life.",
+      "id": "Be careful of the poison tiles: if you step on them you will lose a life.",
       "note": "Tutorial lesson 7",
       "max": 170
     },

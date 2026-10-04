@@ -46,7 +46,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Stepping on this tile will make Map Man disappear.\nDon't worry after a few moves he will show up again."
+   "description": "Stepping on this tile will make Map Man disappear.\nDon't worry, after a few moves he will show up again."
   },
   {
    "number": 4,
@@ -78,7 +78,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Watch out for bonus points,\n although you may have to go out of your way to get them"
+   "description": "Watch out for bonus points,\nalthough you may have to go out of your way to get them."
   },
   {
    "number": 6,
@@ -94,7 +94,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points"
+   "description": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points."
   },
   {
    "number": 7,
@@ -109,7 +109,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Be careful of the poison tiles, if you step on them you will lose a life."
+   "description": "Be careful of the poison tiles: if you step on them you will lose a life."
   },
   {
    "number": 8,
