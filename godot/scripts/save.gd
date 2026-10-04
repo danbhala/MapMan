@@ -119,9 +119,8 @@ func load_all(path := PATH) -> void:
 	seen = _looks(_cfg.get_value("wardrobe", "seen", []))
 	# Saves from before the wardrobe have the progress but not the looks.
 	sync_wardrobe()
-	worn = _cfg.get_value("wardrobe", "worn", "classic")
-	if not is_released(worn):
-		worn = "classic"
+	var saved_worn: Variant = _cfg.get_value("wardrobe", "worn", "classic")
+	worn = saved_worn if saved_worn is String and is_released(saved_worn) else "classic"
 
 
 ## path: tests write to a file of their own; the game uses PATH.
