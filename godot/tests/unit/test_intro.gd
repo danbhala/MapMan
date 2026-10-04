@@ -71,3 +71,23 @@ func test_tests_building_main_skip_it() -> void:
 	add_child_autofree(game)
 	assert_null(game.intro)
 	assert_true(game.menus.visible, "straight to the main menu")
+
+
+func _click(pressed: bool) -> InputEventMouseButton:
+	var e := InputEventMouseButton.new()
+	e.button_index = MOUSE_BUTTON_LEFT
+	e.pressed = pressed
+	return e
+
+
+func test_a_stray_release_or_an_early_tap_does_not_skip() -> void:
+	await wait_frames(3)
+	intro._unhandled_input(_click(false))
+	assert_eq(intro.state, "intro", "a release without its press (a finger from the launcher)")
+	intro._unhandled_input(_click(true))
+	intro._unhandled_input(_click(false))
+	assert_eq(intro.state, "intro", "too soon after launch")
+	intro._born_ms -= Intro.INPUT_DELAY_MS
+	intro._unhandled_input(_click(true))
+	intro._unhandled_input(_click(false))
+	assert_eq(intro.state, "title", "a whole tap skips")

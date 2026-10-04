@@ -37,6 +37,12 @@ const ROUTE: Array[Vector2i] = [
 	Vector2i.UP,
 	Vector2i.RIGHT,
 ]
+## Input this soon after launch is ignored: a finger still lifting off the
+## launcher or installer must not skip the intro.
+const INPUT_DELAY_MS := 600
+## The longest frame the scene steps by, so a hitch while the game warms up
+## slows the scene down instead of jumping it ahead.
+const MAX_FRAME := 1.0 / 20.0
 const STEP_TIME := 14.0 / 60.0  # Main.STOP_TIME: one tile on a gentle tilt
 const TEXT := {"tap": "TAP TO START", "skip": "SKIP", "hidden": "TILES HIDDEN"}
 
@@ -55,10 +61,14 @@ var _title: Label
 var _tap: Label
 var _pulse: Tween
 var _audio: Node
+var _born_ms := 0
+## A tap counts when its press and its release both land on the intro.
+var _pressed := false
 
 
 func _ready() -> void:
 	_audio = Blueprint.autoload("Audio")
+	_born_ms = Time.get_ticks_msec()
 	_size = get_viewport_rect().size
 	var layer := CanvasLayer.new()
 	layer.layer = 6
@@ -93,8 +103,16 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	var tap: bool = event is InputEventMouseButton and not event.pressed
-	if tap or event.is_action_pressed("ui_accept") or event.is_action_pressed("shake"):
+	if Time.get_ticks_msec() - _born_ms < INPUT_DELAY_MS:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		get_viewport().set_input_as_handled()
+		if event.pressed:
+			_pressed = true
+		elif _pressed:
+			_pressed = false
+			advance()
+	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("shake"):
 		get_viewport().set_input_as_handled()
 		advance()
 
@@ -135,12 +153,12 @@ func _play() -> void:
 	while t < walk or not map.loaded():
 		if not await _frame():
 			return
-		t += get_process_delta_time()
+		t += _dt()
 		_pos = from.lerp(start, minf(t / walk, 1.0))
 		var done := clampf(map._load_elapsed / maxf(map._load_time, 0.01), 0.0, 1.0)
 		_strip.text = "%d%%" % int(done * 100.0)
 		_bar.size.x = 120.0 * done
-		if fmod(t, 0.23) < get_process_delta_time() and t < walk:
+		if fmod(t, 0.23) < _dt() and t < walk:
 			_sfx_step()
 	_pos = start
 	player.face_right_idle()
@@ -259,12 +277,16 @@ func _frame() -> bool:
 	return state == "intro" and is_inside_tree()
 
 
+func _dt() -> float:
+	return minf(get_process_delta_time(), MAX_FRAME)
+
+
 func _wait(seconds: float) -> bool:
 	var t := 0.0
 	while t < seconds:
 		if not await _frame():
 			return false
-		t += get_process_delta_time()
+		t += _dt()
 	return true
 
 
@@ -275,7 +297,7 @@ func _step(d: Vector2i, seconds: float) -> bool:
 	while map.moving:
 		if not await _frame():
 			return false
-		map.update_move(get_process_delta_time())
+		map.update_move(_dt())
 		_pos = map.get_player_position()
 	_pos = map.get_player_position()
 	map.unhide_tile_at(map.position_key)
