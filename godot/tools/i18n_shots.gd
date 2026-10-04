@@ -83,8 +83,44 @@ func _loaded() -> void:
 	game.loaded()
 
 
+## The look whose name and tier take the most room in the language on screen,
+## of those a level releases (tests/unit/test_i18n.gd picks it the same way).
+func _longest_look() -> String:
+	var font := Blueprint.mono(800)
+	var longest := ""
+	var widest := 0.0
+	for look in Wardrobe.LOOKS:
+		if look.level == 0 or look.level == Wardrobe.THE_END:
+			continue
+		var tier: String = Wardrobe.TIERS[look.tier]
+		var text := (
+			TranslationServer.translate(look.name) + "  ·  " + TranslationServer.translate(tier)
+		)
+		var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x
+		if w > widest:
+			widest = w
+			longest = look.id
+	return longest
+
+
+## A wardrobe part way through: the first ten looks, `worn` and MapWoman
+## released, the last of them not seen yet (NEW on the main menu).
+func _pin_wardrobe(worn: String) -> void:
+	var save = root.get_node("Save")
+	var ids: Array = Wardrobe.ids().slice(1, 11)
+	for id in [worn, "mapwoman"]:
+		if id not in ids:
+			ids.append(id)
+	save.released.assign(ids)
+	save.seen.assign(ids.slice(0, ids.size() - 1))
+	save.worn = worn
+
+
 func sheets(locale: String) -> void:
 	var m = game.menus
+	var save = root.get_node("Save")
+	var longest := _longest_look()
+	_pin_wardrobe(longest)
 	game.game_over(false)
 	m.show_main(1842, true, 100)
 	await shot(locale, "01_main")
@@ -95,7 +131,6 @@ func sheets(locale: String) -> void:
 	m.show_language()
 	await shot(locale, "04_language")
 	# As a phone in this language shows them before any choice is made.
-	var save = root.get_node("Save")
 	save.locale = ""
 	save.use_locale(locale)
 	m.show_options()
@@ -127,6 +162,21 @@ func sheets(locale: String) -> void:
 	await shot(locale, "17_congratulations")
 	m.show_game_complete(1842, 100, 100)
 	await shot(locale, "18_completion")
+	# The wardrobe: the longest release slip, MapWoman's, and sheet 001-D with
+	# the longest name worn, then MapWoman and Classic and their details.
+	m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest)
+	await shot(locale, "25_level_clear_release")
+	m.show_congratulations(2042, true, "mapwoman")
+	await shot(locale, "26_congratulations_mapwoman")
+	var wearing := {
+		"27_wardrobe": longest,
+		"28_wardrobe_mapwoman": "mapwoman",
+		"29_wardrobe_classic": "classic",
+	}
+	for name in wearing:
+		save.worn = wearing[name]
+		m.show_wardrobe()
+		await shot(locale, name)
 	m.close()
 
 
