@@ -24,6 +24,9 @@ const HEAD_R := 15.0
 ## Rest points stand this much higher on his legs than their numbers say:
 ## the sprite's legs were longer than the first drawn figure's.
 const RISE := 6.0
+## How wide the soft line round a filled shape's edge is: a hairline, so the
+## line's own antialiasing softens the edge without the shape growing.
+const EDGE := 0.02
 
 var canvas: CanvasItem
 var measuring := false
@@ -156,6 +159,11 @@ func poly(pts: PackedVector2Array, c: Color) -> void:
 		_grow(pts, 0.0)
 		return
 	canvas.draw_colored_polygon(pts, col(c))
+	# Filled polygons have hard, stepped edges; a thin antialiased line round
+	# the edge softens them like the legs (lines) and dots.
+	var edge := pts.duplicate()
+	edge.append(pts[0])
+	canvas.draw_polyline(edge, col(c), EDGE, true)
 
 
 ## A closed outline.
@@ -185,7 +193,7 @@ func dot(at: Vector2, radius: float, c: Color) -> void:
 	if measuring:
 		_grow(PackedVector2Array([at]), radius)
 		return
-	canvas.draw_circle(at, radius, col(c))
+	canvas.draw_circle(at, radius, col(c), true, -1.0, true)
 
 
 func arc(centre: Vector2, radius: float, from: float, to: float, c: Color, width: float) -> void:
