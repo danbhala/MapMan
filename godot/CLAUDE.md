@@ -37,9 +37,17 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `--check` in CI). `tools/subset_fonts.py` cuts Noto Sans fonts down to the
   characters the translations use (`assets/fonts/i18n/`), so add a glyph source
   there before adding a script. `Save.locale` is the chosen language ("" follows
-  the phone); Arabic mirrors the sheets (`Menus._mx()`). `tests/unit/test_i18n.gd`
-  checks the catalog, the translations, the glyphs and that every sheet fits
-  in every language.
+  the phone); Arabic mirrors the sheets (`Menus._mx()`, with Godot's own
+  mirroring off in `project.godot`). `tests/unit/test_i18n.gd` checks the
+  catalog, the translations, the glyphs and, through `tools/layout_check.gd`,
+  that every sheet and HUD state lays out in every language: text fits the
+  box it was given (`Blueprint.fit()` remembers it), stays in the frame and
+  crosses no other text. `tools/i18n_shots.sh` runs the same rules with
+  pictures of every screen in every language (local only, about two minutes).
+- Blueprint labels and buttons join the tree before they are sized: a Control
+  sized outside the tree measures its text with the default theme's font and
+  keeps that box. Figures ("+10", "T-0:20") are forced left-to-right
+  (`Blueprint.direction()`) so they don't flip on an Arabic phone.
 - Tile art is the original @3x set, drawn at scale 1/3 (the menu, button and
   character art is no longer used). Fonts are bundled (JetBrains Mono,
   Liberation; OFL) so screenshots match on every machine.

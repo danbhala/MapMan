@@ -25,6 +25,11 @@ Other commands, from the repo root:
 - Import after adding assets: `godot --headless --path godot --import`
 - Unit tests only: `godot --headless --path godot -s addons/gut/gut_cmdln.gd`
 - Level difficulty numbers: `python3 godot/tools/level_report.py [levels]`
+- Every screen in every language, with a layout check:
+  `godot/tools/i18n_shots.sh [out dir] [locales]` (local only; look at the
+  contact sheets it writes). After editing a translation: `python3
+  godot/tools/i18n.py`, and `python3 godot/tools/subset_fonts.py <noto dir>`
+  if it uses new Arabic or CJK characters.
 - Lint: `cd godot && gdlint scripts tests && gdformat --check scripts tests`
 
 ## Commits and releases

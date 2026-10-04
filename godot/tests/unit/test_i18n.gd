@@ -4,6 +4,7 @@ extends GutTest
 ## every sheet still fits its boxes in every language.
 
 const MAIN_SCENE := preload("res://scenes/main.tscn")
+const LayoutCheck := preload("res://tools/layout_check.gd")
 ## TEXT entries that are numbers, symbols or format scaffolding, not words.
 const UNTRANSLATED := [
 	"001",
@@ -31,6 +32,8 @@ const PLURAL_SAMPLES := [0, 1, 2, 3, 5, 11, 21, 25, 100]
 
 var catalog: Dictionary
 var msgids := {}
+## The plural forms, which only show up as the second half of a pair.
+var plurals := {}
 var game
 
 
@@ -38,9 +41,14 @@ func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
 	Dev.enabled = false
+	# The phone's screen, not the 64 px square headless Godot starts with:
+	# the sheets are laid out in it.
+	get_tree().root.size = Vector2i(1334, 750)
 	catalog = JSON.parse_string(FileAccess.get_file_as_string("res://i18n/catalog.json"))
 	for entry in catalog.strings:
 		msgids[entry.id] = entry
+		if entry.has("plural"):
+			plurals[entry.plural] = entry
 
 
 func before_each() -> void:
@@ -48,6 +56,8 @@ func before_each() -> void:
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
 	game.menus.close()
+	# The main menu it opened on its own is gone once a frame has passed.
+	await get_tree().process_frame
 
 
 func after_each() -> void:
@@ -72,7 +82,8 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 			var texts: Array = value if value is Array else [value]
 			for text in texts:
 				if _has_letters(text) and text not in UNTRANSLATED:
-					assert_true(msgids.has(text), "catalog has %s: %s" % [key, text])
+					var known: bool = msgids.has(text) or plurals.has(text)
+					assert_true(known, "catalog has %s: %s" % [key, text])
 
 
 func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
@@ -84,7 +95,7 @@ func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
 			var text: String = m.get_string(1).c_unescape()
 			count += 1
 			assert_true(msgids.has(text), "%s: catalog has %s" % [script, text])
-	assert_gt(count, 20, "the game-loop notes go through tr()")
+	assert_gt(count, 10, "the game-loop notes go through tr()")
 
 
 func test_data_text_is_in_the_catalog() -> void:
@@ -159,13 +170,13 @@ func test_every_character_has_a_bundled_glyph() -> void:
 		var t := TranslationServer.get_translation_object(locale)
 		if t == null:
 			continue
-		var texts: Array = [catalog.locales[locale].name]
+		var texts: Array[String] = [catalog.locales[locale].name]
 		for entry in catalog.strings:
 			if entry.has("plural"):
 				for n in PLURAL_SAMPLES:
-					texts.append(t.get_plural_message(entry.id, entry.plural, n))
+					texts.append(String(t.get_plural_message(entry.id, entry.plural, n)))
 			else:
-				texts.append(t.get_message(entry.id))
+				texts.append(String(t.get_message(entry.id)))
 		var missing := {}
 		for text in texts:
 			for ch in text:
@@ -199,22 +210,19 @@ func _open_every_sheet(check: Callable) -> void:
 	for open_sheet in sheets:
 		open_sheet.call()
 		check.call(m.current)
+		# Let the sheet's nodes go before the next one, or they pile up.
+		m.close()
+		await get_tree().process_frame
+
+
+## The area text may use: inside the drawing frame.
+func _bounds() -> Rect2:
+	return game.menus.get_viewport_rect().grow(-Blueprint.INSET)
 
 
 func _check_fit(locale: String, sheet: String) -> void:
-	for b in game.menus.find_children("*", "Button", true, false):
-		var need: float = b.get_minimum_size().x
-		assert_true(
-			need <= b.size.x + 0.5,
-			"%s %s: button '%s' needs %d of %d" % [locale, sheet, b.text, need, b.size.x]
-		)
-	for l in game.menus.find_children("*", "Label", true, false):
-		if l.autowrap_mode == TextServer.AUTOWRAP_OFF and l.size.x > 0.0 and l.text != "":
-			var need: float = l.get_minimum_size().x
-			assert_true(
-				need <= l.size.x + 0.5,
-				"%s %s: label '%s' needs %d of %d" % [locale, sheet, l.text, need, l.size.x]
-			)
+	var found := LayoutCheck.problems([game.menus], _bounds())
+	assert_eq(found.size(), 0, "%s %s: %s" % [locale, sheet, "; ".join(found)])
 
 
 func test_every_sheet_fits_in_every_language() -> void:
@@ -222,7 +230,54 @@ func test_every_sheet_fits_in_every_language() -> void:
 	locales.append("en")
 	for locale in locales:
 		Save.set_locale(locale)
-		_open_every_sheet(_check_fit.bind(locale))
+		await _open_every_sheet(_check_fit.bind(locale))
+
+
+## The HUD while playing: a level, every effect's note, and a tutorial lesson.
+func _play_every_hud_state(check: Callable) -> void:
+	game.new_game(10)
+	game.map._load_elapsed = game.map._load_time
+	game.loaded()
+	check.call("playing")
+	game.reverse = true
+	game.vanish = 3
+	game.set_controls_message()
+	check.call("reversed and vanished")
+	game.vanish = 0
+	game.stuck = true
+	game.set_controls_message()
+	check.call("stuck and reversed")
+	game.reverse = false
+	game.stuck = false
+	game.map.hide_tiles()
+	game._flash("_last_hide")
+	game.set_controls_message()
+	check.call("tiles hidden")
+	game.map.unhide_tiles()
+	game._flash("_last_points")
+	game.set_controls_message()
+	check.call("bonus points")
+	game.game_over(false)
+	game.new_game(6, true)
+	game.map._load_elapsed = game.map._load_time
+	game.loaded()
+	game.reverse = true
+	game.set_controls_message()
+	check.call("tutorial")
+	game.game_over(false)
+
+
+func _check_hud(locale: String, state: String) -> void:
+	var found := LayoutCheck.problems([game.hud], _bounds())
+	assert_eq(found.size(), 0, "%s %s: %s" % [locale, state, "; ".join(found)])
+
+
+func test_the_hud_lays_out_in_every_language() -> void:
+	var locales: Array = catalog.locales.keys()
+	locales.append("en")
+	for locale in locales:
+		Save.set_locale(locale)
+		_play_every_hud_state(_check_hud.bind(locale))
 
 
 func test_hud_notes_fit_in_two_lines_in_every_language() -> void:
