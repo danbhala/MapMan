@@ -12,7 +12,7 @@ signal action(name: String)
 const PRACTICE_PAGE := 20
 ## The panel every sheet is laid out on; wider screens get margins.
 const SHEET := Vector2(667, 375)
-const TITLE_BLOCK := Vector2(200, 63)
+const TITLE_BLOCK := Vector2(100, 63)
 ## The checkpoint picker's cells, top row first.
 const CHECKPOINT_ROWS := [[80, 85, 90, 95], [50, 60, 70, 75], [10, 20, 30, 40]]
 ## The lose-life sheet draws this many life discs at most, then "+N".
@@ -48,7 +48,6 @@ const BIG_ROW := 50
 const TEXT := {
 	"header": "MAPMAN  —  SHEET %s  —  %s",
 	"title_block": "REV %s\nSCALE 1:3\nSHEET %s",
-	"drawn_by": "DRAWN BY\ndanbhala\n2026",
 	"rev_dev": "DEV",
 	"col_item": "ITEM",
 	"col_description": "DESCRIPTION",
@@ -316,23 +315,20 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 
 
 ## The title block in the frame's bottom-right corner: revision, scale and
-## sheet number on the left, who drew it on the right.
+## sheet number.
 func _title_block(number: String, color: Color) -> Control:
 	var block := Control.new()
 	block.size = TITLE_BLOCK
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(block)
 	Blueprint.line(block, Blueprint.box_points(Vector2.ZERO, TITLE_BLOCK), color, 1.2)
-	var mid := TITLE_BLOCK.x / 2.0
-	Blueprint.line(block, PackedVector2Array([Vector2(mid, 0), Vector2(mid, TITLE_BLOCK.y)]), color)
 	# "1.2.0" of "1.2.0-pr.16": the build suffix is on the DEV overlay and
-	# would run into the next column here.
+	# would run off the block here.
 	var rev: String = Dev.build_info.version.get_slice("-", 0)
 	if rev == "":
 		rev = TEXT.rev_dev
-	var left: String = TEXT.title_block % [rev, number]
-	Blueprint.label(block, left, 11, Blueprint.INK, Vector2(11, 8))
-	Blueprint.label(block, TEXT.drawn_by, 11, Blueprint.INK, Vector2(mid + 11, 8))
+	var text: String = TEXT.title_block % [rev, number]
+	Blueprint.label(block, text, 11, Blueprint.INK, Vector2(11, 8))
 	return block
 
 
