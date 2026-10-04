@@ -52,9 +52,15 @@ const DRAW_ON := 0.5
 const STAMP_DELAY := 0.45
 const STAMP_FALL := 0.16
 const STAMP_DEPTH := 42.0
-## The total counts up a point per tick, five at a time past BIG_ROW points.
-const TICK := 0.1
-const BIG_ROW := 50
+## The count-up: each row's figure and the TOTAL climb together in at most
+## TICKS ticks this far apart, so a big bonus takes no longer than a small
+## one, and the ticks rise in pitch by up to TICK_RISE on the way to the total.
+const TICKS := 16
+const TICK := 0.05
+const TICK_RISE := 0.6
+## A tap on the level clear before the count is in finishes it, rather than
+## leaving the sheet.
+const FINISH := "finish count"
 
 ## Every word on the sheets (plain English until translation comes).
 const TEXT := {
@@ -153,8 +159,16 @@ const TEXT := {
 	"seconds": "%d s",
 	"tap_next": "TAP TO CONTINUE TO SHEET %03d",
 	"tap_final": "TAP TO CONTINUE TO THE FINAL SHEET",
+	"next_level": "NEXT LEVEL",
 	"checkpoint_saved": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
 	"passed": "PASSED",
+	# nnn — ready for the next level
+	"ready_title": "LEVEL %d — READY",
+	"on_the_clock": "T-%d:%02d ON THE CLOCK",
+	"your_best": "YOUR BEST %s",
+	"start_level": "START LEVEL %d",
+	"tap_start": "TAP THE SHEET TO START",
+	"return_to": "<  RETURN TO SHEET %03d",
 	# 100 — the end
 	"end_sheet": "100",
 	"congratulations_title": "CONGRATULATIONS",
@@ -198,6 +212,9 @@ const LANGUAGES := [
 ]
 
 var current := ""
+## What NO, KEEP PLAYING on the question before quitting reports: back to
+## the game, or to the ready sheet between levels.
+var confirm_back := "unpause"
 
 var _panel: Control
 var _bg: ColorRect
@@ -228,6 +245,9 @@ var _clock := 0.0
 var _rest := Vector3.ZERO
 ## A desktop: his eyes follow the mouse once it has moved.
 var _mouse_seen := false
+## Opens the sheet on screen again as it ends up (no motion): the level clear
+## sets it, so a tap can finish its count and wearing a look can show on him.
+var _redraw := Callable()
 ## The level the pause sheet was opened on, for the confirm sheet's number;
 ## 0 on the final sheet after level 100.
 var _level := 0
@@ -304,7 +324,17 @@ func _gui_input(event: InputEvent) -> void:
 ## listener, such as a test, sees the value.
 func _emit_tap() -> void:
 	var act := _tap_action
+	if act == FINISH:
+		redraw()
+		return
 	action.emit(act)
+
+
+## The sheet on screen again, all in, as a tap mid-count or a change to it
+## leaves it; nothing for a sheet that doesn't redraw.
+func redraw() -> void:
+	if _redraw.is_valid():
+		_redraw.call()
 
 
 func close() -> void:
@@ -320,6 +350,7 @@ func close() -> void:
 	_hero_mode = ""
 	_first_button = null
 	_tap_action = ""
+	_redraw = Callable()
 	current = ""
 	visible = false
 
@@ -543,12 +574,18 @@ func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array =
 		_item(i + 1, texts[i], acts[i], y + i * pitch, on)
 
 
-## The way back to the main menu, as the last row of a sheet.
-func _return_item(y: float) -> void:
-	var b := Blueprint.item(_panel, _t("return_item"), Vector2(_mx(LIST_X, LIST_W), y))
+## The way back to the main menu, as the last row of a sheet; between levels,
+## the way back to the ready sheet of level `level`.
+func _return_item(y: float, level := 0) -> void:
+	var text: String = _t("return_to") % level if level > 0 else _t("return_item")
+	var b := Blueprint.item(_panel, text, Vector2(_mx(LIST_X, LIST_W), y))
 	b.alignment = _align()
-	b.accessibility_name = _sentence(_t("main_menu"))
-	_connect(b, "main menu")
+	if level > 0:
+		b.accessibility_name = _sentence(_t("ready_title") % level)
+		_connect(b, "ready")
+	else:
+		b.accessibility_name = _sentence(_t("main_menu"))
+		_connect(b, "main menu")
 	_reveal(b)
 
 
@@ -630,7 +667,7 @@ func _table_row(y: float, name: String, qty: String, value: String) -> Control:
 	_text(row, name, 15, Blueprint.INK, LIST_X, 0, 180.0)
 	if qty != "":
 		_text(row, qty, 15, Blueprint.INK, 226.0, 0, 60.0)
-	_value(row, value, 15, 0)
+	row.set_meta("value", _value(row, value, 15, 0))
 	var x := _mx(LIST_X, LIST_W)
 	Blueprint.rule(row, 26, x, x + LIST_W)
 	return row
@@ -666,39 +703,63 @@ func _score_block(score: int, previous_best: int) -> void:
 	_reveal(row)
 
 
-## The TOTAL counts up from `start` as each row is revealed in turn, a tick
-## at a time; `rows` are [{"node": CanvasItem, "points": int}]. `then` runs
-## once it's all in (at once with reduced motion).
+## The TOTAL counts up from `start` as each row is revealed in turn, the
+## row's own figure counting up from +0 with it; `rows` are [{"node":
+## CanvasItem, "points": int, "value": Label (optional)}]. When it's all in
+## the total gives a bump and `then` runs (at once with reduced motion).
 func _count_up(label: Label, start: int, rows: Array, then: Callable) -> void:
-	var sum := [start]
+	var all := 0
+	for r in rows:
+		all += r.points
 	if not _animate:
-		for r in rows:
-			sum[0] += r.points
-		label.text = str(sum[0])
+		label.text = str(start + all)
 		then.call()
 		return
 	var tw := create_tween()
 	_tweens.append(tw)
 	tw.tween_interval(DRAW_ON)
+	var done := 0
 	for r in rows:
 		var node: CanvasItem = r.node
 		node.modulate.a = 0.0
+		var value: Label = r.get("value")
+		var points: int = r.points
+		if value != null and points > 0:
+			value.text = TEXT.plus % 0
 		tw.tween_callback(func(): Blueprint.reveal(node))
-		tw.tween_interval(0.25)
-		var step: int = 5 if r.points > BIG_ROW else 1
-		var left: int = r.points
-		while left > 0:
-			var take := mini(step, left)
-			left -= take
+		tw.tween_interval(0.2)
+		var ticks := mini(points, TICKS)
+		for i in ticks:
+			@warning_ignore("integer_division")
+			var upto := points * (i + 1) / ticks
+			var pitch := 1.0 + TICK_RISE * float(done + upto) / float(all)
 			tw.tween_interval(TICK)
-			tw.tween_callback(_tick.bind(label, sum, take))
+			tw.tween_callback(_tick.bind(label, start + done + upto, value, upto, pitch))
+		done += points
+	tw.tween_callback(_bump.bind(label))
+	tw.tween_interval(0.2)
 	tw.tween_callback(then)
 
 
-func _tick(label: Label, sum: Array, take: int) -> void:
-	sum[0] += take
-	label.text = str(sum[0])
-	Audio.play("star", 0.2)
+func _tick(label: Label, total: int, value: Label, upto: int, pitch: float) -> void:
+	label.text = str(total)
+	if value != null:
+		value.text = TEXT.plus % upto
+	Audio.play("star", 0.2, pitch)
+
+
+## The total swells and settles back, from its reading edge, as it lands.
+func _bump(label: Label) -> void:
+	label.pivot_offset = Vector2(0.0 if _rtl else label.size.x, label.size.y / 2.0)
+	var tw := create_tween()
+	_tweens.append(tw)
+	(
+		tw
+		. tween_property(label, "scale", Vector2.ONE, 0.3)
+		. from(Vector2.ONE * 1.35)
+		. set_trans(Tween.TRANS_BACK)
+		. set_ease(Tween.EASE_OUT)
+	)
 
 
 ## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
@@ -926,9 +987,10 @@ func _language_name(code: String) -> String:
 
 
 ## 001-D: the wardrobe, every look to wear (WardrobeSheet). A released one
-## reports "wear <id>".
-func show_wardrobe() -> void:
-	WardrobeSheet.build(self)
+## reports "wear <id>". Opened from the ready sheet of level `back_level`, its
+## last row goes back there.
+func show_wardrobe(back_level := 0) -> void:
+	WardrobeSheet.build(self, back_level)
 
 
 ## The language sheet: the phone's language, then every language in its own
@@ -1023,10 +1085,12 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 	_focus_first()
 
 
-func show_confirm_quit() -> void:
+## back: what NO, KEEP PLAYING reports ("unpause", or "ready" between levels).
+func show_confirm_quit(back := "unpause") -> void:
+	confirm_back = back
 	_open("confirm_quit", _level_number("A"), _t("confirm_title"), Blueprint.PINK)
 	_note(_t("confirm_question"), LIST_TOP, Blueprint.PINK, 11)
-	_item(1, _t("keep_playing"), "unpause", 100)
+	_item(1, _t("keep_playing"), back, 100)
 	_item(2, _t("end_the_game"), "end game", 148)
 	_hero_on("tilt")
 	_focus_first()
@@ -1167,10 +1231,8 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 	return _t("best") % best.time
 
 
-## Level clear: the bonuses are added into the score one row at a time.
-## seconds_left: the clock at the exit, shown as the time bonus's quantity.
-## last: this was level 100, so the final sheet comes next.
-## released: the look this first clear released, if any, for a slip.
+## Level clear (ClearSheet): the bonuses count into the score, then NEXT
+## LEVEL and MAIN MENU. released: the look this first clear released, if any.
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1182,31 +1244,14 @@ func show_end_level(
 	last := false,
 	released := ""
 ) -> void:
-	var title: String = (_t("checkpoint_title") if checkpoint else _t("inspection_title")) % level
-	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
-	_columns([_t("col_item"), _t("col_qty"), _t("col_value")], [LIST_X, 226], true)
-	var clock := seconds_left if seconds_left >= 0 else time_bonus * 2
-	var specs := [
-		[_t("level_bonus"), "1", level_bonus],
-		[_t("time_bonus"), _t("seconds") % clock, time_bonus],
-	]
-	if stars > 0:
-		specs.append([_t("stars_collected"), str(stars), stars])
-	var rows := []
-	var y := 84.0
-	for s in specs:
-		rows.append({"node": _table_row(y, s[0], s[1], TEXT.plus % s[2]), "points": s[2]})
-		y += ROW_H
-	var total := _total(y + 4, str(score))
-	if checkpoint:
-		_note(_t("checkpoint_saved"), 244, Blueprint.GOLD, 11)
-	_note(_t("tap_final") if last else _t("tap_next") % (level + 1), 264, Blueprint.FAINT, 11)
-	_hero_on("right")
-	if released != "":
-		WardrobeSheet.release_slip(self, released)
-	var passed := Vector2(470, _over_head(90, HERO_POS.y))
-	_count_up(total, score, rows, func(): _stamp(_t("passed"), passed, Blueprint.GOLD, 0.0))
-	_tap_to("next level")
+	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
+	ClearSheet.end_level(self, args + [last, released])
+	_redraw = show_end_level.bindv(args + [last, released])
+
+
+## Before a level of the main game (ClearSheet): ready when the player is.
+func show_ready(level: int, seconds: int, best: Dictionary) -> void:
+	ClearSheet.ready_sheet(self, level, seconds, best)
 
 
 ## released: "mapwoman" when finishing the game this time released her.
@@ -1236,7 +1281,8 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 	var rows := []
 	var y := 84.0
 	for s in specs:
-		rows.append({"node": _table_row(y, s[0], "", s[1]), "points": s[2]})
+		var row := _table_row(y, s[0], "", s[1])
+		rows.append({"node": row, "points": s[2], "value": row.get_meta("value")})
 		y += ROW_H
 	var total := _total(y + 4, str(score))
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)

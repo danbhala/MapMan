@@ -323,6 +323,10 @@ msgstr "DEVAM İÇİN DOKUN · PAFTA %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "DEVAM İÇİN DOKUN · SON PAFTA"
 
+#. Level clear button, beside MAIN MENU: on to the next level
+msgid "NEXT LEVEL"
+msgstr "SONRAKİ BÖLÜM"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "KONTROL NOKTASI KAYDEDİLDİ · İSTEDİĞİN ZAMAN BURADAN BAŞLA"
@@ -330,6 +334,30 @@ msgstr "KONTROL NOKTASI KAYDEDİLDİ · İSTEDİĞİN ZAMAN BURADAN BAŞLA"
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "GEÇTİ"
+
+#. Sheet title before a level starts; level number
+msgid "LEVEL %d — READY"
+msgstr "BÖLÜM %d — HAZIR"
+
+#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
+msgid "T-%d:%02d ON THE CLOCK"
+msgstr "SÜRE T-%d:%02d"
+
+#. Ready sheet small print: the best time on this level, e.g. 9s ★1
+msgid "YOUR BEST %s"
+msgstr "REKORUN %s"
+
+#. Ready sheet row: start the level; level number
+msgid "START LEVEL %d"
+msgstr "%d. BÖLÜMÜ BAŞLAT"
+
+#. Ready sheet small print
+msgid "TAP THE SHEET TO START"
+msgstr "BAŞLAMAK İÇİN PAFTAYA DOKUN"
+
+#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  PAFTA %03d'E DÖN"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -751,9 +779,9 @@ msgstr "OYUNU BİTİRİNCE YAYINLANIR"
 msgid "NEW IN THE WARDROBE"
 msgstr "GARDIROBA YENİ EKLENDİ"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "PAFTA 001'DEKİ GARDIROPTAN GİYEBİLİRSİN"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "GİY"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"

@@ -76,6 +76,9 @@ var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 var _practice_page := 0
+## Between levels of the main game: the next level waits behind the ready
+## sheet (or the wardrobe, or the question before quitting, opened from it).
+var _between := false
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -693,11 +696,36 @@ func advance_level(check_point: bool) -> void:
 
 
 func next_level() -> void:
+	_bank_level()
+	finish_advancing_level()
+
+
+## The cleared level's points join the score (saving a checkpoint on a
+## checkpoint level), and the level after it is next.
+func _bank_level() -> void:
 	if not tutorial:
 		score += end_of_level_points
 		if map.is_checkpoint:
 			Save.checkpoint_reached(level, score)
 	level += 1
+
+
+## Whether the level about to be played gets a ready sheet first: every level
+## of the main game, but not the bonus map after the last.
+func _wants_ready() -> bool:
+	return not tutorial and not practice and not completed and level <= levels.size()
+
+
+## The ready sheet for the next level, which waits until it is started.
+func _show_ready() -> void:
+	_between = true
+	Save.level_reached(level)
+	menus.show_ready(level, int(INITIAL_SECONDS), Save.bests.get(level, {}))
+
+
+func _start_next_level() -> void:
+	_between = false
+	menus.close()
 	finish_advancing_level()
 
 
@@ -739,6 +767,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	tutorial = is_tutorial
 	completed = false
 	practice = false
+	_between = false
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -791,6 +820,7 @@ func game_over(show_score := true) -> void:
 	_hide_ending()
 	completed = false
 	practice = false
+	_between = false
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -899,7 +929,7 @@ func _on_menu_action(act: String) -> void:
 		"language":
 			menus.show_language()
 		"wardrobe":
-			menus.show_wardrobe()
+			menus.show_wardrobe(level if _between else 0)
 		"main menu":
 			if menus.current == "wardrobe":
 				# Looked at: nothing in it is new any more (the marks stay
@@ -923,8 +953,29 @@ func _on_menu_action(act: String) -> void:
 				clampi((Save.furthest_level - 1) / Menus.PRACTICE_PAGE, 0, last_page)
 			)
 		"next level":
-			menus.close()
-			next_level()
+			_bank_level()
+			if _wants_ready():
+				_show_ready()
+			else:
+				_start_next_level()
+		"start level":
+			_start_next_level()
+		"ready":
+			if menus.current == "wardrobe":
+				Save.mark_seen()
+			_show_ready()
+		"leave clear":
+			# MAIN MENU on the level clear: the level counts (and its
+			# checkpoint), then the same question as quitting from the pause.
+			_bank_level()
+			if _wants_ready():
+				Save.level_reached(level)
+				_between = true
+				menus.show_confirm_quit("ready")
+			else:
+				menus.show_confirm_quit("start level")
+		"leave ready":
+			menus.show_confirm_quit("ready")
 		"try again":
 			menus.close()
 			reset_all(false)
@@ -960,10 +1011,14 @@ func _on_menu_action(act: String) -> void:
 				menus.close()
 				start_practice(int(act.get_slice(" ", 2)))
 			elif act.begins_with("wear "):
-				# Only from the wardrobe, between games: he wears it from now on.
+				# From the wardrobe, or the slip on the level clear that released
+				# it: he wears it from now on.
 				if Save.wear(act.get_slice(" ", 1)):
 					player.outfit = Save.worn
-				menus.show_wardrobe()
+				if menus.current == "end_level":
+					menus.redraw()
+				else:
+					menus.show_wardrobe(level if _between else 0)
 			elif act.begins_with("L") and act.substr(1).is_valid_int():
 				menus.close()
 				new_game(int(act.substr(1)) + 1)
@@ -1020,9 +1075,15 @@ func go_back() -> void:
 		"":
 			if game_active and not dead:
 				show_pause_menu()
-		"pause", "confirm_quit":
+		"pause":
 			_on_menu_action("unpause")
-		"options", "restart", "first_play", "game_over", "congratulations", "practice", "wardrobe":
+		"confirm_quit":
+			_on_menu_action(menus.confirm_back)
+		"ready":
+			_on_menu_action("leave ready")
+		"wardrobe":
+			_on_menu_action("ready" if _between else "main menu")
+		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
 		"language":
 			_on_menu_action("options")

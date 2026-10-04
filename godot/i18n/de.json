@@ -190,11 +190,18 @@
   "IN THE WARDROBE FROM THE START": "VON ANFANG AN DABEI",
   "RELEASED FOR FINISHING THE GAME": "FREIGABE FÜRS DURCHSPIELEN",
   "NEW IN THE WARDROBE": "NEU IN DER GARDEROBE",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "IN DER GARDEROBE AUF BLATT 001 ANZIEHEN",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN NEU IN DER GARDEROBE",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "SPIEL ALS SIE: MAPMAN WARTET AM ENDE AUF DICH",
   "Wardrobe, %d of %d released": "Garderobe, %d von %d freigegeben",
   "%s, worn": "%s, angelegt",
   "Locked, released at level %d": "Gesperrt, Freigabe bei Level %d",
-  "Locked, released for finishing the game": "Gesperrt, Freigabe fürs Durchspielen"
+  "Locked, released for finishing the game": "Gesperrt, Freigabe fürs Durchspielen",
+  "WEAR IT": "ANZIEHEN",
+  "NEXT LEVEL": "NÄCHSTES LEVEL",
+  "LEVEL %d — READY": "LEVEL %d — BEREIT",
+  "T-%d:%02d ON THE CLOCK": "T-%d:%02d AUF DER UHR",
+  "YOUR BEST %s": "DEIN REKORD %s",
+  "START LEVEL %d": "LEVEL %d STARTEN",
+  "TAP THE SHEET TO START": "BLATT ANTIPPEN ZUM STARTEN",
+  "<  RETURN TO SHEET %03d": "<  ZURÜCK ZU BLATT %03d"
 }

@@ -134,11 +134,12 @@ first time the game loads their save, marked NEW (see [the save](#the-save)).
    worn look.
 3. **The release.** The first time a 5th level is cleared in the main game,
    its inspection or checkpoint sheet gets a gold *release slip* along the
-   bottom: the new look in miniature, its name and tier, and "wear it from
-   the wardrobe on sheet 001". The look is saved the moment the slip shows,
-   even if the player quits on that sheet. It is not put on for him: that is
-   the wardrobe's job, between games. The PASSED and APPROVED stamps rise
-   clear of a tall hat.
+   bottom: the new look in miniature, its name and tier, and a WEAR IT
+   button that puts it on him there and then (the sheet redraws with him in
+   it, and the button turns to WORN). The look is saved the moment the slip
+   shows, even if the player quits on that sheet. Between levels the ready
+   sheet also opens the wardrobe, whose last row then goes back to it. The
+   PASSED and APPROVED stamps rise clear of a tall hat.
 4. **The end.** Finishing the game puts MapWoman in the wardrobe, and the
    congratulations sheet says so: MAPWOMAN JOINS THE WARDROBE, play as her.
 

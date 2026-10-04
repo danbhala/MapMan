@@ -24,7 +24,7 @@ const TEXT := {
 	"from_the_start": "IN THE WARDROBE FROM THE START",
 	"for_finishing": "RELEASED FOR FINISHING THE GAME",
 	"new_in_wardrobe": "NEW IN THE WARDROBE",
-	"wear_it": "WEAR IT FROM THE WARDROBE ON SHEET 001",
+	"wear_now": "WEAR IT",
 	"mapwoman_joins": "MAPWOMAN JOINS THE WARDROBE",
 	"play_as_her": "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END",
 	# for screen readers
@@ -65,6 +65,8 @@ const SLIP_Y := 288.0
 const SLIP_H := 62.0
 const END_SLIP_Y := 244.0
 const END_SLIP_H := 50.0
+## The WEAR IT button at the far end of the release slip.
+const WEAR_W := 104.0
 
 # --- 001: the way in ---------------------------------------------------------------
 
@@ -115,7 +117,7 @@ static func _tag(m: Menus, text: String) -> void:
 ## "wear <id>"; a locked one is drawn in hidden lines, with the level that
 ## releases it. MapMan stands on the right in the look he wears, under its
 ## name, with a WORN stamp. The focus starts on the worn look.
-static func build(m: Menus) -> void:
+static func build(m: Menus, back_level := 0) -> void:
 	# Redrawn after a tap on another look: the stamp lands on the new one.
 	var before := ""
 	if m.current == "wardrobe" and m._hero != null:
@@ -137,7 +139,7 @@ static func build(m: Menus) -> void:
 		var b := _cell(m, i)
 		if Wardrobe.LOOKS[i].id == worn.id:
 			worn_cell = b
-	m._return_item(RETURN_Y)
+	m._return_item(RETURN_Y, back_level)
 	m._hero_on("tilt")
 	_worn_stamp(m, before != "" and before != worn.id)
 	if worn_cell != null and not worn_cell.disabled:
@@ -286,13 +288,25 @@ static func release_slip(m: Menus, id: String) -> void:
 		return
 	var slip := _slip(m, SLIP_Y, SLIP_H)
 	_miniature(slip, id, Vector2(_flip(m, 36, 0, slip.size.x), 56), 0.56).cheer()
-	var name: String = m.tr(look.name)
-	var tier := _tier(m, look)
-	if tier != "":
-		name += "  ·  " + tier
-	_slip_text(m, slip, m.tr(TEXT.new_in_wardrobe), 10, Blueprint.GOLD, 78, 6, 800)
-	_slip_text(m, slip, name, 15, Blueprint.INK, 78, 20, 800)
-	_slip_text(m, slip, m.tr(TEXT.wear_it), 10, Blueprint.FAINT, 78, 42, 500)
+	var room := WEAR_W + 8.0
+	_slip_text(m, slip, m.tr(TEXT.new_in_wardrobe), 10, Blueprint.GOLD, 78, 6, 800, room)
+	_slip_text(m, slip, m.tr(look.name), 15, Blueprint.INK, 78, 20, 800, room)
+	_slip_text(m, slip, _tier(m, look), 10, Blueprint.FAINT, 78, 42, 500, room)
+	# WEAR IT puts it on him there and then (reporting "wear <id>"); once he
+	# has it on, WORN in its place.
+	var size := Vector2(WEAR_W, Blueprint.TAP_HEIGHT)
+	var at := Vector2(_flip(m, slip.size.x - 8.0 - WEAR_W, WEAR_W, slip.size.x), 9)
+	if Save.worn == id:
+		var l := Blueprint.label(slip, m.tr(TEXT.worn), 15, Blueprint.GOLD, at, 800, WEAR_W)
+		l.autowrap_mode = TextServer.AUTOWRAP_OFF
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		Blueprint.fit(l, size)
+	else:
+		var b := Blueprint.item(slip, m.tr(TEXT.wear_now), at, size)
+		b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.accessibility_name = m._sentence(m.tr(TEXT.wear_now)) + ", " + m.tr(look.name)
+		m._connect(b, "wear " + id)
 	m._reveal(slip)
 
 
@@ -321,9 +335,19 @@ static func _slip(m: Menus, y: float, height: float) -> Control:
 
 ## A line of a slip from `x` to its far margin, on the reading side.
 static func _slip_text(
-	m: Menus, slip: Control, text: String, size: int, ink: Color, x: float, y: float, weight: int
+	m: Menus,
+	slip: Control,
+	text: String,
+	size: int,
+	ink: Color,
+	x: float,
+	y: float,
+	weight: int,
+	room := 0.0
 ) -> void:
-	var w := slip.size.x - x - 8.0
+	if text == "":
+		return
+	var w := slip.size.x - x - 8.0 - room
 	var pos := Vector2(_flip(m, x, w, slip.size.x), y)
 	var l := Blueprint.label(slip, text, size, ink, pos, weight, w, m._align())
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF

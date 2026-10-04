@@ -184,11 +184,18 @@
   "IN THE WARDROBE FROM THE START": "DI LEMARI BAJU SEJAK AWAL",
   "RELEASED FOR FINISHING THE GAME": "DIRILIS SETELAH PERMAINAN TAMAT",
   "NEW IN THE WARDROBE": "BARU DI LEMARI BAJU",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "PAKAI DARI LEMARI BAJU DI LEMBAR 001",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN HADIR DI LEMARI BAJU",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "MAIN SEBAGAI DIA: MAPMAN MENUNGGUMU DI AKHIR",
   "Wardrobe, %d of %d released": "Lemari baju, %d dari %d dirilis",
   "%s, worn": "%s, dipakai",
   "Locked, released at level %d": "Terkunci, dirilis di level %d",
-  "Locked, released for finishing the game": "Terkunci, dirilis setelah permainan tamat"
+  "Locked, released for finishing the game": "Terkunci, dirilis setelah permainan tamat",
+  "WEAR IT": "PAKAI",
+  "NEXT LEVEL": "LEVEL BERIKUT",
+  "LEVEL %d — READY": "LEVEL %d — SIAP",
+  "T-%d:%02d ON THE CLOCK": "WAKTU T-%d:%02d",
+  "YOUR BEST %s": "REKORMU %s",
+  "START LEVEL %d": "MULAI LEVEL %d",
+  "TAP THE SHEET TO START": "KETUK LEMBAR UNTUK MULAI",
+  "<  RETURN TO SHEET %03d": "<  KEMBALI KE LEMBAR %03d"
 }

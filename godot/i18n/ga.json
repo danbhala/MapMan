@@ -208,11 +208,18 @@
   "IN THE WARDROBE FROM THE START": "SA VARDRÚS ÓN TÚS",
   "RELEASED FOR FINISHING THE GAME": "SCAOILTE AG DEIREADH AN CHLUICHE",
   "NEW IN THE WARDROBE": "NUA SA VARDRÚS",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "CAITH É ÓN VARDRÚS AR BHILEOG 001",
   "MAPWOMAN JOINS THE WARDROBE": "TÁ MAPWOMAN SA VARDRÚS ANOIS",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "IMIR MAR Í: FANANN MAPMAN LEAT AG AN DEIREADH",
   "Wardrobe, %d of %d released": "Vardrús, %d as %d scaoilte",
   "%s, worn": "%s, in úsáid",
   "Locked, released at level %d": "Faoi ghlas, scaoilfear ag leibhéal %d",
-  "Locked, released for finishing the game": "Faoi ghlas, scaoilfear ag an deireadh"
+  "Locked, released for finishing the game": "Faoi ghlas, scaoilfear ag an deireadh",
+  "WEAR IT": "CAITH É",
+  "NEXT LEVEL": "AR AGHAIDH",
+  "LEVEL %d — READY": "LEIBHÉAL %d — RÉIDH",
+  "T-%d:%02d ON THE CLOCK": "T-%d:%02d AR AN gCLOG",
+  "YOUR BEST %s": "DO BHUAIC %s",
+  "START LEVEL %d": "TOSAIGH LEIBHÉAL %d",
+  "TAP THE SHEET TO START": "TAPÁIL AN BHILEOG LE TOSÚ",
+  "<  RETURN TO SHEET %03d": "<  FILL AR BHILEOG %03d"
 }

@@ -176,6 +176,51 @@ func _tap() -> void:
 	game.menus._unhandled_input(event)
 
 
+func test_level_clear_buttons() -> void:
+	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
+	assert_eq(_press_all(), ["next level", "leave clear"])
+
+
+func test_a_tap_mid_count_finishes_it_and_stays() -> void:
+	Save.reduce_motion = false
+	var m = game.menus
+	m.show_end_level(100, 10, 7, 2, false, 35, 14)
+	var buttons: Array = m._panel.find_children("*", "Button", true, false)
+	for b in buttons:
+		assert_eq(b.mouse_filter, Control.MOUSE_FILTER_IGNORE, "out of reach mid-count")
+	assert_has(_texts(), "100", "the total starts from the score")
+	assert_has(_texts(), "+0", "and each row from nothing")
+	_tap()
+	assert_eq(_actions, [], "the first tap doesn't leave")
+	assert_eq(m.current, "end_level")
+	assert_has(_texts(), "119", "it's all in")
+	assert_has(_texts(), "PASSED")
+	buttons = m._panel.find_children("*", "Button", true, false)
+	for b in buttons:
+		assert_eq(b.mouse_filter, Control.MOUSE_FILTER_STOP, "and the buttons work")
+	_tap()
+	assert_eq(_actions, ["next level"], "the next tap goes on")
+
+
+func test_ready_sheet() -> void:
+	Save.set_locale("en")
+	game.menus.show_ready(7, 20, {"time": 9, "stars": 1})
+	assert_eq(game.menus.current, "ready")
+	assert_has(_texts(), "T-0:20 ON THE CLOCK · YOUR BEST 9s ★1")
+	assert_eq(_press_all(), ["start level", "wardrobe", "leave ready"])
+	game.menus.show_ready(7, 20, {})
+	assert_has(_texts(), "T-0:20 ON THE CLOCK", "no best yet")
+	_actions.clear()
+	_tap()
+	assert_eq(_actions, ["start level"], "a tap on the sheet starts it")
+	game.menus.show_wardrobe(7)
+	var rows: Array = game.menus._panel.find_children("*", "Button", true, false)
+	assert_eq(rows.back().text, "<  RETURN TO SHEET 007")
+	assert_eq(_press_all().back(), "ready", "the wardrobe goes back to the ready sheet")
+	game.menus.show_confirm_quit("ready")
+	assert_eq(_press_all(), ["ready", "end game"])
+
+
 func test_tap_to_continue_sheets() -> void:
 	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
 	_tap()
@@ -240,6 +285,7 @@ func test_every_hero_wears_the_worn_look() -> void:
 		func(): m.show_game_over(100, true, false, 90),
 		func(): m.show_restart([10]),
 		func(): m.show_end_level(100, 10, 7, 2, false, 35, 14),
+		func(): m.show_ready(36, 20, {}),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_game_complete(1842, 100, 100),
 		func(): m.show_wardrobe(),
@@ -324,7 +370,11 @@ func test_release_slips() -> void:
 	assert_does_not_have(_texts(), "NEW IN THE WARDROBE", "no slip without a release")
 	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
 	assert_has(_texts(), "NEW IN THE WARDROBE")
-	assert_has(_texts(), "COWBOY  ·  UNCOMMON")
+	assert_has(_texts(), "COWBOY")
+	assert_has(_texts(), "UNCOMMON")
+	assert_eq(_press_all(), ["next level", "leave clear", "wear cowboy"], "WEAR IT on the slip")
+	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
+	_actions.clear()
 	_tap()
 	assert_eq(_actions, ["next level"], "the sheet still taps through")
 	m.show_congratulations(2042, true, "mapwoman")

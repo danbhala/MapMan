@@ -196,11 +196,18 @@
   "IN THE WARDROBE FROM THE START": "В ГАРДЕРОБЕ С САМОГО НАЧАЛА",
   "RELEASED FOR FINISHING THE GAME": "ВЫПУСК ЗА ПРОХОЖДЕНИЕ ИГРЫ",
   "NEW IN THE WARDROBE": "НОВИНКА В ГАРДЕРОБЕ",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "НАДЕТЬ МОЖНО В ГАРДЕРОБЕ НА ЛИСТЕ 001",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN ТЕПЕРЬ В ГАРДЕРОБЕ",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "ИГРАЙТЕ ЗА НЕЁ: MAPMAN ЖДЁТ ВАС В КОНЦЕ",
   "Wardrobe, %d of %d released": "Гардероб, выпущено %d из %d",
   "%s, worn": "%s, надето",
   "Locked, released at level %d": "Закрыто, выпуск на уровне %d",
-  "Locked, released for finishing the game": "Закрыто, выпуск за прохождение игры"
+  "Locked, released for finishing the game": "Закрыто, выпуск за прохождение игры",
+  "WEAR IT": "НАДЕТЬ",
+  "NEXT LEVEL": "ДАЛЕЕ",
+  "LEVEL %d — READY": "УРОВЕНЬ %d — ГОТОВ",
+  "T-%d:%02d ON THE CLOCK": "T-%d:%02d НА ЧАСАХ",
+  "YOUR BEST %s": "ВАШ РЕКОРД %s",
+  "START LEVEL %d": "НАЧАТЬ УРОВЕНЬ %d",
+  "TAP THE SHEET TO START": "КОСНИТЕСЬ ЛИСТА, ЧТОБЫ НАЧАТЬ",
+  "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d"
 }

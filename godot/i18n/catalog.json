@@ -456,6 +456,11 @@
       "max": 45
     },
     {
+      "id": "NEXT LEVEL",
+      "note": "Level clear button, beside MAIN MENU: on to the next level",
+      "max": 16
+    },
+    {
       "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
       "note": "Checkpoint level clear small print",
       "max": 60
@@ -464,6 +469,36 @@
       "id": "PASSED",
       "note": "Rubber stamp on a cleared level",
       "max": 10
+    },
+    {
+      "id": "LEVEL %d — READY",
+      "note": "Sheet title before a level starts; level number",
+      "max": 26
+    },
+    {
+      "id": "T-%d:%02d ON THE CLOCK",
+      "note": "Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d",
+      "max": 24
+    },
+    {
+      "id": "YOUR BEST %s",
+      "note": "Ready sheet small print: the best time on this level, e.g. 9s ★1",
+      "max": 20
+    },
+    {
+      "id": "START LEVEL %d",
+      "note": "Ready sheet row: start the level; level number",
+      "max": 30
+    },
+    {
+      "id": "TAP THE SHEET TO START",
+      "note": "Ready sheet small print",
+      "max": 40
+    },
+    {
+      "id": "<  RETURN TO SHEET %03d",
+      "note": "Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number",
+      "max": 30
     },
     {
       "id": "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE",
@@ -945,9 +980,9 @@
       "max": 24
     },
     {
-      "id": "WEAR IT FROM THE WARDROBE ON SHEET 001",
-      "note": "Slip on the level-clear sheet; keep 001, the main menu's sheet number",
-      "max": 40
+      "id": "WEAR IT",
+      "note": "Button on the level-clear slip: wear the look just released, now",
+      "max": 9
     },
     {
       "id": "MAPWOMAN JOINS THE WARDROBE",

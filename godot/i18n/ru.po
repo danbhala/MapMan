@@ -327,6 +327,10 @@ msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ЛИСТУ %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ФИНАЛЬНОМУ ЛИСТУ"
 
+#. Level clear button, beside MAIN MENU: on to the next level
+msgid "NEXT LEVEL"
+msgstr "ДАЛЕЕ"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "КОНТРОЛЬНАЯ ТОЧКА СОХРАНЕНА · СТАРТ ОТСЮДА В ЛЮБОЕ ВРЕМЯ"
@@ -334,6 +338,30 @@ msgstr "КОНТРОЛЬНАЯ ТОЧКА СОХРАНЕНА · СТАРТ ОТ�
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "ПРИНЯТО"
+
+#. Sheet title before a level starts; level number
+msgid "LEVEL %d — READY"
+msgstr "УРОВЕНЬ %d — ГОТОВ"
+
+#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
+msgid "T-%d:%02d ON THE CLOCK"
+msgstr "T-%d:%02d НА ЧАСАХ"
+
+#. Ready sheet small print: the best time on this level, e.g. 9s ★1
+msgid "YOUR BEST %s"
+msgstr "ВАШ РЕКОРД %s"
+
+#. Ready sheet row: start the level; level number
+msgid "START LEVEL %d"
+msgstr "НАЧАТЬ УРОВЕНЬ %d"
+
+#. Ready sheet small print
+msgid "TAP THE SHEET TO START"
+msgstr "КОСНИТЕСЬ ЛИСТА, ЧТОБЫ НАЧАТЬ"
+
+#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  НАЗАД К ЛИСТУ %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -767,9 +795,9 @@ msgstr "ВЫПУСК ЗА ПРОХОЖДЕНИЕ ИГРЫ"
 msgid "NEW IN THE WARDROBE"
 msgstr "НОВИНКА В ГАРДЕРОБЕ"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "НАДЕТЬ МОЖНО В ГАРДЕРОБЕ НА ЛИСТЕ 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "НАДЕТЬ"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"

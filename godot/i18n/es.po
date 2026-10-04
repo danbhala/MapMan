@@ -325,6 +325,10 @@ msgstr "TOCA PARA PASAR A LA HOJA %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "TOCA PARA PASAR A LA HOJA FINAL"
 
+#. Level clear button, beside MAIN MENU: on to the next level
+msgid "NEXT LEVEL"
+msgstr "SIGUIENTE NIVEL"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "PUNTO DE CONTROL GUARDADO · REINICIA AQUÍ CUANDO QUIERAS"
@@ -332,6 +336,30 @@ msgstr "PUNTO DE CONTROL GUARDADO · REINICIA AQUÍ CUANDO QUIERAS"
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "SUPERADO"
+
+#. Sheet title before a level starts; level number
+msgid "LEVEL %d — READY"
+msgstr "NIVEL %d — LISTO"
+
+#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
+msgid "T-%d:%02d ON THE CLOCK"
+msgstr "T-%d:%02d DE RELOJ"
+
+#. Ready sheet small print: the best time on this level, e.g. 9s ★1
+msgid "YOUR BEST %s"
+msgstr "TU RÉCORD %s"
+
+#. Ready sheet row: start the level; level number
+msgid "START LEVEL %d"
+msgstr "EMPEZAR NIVEL %d"
+
+#. Ready sheet small print
+msgid "TAP THE SHEET TO START"
+msgstr "TOCA LA HOJA PARA EMPEZAR"
+
+#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  VOLVER A LA HOJA %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -759,9 +787,9 @@ msgstr "SE LIBERA AL TERMINAR EL JUEGO"
 msgid "NEW IN THE WARDROBE"
 msgstr "NUEVO EN EL VESTUARIO"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "PÓNTELO EN EL VESTUARIO DE LA HOJA 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "PONERLO"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
