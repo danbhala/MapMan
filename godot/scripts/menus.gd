@@ -723,7 +723,9 @@ func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, chee
 ## covers his hat.
 func _over_head(y: float, feet: float) -> float:
 	var top := feet - (Player.standing_height(Save.worn) + Player.FEET_LIFT) * HERO_SCALE
-	return minf(y, top - STAMP_DEPTH)
+	# On a whole pixel, so a position stored in floats never rounds down onto
+	# the hat.
+	return minf(y, floorf(top - STAMP_DEPTH))
 
 
 ## Wide eyes and a hop (just the eyes with reduced motion: nothing landed).

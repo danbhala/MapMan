@@ -263,7 +263,8 @@ checked.
    coordinates through `pen.b()` (bob, squash and the drop when dying are
    applied there). Head parts use `pen.h()`, which sinks and shrinks with the
    head. Hats use `pen.hat_*`, which ride the head and fly off it. Face parts
-   use `pen.eye()`. Leg parts use `pen.hips` and `pen.feet`.
+   use `pen.eye()`. Leg parts follow each leg's curve through hip, knee and
+   foot with `pen.leg()` and `pen.leg_line()`, since the legs bend.
 5. **Four views.** Front. Side, which is the figure mirrored with the face
    shifted by `look.x` (front details shift with it). From behind: no face,
    no front-only details, back parts over the body. Dying. Mirroring flips
@@ -379,9 +380,8 @@ proposed; MapWoman is exactly the ending's MapWoman; practice clears don't
 count.
 
 Left for later, if wanted: the bench and feats (needs save counters),
-shuffling within tiers, seasonal looks. Known and not touched here: walking
-left, MapMan leans backwards (the lean is multiplied by the facing and then
-mirrored); the Classic walk columns of sheet 02 show it.
+shuffling within tiers, seasonal looks. (MapMan used to lean when walking;
+he no longer does, and his walks are the original sprite's frame for frame.)
 
 ## The prototype
 

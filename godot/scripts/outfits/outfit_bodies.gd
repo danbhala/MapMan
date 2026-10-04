@@ -1,10 +1,12 @@
 class_name OutfitBodies
 extends RefCounted
 ## What a look puts on his legs, body and neck (docs/wardrobe). Leg parts
-## follow pen.hips and pen.feet. Body points are given at rest through
-## pen.b() / pen.bp() / pen.band() / pen.stripe(): the bell runs from its hem
-## at y -26 up to -56, 18 either side, and the head covers it above about -47.
-## Front-only details check pen.front(), and turn with his face (look.x).
+## follow the curve of each leg (pen.leg(), pen.leg_line()). Body points are
+## given at rest through pen.b() / pen.bp() / pen.band() / pen.stripe(): the
+## bell runs from its hem at y -26 up to -60, 22 either side, rounding off
+## below the hem, and the head covers it above about -47.
+## Front-only details check pen.front(), and turn with his face (look.x), as
+## do the neck pieces, which hang under his chin.
 ## Neck pieces fade as he dies (Player sets pen.alpha).
 
 const CREAM := Color("#f4ecd8")
@@ -40,8 +42,7 @@ static func _legs(pen: OutfitPen, id: String) -> void:
 			_boots(pen, DARK, 5.2)
 		"robot":
 			for i in 2:
-				var top := pen.hips[i].lerp(pen.feet[i], 0.1)
-				pen.line(top, pen.hips[i].lerp(pen.feet[i], 0.9), STEEL, 1.4)
+				pen.leg_line(i, 0.1, 0.9, STEEL, 1.4)
 
 
 static func _body(pen: OutfitPen, id: String) -> void:
@@ -62,7 +63,7 @@ static func _body(pen: OutfitPen, id: String) -> void:
 		"pirate":
 			for y: float in [-49.5, -43.5, -37.5, -31.5]:
 				pen.band(y, y + 2.8, Color("#eeeeee"))
-			pen.band(-28.4, -26.0, Color("#b5171f"))  # the sash
+			_hem_band(pen, 2.4, Color("#b5171f"))  # the sash
 		"skeleton":
 			_ribcage(pen, s * 0.7)
 		"explorer":
@@ -80,22 +81,23 @@ static func _body(pen: OutfitPen, id: String) -> void:
 				Vector2(-9, -37), Vector2(7, -31.5), Vector2(10.5, -41.5), Vector2(-3, -30)
 			]:
 				pen.star(pen.b(p.x, p.y), 1.9, GOLD, 4, 0.35)
-			pen.band(-28.4, -26.0, GOLD)
+			_hem_band(pen, 2.4, GOLD)
 		"gold":
 			_shine(pen)
 
 
 static func _neck(pen: OutfitPen, id: String) -> void:
+	var s := pen.look.x * 2.0  # under his chin, which turns with his face
 	match id:
 		"cowboy":
 			if pen.front():
-				_bandana(pen, RED)
+				_bandana(pen, RED, s)
 		"top_hat":
 			if pen.front():
-				_bow_tie(pen, RED)
+				_bow_tie(pen, RED, s)
 		"doctor":
 			if pen.front():
-				_stethoscope(pen)
+				_stethoscope(pen, s)
 		"explorer":
 			if pen.front():
 				_compass(pen)
@@ -118,15 +120,16 @@ static func _neck(pen: OutfitPen, id: String) -> void:
 ## Boots: the bottom of each leg, a little wider.
 static func _boots(pen: OutfitPen, c: Color, width: float) -> void:
 	for i in 2:
-		pen.line(pen.hips[i].lerp(pen.feet[i], 0.72), pen.feet[i], c, width)
+		pen.leg_line(i, 0.72, 1.0, c, width)
+		pen.dot(pen.feet[i], width / 2.0, c)
 
 
 ## A bone down each leg, knobbed at both ends until they draw up into him.
 static func _leg_bones(pen: OutfitPen) -> void:
 	for i in 2:
-		var top := pen.hips[i].lerp(pen.feet[i], 0.07)
-		var bottom := pen.hips[i].lerp(pen.feet[i], 0.93)
-		pen.line(top, bottom, BONE, 1.5)
+		var top := pen.leg(i, 0.07)
+		var bottom := pen.leg(i, 0.93)
+		pen.leg_line(i, 0.07, 0.93, BONE, 1.5)
 		if pen.dead < 0.8:
 			pen.dot(top, 1.3, BONE)
 			pen.dot(bottom, 1.3, BONE)
@@ -224,12 +227,29 @@ static func _robot_panel(pen: OutfitPen, s: float) -> void:
 		pen.dot(pen.b(x, -28.4), 0.9, Color("#4d5866"))
 
 
-## The light catching one shoulder of a gold body.
+## A band along the body's bottom edge, `thick` high, following its lip.
+static func _hem_band(pen: OutfitPen, thick: float, c: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 25:
+		var a := PI * i / 24.0
+		var x := -cos(a) * OutfitPen.BODY_HALF
+		pts.append(pen.b(x, OutfitPen.HEM + sin(a) * OutfitPen.LIP - thick))
+	for i in range(24, -1, -1):
+		var a := PI * i / 24.0
+		var x := -cos(a) * OutfitPen.BODY_HALF
+		pts.append(pen.b(x, OutfitPen.HEM + sin(a) * OutfitPen.LIP))
+	pen.poly(pts, c)
+
+
+## The light catching one shoulder of a gold body: an arc about 7/10 of the
+## way out and up the bell.
 static func _shine(pen: OutfitPen) -> void:
 	var shine := PackedVector2Array()
+	var rx := OutfitPen.BODY_HALF * 0.72
+	var ry := (OutfitPen.HEM - OutfitPen.BODY_TOP) * 0.83
 	for i in 7:
 		var a := lerpf(PI * 0.6, PI * 0.86, i / 6.0)
-		shine.append(pen.b(cos(a) * 13.0, -26.0 - sin(a) * 25.0))
+		shine.append(pen.b(cos(a) * rx, OutfitPen.HEM - sin(a) * ry))
 	pen.polyline(shine, Color(1, 1, 1, 0.45), 2.4)
 
 
@@ -237,8 +257,10 @@ static func _shine(pen: OutfitPen) -> void:
 
 
 ## A spotted neckerchief, knotted behind, its point under his chin.
-static func _bandana(pen: OutfitPen, c: Color) -> void:
-	pen.poly(pen.bp([Vector2(-11.5, -50.5), Vector2(11.5, -50.5), Vector2(1.0, -37.0)]), c)
+static func _bandana(pen: OutfitPen, c: Color, s: float) -> void:
+	pen.poly(
+		pen.bp([Vector2(-11.5 + s, -50.5), Vector2(11.5 + s, -50.5), Vector2(1.0 + s, -37.0)]), c
+	)
 	for d: Vector2 in [
 		Vector2(-5, -47.4),
 		Vector2(4, -46.2),
@@ -246,31 +268,33 @@ static func _bandana(pen: OutfitPen, c: Color) -> void:
 		Vector2(-8, -49.4),
 		Vector2(7, -49.2)
 	]:
-		pen.dot(pen.b(d.x, d.y), 0.8, Color(1, 1, 1, 0.85))
+		pen.dot(pen.b(d.x + s, d.y), 0.8, Color(1, 1, 1, 0.85))
 
 
 ## A bow tie under his chin.
-static func _bow_tie(pen: OutfitPen, c: Color) -> void:
-	pen.poly(pen.bp([Vector2(0, -44), Vector2(-7.5, -47.8), Vector2(-7.5, -40.2)]), c)
-	pen.poly(pen.bp([Vector2(0, -44), Vector2(7.5, -47.8), Vector2(7.5, -40.2)]), c)
-	pen.poly(pen.bp(OutfitPen.rrect(Vector2(0, -44), Vector2(1.9, 2.3), 0.8)), c.darkened(0.25))
+static func _bow_tie(pen: OutfitPen, c: Color, s: float) -> void:
+	pen.poly(pen.bp([Vector2(s, -44), Vector2(s - 7.5, -47.8), Vector2(s - 7.5, -40.2)]), c)
+	pen.poly(pen.bp([Vector2(s, -44), Vector2(s + 7.5, -47.8), Vector2(s + 7.5, -40.2)]), c)
+	pen.poly(pen.bp(OutfitPen.rrect(Vector2(s, -44), Vector2(1.9, 2.3), 0.8)), c.darkened(0.25))
 
 
 ## A stethoscope round his neck, its chest piece hanging in front.
-static func _stethoscope(pen: OutfitPen) -> void:
+static func _stethoscope(pen: OutfitPen, s: float) -> void:
 	var tube := Color("#4b5563")
 	var left := pen.bp(
 		[
-			Vector2(-8, -49),
-			Vector2(-9, -44),
-			Vector2(-7, -39.5),
-			Vector2(-3, -37.4),
-			Vector2(2.2, -37.6)
+			Vector2(s - 8, -49),
+			Vector2(s - 9, -44),
+			Vector2(s - 7, -39.5),
+			Vector2(s - 3, -37.4),
+			Vector2(s + 2.2, -37.6)
 		]
 	)
 	pen.polyline(left, tube, 1.3)
-	pen.polyline(pen.bp([Vector2(8, -49), Vector2(7.6, -44), Vector2(5.2, -39.4)]), tube, 1.3)
-	var piece := pen.b(4.4, -37.2)
+	pen.polyline(
+		pen.bp([Vector2(s + 8, -49), Vector2(s + 7.6, -44), Vector2(s + 5.2, -39.4)]), tube, 1.3
+	)
+	var piece := pen.b(s + 4.4, -37.2)
 	pen.dot(piece, 2.7, tube)
 	pen.dot(piece, 1.9, Color("#cfd8e3"))
 
@@ -279,8 +303,8 @@ static func _stethoscope(pen: OutfitPen) -> void:
 static func _compass(pen: OutfitPen) -> void:
 	var s := pen.look.x * 2.0
 	var cord := Color("#3b2a1a")
-	pen.line(pen.b(-7, -49.5), pen.b(s - 1.6, -38.8), cord, 0.9)
-	pen.line(pen.b(7, -49.5), pen.b(s + 1.6, -38.8), cord, 0.9)
+	pen.line(pen.b(s - 7, -49.5), pen.b(s - 1.6, -38.8), cord, 0.9)
+	pen.line(pen.b(s + 7, -49.5), pen.b(s + 1.6, -38.8), cord, 0.9)
 	var c := pen.b(s, -36.0)
 	pen.dot(c, 3.9, BRASS)
 	pen.dot(c, 2.8, CREAM)

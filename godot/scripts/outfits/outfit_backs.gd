@@ -6,6 +6,8 @@ extends RefCounted
 ## decoration (sparkles, a twinkle): only with pen.motion, and never dying.
 
 const GOLD := Blueprint.GOLD
+## Where the cape is tied on: the body's edge at this rest height.
+const SHOULDERS := -51.0
 
 
 static func draw(pen: OutfitPen, layer: Outfits.Layer, id: String) -> void:
@@ -33,17 +35,20 @@ static func _front(pen: OutfitPen, id: String) -> void:
 			_twinkles(pen)
 
 
-## A cape from the shoulders; walking, it streams out behind and ripples.
+## A cape from the shoulders, as wide as his back below them; walking, it
+## streams out behind and ripples.
 static func _cape(pen: OutfitPen, main: Color, edge: Color) -> void:
 	var trail := pen.walking * 9.0
 	var ripple := pen.walking if pen.motion else 0.0
+	var wide := OutfitPen.BODY_HALF + 1.2
 	var hem := PackedVector2Array()
 	for i in 7:
 		var k := i / 6.0
-		var x := lerpf(19.0, -21.0, k) - trail * (0.3 + 0.7 * k)
+		var x := lerpf(wide, -wide - 1.0, k) - trail * (0.3 + 0.7 * k)
 		var y := -13.0 + sin(k * PI * 3.0 + pen.phase * 2.0) * 1.6 * ripple - trail * 0.4 * k
 		hem.append(pen.b(x, y))
-	var pts := pen.bp([Vector2(-10.5, -51.0), Vector2(10.5, -51.0)])
+	var at := pen.edges(SHOULDERS)
+	var pts := pen.bp([Vector2(at.x - 0.6, SHOULDERS), Vector2(at.y + 0.6, SHOULDERS)])
 	pts.append_array(hem)
 	pen.poly(pts, main)
 	pen.polyline(hem, edge, 1.6)
@@ -76,7 +81,9 @@ static func _sparkles(pen: OutfitPen) -> void:
 
 ## Two glints that come and go, on his head and on his body.
 static func _twinkles(pen: OutfitPen) -> void:
-	var spots: Array[Vector2] = [pen.h(10.0, -11.0), pen.b(-11.0, -40.0)]
+	# On the head's rim, up and to the right, and on the body's left side.
+	var rim := OutfitPen.HEAD_R * 0.97
+	var spots: Array[Vector2] = [pen.h(rim * 0.67, -rim * 0.74), pen.b(-11.0, -40.0)]
 	for k in 2:
 		var glint := maxf(0.0, sin(pen.idle_clock * 2.4 + k * 2.6))
 		if glint > 0.05:

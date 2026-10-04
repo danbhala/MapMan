@@ -13,11 +13,31 @@ extends RefCounted
 ## Measuring draws nothing and grows `bounds` instead, in his node's units, so
 ## tests can check a look's size without a screen.
 
-## The body at rest: a bell from its hem at y -26 up to -56, 18 either side.
+## The body at rest: a bell from its hem at y -26 up to -60, 21.9 either
+## side, measured off the original sprite (81 px of 162 wide, 137 px tall on
+## its 176x320 frames, 3.71 px to one of these units).
 const HEM := -26.0
-const BODY_TOP := -56.0
-const BODY_HALF := 18.0
-const HEAD_R := 15.0
+const BODY_TOP := -60.0
+const BODY_HALF := 21.9
+## The bell is a touch fuller than a half-ellipse: its width follows
+## sqrt(1 - k^DOME) up its height, which fits the sprite to within a pixel.
+const DOME := 2.1
+## Below the hem the bell rounds off, bulging this far down in the middle.
+const LIP := 3.9
+## The sprite's head: 54 px across its 308.8 px height.
+const HEAD_R := 14.55
+## Rest points stand this much higher on his legs than their numbers say:
+## the sprite's legs were longer than the first drawn figure's.
+const RISE := 6.6
+## How wide the soft line round a filled shape's edge is: a hairline, so the
+## line's own antialiasing softens the edge without the shape growing.
+const EDGE := 0.02
+## Drawing calls get coordinates this many times finer, and the frame scales
+## them back down. Godot's antialiasing blurs about one unit of the
+## coordinates it is given, so at his own units it smeared edges over the
+## four or so phone pixels a unit covers in the game; at a quarter unit it is
+## about one pixel.
+const FINE := 4.0
 
 var canvas: CanvasItem
 var measuring := false
@@ -27,6 +47,8 @@ var bounds := Rect2()
 # The pose, set by Player before each draw.
 var look := Vector2.ZERO
 var walking := 0.0
+## 0 front or back on .. 1 side on: his back is a little slimmer side on.
+var side_on := 0.0
 var phase := 0.0
 var idle_clock := 0.0
 var blink := 0.0
@@ -41,6 +63,7 @@ var drop := 0.0
 var hc := Vector2.ZERO
 var hr := HEAD_R
 var hips: Array[Vector2] = []
+var knees: Array[Vector2] = []
 var feet: Array[Vector2] = []
 ## The body outline this frame.
 var body := PackedVector2Array()
@@ -72,7 +95,7 @@ func set_frame(origin: Vector2, rotation: float, scale: Vector2) -> void:
 	var s := sin(rotation)
 	_xf = Transform2D(Vector2(c * scale.x, s * scale.y), Vector2(-s * scale.x, c * scale.y), origin)
 	if not measuring:
-		canvas.draw_set_transform(origin, rotation, scale)
+		canvas.draw_set_transform(origin, rotation, scale / FINE)
 
 
 # --- the pose -------------------------------------------------------------------
@@ -80,7 +103,23 @@ func set_frame(origin: Vector2, rotation: float, scale: Vector2) -> void:
 
 ## A point of the body at rest, moved to the pose.
 func b(x: float, y: float) -> Vector2:
-	return Vector2(x * sx, (y - bob) * sy + drop)
+	return Vector2(x * sx, (y - RISE - bob) * sy + drop)
+
+
+## A point down leg i (0 the left, 1 the right), from the hip (t 0) through
+## the knee (0.5) to the foot (1). Legs bend in a smooth curve.
+func leg(i: int, t: float) -> Vector2:
+	# A quadratic curve through the knee: its control point overshoots it.
+	var ctrl := knees[i] * 2.0 - (hips[i] + feet[i]) * 0.5
+	return hips[i].lerp(ctrl, t).lerp(ctrl.lerp(feet[i], t), t)
+
+
+## Leg i from t0 to t1 (see leg()), as a curve `width` wide.
+func leg_line(i: int, t0: float, t1: float, c: Color, width: float) -> void:
+	var pts := PackedVector2Array()
+	for k in 7:
+		pts.append(leg(i, lerpf(t0, t1, k / 6.0)))
+	polyline(pts, c, width)
 
 
 ## b() for a list of rest points.
@@ -101,9 +140,10 @@ func t(v: Vector2) -> Vector2:
 	return hat_xf * (hc + v)
 
 
-## Where an eye is (side -1 or 1), as the eyes have always been placed.
+## Where an eye is (side -1 or 1): where the sprite put them, 6.6 either side
+## of the head's centre and 4 below it, sliding a little with the look.
 func eye(side: float) -> Vector2:
-	return hc + Vector2(side * 5.5 + look.x * 3.5, 1.0 + look.y * 2.5)
+	return hc + Vector2(side * 6.6 + look.x * 2.0, 4.05 + look.y * 0.5)
 
 
 ## How open the eyes are: blinking shuts them, happiness widens them.
@@ -132,7 +172,12 @@ func poly(pts: PackedVector2Array, c: Color) -> void:
 	if measuring:
 		_grow(pts, 0.0)
 		return
-	canvas.draw_colored_polygon(pts, col(c))
+	var fine := _fine(pts)
+	canvas.draw_colored_polygon(fine, col(c))
+	# Filled polygons have hard, stepped edges; a thin antialiased line round
+	# the edge softens them like the legs (lines) and dots.
+	fine.append(fine[0])
+	canvas.draw_polyline(fine, col(c), EDGE * FINE, true)
 
 
 ## A closed outline.
@@ -148,28 +193,28 @@ func polyline(pts: PackedVector2Array, c: Color, width: float) -> void:
 	if measuring:
 		_grow(pts, width / 2.0)
 		return
-	canvas.draw_polyline(pts, col(c), width, true)
+	canvas.draw_polyline(_fine(pts), col(c), width * FINE, true)
 
 
 func line(from: Vector2, to: Vector2, c: Color, width: float) -> void:
 	if measuring:
 		_grow(PackedVector2Array([from, to]), width / 2.0)
 		return
-	canvas.draw_line(from, to, col(c), width, true)
+	canvas.draw_line(from * FINE, to * FINE, col(c), width * FINE, true)
 
 
 func dot(at: Vector2, radius: float, c: Color) -> void:
 	if measuring:
 		_grow(PackedVector2Array([at]), radius)
 		return
-	canvas.draw_circle(at, radius, col(c))
+	canvas.draw_circle(at * FINE, radius * FINE, col(c), true, -1.0, true)
 
 
 func arc(centre: Vector2, radius: float, from: float, to: float, c: Color, width: float) -> void:
 	if measuring:
 		_grow(PackedVector2Array([centre]), radius + width / 2.0)
 		return
-	canvas.draw_arc(centre, radius, from, to, 48, col(c), width, true)
+	canvas.draw_arc(centre * FINE, radius * FINE, from, to, 48, col(c), width * FINE, true)
 
 
 ## The two classic eyes, as Player has always drawn them.
@@ -180,9 +225,9 @@ func classic_eyes(c: Color) -> void:
 	for side: float in [-1.0, 1.0]:
 		var e := eye(side)
 		var pts := PackedVector2Array()
-		for k in 12:
-			var a := TAU * k / 12.0
-			pts.append(e + Vector2(cos(a) * 2.4, sin(a) * 2.4 * open))
+		for k in 24:
+			var a := TAU * k / 24.0
+			pts.append(e + Vector2(cos(a) * 2.0, sin(a) * 2.0 * open))
 		poly(pts, c)
 
 
@@ -191,10 +236,10 @@ func band(y0: float, y1: float, c: Color) -> void:
 	var pts := PackedVector2Array()
 	for i in 7:
 		var y := lerpf(y0, y1, i / 6.0)
-		pts.append(b(-dome_w(y), y))
+		pts.append(b(edges(y).x, y))
 	for i in 7:
 		var y := lerpf(y1, y0, i / 6.0)
-		pts.append(b(dome_w(y), y))
+		pts.append(b(edges(y).y, y))
 	poly(pts, c)
 
 
@@ -203,7 +248,7 @@ func stripe(x0: float, x1: float, c: Color) -> void:
 	var pts := PackedVector2Array([b(x0, HEM)])
 	for i in 6:
 		var x := lerpf(x0, x1, i / 5.0)
-		pts.append(b(x, dome_top(x)))
+		pts.append(b(x, top_at(x)))
 	pts.append(b(x1, HEM))
 	poly(pts, c)
 
@@ -279,16 +324,60 @@ func _hat_points(offsets: PackedVector2Array) -> PackedVector2Array:
 # --- shapes -------------------------------------------------------------------------
 
 
+## The body's outline at rest: the bell, then its rounded lip below the hem.
+func body_points() -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in 25:
+		var a := PI * i / 24.0
+		var y := dome_top(cos(a) * BODY_HALF)
+		pts.append(b(cos(a) * BODY_HALF + (back_inset(y) if a > PI / 2.0 else 0.0), y))
+	for i in range(1, 24):
+		var a := PI * i / 24.0
+		pts.append(b(-cos(a) * BODY_HALF, HEM + sin(a) * LIP))
+	return pts
+
+
+## Side on, the sprite drew his back (the left side before mirroring) a
+## little straighter: its edge sits this far in from the bell's at rest
+## height y, most of the way up, nothing at the hem.
+func back_inset(y: float) -> float:
+	var k := clampf((HEM - y) / (HEM - BODY_TOP), 0.0, 1.0)
+	return 1.75 * pow(sin(k * PI / 2.0), 2.0) * side_on
+
+
+## The body's edge at rest height y: x of the left (back) and right edges.
+func edges(y: float) -> Vector2:
+	var w := dome_w(y)
+	return Vector2(-w + back_inset(y), w)
+
+
+## The body's top edge at rest x this frame (the back may be inset).
+func top_at(x: float) -> float:
+	if x >= 0.0 or side_on <= 0.0:
+		return dome_top(x)
+	# The back edge rises inwards, so the height where it passes x is found
+	# by halving: between the hem (far out) and the top (at the centre).
+	var lo := HEM
+	var hi := BODY_TOP
+	for _i in 24:
+		var mid := (lo + hi) / 2.0
+		if edges(mid).x < x:
+			lo = mid
+		else:
+			hi = mid
+	return (lo + hi) / 2.0
+
+
 ## Half the body's width at rest height y.
 static func dome_w(y: float) -> float:
 	var k := clampf((HEM - y) / (HEM - BODY_TOP), 0.0, 1.0)
-	return BODY_HALF * sqrt(1.0 - k * k)
+	return BODY_HALF * sqrt(1.0 - pow(k, DOME))
 
 
 ## The body's top edge at rest x.
 static func dome_top(x: float) -> float:
 	var k := clampf(x / BODY_HALF, -1.0, 1.0)
-	return HEM - (HEM - BODY_TOP) * sqrt(1.0 - k * k)
+	return HEM - (HEM - BODY_TOP) * pow(1.0 - k * k, 1.0 / DOME)
 
 
 ## A star's points, `inner` the ratio of the inner radius to the outer.
@@ -370,11 +459,20 @@ static func rotated(pts: Array, pivot: Vector2, angle: float) -> PackedVector2Ar
 	return out
 
 
+static func _fine(pts: PackedVector2Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	out.resize(pts.size())
+	for i in pts.size():
+		out[i] = pts[i] * FINE
+	return out
+
+
 func _grow(pts: PackedVector2Array, pad: float) -> void:
 	if alpha <= 0.0:
 		return  # faded right out: not part of what is seen
+	var reach := _xf.get_scale().abs() * pad  # a round end grows with the frame
 	for p in pts:
 		var at := _xf * p
-		var box := Rect2(at - Vector2(pad, pad), Vector2(pad, pad) * 2.0)
+		var box := Rect2(at - reach, reach * 2.0)
 		bounds = box if not _measured else bounds.merge(box)
 		_measured = true

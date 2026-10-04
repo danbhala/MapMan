@@ -75,6 +75,7 @@ static func pose(p: Player, which: String) -> void:
 			p.flip = 1.0 if which == "walk_r" else -1.0
 			p.look = Vector2(0.9, 0.0)
 			p.walking = 1.0
+			p.side_on = 1.0
 			p._phase = 1.25
 		"away":
 			p.look = Vector2(0.0, -1.0)
