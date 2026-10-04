@@ -166,6 +166,10 @@ msgstr "GETARAN"
 msgid "REDUCE MOTION"
 msgstr "KURANGI GERAKAN"
 
+#. Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted
+msgid "TILT GAUGE"
+msgstr "INDIKATOR MIRING"
+
 #. Pause sheet status line; work suspended as on a drawing office note
 msgid "WORK SUSPENDED AT LEVEL %d"
 msgstr "PEKERJAAN DITANGGUHKAN DI LEVEL %d"
@@ -323,9 +327,17 @@ msgstr "KETUK UNTUK LANJUT KE LEMBAR %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "KETUK UNTUK LANJUT KE LEMBAR AKHIR"
 
-#. Level clear button, beside MAIN MENU: on to the next level
+#. Level clear: what NEXT does, for screen readers
 msgid "NEXT LEVEL"
 msgstr "LEVEL BERIKUT"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "BERIKUTNYA"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "MENU"
 
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
@@ -335,27 +347,7 @@ msgstr "CHECKPOINT TERSIMPAN · MULAI ULANG DARI SINI KAPAN SAJA"
 msgid "PASSED"
 msgstr "LULUS"
 
-#. Sheet title before a level starts; level number
-msgid "LEVEL %d — READY"
-msgstr "LEVEL %d — SIAP"
-
-#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
-msgid "T-%d:%02d ON THE CLOCK"
-msgstr "WAKTU T-%d:%02d"
-
-#. Ready sheet small print: the best time on this level, e.g. 9s ★1
-msgid "YOUR BEST %s"
-msgstr "REKORMU %s"
-
-#. Ready sheet row: start the level; level number
-msgid "START LEVEL %d"
-msgstr "MULAI LEVEL %d"
-
-#. Ready sheet small print
-msgid "TAP THE SHEET TO START"
-msgstr "KETUK LEMBAR UNTUK MULAI"
-
-#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
 msgid "<  RETURN TO SHEET %03d"
 msgstr "<  KEMBALI KE LEMBAR %03d"
 
@@ -546,11 +538,11 @@ msgstr "Sisa waktu"
 
 #. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
 msgid ""
-"Tilt your device to move around the map.\n"
-"Head for the exit tile to progress to the next level."
+"Tilt your device to move around the map and head for the exit tile.\n"
+"The gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
 msgstr ""
-"Miringkan perangkatmu untuk bergerak di peta.\n"
-"Menujulah ke ubin keluar untuk lanjut ke level berikutnya."
+"Miringkan perangkatmu untuk bergerak dan menujulah ke ubin keluar.\n"
+"Indikator di sudut menunjukkan kemiringan: cincin putus-putus jalan, cincin penuh lari."
 
 #. Tutorial lesson 2
 msgid ""
@@ -611,8 +603,8 @@ msgid "Every so often you'll come across a checkpoint. Each time you reach a che
 msgstr "Sesekali kamu akan menemukan checkpoint. Setiap kali mencapai checkpoint, kamu bisa mulai ulang dari sana, bukan dari awal lagi."
 
 #. Tutorial lesson 11
-msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
-msgstr "Kalau butuh istirahat, ketuk layar saat bermain untuk jeda. Saat dijeda kamu bisa melanjutkan permainan atau keluar dari game."
+msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+msgstr "Ketuk layar saat bermain untuk jeda. Memegang perangkat dengan cara lain? Ketuk indikator di sudut untuk menjadikannya titik tengah baru."
 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"

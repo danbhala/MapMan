@@ -105,8 +105,6 @@ func run() -> void:
 			check(game.menus.current == "congratulations", "congratulations after last level")
 			break
 		game._on_menu_action("next level")
-		if game.menus.current == "ready":
-			game._on_menu_action("start level")
 		check(game.score > score_before, "score went up after level %d" % lvl)
 		check(game.level == lvl + 1, "advanced past level %d" % lvl)
 		played += 1

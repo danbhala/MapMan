@@ -13,6 +13,8 @@ var fx_on := true
 var vibration_on := true
 ## Skip the decorative animation (stamps, sheets drawing on, tiles folding).
 var reduce_motion := false
+## The tilt gauge in the corner of the field (TiltDial).
+var tilt_gauge := true
 ## Show the level's best run as a ghost beside MapMan.
 var ghost_on := true
 ## Locale code of the chosen language, or "" to follow the phone's.
@@ -92,6 +94,7 @@ func load_all(path := PATH) -> void:
 	fx_on = _cfg.get_value("options", "fx", true)
 	vibration_on = _cfg.get_value("options", "vibration", true)
 	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
+	tilt_gauge = _cfg.get_value("options", "tilt_gauge", true)
 	ghost_on = _cfg.get_value("options", "ghost", true)
 	locale = _cfg.get_value("options", "locale", "")
 	# A language this build no longer ships falls back to the phone's.
@@ -141,6 +144,7 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("options", "fx", fx_on)
 	_cfg.set_value("options", "vibration", vibration_on)
 	_cfg.set_value("options", "reduce_motion", reduce_motion)
+	_cfg.set_value("options", "tilt_gauge", tilt_gauge)
 	_cfg.set_value("options", "ghost", ghost_on)
 	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)

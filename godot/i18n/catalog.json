@@ -265,6 +265,11 @@
       "max": 18
     },
     {
+      "id": "TILT GAUGE",
+      "note": "Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted",
+      "max": 18
+    },
+    {
       "id": "WORK SUSPENDED AT LEVEL %d",
       "note": "Pause sheet status line; work suspended as on a drawing office note",
       "max": 40
@@ -457,8 +462,18 @@
     },
     {
       "id": "NEXT LEVEL",
-      "note": "Level clear button, beside MAIN MENU: on to the next level",
+      "note": "Level clear: what NEXT does, for screen readers",
       "max": 16
+    },
+    {
+      "id": "NEXT",
+      "note": "Level clear button, first of three side by side: on to the next level",
+      "max": 10
+    },
+    {
+      "id": "MENU",
+      "note": "Level clear button, last of three side by side: back to the main menu (asks first)",
+      "max": 12
     },
     {
       "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
@@ -471,33 +486,8 @@
       "max": 10
     },
     {
-      "id": "LEVEL %d — READY",
-      "note": "Sheet title before a level starts; level number",
-      "max": 26
-    },
-    {
-      "id": "T-%d:%02d ON THE CLOCK",
-      "note": "Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d",
-      "max": 24
-    },
-    {
-      "id": "YOUR BEST %s",
-      "note": "Ready sheet small print: the best time on this level, e.g. 9s ★1",
-      "max": 20
-    },
-    {
-      "id": "START LEVEL %d",
-      "note": "Ready sheet row: start the level; level number",
-      "max": 30
-    },
-    {
-      "id": "TAP THE SHEET TO START",
-      "note": "Ready sheet small print",
-      "max": 40
-    },
-    {
       "id": "<  RETURN TO SHEET %03d",
-      "note": "Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number",
+      "note": "Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number",
       "max": 30
     },
     {
@@ -719,7 +709,7 @@
       "max": 20
     },
     {
-      "id": "Tilt your device to move around the map.\nHead for the exit tile to progress to the next level.",
+      "id": "Tilt your device to move around the map and head for the exit tile.\nThe gauge in the corner shows your tilt: dashed ring to walk, solid ring to run.",
       "note": "Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)",
       "max": 170
     },
@@ -769,7 +759,7 @@
       "max": 170
     },
     {
-      "id": "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game.",
+      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
       "note": "Tutorial lesson 11",
       "max": 170
     },

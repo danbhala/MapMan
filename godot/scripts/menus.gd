@@ -25,8 +25,6 @@ const LIST_W := 380.0
 const TEXT_X := 52.0
 const CHAR_W := 9.6
 const LIST_TOP := 60.0
-## The options rows' pitch: a touch under a tap's height, to fit them all.
-const OPTIONS_PITCH := 39.0
 ## Boxes that flow across the sheet (the language names): text size, the
 ## padding either side of it, the gap between boxes, and the row they fill.
 const CHIP_SIZE := 15
@@ -34,6 +32,9 @@ const CHIP_PAD := 10.0
 const CHIP_GAP := 8.0
 const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
+## The options sheet's rows: eight of them, tighter than TAP_HEIGHT.
+const OPTIONS_TOP := 78.0
+const OPTIONS_PITCH := 35.0
 ## Where MapMan stands, how big he is, and his height in his own units as
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
@@ -54,12 +55,6 @@ const DRAW_ON := 0.5
 const STAMP_DELAY := 0.45
 const STAMP_FALL := 0.16
 const STAMP_DEPTH := 42.0
-## The count-up: each row's figure and the TOTAL climb together in at most
-## TICKS ticks this far apart, so a big bonus takes no longer than a small
-## one, and the ticks rise in pitch by up to TICK_RISE on the way to the total.
-const TICKS := 16
-const TICK := 0.05
-const TICK_RISE := 0.6
 ## A tap on the level clear before the count is in finishes it, rather than
 ## leaving the sheet.
 const FINISH := "finish count"
@@ -94,7 +89,8 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "BEST-RUN GHOST"],
+	"options":
+	["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -162,14 +158,10 @@ const TEXT := {
 	"tap_next": "TAP TO CONTINUE TO SHEET %03d",
 	"tap_final": "TAP TO CONTINUE TO THE FINAL SHEET",
 	"next_level": "NEXT LEVEL",
+	"next": "NEXT",
+	"menu": "MENU",
 	"checkpoint_saved": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
 	"passed": "PASSED",
-	# nnn — ready for the next level
-	"ready_title": "LEVEL %d — READY",
-	"on_the_clock": "T-%d:%02d ON THE CLOCK",
-	"your_best": "YOUR BEST %s",
-	"start_level": "START LEVEL %d",
-	"tap_start": "TAP THE SHEET TO START",
 	"return_to": "<  RETURN TO SHEET %03d",
 	# 100 — the end
 	"end_sheet": "100",
@@ -215,7 +207,7 @@ const LANGUAGES := [
 
 var current := ""
 ## What NO, KEEP PLAYING on the question before quitting reports: back to
-## the game, or to the ready sheet between levels.
+## the game, or back to the level clear.
 var confirm_back := "unpause"
 
 var _panel: Control
@@ -250,6 +242,10 @@ var _mouse_seen := false
 ## Opens the sheet on screen again as it ends up (no motion): the level clear
 ## sets it, so a tap can finish its count and wearing a look can show on him.
 var _redraw := Callable()
+## The last level clear's arguments, to reopen it from the wardrobe.
+var _clear_args := []
+## A press landed on MapMan (he jumped): its release isn't a tap on the sheet.
+var _poked := false
 ## The level the pause sheet was opened on, for the confirm sheet's number;
 ## 0 on the final sheet after level 100.
 var _level := 0
@@ -309,6 +305,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	# A tap on MapMan (or whoever stands with him) makes him jump, and is
+	# nothing else: its release doesn't continue the sheet.
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and _poke(get_global_transform() * event.position):
+			_poked = true
+			accept_event()
+			return
+		if not event.pressed and _poked:
+			_poked = false
+			accept_event()
+			return
 	# Taps on the sheet (not on a button) for "tap to continue" menus.
 	if _tap_action == "" or Time.get_ticks_msec() / 1000.0 < _tap_ready_at:
 		return
@@ -319,6 +326,20 @@ func _gui_input(event: InputEvent) -> void:
 	):
 		accept_event()
 		_emit_tap()
+
+
+## Makes whoever stands at `at` (a global position) jump; false when nobody
+## does.
+func _poke(at: Vector2) -> bool:
+	for p in [_hero, _woman]:
+		if p == null or not p.visible:
+			continue
+		var local: Vector2 = p.get_global_transform().affine_inverse() * at
+		if p.measure().grow(6.0).has_point(local):
+			p.jump()
+			Audio.play("star", 0.5, 1.5)
+			return true
+	return false
 
 
 ## Emits a copy: a signal passes a member variable by reference, and the
@@ -576,15 +597,16 @@ func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array =
 		_item(i + 1, texts[i], acts[i], y + i * pitch, on)
 
 
-## The way back to the main menu, as the last row of a sheet; between levels,
-## the way back to the ready sheet of level `level`.
-func _return_item(y: float, level := 0) -> void:
+## The way back to the main menu, as the last row of a sheet; from a level
+## clear, the way back to it (sheet `level`).
+func _return_item(y: float, height := Blueprint.TAP_HEIGHT, level := 0) -> void:
 	var text: String = _t("return_to") % level if level > 0 else _t("return_item")
-	var b := Blueprint.item(_panel, text, Vector2(_mx(LIST_X, LIST_W), y))
+	var pos := Vector2(_mx(LIST_X, LIST_W), y)
+	var b := Blueprint.item(_panel, text, pos, Vector2(LIST_W, height))
 	b.alignment = _align()
 	if level > 0:
-		b.accessibility_name = _sentence(_t("ready_title") % level)
-		_connect(b, "ready")
+		b.accessibility_name = _sentence(_t("inspection_title") % level)
+		_connect(b, "back to clear")
 	else:
 		b.accessibility_name = _sentence(_t("main_menu"))
 		_connect(b, "main menu")
@@ -703,65 +725,6 @@ func _score_block(score: int, previous_best: int) -> void:
 		var text: String = _t("previous_best") % previous_best
 		_text(row, text, 12, Blueprint.FAINT, LIST_X, 80, 200.0)
 	_reveal(row)
-
-
-## The TOTAL counts up from `start` as each row is revealed in turn, the
-## row's own figure counting up from +0 with it; `rows` are [{"node":
-## CanvasItem, "points": int, "value": Label (optional)}]. When it's all in
-## the total gives a bump and `then` runs (at once with reduced motion).
-func _count_up(label: Label, start: int, rows: Array, then: Callable) -> void:
-	var all := 0
-	for r in rows:
-		all += r.points
-	if not _animate:
-		label.text = str(start + all)
-		then.call()
-		return
-	var tw := create_tween()
-	_tweens.append(tw)
-	tw.tween_interval(DRAW_ON)
-	var done := 0
-	for r in rows:
-		var node: CanvasItem = r.node
-		node.modulate.a = 0.0
-		var value: Label = r.get("value")
-		var points: int = r.points
-		if value != null and points > 0:
-			value.text = TEXT.plus % 0
-		tw.tween_callback(func(): Blueprint.reveal(node))
-		tw.tween_interval(0.2)
-		var ticks := mini(points, TICKS)
-		for i in ticks:
-			@warning_ignore("integer_division")
-			var upto := points * (i + 1) / ticks
-			var pitch := 1.0 + TICK_RISE * float(done + upto) / float(all)
-			tw.tween_interval(TICK)
-			tw.tween_callback(_tick.bind(label, start + done + upto, value, upto, pitch))
-		done += points
-	tw.tween_callback(_bump.bind(label))
-	tw.tween_interval(0.2)
-	tw.tween_callback(then)
-
-
-func _tick(label: Label, total: int, value: Label, upto: int, pitch: float) -> void:
-	label.text = str(total)
-	if value != null:
-		value.text = TEXT.plus % upto
-	Audio.play("star", 0.2, pitch)
-
-
-## The total swells and settles back, from its reading edge, as it lands.
-func _bump(label: Label) -> void:
-	label.pivot_offset = Vector2(0.0 if _rtl else label.size.x, label.size.y / 2.0)
-	var tw := create_tween()
-	_tweens.append(tw)
-	(
-		tw
-		. tween_property(label, "scale", Vector2.ONE, 0.3)
-		. from(Vector2.ONE * 1.35)
-		. set_trans(Tween.TRANS_BACK)
-		. set_ease(Tween.EASE_OUT)
-	)
 
 
 ## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
@@ -941,31 +904,40 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.ghost_on]
-	var acts := ["music", "fx", "vibration", "reduce motion", "ghost"]
+	var states := [
+		Save.music_on,
+		Save.fx_on,
+		Save.vibration_on,
+		Save.reduce_motion,
+		Save.tilt_gauge,
+		Save.ghost_on,
+	]
+	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
 	for i in acts.size():
 		var on: bool = states[i]
-		var b := _value_row(names[i], TEXT.on if on else TEXT.off, 80 + i * OPTIONS_PITCH)
+		var b := _value_row(names[i], TEXT.on if on else TEXT.off, OPTIONS_TOP + i * OPTIONS_PITCH)
 		var state: String = _t("a11y_on") if on else _t("a11y_off")
 		b.accessibility_name = TEXT.a11y_toggle % [_sentence(names[i]), state]
 		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
 		b.pressed.connect(_remember_row.bind(i))
 		if i == refocus:
 			_first_button = b
-	var lang_y := 80 + acts.size() * OPTIONS_PITCH
-	var lang := _value_row(_t("language_title"), _language_name(Save.locale), lang_y)
+	var lang := _value_row(
+		_t("language_title"), _language_name(Save.locale), OPTIONS_TOP + acts.size() * OPTIONS_PITCH
+	)
 	_connect(lang, "language")
-	_return_item(lang_y + OPTIONS_PITCH)
+	_return_item(OPTIONS_TOP + (acts.size() + 1) * OPTIONS_PITCH, OPTIONS_PITCH)
 	_hero_on("tilt")
 	_focus_first()
 
 
 ## An options row: the parameter on the left, its value in the VALUE column.
 func _value_row(name: String, value: String, y: float) -> Button:
-	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y))
+	var size := Vector2(LIST_W, OPTIONS_PITCH)
+	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size)
 	b.alignment = _align()
 	# The value column runs from 20 characters in to the row's far margin, at
 	# the mirror image on a right-to-left sheet.
@@ -976,7 +948,7 @@ func _value_row(name: String, value: String, y: float) -> Button:
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	Blueprint.fit(l, Vector2(w, Blueprint.TAP_HEIGHT))
+	Blueprint.fit(l, Vector2(w, OPTIONS_PITCH))
 	_reveal(b)
 	return b
 
@@ -990,8 +962,8 @@ func _language_name(code: String) -> String:
 
 
 ## 001-D: the wardrobe, every look to wear (WardrobeSheet). A released one
-## reports "wear <id>". Opened from the ready sheet of level `back_level`, its
-## last row goes back there.
+## reports "wear <id>". Opened from the level clear of level `back_level`,
+## its last row goes back there.
 func show_wardrobe(back_level := 0) -> void:
 	WardrobeSheet.build(self, back_level)
 
@@ -1088,7 +1060,7 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 	_focus_first()
 
 
-## back: what NO, KEEP PLAYING reports ("unpause", or "ready" between levels).
+## back: what NO, KEEP PLAYING reports ("unpause", or "back to clear").
 func show_confirm_quit(back := "unpause") -> void:
 	confirm_back = back
 	_open("confirm_quit", _level_number("A"), _t("confirm_title"), Blueprint.PINK)
@@ -1234,9 +1206,9 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 	return _t("best") % best.time
 
 
-## Level clear (ClearSheet): the bonuses count into the score, then NEXT
-## LEVEL and MAIN MENU. released: the look this first clear released, if any;
-## tries: how many tries the replay would show (0: no WATCH REPLAY).
+## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
+## WARDROBE and MAIN MENU. released: the look this first clear released, if
+## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1250,13 +1222,16 @@ func show_end_level(
 	tries := 0
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	ClearSheet.end_level(self, args + [last, released, tries])
-	_redraw = show_end_level.bindv(args + [last, released, tries])
+	_clear_args = args + [last, released, tries]
+	ClearSheet.end_level(self, _clear_args)
+	_redraw = show_end_level.bindv(_clear_args)
 
 
-## Before a level of the main game (ClearSheet): ready when the player is.
-func show_ready(level: int, seconds: int, best: Dictionary) -> void:
-	ClearSheet.ready_sheet(self, level, seconds, best)
+## The level clear again, all in (no count), on the way back from the
+## wardrobe or the question before quitting it.
+func reopen_end_level() -> void:
+	current = "end_level"  # as a redraw: it opens settled
+	show_end_level.callv(_clear_args)
 
 
 ## released: "mapwoman" when finishing the game this time released her.
@@ -1293,5 +1268,7 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
 	_pair_on()
 	var approved := Vector2(458, _over_head(84, PAIR_FEET))
-	_count_up(total, score, rows, func(): _stamp(_t("approved"), approved, Blueprint.GOLD, 0.0))
+	ClearSheet.count_up(
+		self, total, score, rows, func(): _stamp(_t("approved"), approved, Blueprint.GOLD, 0.0)
+	)
 	_tap_to("completion done")

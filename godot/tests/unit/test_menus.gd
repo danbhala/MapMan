@@ -107,6 +107,7 @@ func test_options_toggle_the_current_state() -> void:
 			"fx on",
 			"vibration off",
 			"reduce motion off",
+			"tilt gauge off",
 			"ghost off",
 			"language",
 			"main menu"
@@ -187,7 +188,7 @@ func _tap() -> void:
 
 func test_level_clear_buttons() -> void:
 	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
-	assert_eq(_press_all(), ["next level", "leave clear"])
+	assert_eq(_press_all(), ["next level", "clear wardrobe", "leave clear"])
 
 
 func test_a_tap_mid_count_finishes_it_and_stays() -> void:
@@ -211,23 +212,37 @@ func test_a_tap_mid_count_finishes_it_and_stays() -> void:
 	assert_eq(_actions, ["next level"], "the next tap goes on")
 
 
-func test_ready_sheet() -> void:
-	Save.set_locale("en")
-	game.menus.show_ready(7, 20, {"time": 9, "stars": 1})
-	assert_eq(game.menus.current, "ready")
-	assert_has(_texts(), "T-0:20 ON THE CLOCK · YOUR BEST 9s ★1")
-	assert_eq(_press_all(), ["start level", "wardrobe", "leave ready"])
-	game.menus.show_ready(7, 20, {})
-	assert_has(_texts(), "T-0:20 ON THE CLOCK", "no best yet")
-	_actions.clear()
-	_tap()
-	assert_eq(_actions, ["start level"], "a tap on the sheet starts it")
+func test_wardrobe_from_the_level_clear() -> void:
 	game.menus.show_wardrobe(7)
 	var rows: Array = game.menus._panel.find_children("*", "Button", true, false)
 	assert_eq(rows.back().text, "<  RETURN TO SHEET 007")
-	assert_eq(_press_all().back(), "ready", "the wardrobe goes back to the ready sheet")
-	game.menus.show_confirm_quit("ready")
-	assert_eq(_press_all(), ["ready", "end game"])
+	assert_eq(_press_all().back(), "back to clear", "the wardrobe goes back to the level clear")
+	game.menus.show_confirm_quit("back to clear")
+	assert_eq(_press_all(), ["back to clear", "end game"])
+
+
+func test_tapping_mapman_makes_him_jump() -> void:
+	Save.reduce_motion = false
+	var m = game.menus
+	m.show_end_level(100, 10, 7, 2, false, 35, 14)
+	var head: Vector2 = m._hero.global_position + Vector2(0, -60)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = head
+	m._gui_input(press)
+	assert_gt(m._hero._jump, 0.0, "he jumps")
+	m._tap_ready_at = 0.0
+	m._tap_action = "next level"
+	var release := press.duplicate()
+	release.pressed = false
+	m._gui_input(release)
+	assert_eq(_actions, [], "and the tap on him doesn't continue the sheet")
+	press.position = Vector2(60, 340)
+	m._gui_input(press)
+	release.position = press.position
+	m._gui_input(release)
+	assert_eq(_actions, ["next level"], "a tap elsewhere still does")
 
 
 func test_tap_to_continue_sheets() -> void:
@@ -294,7 +309,6 @@ func test_every_hero_wears_the_worn_look() -> void:
 		func(): m.show_game_over(100, true, false, 90),
 		func(): m.show_restart([10]),
 		func(): m.show_end_level(100, 10, 7, 2, false, 35, 14),
-		func(): m.show_ready(36, 20, {}),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_game_complete(1842, 100, 100),
 		func(): m.show_wardrobe(),
@@ -381,7 +395,8 @@ func test_release_slips() -> void:
 	assert_has(_texts(), "NEW IN THE WARDROBE")
 	assert_has(_texts(), "COWBOY")
 	assert_has(_texts(), "UNCOMMON")
-	assert_eq(_press_all(), ["next level", "leave clear", "wear cowboy"], "WEAR IT on the slip")
+	var acts := ["next level", "clear wardrobe", "leave clear", "wear cowboy"]
+	assert_eq(_press_all(), acts, "WEAR IT on the slip")
 	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
 	_actions.clear()
 	_tap()

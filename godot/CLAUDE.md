@@ -34,12 +34,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
   end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
   for `menus.gd`.
-- Between levels of the main game (`scripts/clear_sheet.gd`, for
-  `menus.gd`): the level clear counts its bonuses in (a tap mid-count
-  finishes it), then offers NEXT LEVEL and MAIN MENU; NEXT LEVEL banks the
-  level and opens the ready sheet, and the next level only loads on START
-  (`main.gd` `_between`). The wardrobe and the quit question opened from
-  there come back to it.
+- The level clear of the main game (`scripts/clear_sheet.gd`, for
+  `menus.gd`) counts its bonuses in (a tap mid-count finishes it), then
+  offers NEXT, WARDROBE and MAIN MENU. Until NEXT banks the level
+  (`main.gd` `_between`), the wardrobe and the quit question opened from it
+  come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
+  sheet makes him jump (`Menus._poke()`, `Player.jump()`).
 - Tries (`scripts/run_record.gd`): `main.gd` records every try at a level
   as tile steps and when each began on its run clock (no tilt: a step is
   always a whole tile at one of two speeds), about two bytes a step. The
@@ -55,8 +55,13 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `Dev.enabled`: the "Android Dev" and "iOS Dev" export presets (feature tag
   `dev`, app "MapMan Dev" through `config/name.dev`, package/bundle ID
   `com.danbhala.mapman.dev`, own save) or any debug run.
-  `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
+  `scripts/dev_panel.gd` is the DEV button, dev menu and tilt readout. Never
   let a cheat work when `Dev.enabled` is false.
+- `scripts/tilt_gauge.gd` is the players' tilt gauge in the field's
+  bottom-right corner (Options "TILT GAUGE", `Save.tilt_gauge`); tapping it
+  recentres (`main.gd` `recentre()`) and never reaches the field, so it never
+  pauses. It only shows on phones with an accelerometer; tests and
+  screenshots set `show_gauge_anyway`.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
 - Languages: every player-facing string is an English msgid passed to `tr()`
   (plurals through `tr_n()`), listed with a note and a width budget in

@@ -139,7 +139,7 @@ static func build(m: Menus, back_level := 0) -> void:
 		var b := _cell(m, i)
 		if Wardrobe.LOOKS[i].id == worn.id:
 			worn_cell = b
-	m._return_item(RETURN_Y, back_level)
+	m._return_item(RETURN_Y, Blueprint.TAP_HEIGHT, back_level)
 	m._hero_on("tilt")
 	_worn_stamp(m, before != "" and before != worn.id)
 	if worn_cell != null and not worn_cell.disabled:

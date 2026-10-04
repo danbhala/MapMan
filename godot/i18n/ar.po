@@ -171,6 +171,10 @@ msgstr "الاهتزاز"
 msgid "REDUCE MOTION"
 msgstr "تقليل الحركة"
 
+#. Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted
+msgid "TILT GAUGE"
+msgstr "مؤشر الميل"
+
 #. Pause sheet status line; work suspended as on a drawing office note
 msgid "WORK SUSPENDED AT LEVEL %d"
 msgstr "العمل متوقف عند المستوى %d"
@@ -333,9 +337,17 @@ msgstr "انقر للمتابعة إلى اللوحة %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "انقر للمتابعة إلى اللوحة الأخيرة"
 
-#. Level clear button, beside MAIN MENU: on to the next level
+#. Level clear: what NEXT does, for screen readers
 msgid "NEXT LEVEL"
 msgstr "المستوى التالي"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "التالي"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "القائمة"
 
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
@@ -345,27 +357,7 @@ msgstr "تم حفظ نقطة التفتيش · يمكنك البدء من هنا
 msgid "PASSED"
 msgstr "مقبول"
 
-#. Sheet title before a level starts; level number
-msgid "LEVEL %d — READY"
-msgstr "المستوى %d — جاهز"
-
-#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
-msgid "T-%d:%02d ON THE CLOCK"
-msgstr "T-%d:%02d على الساعة"
-
-#. Ready sheet small print: the best time on this level, e.g. 9s ★1
-msgid "YOUR BEST %s"
-msgstr "أفضل وقت لك %s"
-
-#. Ready sheet row: start the level; level number
-msgid "START LEVEL %d"
-msgstr "ابدأ المستوى %d"
-
-#. Ready sheet small print
-msgid "TAP THE SHEET TO START"
-msgstr "انقر اللوحة للبدء"
-
-#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
 msgid "<  RETURN TO SHEET %03d"
 msgstr "<  العودة إلى اللوحة %03d"
 
@@ -581,11 +573,11 @@ msgstr "الوقت المتبقي"
 
 #. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
 msgid ""
-"Tilt your device to move around the map.\n"
-"Head for the exit tile to progress to the next level."
+"Tilt your device to move around the map and head for the exit tile.\n"
+"The gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
 msgstr ""
-"أمِل جهازك لتتحرك في الخريطة.\n"
-"توجه إلى بلاطة الخروج للانتقال إلى المستوى التالي."
+"أمِل جهازك لتتحرك في الخريطة وتوجه إلى بلاطة الخروج.\n"
+"يُظهر المؤشر في الزاوية مقدار الميل: الحلقة المتقطعة للمشي، والمتصلة للركض."
 
 #. Tutorial lesson 2
 msgid ""
@@ -646,8 +638,8 @@ msgid "Every so often you'll come across a checkpoint. Each time you reach a che
 msgstr "ستصادف نقطة تفتيش بين الحين والآخر. كلما بلغت نقطة تفتيش أمكنك البدء منها بدلًا من العودة إلى البداية."
 
 #. Tutorial lesson 11
-msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
-msgstr "إن احتجت إلى استراحة، انقر الشاشة أثناء اللعب للإيقاف المؤقت. بعدها يمكنك استئناف اللعب أو الخروج من اللعبة."
+msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+msgstr "انقر الشاشة أثناء اللعب للإيقاف المؤقت. غيّرت طريقة إمساك جهازك؟ انقر المؤشر في الزاوية لتجعلها المركز الجديد."
 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"

@@ -137,8 +137,8 @@ first time the game loads their save, marked NEW (see [the save](#the-save)).
    bottom: the new look in miniature, its name and tier, and a WEAR IT
    button that puts it on him there and then (the sheet redraws with him in
    it, and the button turns to WORN). The look is saved the moment the slip
-   shows, even if the player quits on that sheet. Between levels the ready
-   sheet also opens the wardrobe, whose last row then goes back to it. The
+   shows, even if the player quits on that sheet. The sheet's WARDROBE
+   button opens the wardrobe, whose last row then goes back to it. The
    PASSED and APPROVED stamps rise clear of a tall hat.
 4. **The end.** Finishing the game puts MapWoman in the wardrobe, and the
    congratulations sheet says so: MAPWOMAN JOINS THE WARDROBE, play as her.

@@ -11,7 +11,7 @@ var game  # main.gd
 var _button: Button
 var _build_label: Label
 var _panel: Control
-var _gauge: TiltGauge
+var _gauge: TiltReadout
 var _level_box: SpinBox
 var _toast: Label
 var _playlog_label: Label
@@ -43,7 +43,7 @@ func _ready() -> void:
 	_build_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_build_label)
 
-	_gauge = TiltGauge.new()
+	_gauge = TiltReadout.new()
 	_gauge.game = game
 	add_child(_gauge)
 
@@ -319,7 +319,7 @@ func _slider(key: String, text: String, lo: float, hi: float, step: float) -> HB
 	return row
 
 
-class TiltGauge:
+class TiltReadout:
 	extends Control
 	## Live view of the phone's tilt: the dot is the steering input, the inner
 	## ring the start-moving threshold, the outer ring the full-speed threshold.

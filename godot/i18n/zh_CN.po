@@ -166,6 +166,10 @@ msgstr "振动"
 msgid "REDUCE MOTION"
 msgstr "减弱动态效果"
 
+#. Options row: shows or hides the tilt gauge, a small dial in the corner of the playing field that shows how far the device is tilted
+msgid "TILT GAUGE"
+msgstr "倾斜指示器"
+
 #. Pause sheet status line; work suspended as on a drawing office note
 msgid "WORK SUSPENDED AT LEVEL %d"
 msgstr "第%d关停工中"
@@ -323,9 +327,17 @@ msgstr "点击继续，前往图纸 %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "点击继续，前往最终图纸"
 
-#. Level clear button, beside MAIN MENU: on to the next level
+#. Level clear: what NEXT does, for screen readers
 msgid "NEXT LEVEL"
 msgstr "下一关"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "下一关"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "菜单"
 
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
@@ -335,27 +347,7 @@ msgstr "检查点已保存 · 随时可从此处重新开始"
 msgid "PASSED"
 msgstr "合格"
 
-#. Sheet title before a level starts; level number
-msgid "LEVEL %d — READY"
-msgstr "第%d关 — 准备"
-
-#. Ready sheet small print: the time the level gives (minutes, seconds); keep T-%d:%02d
-msgid "T-%d:%02d ON THE CLOCK"
-msgstr "时间 T-%d:%02d"
-
-#. Ready sheet small print: the best time on this level, e.g. 9s ★1
-msgid "YOUR BEST %s"
-msgstr "你的最佳 %s"
-
-#. Ready sheet row: start the level; level number
-msgid "START LEVEL %d"
-msgstr "开始第%d关"
-
-#. Ready sheet small print
-msgid "TAP THE SHEET TO START"
-msgstr "点击图纸开始"
-
-#. Last row of the wardrobe when opened between levels: back to the ready sheet; keep <  and the number
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
 msgid "<  RETURN TO SHEET %03d"
 msgstr "<  返回图纸 %03d"
 
@@ -546,11 +538,11 @@ msgstr "剩余时间"
 
 #. Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)
 msgid ""
-"Tilt your device to move around the map.\n"
-"Head for the exit tile to progress to the next level."
+"Tilt your device to move around the map and head for the exit tile.\n"
+"The gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
 msgstr ""
-"倾斜设备即可在地图中移动。\n"
-"前往出口地砖即可进入下一关。"
+"倾斜设备即可移动，前往出口地砖。\n"
+"角落的指示器显示倾斜程度：超过虚线圈走路，超过实线圈奔跑。"
 
 #. Tutorial lesson 2
 msgid ""
@@ -611,8 +603,8 @@ msgid "Every so often you'll come across a checkpoint. Each time you reach a che
 msgstr "你会时不时遇到检查点。每到达一个检查点，就可以从那里重新开始，而不必回到起点。"
 
 #. Tutorial lesson 11
-msgid "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game."
-msgstr "想休息时，在游戏中点击屏幕即可暂停。暂停后可以选择继续游戏或退出游戏。"
+msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+msgstr "游戏中点击屏幕即可暂停。换了握持姿势？点击角落的指示器，即可将当前角度设为新的中心。"
 
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
