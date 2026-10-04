@@ -589,3 +589,192 @@ msgstr "休憩したいときはプレイ中に画面をタップすると一時
 #. Tutorial lesson 12
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "準備完了。出口へ向かってゲームを始めましょう。楽しんで！"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is
+msgid "CLASSIC"
+msgstr "クラシック"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PARTY HAT"
+msgstr "パーティー帽"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red
+msgid "SIGNAL RED"
+msgstr "シグナルレッド"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom
+msgid "BOBBLE HAT"
+msgstr "ニット帽"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car
+msgid "RACING GREEN"
+msgstr "緑のレーサー"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses
+msgid "SHADES"
+msgstr "サングラス"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing
+msgid "BLUEPRINT"
+msgstr "設計図"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "COWBOY"
+msgstr "カウボーイ"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest
+msgid "HARD HAT"
+msgstr "現場監督"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "TOP HAT"
+msgstr "シルクハット"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline
+msgid "NEON"
+msgstr "ネオン"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "DOCTOR"
+msgstr "ドクター"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "PIRATE"
+msgstr "海賊"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head
+msgid "PUMPKIN HEAD"
+msgstr "パンプキン"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SKELETON"
+msgstr "ガイコツ"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map
+msgid "EXPLORER"
+msgstr "探検家"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ASTRONAUT"
+msgstr "宇宙飛行士"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "ROBOT"
+msgstr "ロボット"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "SUPERHERO"
+msgstr "ヒーロー"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin)
+msgid "WIZARD"
+msgstr "魔法使い"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold
+msgid "SOLID GOLD"
+msgstr "純金"
+
+#. Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept
+msgid "MAPWOMAN"
+msgstr "MAPWOMAN"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "COMMON"
+msgstr "コモン"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "UNCOMMON"
+msgstr "アンコモン"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "RARE"
+msgstr "レア"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "EPIC"
+msgstr "エピック"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "LEGENDARY"
+msgstr "レジェンド"
+
+#. Wardrobe: how rare a look is, as in collectible games
+msgid "SPECIAL"
+msgstr "スペシャル"
+
+#. Main menu row and sheet title: where MapMan's looks are kept and chosen
+msgid "WARDROBE"
+msgstr "クローゼット"
+
+#. Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number
+msgid "%d OF %d RELEASED"
+msgid_plural "%d OF %d RELEASED"
+msgstr[0] "%d/%d 解放済み"
+
+#. Wardrobe note: tap a released look to put it on
+msgid "TAP ONE TO WEAR IT"
+msgstr "タップで着用"
+
+#. Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short
+msgid "LV %d"
+msgstr "Lv.%d"
+
+#. Wardrobe cell for Classic: in the wardrobe from the start
+msgid "START"
+msgstr "初期"
+
+#. Wardrobe cell for MapWoman: released by finishing the game
+msgid "THE END"
+msgstr "クリア"
+
+#. Rubber stamp: the look MapMan is wearing
+msgid "WORN"
+msgstr "着用中"
+
+#. Small tag on the main menu: a look not yet seen in the wardrobe
+msgid "NEW"
+msgstr "新着"
+
+#. Wardrobe: when this look was released
+msgid "RELEASED AT LEVEL %d"
+msgstr "レベル%dで解放"
+
+#. Wardrobe: Classic's line
+msgid "IN THE WARDROBE FROM THE START"
+msgstr "最初から所持"
+
+#. Wardrobe: MapWoman's line
+msgid "RELEASED FOR FINISHING THE GAME"
+msgstr "ゲームクリアで解放"
+
+#. Slip on the level-clear sheet: a look was just released
+msgid "NEW IN THE WARDROBE"
+msgstr "クローゼットに追加"
+
+#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
+msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
+msgstr "図面 001 のクローゼットで着用できます"
+
+#. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
+msgid "MAPWOMAN JOINS THE WARDROBE"
+msgstr "MAPWOMANがクローゼットに登場"
+
+#. Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN
+msgid "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END"
+msgstr "彼女でプレイ：最後にMAPMANが待っています"
+
+#. Screen reader name of the main menu's wardrobe row
+msgid "Wardrobe, %d of %d released"
+msgstr "クローゼット、%d/%d 解放済み"
+
+#. Screen reader: a look's name, and that MapMan wears it
+msgid "%s, worn"
+msgstr "%s、着用中"
+
+#. Screen reader: a look not released yet
+msgid "Locked, released at level %d"
+msgstr "未開放、レベル%dで解放"
+
+#. Screen reader: MapWoman before the game is finished
+msgid "Locked, released for finishing the game"
+msgstr "未開放、ゲームクリアで解放"

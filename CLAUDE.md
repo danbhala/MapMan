@@ -14,6 +14,10 @@ now ported to Godot 4.5.
   APKs, `.ipa`s or `godot/build/` to master.
 - iPhone builds go through TestFlight (Test builds and Release workflows,
   `.github/actions/build-ipa`); the Apple setup is in `CONTRIBUTING.md`.
+- `docs/wardrobe/` – the wardrobe of looks MapMan can collect and wear: its
+  design and the rules that keep extra parts on him from breaking his
+  animations. Read its README before touching looks, releases or how MapMan
+  is drawn.
 
 ## Checking your work
 
@@ -57,7 +61,7 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
 
 ## Workflow
 
-- Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit`
+- Skills: `/verify`, `/new-level`, `/new-tile`, `/new-look`, `/build-apk`, `/commit`
   (every commit), `/open-pr` (every PR: title, body, labels), `/release`
   (merging and shipping).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,

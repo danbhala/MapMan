@@ -11,6 +11,8 @@ const UNTRANSLATED := [
 	"000",
 	"001-B",
 	"001-C",
+	"001-D",
+	"%d/%d",
 	"END",
 	"CP",
 	"100",
@@ -53,6 +55,7 @@ func before_all() -> void:
 
 func before_each() -> void:
 	Save.reduce_motion = true
+	_pin_wardrobe("classic", [])
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
 	game.menus.close()
@@ -63,6 +66,15 @@ func before_each() -> void:
 func after_each() -> void:
 	Save.reduce_motion = false
 	Save.set_locale("")
+	_pin_wardrobe("classic", [])
+
+
+## The wardrobe with `released` in it, the last of them not seen yet (NEW on
+## the main menu), and `worn` on.
+func _pin_wardrobe(worn: String, released: Array) -> void:
+	Save.released.assign(released)
+	Save.seen.assign(released.slice(0, maxi(released.size() - 1, 0)))
+	Save.worn = worn
 
 
 func _has_letters(text: String) -> bool:
@@ -76,7 +88,7 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT]:
+	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]
@@ -89,13 +101,22 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
 	var literal := RegEx.create_from_string('\\btr(?:_n)?\\(\\s*"((?:[^"\\\\]|\\\\.)*)"')
 	var count := 0
-	for script in ["main.gd", "hud.gd", "menus.gd", "level_map.gd"]:
+	for script in ["main.gd", "hud.gd", "menus.gd", "wardrobe_sheet.gd", "level_map.gd"]:
 		var source := FileAccess.get_file_as_string("res://scripts/" + script)
 		for m in literal.search_all(source):
 			var text: String = m.get_string(1).c_unescape()
 			count += 1
 			assert_true(msgids.has(text), "%s: catalog has %s" % [script, text])
 	assert_gt(count, 10, "the game-loop notes go through tr()")
+
+
+func test_every_look_and_tier_name_is_in_the_catalog() -> void:
+	for look in Wardrobe.LOOKS:
+		assert_true(msgids.has(look.name), "catalog has the look %s" % look.name)
+	for tier in Wardrobe.TIERS:
+		var name: String = Wardrobe.TIERS[tier]
+		if name != "":
+			assert_true(msgids.has(name), "catalog has the tier %s" % name)
 
 
 func test_data_text_is_in_the_catalog() -> void:
@@ -188,8 +209,39 @@ func test_every_character_has_a_bundled_glyph() -> void:
 # --- the sheets ----------------------------------------------------------------
 
 
+## The look whose name and tier take the most room in the language on screen,
+## of those a level releases: the longest release slip, and the longest name
+## over MapMan on the wardrobe sheet.
+func _longest_look() -> String:
+	var font := Blueprint.mono(800)
+	var longest := ""
+	var widest := 0.0
+	for look in Wardrobe.LOOKS:
+		if look.level == 0 or look.level == Wardrobe.THE_END:
+			continue
+		var text: String = tr(look.name) + "  ·  " + tr(Wardrobe.TIERS[look.tier])
+		var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x
+		if w > widest:
+			widest = w
+			longest = look.id
+	return longest
+
+
+## Sheet 001-D with `worn` on: its name and details over him.
+func _wardrobe_sheet(worn: String) -> void:
+	Save.worn = worn
+	game.menus.show_wardrobe()
+
+
 func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
+	# Part way through: the first ten looks, the longest and MapWoman released.
+	var longest := _longest_look()
+	var released: Array = Wardrobe.ids().slice(1, 11)
+	for id in [longest, "mapwoman"]:
+		if id not in released:
+			released.append(id)
+	_pin_wardrobe(longest, released)
 	var sheets := [
 		func(): m.show_main(1842, true, 100),
 		func(): m.show_first_play(),
@@ -204,8 +256,13 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_restart([10, 30]),
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
+		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
 		func(): m.show_congratulations(2042, true),
+		func(): m.show_congratulations(2042, true, "mapwoman"),
 		func(): m.show_game_complete(1842, 100, 100),
+		_wardrobe_sheet.bind(longest),
+		_wardrobe_sheet.bind("mapwoman"),
+		_wardrobe_sheet.bind("classic"),
 	]
 	for open_sheet in sheets:
 		open_sheet.call()

@@ -20,7 +20,20 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `Blueprint.motion()`, which is off when the player sets "reduce motion".
 - `scripts/player.gd` draws MapMan (and MapWoman, `art = "woman"`) in
   `_draw()`: look, blink, walk, squash, cobweb, spin and death are dials the
-  game turns; the facing API is the sprite version's.
+  game turns; the facing API is the sprite version's. He wears one look
+  (`outfit`, a `Wardrobe` id) and is drawn in layers through
+  `scripts/outfits/outfit_pen.gd`, the pose plus drawing calls that follow
+  it; `outfits.gd` holds each look's colours and `outfit_*.gd` its parts per
+  layer. `measure()` gives his box without drawing (tests, the menus'
+  dimension line).
+- The wardrobe (`docs/wardrobe/README.md`, the `/new-look` skill):
+  `scripts/wardrobe.gd` lists the looks (id, name msgid, release level,
+  tier). `Save` keeps `worn`, `released` and `seen`, and on load releases
+  whatever the progress has earned. `main.gd` releases a look on the first
+  clear of every 5th level in the main game (never practice or the
+  tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
+  end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
+  for `menus.gd`.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
@@ -76,6 +89,15 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `main.gd`/`menus.gd`, which only load with the scene.
 - `DisplayServer`'s live-region enum is `DisplayServer.LIVE_POLITE`, not
   `ACCESSIBILITY_LIVE_POLITE`.
+- A look's parts draw through the pen (`pen.b()`, `pen.h()`, `pen.hat_*`),
+  never with `draw_*` or screen positions, and keep no state of their own:
+  anything moving comes from Player's dials, so `reset_pose()` resets it and
+  screenshots stay the same. Front-only details check `pen.front()`. Look at
+  every pose (`tools/wardrobe_sheets.sh`) before calling a look done.
+- The screenshot tools, and tests that check a sheet's layout or picture,
+  must pin `Save.worn`, `released` and `seen`: MapMan wears the worn look on
+  every sheet, and the main menu shows the wardrobe's count, and the autoload
+  reads this machine's real save even with `persist` off.
 
 ## Tests
 

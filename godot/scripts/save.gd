@@ -1,6 +1,7 @@
 extends Node
-## Persistent player data: options, best score, completed checkpoints.
-## Replaces the dot-files the Pythonista version wrote next to the script.
+## Persistent player data: options, best score, completed checkpoints, the
+## wardrobe. Replaces the dot-files the Pythonista version wrote next to the
+## script.
 
 ## The language on screen changed (use_locale).
 signal locale_changed
@@ -25,6 +26,12 @@ var checkpoints := {}
 var furthest_level := 1
 ## level number -> {"time": best seconds left, "stars": most stars}
 var bests := {}
+## The look MapMan wears (a Wardrobe id), and the looks released so far, in
+## the order they came. Classic is always there and never listed.
+var worn := "classic"
+var released: Array[String] = []
+## Released looks the wardrobe has shown: the main menu says NEW until then.
+var seen: Array[String] = []
 ## Tests turn this off so they never overwrite the player's real progress.
 var persist := true
 
@@ -72,6 +79,9 @@ func set_locale(code: String) -> void:
 
 ## path: tests load an old save from elsewhere; the game uses PATH.
 func load_all(path := PATH) -> void:
+	# A fresh file each time: ConfigFile.load() keeps keys from a file loaded
+	# before, which a second load (tests load old saves) would inherit.
+	_cfg = ConfigFile.new()
 	if _cfg.load(path) != OK:
 		return
 	music_on = _cfg.get_value("options", "music", true)
@@ -105,9 +115,16 @@ func load_all(path := PATH) -> void:
 	for key in saved_bests:
 		var b: Dictionary = saved_bests[key]
 		bests[int(key)] = {"time": int(b.get("time", 0)), "stars": int(b.get("stars", 0))}
+	released = _looks(_cfg.get_value("wardrobe", "released", []))
+	seen = _looks(_cfg.get_value("wardrobe", "seen", []))
+	# Saves from before the wardrobe have the progress but not the looks.
+	sync_wardrobe()
+	var saved_worn: Variant = _cfg.get_value("wardrobe", "worn", "classic")
+	worn = saved_worn if saved_worn is String and is_released(saved_worn) else "classic"
 
 
-func save_all() -> void:
+## path: tests write to a file of their own; the game uses PATH.
+func save_all(path := PATH) -> void:
 	if not persist:
 		return
 	_cfg.set_value("options", "music", music_on)
@@ -122,7 +139,10 @@ func save_all() -> void:
 	_cfg.set_value("progress", "checkpoints", checkpoints)
 	_cfg.set_value("progress", "furthest_level", furthest_level)
 	_cfg.set_value("progress", "bests", bests)
-	_cfg.save(PATH)
+	_cfg.set_value("wardrobe", "worn", worn)
+	_cfg.set_value("wardrobe", "released", released)
+	_cfg.set_value("wardrobe", "seen", seen)
+	_cfg.save(path)
 
 
 func checkpoint_reached(level: int, score: int) -> void:
@@ -158,3 +178,63 @@ func submit_score(score: int) -> bool:
 		save_all()
 		return true
 	return false
+
+
+# --- the wardrobe (docs/wardrobe) -------------------------------------------------
+
+
+func is_released(id: String) -> bool:
+	return id == "classic" or id in released
+
+
+## Puts a look in the wardrobe; true if it wasn't there before.
+func release(id: String) -> bool:
+	if not Wardrobe.is_look(id) or is_released(id):
+		return false
+	released.append(id)
+	save_all()
+	return true
+
+
+## Wears a released look; false (and no change) for any other id.
+func wear(id: String) -> bool:
+	if not is_released(id):
+		return false
+	worn = id
+	save_all()
+	return true
+
+
+## The wardrobe has been looked at: nothing in it is new any more.
+func mark_seen() -> void:
+	if seen == released:
+		return
+	seen = released.duplicate()
+	save_all()
+
+
+## Released looks the wardrobe hasn't shown yet.
+func unseen() -> int:
+	var n := 0
+	for id in released:
+		if id not in seen:
+			n += 1
+	return n
+
+
+## Releases every look the progress has earned: a save from before the
+## wardrobe, or a level skipped in a dev build.
+func sync_wardrobe() -> void:
+	for id in Wardrobe.earned(furthest_level, has_completed):
+		if not is_released(id):
+			released.append(id)
+
+
+## The known looks in a list read from the save, each once.
+func _looks(saved: Variant) -> Array[String]:
+	var out: Array[String] = []
+	if saved is Array:
+		for id in saved:
+			if id is String and id != "classic" and Wardrobe.is_look(id) and id not in out:
+				out.append(id)
+	return out

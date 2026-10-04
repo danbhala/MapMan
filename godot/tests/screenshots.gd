@@ -92,6 +92,10 @@ func run() -> void:
 	save.highscore = 0
 	save.checkpoints.clear()
 	save.first_play = false
+	# Classic, and an empty wardrobe: level 10's clear releases its look.
+	save.worn = "classic"
+	save.released.clear()
+	save.seen.clear()
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	game = load("res://scenes/main.tscn").instantiate()
@@ -267,6 +271,19 @@ func run() -> void:
 	game.set_controls_message()
 	await frames(2)
 	await shot("24_playing_ar")
+
+	# The wardrobe as docs/wardrobe/sheets/menu_2_wardrobe.png has it: the
+	# looks up to level 45 released, the last of them not seen yet, the
+	# cowboy worn.
+	save.set_locale("en")
+	var looks: Array = Wardrobe.ids().slice(1, 10)
+	save.released.assign(looks)
+	save.seen.assign(looks.slice(0, looks.size() - 1))
+	save.worn = "cowboy"
+	game._on_menu_action("main menu")
+	game._on_menu_action("wardrobe")
+	await frames(100)  # 22 cells cascade in, then WORN lands
+	await shot("25_wardrobe")
 	save.set_locale("")
 
 	if failures.is_empty():

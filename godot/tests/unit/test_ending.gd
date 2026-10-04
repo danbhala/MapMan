@@ -12,10 +12,15 @@ func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
 	Dev.enabled = false
+	# The pause sheet draws him: not in whatever this machine's save wears.
+	Save.worn = "classic"
+	Save.released.clear()
+	Save.seen.clear()
 
 
 func after_each() -> void:
 	Save.has_completed = false
+	Save.released.clear()  # finishing releases MapWoman
 
 
 func before_each() -> void:
@@ -82,6 +87,15 @@ func test_meeting_then_walking_into_the_vortex() -> void:
 	assert_false(game._woman.visible, "she steps into the vortex first")
 	assert_false(game._vortex.visible)
 	assert_eq(game.menus.current, "completion", "then the completion scoring")
+
+
+func test_wearing_mapwoman_mapman_waits_for_her() -> void:
+	game.player.outfit = "mapwoman"
+	game._start_ending()
+	assert_eq(game._woman.art, "man", "the one waiting is MapMan")
+	game.player.outfit = "classic"
+	game._start_ending()
+	assert_eq(game._woman.art, "woman")
 
 
 func test_no_meeting_from_another_row() -> void:

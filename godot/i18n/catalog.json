@@ -742,6 +742,242 @@
       "id": "You're all set, head for the exit to start the game. Have fun!",
       "note": "Tutorial lesson 12",
       "max": 170
+    },
+    {
+      "id": "CLASSIC",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); plain MapMan, as he is",
+      "max": 14
+    },
+    {
+      "id": "PARTY HAT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "SIGNAL RED",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); bright red colour scheme, signal/pillar-box red",
+      "max": 14
+    },
+    {
+      "id": "BOBBLE HAT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); knitted winter hat with a pom-pom",
+      "max": 14
+    },
+    {
+      "id": "RACING GREEN",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); dark green with two white stripes, like a racing car",
+      "max": 14
+    },
+    {
+      "id": "SHADES",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); sunglasses",
+      "max": 14
+    },
+    {
+      "id": "BLUEPRINT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); he is drawn as white lines, like an engineering drawing",
+      "max": 14
+    },
+    {
+      "id": "COWBOY",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "HARD HAT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a builder's safety helmet and hi-vis vest",
+      "max": 14
+    },
+    {
+      "id": "TOP HAT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "NEON",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); glowing neon outline",
+      "max": 14
+    },
+    {
+      "id": "DOCTOR",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "PIRATE",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "PUMPKIN HEAD",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); Halloween jack-o'-lantern head",
+      "max": 14
+    },
+    {
+      "id": "SKELETON",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "EXPLORER",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); pith helmet, compass and a map",
+      "max": 14
+    },
+    {
+      "id": "ASTRONAUT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "ROBOT",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "SUPERHERO",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "WIZARD",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin)",
+      "max": 14
+    },
+    {
+      "id": "SOLID GOLD",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); MapMan made of gold",
+      "max": 14
+    },
+    {
+      "id": "MAPWOMAN",
+      "note": "Wardrobe: name of a look MapMan can wear (one at a time, like a skin); a name: keep MAPWOMAN, as MAPMAN is kept",
+      "max": 14
+    },
+    {
+      "id": "COMMON",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "UNCOMMON",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "RARE",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "EPIC",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "LEGENDARY",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "SPECIAL",
+      "note": "Wardrobe: how rare a look is, as in collectible games",
+      "max": 11
+    },
+    {
+      "id": "WARDROBE",
+      "note": "Main menu row and sheet title: where MapMan's looks are kept and chosen",
+      "max": 12
+    },
+    {
+      "id": "%d OF %d RELEASED",
+      "plural": "%d OF %d RELEASED",
+      "note": "Wardrobe note: looks released so far out of all of them, e.g. 10 OF 22 RELEASED; n is the first number",
+      "max": 22
+    },
+    {
+      "id": "TAP ONE TO WEAR IT",
+      "note": "Wardrobe note: tap a released look to put it on",
+      "max": 24
+    },
+    {
+      "id": "LV %d",
+      "note": "Wardrobe cell: the level whose first clear releases this look, e.g. LV 35; very short",
+      "max": 6
+    },
+    {
+      "id": "START",
+      "note": "Wardrobe cell for Classic: in the wardrobe from the start",
+      "max": 7
+    },
+    {
+      "id": "THE END",
+      "note": "Wardrobe cell for MapWoman: released by finishing the game",
+      "max": 8
+    },
+    {
+      "id": "WORN",
+      "note": "Rubber stamp: the look MapMan is wearing",
+      "max": 8
+    },
+    {
+      "id": "NEW",
+      "note": "Small tag on the main menu: a look not yet seen in the wardrobe",
+      "max": 5
+    },
+    {
+      "id": "RELEASED AT LEVEL %d",
+      "note": "Wardrobe: when this look was released",
+      "max": 28
+    },
+    {
+      "id": "IN THE WARDROBE FROM THE START",
+      "note": "Wardrobe: Classic's line",
+      "max": 30
+    },
+    {
+      "id": "RELEASED FOR FINISHING THE GAME",
+      "note": "Wardrobe: MapWoman's line",
+      "max": 32
+    },
+    {
+      "id": "NEW IN THE WARDROBE",
+      "note": "Slip on the level-clear sheet: a look was just released",
+      "max": 24
+    },
+    {
+      "id": "WEAR IT FROM THE WARDROBE ON SHEET 001",
+      "note": "Slip on the level-clear sheet; keep 001, the main menu's sheet number",
+      "max": 40
+    },
+    {
+      "id": "MAPWOMAN JOINS THE WARDROBE",
+      "note": "Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN",
+      "max": 30
+    },
+    {
+      "id": "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END",
+      "note": "Slip on the last sheet: wearing MapWoman, MapMan is the one waiting at the end; keep MAPMAN",
+      "max": 46
+    },
+    {
+      "id": "Wardrobe, %d of %d released",
+      "note": "Screen reader name of the main menu's wardrobe row",
+      "max": 40
+    },
+    {
+      "id": "%s, worn",
+      "note": "Screen reader: a look's name, and that MapMan wears it",
+      "max": 30
+    },
+    {
+      "id": "Locked, released at level %d",
+      "note": "Screen reader: a look not released yet",
+      "max": 40
+    },
+    {
+      "id": "Locked, released for finishing the game",
+      "note": "Screen reader: MapWoman before the game is finished",
+      "max": 44
     }
   ]
 }
