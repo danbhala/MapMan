@@ -176,7 +176,7 @@ const TEXT := {
 const LANGUAGES := [
 	["en", "English"],
 	["es", "Español"],
-	["pt_BR", "Português (Brasil)"],
+	["pt_BR", "Português (BR)"],
 	["fr", "Français"],
 	["it", "Italiano"],
 	["de", "Deutsch"],
@@ -326,8 +326,7 @@ func close() -> void:
 func _open(tag: String, number: String, title: String, frame_color := Blueprint.INK) -> void:
 	_animate = Blueprint.motion() and current != tag
 	close()
-	var ts := TextServerManager.get_primary_interface()
-	_rtl = ts.is_locale_right_to_left(TranslationServer.get_locale())
+	_rtl = Save.reads_rtl()
 	current = tag
 	visible = true
 	_cascade = 0.0
@@ -336,13 +335,15 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 	_bg = Blueprint.rect(self, Blueprint.FIELD, Vector2.ZERO, vp)
 	_grid = Blueprint.grid(self, vp)
 	_frame = Blueprint.line(self, Blueprint.frame_points(vp), frame_color, Blueprint.FRAME_WIDTH)
-	var heading: String = _t("header") % [number, title]
+	# The sheet number keeps its order inside right-to-left text: "001-B".
+	var figure := _isolated(number)
+	var heading: String = _t("header") % [figure, title]
 	_header = Blueprint.label(self, heading, 14, Blueprint.INK, Vector2.ZERO, 700)
 	# "MAPMAN — SHEET 001 — TITLE" starts with Latin letters, so the text
 	# itself must say which way the sheet reads.
 	_header.text_direction = Control.TEXT_DIRECTION_RTL if _rtl else Control.TEXT_DIRECTION_AUTO
 	_header.accessibility_name = _sentence(title)
-	_block = _title_block(number, frame_color)
+	_block = _title_block(figure, frame_color)
 	_panel = Control.new()
 	_panel.size = SHEET
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -404,7 +405,14 @@ func _level_number(suffix: String) -> String:
 
 ## "PLAY FROM START" -> "Play from start", for screen readers.
 func _sentence(text: String) -> String:
-	return text.left(1) + text.substr(1).to_lower()
+	var ts := TextServerManager.get_primary_interface()
+	return text.left(1) + ts.string_to_lower(text.substr(1), TranslationServer.get_locale())
+
+
+## A figure such as "001-B" that must read left to right even inside
+## right-to-left text, which would otherwise reorder it to "B-001".
+func _isolated(text: String) -> String:
+	return char(0x2066) + text + char(0x2069) if _rtl else text
 
 
 ## The x of a piece `w` wide whose left edge is at `x` on a left-to-right
@@ -868,10 +876,16 @@ func show_options() -> void:
 func _value_row(name: String, value: String, y: float) -> Button:
 	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y))
 	b.alignment = _align()
-	var x := 12.0 if _rtl else TEXT_X - LIST_X + 20 * CHAR_W
-	var l := Blueprint.label(b, value, 16, Blueprint.INK, Vector2(x, 0))
-	l.size.y = Blueprint.TAP_HEIGHT
+	# The value column runs from 20 characters in to the row's far margin, at
+	# the mirror image on a right-to-left sheet.
+	var col := TEXT_X - LIST_X + 20 * CHAR_W
+	var w := LIST_W - col - 12.0
+	var pos := Vector2(12.0 if _rtl else col, 0)
+	var l := Blueprint.label(b, value, 16, Blueprint.INK, pos, 500, w)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	Blueprint.fit(l, Vector2(w, Blueprint.TAP_HEIGHT))
 	_reveal(b)
 	return b
 

@@ -109,7 +109,7 @@ msgstr "最終檢驗"
 msgid "LANGUAGE"
 msgstr "語言"
 
-#. Language sheet: follow the phone's system language
+#. Options value and a box on the language sheet: follow the phone's language; the value column holds 17 characters
 msgid "PHONE'S LANGUAGE"
 msgstr "依照系統語言"
 

@@ -109,7 +109,7 @@ msgstr "ИТОГОВЫЙ КОНТРОЛЬ"
 msgid "LANGUAGE"
 msgstr "ЯЗЫК"
 
-#. Language sheet: follow the phone's system language
+#. Options value and a box on the language sheet: follow the phone's language; the value column holds 17 characters
 msgid "PHONE'S LANGUAGE"
 msgstr "ЯЗЫК ТЕЛЕФОНА"
 

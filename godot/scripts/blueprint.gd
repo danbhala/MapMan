@@ -31,19 +31,25 @@ const FONT_PATH := "res://assets/fonts/JetBrainsMono-Variable.ttf"
 ## so they draw the same on every machine instead of from a system font.
 const SYMBOLS_PATH := "res://assets/fonts/MapManSymbols.ttf"
 ## Scripts JetBrains Mono has no glyphs for, as Noto Sans subsets cut down to
-## the characters the translations use (tools/subset_fonts.py).
-const SCRIPT_FONTS := [
-	"res://assets/fonts/i18n/NotoSansArabic-Subset.ttf",
-	"res://assets/fonts/i18n/NotoSansJP-Subset.ttf",
-	"res://assets/fonts/i18n/NotoSansKR-Subset.ttf",
-	"res://assets/fonts/i18n/NotoSansSC-Subset.ttf",
-	"res://assets/fonts/i18n/NotoSansTC-Subset.otf",
-]
+## the characters the translations use (tools/subset_fonts.py), by the locale
+## each serves.
+const SCRIPT_FONTS := {
+	"ar": "res://assets/fonts/i18n/NotoSansArabic-Subset.ttf",
+	"ja": "res://assets/fonts/i18n/NotoSansJP-Subset.ttf",
+	"ko": "res://assets/fonts/i18n/NotoSansKR-Subset.ttf",
+	"zh_CN": "res://assets/fonts/i18n/NotoSansSC-Subset.ttf",
+	"zh_TW": "res://assets/fonts/i18n/NotoSansTC-Subset.otf",
+}
 const STAMP_ROTATION := -0.12
 ## The height of a tappable row or cell: 48 dp on a 360-450 dp phone screen.
 const TAP_HEIGHT := 44.0
 
 static var _fonts := {}
+## The subset the language on screen draws from, first among the fallbacks:
+## the subsets share many characters (ideographs, punctuation) in different
+## shapes, and a glyph comes from the first font that has it.
+static var _script := ""
+static var _script_fonts := {}
 static var _theme: Theme
 static var _focus_ring: StyleBox
 static var _focus_none: StyleBox
@@ -57,19 +63,46 @@ static func mono(weight := 500) -> Font:
 		v.variation_opentype = {
 			TextServerManager.get_primary_interface().name_to_tag("wght"): weight
 		}
-		var fallbacks: Array[Font] = [load(SYMBOLS_PATH)]
-		for path in SCRIPT_FONTS:
-			if ResourceLoader.exists(path):
-				# The same weight for the fallback, so bold stays bold in every script.
-				var f := FontVariation.new()
-				f.base_font = load(path)
-				f.variation_opentype = {
-					TextServerManager.get_primary_interface().name_to_tag("wght"): weight
-				}
-				fallbacks.append(f)
-		v.fallbacks = fallbacks
+		v.fallbacks = _fallbacks(weight)
 		_fonts[weight] = v
 	return _fonts[weight]
+
+
+## Put the subset of `locale` (a translation's, like "zh_TW") first among the
+## fallbacks of every weight; a locale without one keeps the default order.
+static func prefer_script(locale: String) -> void:
+	var path: String = SCRIPT_FONTS.get(locale, "")
+	if path == _script:
+		return
+	_script = path
+	for weight in _fonts:
+		_fonts[weight].fallbacks = _fallbacks(weight)
+
+
+## The symbols, then the script subsets with the preferred one first.
+static func _fallbacks(weight: int) -> Array[Font]:
+	var out: Array[Font] = [load(SYMBOLS_PATH)]
+	var paths: Array = SCRIPT_FONTS.values()
+	if _script in paths:
+		paths.erase(_script)
+		paths.push_front(_script)
+	for path in paths:
+		if ResourceLoader.exists(path):
+			out.append(_script_font(path, weight))
+	return out
+
+
+## A subset at a weight, so bold stays bold in every script.
+static func _script_font(path: String, weight: int) -> Font:
+	var key := "%s@%d" % [path, weight]
+	if not _script_fonts.has(key):
+		var f := FontVariation.new()
+		f.base_font = load(path)
+		f.variation_opentype = {
+			TextServerManager.get_primary_interface().name_to_tag("wght"): weight
+		}
+		_script_fonts[key] = f
+	return _script_fonts[key]
 
 
 ## False when the player asked for less motion: animations then skip to the end.

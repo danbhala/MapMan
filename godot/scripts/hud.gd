@@ -98,17 +98,14 @@ func _ready() -> void:
 	header = Blueprint.rect(self, Blueprint.STRIP, Vector2.ZERO, Vector2.ZERO)
 	level_label = Blueprint.label(header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	level_label.accessibility_name = tr(TEXT.a11y_level)
 	score_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	score_label.accessibility_name = tr(TEXT.a11y_score)
 	lives_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_RIGHT
 	)
 	lives_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lives_label.accessibility_name = tr(TEXT.a11y_lives)
 
 	bar = Blueprint.rect(self, Blueprint.BAR, Vector2.ZERO, Vector2.ZERO)
 	effect_single = TextureRect.new()
@@ -142,10 +139,19 @@ func _ready() -> void:
 	bar.add_child(timer_line)
 	timer_label = Blueprint.label(bar, "", TIMER_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	timer_label.accessibility_name = tr(TEXT.a11y_time)
+	_name_for_readers()
+	Save.locale_changed.connect(_name_for_readers)
 
 	get_viewport().size_changed.connect(layout)
 	layout()
+
+
+## What a screen reader calls each figure, in the language on screen.
+func _name_for_readers() -> void:
+	level_label.accessibility_name = tr(TEXT.a11y_level)
+	score_label.accessibility_name = tr(TEXT.a11y_score)
+	lives_label.accessibility_name = tr(TEXT.a11y_lives)
+	timer_label.accessibility_name = tr(TEXT.a11y_time)
 
 
 func layout() -> void:
@@ -168,11 +174,10 @@ func layout() -> void:
 
 	bar.position = Vector2(inner_x, s.y - inset - 1.0 - BAR_HEIGHT)
 	bar.size = Vector2(inner_w, BAR_HEIGHT)
-	var timer_w := TIMER_LENGTH + 80.0
 	Blueprint.fit(timer_label, Vector2(70, BAR_HEIGHT))
 	timer_label.position = Vector2(inner_w - 12 - 70, 0)
 	timer_line.position = Vector2(inner_w - 12 - 70 - 10 - TIMER_LENGTH, BAR_HEIGHT / 2.0)
-	_layout_note(inner_w - timer_w)
+	_layout_note(timer_line.position.x)
 	tutorial_label.position = Vector2(12, 0)
 	Blueprint.fit(tutorial_label, Vector2(inner_w - 24, BAR_HEIGHT))
 
@@ -250,9 +255,7 @@ func _refresh_note() -> void:
 	_set_text(note_label, "" if _tutorial else text)
 	_set_text(header_note, text if _tutorial else "")
 	# Right-to-left languages read the note from the right edge of its box.
-	var ts := TextServerManager.get_primary_interface()
-	var rtl := ts.is_locale_right_to_left(TranslationServer.get_locale())
-	var side := HORIZONTAL_ALIGNMENT_RIGHT if rtl else HORIZONTAL_ALIGNMENT_LEFT
+	var side := HORIZONTAL_ALIGNMENT_RIGHT if Save.reads_rtl() else HORIZONTAL_ALIGNMENT_LEFT
 	note_label.horizontal_alignment = side
 	tutorial_label.horizontal_alignment = side
 	_show_icons(not _tutorial)
@@ -270,7 +273,7 @@ func set_tutorial_text(text: String) -> void:
 	_tutorial = text != ""
 	var s := get_viewport_rect().size
 	var inner_w := s.x - 2.0 * (Blueprint.INSET + 1.0)
-	_layout_note(inner_w if _tutorial else inner_w - TIMER_LENGTH - 80.0)
+	_layout_note(inner_w if _tutorial else timer_line.position.x)
 	_refresh_note()
 
 

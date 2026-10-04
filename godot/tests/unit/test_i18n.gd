@@ -28,7 +28,7 @@ const UNTRANSLATED := [
 	"T-0:%02d"
 ]
 ## Plural n values that reach every form of every language's rule.
-const PLURAL_SAMPLES := [0, 1, 2, 3, 5, 11, 21, 25, 100]
+const PLURAL_SAMPLES := [0, 1, 2, 3, 5, 7, 11, 21, 25, 100]
 
 var catalog: Dictionary
 var msgids := {}
@@ -270,6 +270,22 @@ func _play_every_hud_state(check: Callable) -> void:
 func _check_hud(locale: String, state: String) -> void:
 	var found := LayoutCheck.problems([game.hud], _bounds())
 	assert_eq(found.size(), 0, "%s %s: %s" % [locale, state, "; ".join(found)])
+
+
+## Before any choice is made the options value and the marked box read
+## "phone's language", translated: the longest state of those two sheets.
+func test_following_the_phone_lays_out_in_every_language() -> void:
+	var locales: Array = catalog.locales.keys()
+	locales.append("en")
+	for locale in locales:
+		Save.locale = ""
+		Save.use_locale(locale)
+		var m = game.menus
+		for open_sheet in [func(): m.show_options(), func(): m.show_language()]:
+			open_sheet.call()
+			_check_fit(locale + " (phone)", m.current)
+			m.close()
+			await get_tree().process_frame
 
 
 func test_the_hud_lays_out_in_every_language() -> void:

@@ -77,7 +77,7 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 - `tests/unit/` – GUT tests, one per tile rule; add one for every new rule.
 - `tests/autoplay_test.gd` – a bot walks every level along a safe route; the
   proof that all levels are still solvable.
-- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of twenty
+- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of two dozen
   screens. Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
 - `tools/record_tour.sh` records a video tour (menus, a level, pause, level
   clear, a lost life) with Godot's Movie Maker mode, for showing changes.

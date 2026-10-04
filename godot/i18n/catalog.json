@@ -7,7 +7,7 @@
       "plural": "(n != 1)"
     },
     "pt_BR": {
-      "name": "Português (Brasil)",
+      "name": "Português (BR)",
       "nplurals": 2,
       "plural": "(n > 1)"
     },
@@ -195,8 +195,8 @@
     },
     {
       "id": "PHONE'S LANGUAGE",
-      "note": "Language sheet: follow the phone's system language",
-      "max": 24
+      "note": "Options value and a box on the language sheet: follow the phone's language; the value column holds 17 characters",
+      "max": 17
     },
     {
       "id": "PLAY FROM START",

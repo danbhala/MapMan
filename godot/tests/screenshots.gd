@@ -92,6 +92,7 @@ func run() -> void:
 	save.highscore = 0
 	save.checkpoints.clear()
 	save.first_play = false
+	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)

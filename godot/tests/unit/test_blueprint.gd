@@ -11,6 +11,11 @@ func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
 	Dev.enabled = false
+	Save.set_locale("en")  # the English these tests read, whatever the machine's
+
+
+func after_all() -> void:
+	Save.set_locale("")
 
 
 func before_each() -> void:

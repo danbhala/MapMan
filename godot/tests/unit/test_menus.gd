@@ -87,7 +87,8 @@ func test_picking_a_language_saves_it_and_stays_on_the_sheet() -> void:
 	assert_eq(game.menus.current, "language")
 	game._on_menu_action("language system")
 	assert_eq(Save.locale, "", "back to the phone's language")
-	assert_eq(TranslationServer.get_locale(), OS.get_locale())
+	var phone := TranslationServer.standardize_locale(OS.get_locale())
+	assert_eq(TranslationServer.get_locale(), phone)
 	game.go_back()
 	assert_eq(game.menus.current, "options", "back goes to the options sheet")
 
