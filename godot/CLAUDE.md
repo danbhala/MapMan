@@ -7,7 +7,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 ## Architecture
 
 - `scripts/main.gd` owns game flow and state. Tile rules live only in
-  `update_player()`; movement in `move_player()` / `_try_axis()`.
+  `update_player()`; movement in `move_player()` / `_try_axis()`. The
+  assists (`ASSIST_*`): lives lost on a level in the main game this session
+  (`losses`) earn, in turn, pencil marks on hidden death tiles plus the
+  corner guard (`_guarded()`, `Dev.t("guard_hold")`), a sketch of the safe
+  route at the start of each try, and a skip row on the lost-life sheet.
+  `LevelMap.set_marks()`, `sketch_route()` and `safe_route()` draw them.
 - `scripts/level_map.gd` owns the tile grid, loading animation and per-tile
   effect state. Grid keys are `Vector2i(column, row)`, row 0 at the top.
 - `scripts/menus.gd` draws every menu as a Blueprint drawing sheet (frame,

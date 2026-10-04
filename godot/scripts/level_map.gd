@@ -73,6 +73,10 @@ var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
 
+# The assists (main.gd): pencil marks on hidden death tiles, a route sketch.
+var _marks: PencilMarks
+var _route: RouteSketch
+
 # --- texture helpers -----------------------------------------------------
 
 
@@ -139,6 +143,8 @@ func unload() -> void:
 	tiles.clear()
 	ends.clear()
 	checkpoint_flag = null
+	_marks = null
+	_route = null
 	moving = false
 
 
@@ -463,6 +469,127 @@ func reset_hide() -> void:
 		elif tiles_hidden:
 			_unhide_tile(tile)
 	tiles_hidden = false
+
+
+# --- assists -------------------------------------------------------------
+
+
+## Draw, or stop drawing, a dashed outline on every death tile that is
+## hidden: the drafting convention for an edge you can't see.
+func set_marks(on: bool) -> void:
+	if on and _marks == null:
+		_marks = PencilMarks.new(self)
+		_marks.z_index = 4
+		add_child(_marks)
+	elif not on and _marks:
+		_marks.queue_free()
+		_marks = null
+
+
+## How many death tiles the pencil marks outline right now.
+func marked() -> int:
+	return _marks.count() if _marks else 0
+
+
+## Sketch the safe route from the start in gold for `seconds`, then let it fade.
+func sketch_route(seconds: float) -> void:
+	if _route:
+		_route.queue_free()
+	var points := PackedVector2Array()
+	for key in safe_route():
+		points.append(tiles[key].position)
+	_route = RouteSketch.new(points, seconds)
+	_route.z_index = 4
+	add_child(_route)
+
+
+## The shortest route from the start to an exit that touches no death tile,
+## keeping off time-loss tiles when another way exists; empty if there is
+## none. The same search the autoplay test walks.
+func safe_route() -> Array[Vector2i]:
+	for avoid_time_loss in [true, false]:
+		var prev := {start_position: start_position}
+		var queue: Array[Vector2i] = [start_position]
+		while not queue.is_empty():
+			var cur: Vector2i = queue.pop_front()
+			if ends.any(func(t: Tile) -> bool: return t.key == cur):
+				var route: Array[Vector2i] = [cur]
+				while cur != start_position:
+					cur = prev[cur]
+					route.push_front(cur)
+				return route
+			for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
+				var nxt: Vector2i = cur + d
+				if prev.has(nxt) or not tiles.has(nxt):
+					continue
+				var tile: Tile = tiles[nxt]
+				if tile.blank or deaths.has(nxt):
+					continue
+				if avoid_time_loss and less_times.has(nxt):
+					continue
+				prev[nxt] = cur
+				queue.append(nxt)
+	return []
+
+
+## Dashed outlines over the death tiles that are hidden right now. Which
+## tiles those are changes as hide and unhide tiles are stepped on, so it
+## looks again every frame; a sheet has a few dozen tiles at most.
+class PencilMarks:
+	extends Node2D
+	const RX := 13.5
+	const RY := 9.5
+	const DASHES := 12
+	var map: LevelMap
+
+	func _init(on_map: LevelMap) -> void:
+		map = on_map
+
+	func _process(_delta: float) -> void:
+		queue_redraw()
+
+	func count() -> int:
+		var n := 0
+		for key in map.deaths:
+			if _hidden(key):
+				n += 1
+		return n
+
+	func _hidden(key: Vector2i) -> bool:
+		var tile: Tile = map.tiles.get(key)
+		return tile != null and tile.sprite != null and not tile.sprite.visible
+
+	func _draw() -> void:
+		for key in map.deaths:
+			if not _hidden(key):
+				continue
+			var pts := Blueprint.ellipse_points(map.tiles[key].position, RX, RY, DASHES * 2)
+			for i in range(0, pts.size() - 1, 2):
+				draw_line(pts[i], pts[i + 1], Blueprint.PINK, 1.5, true)
+
+
+## The safe route as a dashed gold line through the tiles, for a moment.
+class RouteSketch:
+	extends Node2D
+	const FADE := 0.6
+	var points: PackedVector2Array
+
+	var seconds: float
+
+	func _init(route: PackedVector2Array, for_seconds: float) -> void:
+		points = route
+		seconds = for_seconds
+
+	func _ready() -> void:
+		var tw := create_tween()
+		tw.tween_interval(seconds)
+		if Blueprint.motion():
+			tw.tween_property(self, "modulate:a", 0.0, FADE)
+		tw.tween_callback(queue_free)
+
+	func _draw() -> void:
+		for i in points.size() - 1:
+			draw_dashed_line(points[i], points[i + 1], Blueprint.GOLD, 2.0, 6.0, true, true)
 
 
 # --- movement ------------------------------------------------------------

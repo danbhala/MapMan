@@ -121,6 +121,9 @@ const TEXT := {
 	"try_again": "TRY AGAIN FROM THE START TILE",
 	"death_note": "NOTE: ROUTE AROUND THE DEATH TILES",
 	"timeout_note": "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY",
+	"marks_note": "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON",
+	"route_note": "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS",
+	"skip_sheet": "SKIP THIS SHEET",
 	"rework": "REWORK",
 	# END — game over
 	"end_number": "END",
@@ -1066,7 +1069,9 @@ func show_confirm_quit(back := "unpause") -> void:
 
 
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
-func show_lose_life(lives: int, level := 0, reason := "death") -> void:
+## help: the assist the next try gets ("", "marks", "route" or "skip",
+## main.gd assist_name()); the note says so, and "skip" adds a row for it.
+func show_lose_life(lives: int, level := 0, reason := "death", help := "") -> void:
 	_level = level
 	_open("lose_life", "%03d" % level, _t("defect_title") % level, Blueprint.PINK)
 	var timeout := reason == "timeout"
@@ -1092,9 +1097,20 @@ func show_lose_life(lives: int, level := 0, reason := "death") -> void:
 	_reveal(row)
 	_rule(128)
 	_item(1, _t("try_again"), "try again", 150)
-	_note(_t("timeout_note") if timeout else _t("death_note"), 212)
+	var note: String = _t("timeout_note") if timeout else _t("death_note")
+	match help:
+		"marks":
+			note = _t("marks_note")
+		"route", "skip":
+			note = _t("route_note")
+	if help == "skip":
+		_item(2, _t("skip_sheet"), "skip sheet", 194)
+		_note(note, 252)
+		_stamp(_t("rework"), Vector2(222, 290), Blueprint.PINK, STAMP_DELAY, false)
+	else:
+		_note(note, 212)
+		_stamp(_t("rework"), Vector2(222, 240), Blueprint.PINK, STAMP_DELAY, false)
 	_hero_on("down")
-	_stamp(_t("rework"), Vector2(222, 240), Blueprint.PINK, STAMP_DELAY, false)
 	_focus_first()
 
 

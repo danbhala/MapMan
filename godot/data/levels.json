@@ -866,7 +866,7 @@
     " t    m",
     " t    c",
     " t    c",
-    " ccccccb"
+    " cccmccb"
    ],
    "loading": [
     " k",
@@ -1632,7 +1632,7 @@
     "       t",
     "       t",
     "       t",
-    "       t",
+    "       m",
     " mccvccbccrccm",
     "       c",
     "       y",
@@ -1829,7 +1829,7 @@
     "--ddeffgghhiijjkk"
    ],
    "delay": 0.05,
-   "x_hides": 12,
+   "x_hides": 5,
    "checkpoint": false,
    "message": ""
   },
@@ -1889,10 +1889,10 @@
    "number": 72,
    "rows": [
     "n mcc     mcc",
-    "t c c     c c",
+    "c c c     c c",
     "t ctccctccctcccm",
-    "t c   c c   c",
-    "ttt   mcc bcc"
+    "c c   c c   c",
+    "tct   mcc bcc"
    ],
    "loading": [
     "z pon     987",
@@ -2252,28 +2252,26 @@
   {
    "number": 86,
    "rows": [
-    "   cccc   piip",
-    "   c  c   i  i",
-    "   c  c   i  i",
-    "  cc  cc ip  pi",
-    "  c    c i    i",
-    "  c    c i    i",
-    " cc    ccu    pi",
-    " c      s      i",
-    "cc             pt",
-    "b               l"
+    "--ddddddddddddd",
+    "--dcccccccccccd-",
+    "--dcdddddddddcd-",
+    "--dcdcccccccdcd-",
+    "--dcdcdddddcdcd-",
+    "--dcdcdwccccdrd-",
+    "--dcdcdddddddcd-",
+    "--dcdcccccccccd-",
+    "bcrcddddddddddd-"
    ],
    "loading": [
-    "   cccc   ****",
-    "   c  c   *  *",
-    "   c  c   *  *",
-    "  cc  cc **  **",
-    "  c    c *    *",
-    "  c    c *    *",
-    " cc    ccc    **",
-    " c      c      *",
-    "cc             **",
-    "b               *"
+    "--kkkkkkkkkkkkk",
+    "--l44556677889m-",
+    "--l4ooooooooo9m-",
+    "--l3pffggghhqam-",
+    "--l3pfttttthqam-",
+    "--l3pesjjiiiqam-",
+    "--l2perrrrrrrbm-",
+    "--l2oedddcccbbm-",
+    "1112nnnnnnnnnnn-"
    ],
    "delay": 0.05,
    "x_hides": 25,
@@ -2445,26 +2443,28 @@
   {
    "number": 93,
    "rows": [
-    "--ddddddddddddd",
-    "--dcccccccccccd-",
-    "--dcdddddddddcd-",
-    "--dcdcccccccdcd-",
-    "--dcdcdddddcdcd-",
-    "--dcdcdwccccdrd-",
-    "--dcdcdddddddcd-",
-    "--dcdcccccccccd-",
-    "bcrcddddddddddd-"
+    "   cccc   piip",
+    "   c  c   i  i",
+    "   c  c   i  i",
+    "  cc  cc ip  pi",
+    "  c    c i    i",
+    "  c    c i    i",
+    " cc    ccu    pi",
+    " c      s      i",
+    "cc             pt",
+    "b               l"
    ],
    "loading": [
-    "--kkkkkkkkkkkkk",
-    "--l44556677889m-",
-    "--l4ooooooooo9m-",
-    "--l3pffggghhqam-",
-    "--l3pfttttthqam-",
-    "--l3pesjjiiiqam-",
-    "--l2perrrrrrrbm-",
-    "--l2oedddcccbbm-",
-    "1112nnnnnnnnnnn-"
+    "   cccc   ****",
+    "   c  c   *  *",
+    "   c  c   *  *",
+    "  cc  cc **  **",
+    "  c    c *    *",
+    "  c    c *    *",
+    " cc    ccc    **",
+    " c      c      *",
+    "cc             **",
+    "b               *"
    ],
    "delay": 0.05,
    "x_hides": 25,
@@ -2481,8 +2481,8 @@
     "--dcdcdddddcdcd-",
     "--dcdcdwccccdcd-",
     "--dcdcdddddddcd-",
-    "--dcd4ccccccccd-",
-    "bc8cddddddddddd-"
+    "--d2d4ccccccccd-",
+    "bc3cddddddddddd-"
    ],
    "loading": [
     "--kkkkkkkkkkkkk",
@@ -2504,13 +2504,13 @@
    "number": 95,
    "rows": [
     "--!!!!!!!!!!!!!-",
-    "--!iiiiciiiiii!-",
-    "--!i!!!!!!!!!i!-",
-    "--!i!iiiiiii!i!-",
-    "--!i!i!!!!!c!i!-",
-    "--!i!i!wcccu!i!-",
-    "--!i!i!!!!!!!i!-",
-    "--!i!iiiiiicii!-",
+    "--!ccccccccccc!-",
+    "--!c!!!!!!!!!c!-",
+    "--!c!ccccccc!c!-",
+    "--!c!c!!!!!c!c!-",
+    "--!c!c!wcccu!c!-",
+    "--!c!c!!!!!!!c!-",
+    "--!c!ccccccccc!-",
     "bcch!!!!!!!!!!!-"
    ],
    "loading": [
@@ -2558,9 +2558,9 @@
     "wu--------------",
     "-cccccccccccccc-",
     "-cccccccccccccc-",
-    "-!!!!!!!!!i!!!!-",
+    "-!!!!!!!!!c!!!!-",
     "-cccccccccccccc-",
-    "-!i!!!!!!!!!!!!-",
+    "-!c!!!!!!!!!!!!-",
     "-cccccccccccccc-",
     "-cccccccccccccc-",
     "--------------hb"
@@ -2586,11 +2586,11 @@
    "rows": [
     "wu--------------",
     "-cccccccccccccc-",
-    "-i!!!!!!!!!!!!!-",
+    "-c!!!!!!!!!!!!!-",
     "-cccccccccccccc-",
-    "-!!!!!!!!!!i!!!-",
+    "-!!!!!!!!!!c!!!-",
     "-cccccccccccccc-",
-    "-!!!!!!!!!i!!!!-",
+    "-!!!!!!!!!c!!!!-",
     "-cccccccccccccc-",
     "--------------hb"
    ],

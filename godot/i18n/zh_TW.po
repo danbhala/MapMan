@@ -246,6 +246,18 @@ msgstr "註：繞開毒地磚"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "註：每張圖面 T-0:20 · 走捷徑"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "註：隱藏的毒地磚已標出"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "註：每次開始時勾畫安全路線"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "略過這張圖面"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "重工"
