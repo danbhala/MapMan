@@ -204,6 +204,7 @@ func _on_release_looks() -> void:
 		return
 	for id in Wardrobe.ids():
 		Save.release(id)
+	_refresh_main_menu()
 	_toast_text("Every look released")
 
 
@@ -217,7 +218,15 @@ func _on_empty_wardrobe() -> void:
 	Save.worn = "classic"
 	Save.save_all()
 	game.player.outfit = "classic"
+	_refresh_main_menu()
 	_toast_text("Wardrobe emptied")
+
+
+## The main menu shows the wardrobe's count and the worn look: redraw it
+## behind the panel so a cheat shows at once.
+func _refresh_main_menu() -> void:
+	if game.menus.current == "main":
+		game.show_start_menu()
 
 
 func _on_reset_tuning() -> void:
