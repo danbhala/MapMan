@@ -42,15 +42,17 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   (`gh api -X PUT repos/danbhala/mapman/pulls/N/merge -f merge_method=squash
   -f commit_title="<PR title> (#N)"`). Commit messages on branches should be
   conventional too.
-- release-please keeps a "chore(main): release X.Y.Z" PR open with the next
+- release-please keeps a "chore(master): release X.Y.Z" PR open with the next
   version and changelog. Merging it tags `vX.Y.Z`, publishes the GitHub
   Release, and the Release workflow attaches the APK and refreshes the
-  `android-build` branch. Only merge it when the user asks for a release.
+  `android-build` branch. Only merge it when the user asks for a release, and
+  follow the `/release` skill: squash merges only, or the changelog doubles up.
 
 ## Workflow
 
 - Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit`
-  (every commit), `/open-pr` (every PR: title, body, labels, merging).
+  (every commit), `/open-pr` (every PR: title, body, labels), `/release`
+  (merging and shipping).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
 - Issues come from templates (bug, level, feature) with conventional titles;
