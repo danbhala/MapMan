@@ -98,7 +98,11 @@ func run() -> void:
 	save.seen.clear()
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
+	save.tilt_gauge = true
+
 	game = load("res://scenes/main.tscn").instantiate()
+	# The tilt gauge only shows on phones; draw it here so the shots match them.
+	game.show_gauge_anyway = true
 	root.add_child(game)
 	await frames(70)
 	await shot("01_main_menu")

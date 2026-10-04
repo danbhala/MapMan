@@ -101,7 +101,15 @@ func test_options_toggle_the_current_state() -> void:
 	game.menus.show_options()
 	assert_eq(
 		_press_all(),
-		["music off", "fx on", "vibration off", "reduce motion off", "language", "main menu"]
+		[
+			"music off",
+			"fx on",
+			"vibration off",
+			"reduce motion off",
+			"tilt gauge off",
+			"language",
+			"main menu"
+		]
 	)
 
 
