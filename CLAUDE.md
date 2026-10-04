@@ -12,6 +12,8 @@ now ported to Godot 4.5.
   from `Script/`. Rerunning it overwrites hand edits to `godot/data/levels.json`.
 - `android-build` branch – holds only the latest APK for phones. Never commit
   APKs or `godot/build/` to master.
+- `docs/wardrobe/` – the plan for unlockable looks (the wardrobe), not built
+  yet: read its README before touching outfits, unlocks or how MapMan is drawn.
 
 ## Checking your work
 
