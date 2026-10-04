@@ -309,8 +309,11 @@ func test_new_until_the_wardrobe_has_been_seen() -> void:
 	game._on_menu_action("wardrobe")
 	var dots: Array = game.menus._panel.find_children("*", "Polygon2D", true, false)
 	assert_eq(dots.size(), 1, "the new one is marked on the sheet")
-	assert_eq(Save.unseen(), 0, "and has been seen")
+	game._on_menu_action("wear party_hat")
+	dots = game.menus._panel.find_children("*", "Polygon2D", true, false)
+	assert_eq(dots.size(), 1, "still marked after a tap redraws the sheet")
 	game._on_menu_action("main menu")
+	assert_eq(Save.unseen(), 0, "seen once the sheet is left")
 	assert_does_not_have(_texts(), "NEW")
 
 

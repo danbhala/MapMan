@@ -901,10 +901,12 @@ func _on_menu_action(act: String) -> void:
 		"language":
 			menus.show_language()
 		"wardrobe":
-			# The sheet marks what's new, then nothing is new any more.
 			menus.show_wardrobe()
-			Save.mark_seen()
 		"main menu":
+			if menus.current == "wardrobe":
+				# Looked at: nothing in it is new any more (the marks stay
+				# while the sheet is open, through a tap that redraws it).
+				Save.mark_seen()
 			if game_active:
 				game_over(false)
 			show_start_menu()
