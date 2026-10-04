@@ -14,6 +14,7 @@ const SFX := {
 	"lose_life": "res://assets/sfx/pop.ogg",
 	"checkpoint": "res://assets/sfx/checkpoint.ogg",
 	"love": "res://assets/sfx/love.ogg",
+	"stamp": "res://assets/sfx/pop.ogg",
 }
 
 const GAME_TRACKS := [

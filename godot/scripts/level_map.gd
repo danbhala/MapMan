@@ -10,10 +10,17 @@ const TILE_DIR := "res://assets/tiles/"
 const ASSET_SCALE := 1.0 / 3.0  # the imported art is the original @3x set
 const TILE_ALPHA := 0.8
 const APPEAR_TIME := 0.25
+const FOLD_TIME := 0.25
+## Hiding and unhiding ripple out from the player, this long per tile away.
+const RIPPLE_STEP := 0.02
 
 ## Original tile pitch in points (96x69 px @3x).
 const TILE_W := 32.0
 const TILE_H := 23.0
+## Tile centres are centred on this line: the middle of the band between the
+## HUD's header strip (which ends at 41, plus MapMan's 81 px of height above
+## a tile) and its bottom bar (which starts at 318, less half a tile).
+const CENTRE_Y := (122.0 + 306.0) / 2.0
 
 
 class Tile:
@@ -35,7 +42,7 @@ var ends: Array[Tile] = []
 var position_key := Vector2i.ZERO  # where the player is (or is moving from)
 var tiles_hidden := false
 var is_checkpoint := false
-var checkpoint_flag: AnimatedSprite2D
+var checkpoint_flag: CheckpointFlag
 
 # Tile effects. Each maps Vector2i -> bool (true = still active).
 var reverses := {}
@@ -65,7 +72,6 @@ var _min_y := 0.0
 var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
-var _checkpoint_frames: SpriteFrames
 
 # --- texture helpers -----------------------------------------------------
 
@@ -166,10 +172,12 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	for row in rows:
 		max_columns = max(max_columns, String(row).length())
 
-	# Same centring maths as Map.load_level, in the original's y-up space,
-	# flipped to Godot's y-down space in _screen_pos().
+	# The original's centring maths in its y-up space, flipped to Godot's
+	# y-down space in _screen_pos(), with the map centred on CENTRE_Y.
 	_screen_h = screen_size.y
-	_min_y = screen_size.y / 2.0 - rows.size() * TILE_H / 2.0 + TILE_H * 2.0
+	# _screen_pos() puts row r at screen_h - _min_y - (rows - 2 - r) * TILE_H,
+	# so the middle row lands on CENTRE_Y with this _min_y.
+	_min_y = screen_size.y - CENTRE_Y - (rows.size() - 3) * TILE_H / 2.0
 	_min_x = screen_size.x * 0.5 - (max_columns * 0.5) * TILE_W + 0.5 * TILE_W
 
 	var loadings := {}  # loading char -> Array[Tile]
@@ -291,12 +299,12 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		unhides[key] = true
 
 
-func _appear(node: Node2D, wait: float) -> void:
+func _appear(node: Node2D, wait: float, full := ASSET_SCALE) -> void:
 	var tw := create_tween()
 	tw.tween_interval(wait)
 	(
 		tw
-		. tween_property(node, "scale", Vector2.ONE * ASSET_SCALE, APPEAR_TIME)
+		. tween_property(node, "scale", Vector2.ONE * full, APPEAR_TIME)
 		. set_trans(Tween.TRANS_BACK)
 		. set_ease(Tween.EASE_OUT)
 	)
@@ -313,25 +321,38 @@ func _set_start_hidden(tile: Tile) -> void:
 
 
 func _add_checkpoint_flag(tile: Tile, wait: float) -> void:
-	if _checkpoint_frames == null:
-		_checkpoint_frames = SpriteFrames.new()
-		_checkpoint_frames.set_animation_speed("default", 60.0)
-		for i in range(1, 118):
-			_checkpoint_frames.add_frame(
-				"default", load("res://assets/checkpoint/checkpoint%03d.png" % i)
-			)
-	var flag := AnimatedSprite2D.new()
-	flag.sprite_frames = _checkpoint_frames
-	flag.centered = false
-	# anchor (0.1, 0.05) in the original's y-up space
-	flag.offset = Vector2(-0.1 * 36.0, -0.95 * 54.0)
+	var flag := CheckpointFlag.new()
+	# Its pole stands on the exit tile's north rim, like the original's.
 	flag.position = tile.position - Vector2(0, TILE_H / 2.0)
 	flag.z_index = 5
 	flag.scale = Vector2.ZERO
 	add_child(flag)
-	flag.play()
 	checkpoint_flag = flag
-	_appear(flag, wait)
+	_appear(flag, wait, 1.0)
+
+
+## The checkpoint flag, drawn in code: an inked pole with a gold pennant
+## that waves. The original's dark flag art vanished on the blue field.
+class CheckpointFlag:
+	extends Node2D
+	const POLE := 26.0
+	var _clock := 0.0
+
+	func _process(delta: float) -> void:
+		_clock += delta
+		queue_redraw()
+
+	func _draw() -> void:
+		draw_line(Vector2.ZERO, Vector2(0, -POLE), Blueprint.INK, 1.5, true)
+		var wave := sin(_clock * 6.0) * 1.5
+		var pennant := PackedVector2Array(
+			[
+				Vector2(0.5, -POLE),
+				Vector2(13.0 + wave, -POLE + 5.0 + wave * 0.5),
+				Vector2(0.5, -POLE + 10.0)
+			]
+		)
+		draw_colored_polygon(pennant, Blueprint.GOLD)
 
 
 func loaded() -> bool:
@@ -347,31 +368,92 @@ func _process(delta: float) -> void:
 
 # Hiding uses visibility, not scale: Godot never stores a scale of exactly
 # zero, so a "scale == 0" check can't tell a hidden tile from a visible one.
-func _hide_tile(tile: Tile) -> void:
+# The fold and unfold animations run on top: a hidden tile is hidden at once
+# and a stand-in folds away; an unhidden one is visible at once and unfolds.
+func _hide_tile(tile: Tile, animate := false) -> void:
 	if tile.can_hide and tile.sprite:
+		if animate and tile.sprite.visible and Blueprint.motion():
+			_fold(tile)
 		tile.sprite.visible = false
 
 
-func _unhide_tile(tile: Tile) -> void:
+func _unhide_tile(tile: Tile, animate := false) -> void:
 	if tile.sprite:
+		if animate and not tile.sprite.visible and Blueprint.motion():
+			_unfold(tile)
 		tile.sprite.visible = true
+
+
+func _ripple_delay(tile: Tile) -> float:
+	var d := tile.key - position_key
+	return (absi(d.x) + absi(d.y)) * RIPPLE_STEP
+
+
+## A copy of the tile folds flat (scale.y to zero) and goes.
+func _fold(tile: Tile) -> void:
+	var ghost := Sprite2D.new()
+	ghost.texture = tile.sprite.texture
+	ghost.position = tile.sprite.position
+	ghost.scale = tile.sprite.scale
+	ghost.modulate = tile.sprite.modulate
+	add_child(ghost)
+	var tw := create_tween()
+	tw.tween_interval(_ripple_delay(tile))
+	tw.tween_property(ghost, "scale:y", 0.0, FOLD_TIME).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(ghost.queue_free)
+
+
+## The tile unfolds from flat to full height.
+func _unfold(tile: Tile) -> void:
+	var full: float = tile.sprite.scale.y
+	tile.sprite.scale.y = 0.001
+	var tw := create_tween()
+	tw.tween_interval(_ripple_delay(tile))
+	(
+		tw
+		. tween_property(tile.sprite, "scale:y", full, APPEAR_TIME)
+		. set_trans(Tween.TRANS_BACK)
+		. set_ease(Tween.EASE_OUT)
+	)
 
 
 func unhide_tile_at(key: Vector2i) -> void:
 	if tiles.has(key):
-		_unhide_tile(tiles[key])
+		_unhide_tile(tiles[key], true)
 
 
 func hide_tiles() -> void:
 	for tile: Tile in tiles.values():
-		_hide_tile(tile)
+		_hide_tile(tile, true)
 	tiles_hidden = true
 
 
 func unhide_tiles() -> void:
 	for tile: Tile in tiles.values():
-		_unhide_tile(tile)
+		_unhide_tile(tile, true)
 	tiles_hidden = false
+
+
+## A short note that floats up from the player's tile and fades: "+1 ★".
+## Notes still in the air push a new one higher so they don't pile up.
+func float_text(text: String, color: Color) -> void:
+	if not tiles.has(position_key):
+		return
+	var in_flight := 0
+	for child in get_children():
+		if child is Label:
+			in_flight += 1
+	var pos: Vector2 = tiles[position_key].position
+	var start := pos + Vector2(-40, -92 - 16 * in_flight)
+	var l := Blueprint.label(self, text, 13, color, start, 700, 80, HORIZONTAL_ALIGNMENT_CENTER)
+	l.z_index = 15
+	if not Blueprint.motion():
+		get_tree().create_timer(0.9).timeout.connect(l.queue_free)
+		return
+	var tw := create_tween().set_parallel()
+	tw.tween_property(l, "position:y", start.y - 36, 0.9).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(l, "modulate:a", 0.0, 0.9).set_delay(0.3)
+	tw.chain().tween_callback(l.queue_free)
 
 
 func reset_hide() -> void:
@@ -439,11 +521,22 @@ func on(effect: Dictionary) -> bool:
 	return effect.get(position_key, false)
 
 
-## Consume the effect under the player and draw a plain tile there.
+## Consume the effect under the player and draw a plain tile there, with a
+## little pop as it goes.
 func clear(effect: Dictionary) -> void:
 	if effect.has(position_key):
 		effect[position_key] = false
-		tiles[position_key].sprite.texture = _tex("blank1.png")
+		var sprite: Sprite2D = tiles[position_key].sprite
+		sprite.texture = _tex("blank1.png")
+		if Blueprint.motion() and sprite.visible:
+			var tw := create_tween()
+			tw.tween_property(sprite, "scale", Vector2.ONE * ASSET_SCALE * 1.18, 0.08)
+			(
+				tw
+				. tween_property(sprite, "scale", Vector2.ONE * ASSET_SCALE, 0.16)
+				. set_trans(Tween.TRANS_BACK)
+				. set_ease(Tween.EASE_OUT)
+			)
 
 
 func vanish_duration() -> int:

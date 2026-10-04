@@ -104,7 +104,7 @@ func test_bests_keep_the_best_of_each() -> void:
 func test_locked_levels_cannot_be_played() -> void:
 	Save.furthest_level = 2
 	game._on_menu_action("practice")
-	var buttons: Array = game.menus._panel.find_children("*", "TextureButton", true, false)
+	var buttons: Array = game.menus._panel.find_children("*", "Button", true, false)
 	var open: Array = buttons.filter(func(b): return not b.disabled)
 	var locked: Array = buttons.filter(func(b): return b.disabled)
 	assert_eq(locked.size(), 1, "level 3 of 3 is locked")

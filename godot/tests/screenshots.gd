@@ -95,7 +95,7 @@ func run() -> void:
 
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
-	await frames(40)
+	await frames(70)
 	await shot("01_main_menu")
 
 	game._on_menu_action("play game")
@@ -112,7 +112,7 @@ func run() -> void:
 	Input.action_release("move_left")
 
 	game.show_pause_menu()
-	await frames(30)
+	await frames(70)
 	await shot("05_pause")
 	game._on_menu_action("unpause")
 
@@ -134,8 +134,30 @@ func run() -> void:
 	game.reverse = false
 	game.vanish = 0
 
+	# Stuck in a cobweb, then the tiles hidden.
+	game.stuck = true
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+	await shot("15_stuck")
+	game.stuck = false
+	game.map.hide_tiles()
+	game._flash("_last_hide")
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+	game._flash("_last_hide")  # the flash is wall-clock timed: keep it on a slow runner
+	game.set_controls_message()
+	await frames(1)
+	await shot("16_tiles_hidden")
+	game.map.unhide_tiles()
+	game._flash("_last_hide")
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+
 	game.advance_level(false)
-	await frames(80)
+	await frames(200)  # the inspection table counts up, then PASSED lands
 	await shot("08_level_clear")
 	game._on_menu_action("next level")
 
@@ -144,10 +166,19 @@ func run() -> void:
 	game.load_level()
 	game.reset_all()
 	game.hud.show_stats(false)
+	game.hud.show_level(true)  # as new_game() does for the tutorial
 	await frames(60)
 	await shot("09_tutorial")
 
+	# Losing a life with lives to spare, then the last one.
 	game.tutorial = false
+	game.lives = 2
+	game.lose_life()
+	await frames(90)
+	await shot("17_lose_life")
+	game._on_menu_action("try again")
+	while not game._timer_running:
+		await process_frame
 	game.lives = 1
 	game.lose_life()
 	await frames(90)
@@ -170,15 +201,35 @@ func run() -> void:
 
 	game.game_over(false)
 	game._on_menu_action("options")
-	await frames(40)
+	await frames(70)
 	await shot("13_options")
 
 	# Practice: levels reached so far, with bests on some of them.
 	save.furthest_level = 23
 	save.bests = {21: {"time": 7, "stars": 1}, 22: {"time": 12, "stars": 0}}
 	game._on_menu_action("practice")
-	await frames(40)
+	await frames(90)
 	await shot("14_practice")
+
+	# The remaining sheets: checkpoints, confirm quit, first run.
+	save.checkpoints = {10: 120, 30: 400}
+	game._on_menu_action("main menu")
+	game._on_menu_action("restart from checkpoint")
+	await frames(80)
+	await shot("18_checkpoints")
+	game._on_menu_action("main menu")
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.show_pause_menu()
+	game._on_menu_action("confirm quit")
+	await frames(70)
+	await shot("19_confirm_quit")
+	game._on_menu_action("end game")
+	save.first_play = true
+	game._on_menu_action("play from start")
+	await frames(70)
+	await shot("20_first_play")
 
 	if failures.is_empty():
 		print("SCREENSHOTS OK")

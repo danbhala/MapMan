@@ -10,8 +10,17 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `update_player()`; movement in `move_player()` / `_try_axis()`.
 - `scripts/level_map.gd` owns the tile grid, loading animation and per-tile
   effect state. Grid keys are `Vector2i(column, row)`, row 0 at the top.
-- `scripts/menus.gd` draws menus from the original @3x art; buttons emit the
-  original's action strings, handled in `main.gd` `_on_menu_action()`.
+- `scripts/menus.gd` draws every menu as a Blueprint drawing sheet (frame,
+  grid, parts-list rows, stamps) in code; buttons emit the original's action
+  strings, handled in `main.gd` `_on_menu_action()`.
+- `scripts/blueprint.gd` is the look: the palette (every colour checked for
+  contrast on the blue field), JetBrains Mono at its weights, and the sheet
+  furniture the menus, `hud.gd` and the field share. All decorative motion
+  (stamp slams, sheets drawing on, tiles folding) goes through
+  `Blueprint.motion()`, which is off when the player sets "reduce motion".
+- `scripts/player.gd` draws MapMan (and MapWoman, `art = "woman"`) in
+  `_draw()`: look, blink, walk, squash, cobweb, spin and death are dials the
+  game turns; the facing API is the sprite version's.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
@@ -21,8 +30,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
   let a cheat work when `Dev.enabled` is false.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
-- Art is the original @3x set, drawn at scale 1/3. Fonts are bundled
-  (Liberation, OFL) so screenshots match on every machine.
+- Tile art is the original @3x set, drawn at scale 1/3 (the menu, button and
+  character art is no longer used). Fonts are bundled (JetBrains Mono,
+  Liberation; OFL) so screenshots match on every machine.
 
 ## Traps already hit here
 
@@ -36,11 +46,20 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 - Tests must set `Save.persist = false` and `Dev.persist = false` so they never
   overwrite real progress, and `Dev.enabled = false` unless testing dev tools.
 - Don't hand-edit `.uid` files, UIDs in `.tscn` files, or anything in `.godot/`.
+- A `--script` SceneTree script (autoplay, screenshots, tools) compiles every
+  class it names (`LevelMap`, and so `Blueprint`) before the autoloads exist:
+  a bare `Save`/`Audio`/`Dev` in those scripts is a compile error. Reach them
+  through `Blueprint.autoload("Save")` there, or keep the reference in
+  `main.gd`/`menus.gd`, which only load with the scene.
+- `DisplayServer`'s live-region enum is `DisplayServer.LIVE_POLITE`, not
+  `ACCESSIBILITY_LIVE_POLITE`.
 
 ## Tests
 
 - `tests/unit/` – GUT tests, one per tile rule; add one for every new rule.
 - `tests/autoplay_test.gd` – a bot walks every level along a safe route; the
   proof that all levels are still solvable.
-- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of ten screens.
-  Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
+- `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of twenty
+  screens. Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
+- `tools/record_tour.sh` records a video tour (menus, a level, pause, level
+  clear, a lost life) with Godot's Movie Maker mode, for showing changes.
