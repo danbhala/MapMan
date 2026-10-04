@@ -20,7 +20,6 @@ const VANISH_COLOR := Blueprint.LILAC
 const STUCK_COLOR := Blueprint.GOLD
 const DEATH_COLOR := Blueprint.PINK
 const HIDDEN_COLOR := Blueprint.MINT
-## The notes that float up from a tile as it is collected.
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
@@ -224,6 +223,8 @@ func _process(delta: float) -> void:
 	_update_timer(delta)
 
 	if dead:
+		if map.moving:  # a step the clock cut short still lands on its tile
+			map.update_move(delta)
 		player.update_at(map.get_player_position(), delta)
 		if player.death_finished():
 			finish_lose_life()
@@ -265,7 +266,7 @@ func set_time_message(time_left: int) -> void:
 		hud.set_time_message("go!")
 	elif _low_time:
 		hud.set_time_message("hurry up!")
-	elif time_left > 15 and String(levels[level - 1].get("message", "")) != "":
+	elif time_left > 15 and started() and String(levels[level - 1].get("message", "")) != "":
 		hud.set_time_message(levels[level - 1]["message"])
 	else:
 		hud.set_time_message("")
@@ -277,10 +278,10 @@ func set_background() -> void:
 	var color := Blueprint.INK
 	if not game_active:
 		color = Blueprint.INK
-	elif map.tiles_hidden:
-		color = HIDDEN_COLOR
 	elif dead:
 		color = DEATH_COLOR
+	elif map.tiles_hidden:
+		color = HIDDEN_COLOR
 	elif reverse:
 		color = REVERSE_COLOR
 	elif vanish > 0:
@@ -309,7 +310,7 @@ func set_controls_message() -> void:
 		hud.show_effect("life")
 		hud.set_controls_message("Extra Life", 20)
 	elif reverse and vanish > 0:
-		hud.set_controls_message("Controls reversed &\nsee you again in %d moves" % vanish, 18)
+		hud.set_controls_message("Controls reversed &\n" + _see_you(vanish), 18)
 		hud.show_double_effect("reverse", "vanish")
 	elif reverse and stuck:
 		hud.set_controls_message(
@@ -317,7 +318,7 @@ func set_controls_message() -> void:
 		)
 		hud.show_double_effect("reverse", "sticky")
 	elif reverse and _last_hide >= 0.0 and map.tiles_hidden:
-		hud.set_controls_message("Controls reversed &\nand tiles hidden", 18)
+		hud.set_controls_message("Controls reversed &\ntiles hidden", 18)
 		hud.show_double_effect("reverse", "hide")
 	elif stuck:
 		hud.set_controls_message("Stuck, %s to release" % shake_word, 20)
@@ -326,7 +327,7 @@ func set_controls_message() -> void:
 		hud.set_controls_message("Controls reversed", 20)
 		hud.show_effect("reverse")
 	elif vanish > 0:
-		hud.set_controls_message("See you again in %d moves" % vanish, 18)
+		hud.set_controls_message(_see_you(vanish, true), 18)
 		hud.show_effect("vanish")
 	elif _last_hide >= 0.0:
 		if map.tiles_hidden:
@@ -338,6 +339,11 @@ func set_controls_message() -> void:
 	else:
 		hud.set_controls_message("")
 		hud.clear_effect()
+
+
+func _see_you(n: int, capital := false) -> String:
+	var text := "see you again in %d move%s" % [n, "" if n == 1 else "s"]
+	return text.left(1).to_upper() + text.substr(1) if capital else text
 
 
 # --- movement (move_player / move_player_x / move_player_y) ----------------

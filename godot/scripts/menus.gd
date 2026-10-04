@@ -325,7 +325,9 @@ func _title_block(number: String, color: Color) -> Control:
 	Blueprint.line(block, Blueprint.box_points(Vector2.ZERO, TITLE_BLOCK), color, 1.2)
 	var mid := TITLE_BLOCK.x / 2.0
 	Blueprint.line(block, PackedVector2Array([Vector2(mid, 0), Vector2(mid, TITLE_BLOCK.y)]), color)
-	var rev: String = Dev.build_info.version
+	# "1.2.0" of "1.2.0-pr.16": the build suffix is on the DEV overlay and
+	# would run into the next column here.
+	var rev: String = Dev.build_info.version.get_slice("-", 0)
 	if rev == "":
 		rev = TEXT.rev_dev
 	var left: String = TEXT.title_block % [rev, number]

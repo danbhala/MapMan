@@ -69,6 +69,59 @@ func test_sticky_tile_webs_him_and_a_shake_frees_him() -> void:
 	assert_eq(game.player.web, 0.0, "shaken off")
 
 
+func test_stuck_again_soon_after_a_shake_still_webs_him() -> void:
+	_start("bycyw")
+	_step_on(1)
+	game.stuck = false  # the shake-off starts playing
+	await wait_seconds(0.1)
+	_step_on(3)
+	assert_true(game.stuck)
+	await wait_seconds(0.7)
+	assert_almost_eq(game.player.web, 1.0, 0.01, "wrapped again, old shake-off stopped")
+	assert_eq(game.player.shake_off, 0.0)
+
+
+func test_timeout_mid_step_lands_before_dying() -> void:
+	_start("bccw")
+	game.move(Vector2i.RIGHT, 0.2)
+	assert_true(game.map.moving)
+	game.lose_life("timeout")
+	game._process(0.5)  # a dead frame still finishes the step
+	assert_false(game.map.moving)
+	assert_eq(game.map.position_key, Vector2i(1, 0), "died on a tile, not between two")
+
+
+func test_death_colour_beats_hidden_tiles() -> void:
+	_start("bhdw")
+	_step_on(1)
+	assert_true(game.map.tiles_hidden)
+	assert_eq(game.hud.frame.default_color, Blueprint.MINT)
+	_step_on(2)
+	assert_true(game.dead)
+	assert_eq(game.hud.frame.default_color, Blueprint.PINK)
+
+
+func test_vanish_note_counts_moves_in_the_singular() -> void:
+	_start("b1cw")
+	_step_on(1)
+	assert_eq(game.vanish, 1)
+	assert_eq(game.hud.note_label.text, "SEE YOU AGAIN IN 1 MOVE")
+
+
+func test_checkpoint_flag_stands_on_the_exit() -> void:
+	game.levels = [{"rows": ["bcw"], "delay": 0.0, "checkpoint": true}]
+	game.new_game(1)
+	assert_not_null(game.map.checkpoint_flag)
+	var exit_pos: Vector2 = game.map.tiles[Vector2i(2, 0)].position
+	assert_eq(game.map.checkpoint_flag.position, exit_pos - Vector2(0, LevelMap.TILE_H / 2.0))
+
+
+func test_map_sits_between_the_strips() -> void:
+	_start("bcw")
+	var y: float = game.map.tiles[Vector2i(0, 0)].position.y
+	assert_almost_eq(y, LevelMap.CENTRE_Y, 0.001, "a one-row map sits on the band's centre")
+
+
 func test_facing_flips_him_for_left() -> void:
 	Save.reduce_motion = true
 	_start("bccw")

@@ -58,6 +58,7 @@ var _dying := false
 var _death_clock := 0.0
 var _idle_clock := 0.0
 var _death_tween: Tween
+var _web_tween: Tween
 
 
 func _ready() -> void:
@@ -112,6 +113,9 @@ func reset_pose() -> void:
 	if _death_tween:
 		_death_tween.kill()
 		_death_tween = null
+	if _web_tween:
+		_web_tween.kill()
+		_web_tween = null
 	_dying = false
 	dead = 0.0
 	web = 0.0
@@ -203,21 +207,28 @@ func spin_around() -> void:
 
 
 ## A sticky tile wraps him in cobweb; shaking it off sends the strands flying.
+## A new web stops any shake-off still playing, so a tile two steps on wraps
+## him again instead of being overwritten by the old tween.
 func set_stuck(on: bool) -> void:
+	if _web_tween:
+		_web_tween.kill()
+		_web_tween = null
+	shake_x = 0.0
 	if on:
 		shake_off = 0.0
 		if Blueprint.motion() and is_inside_tree():
-			create_tween().tween_property(self, "web", 1.0, 0.45)
+			_web_tween = create_tween()
+			_web_tween.tween_property(self, "web", 1.0, 0.45)
 		else:
 			web = 1.0
 	elif web > 0.0:
 		if Blueprint.motion() and is_inside_tree():
-			var tw := create_tween().set_parallel()
-			tw.tween_method(
+			_web_tween = create_tween().set_parallel()
+			_web_tween.tween_method(
 				func(k: float): shake_x = sin(k * 50.0) * 6.0 * (1.0 - k), 0.0, 1.0, 0.5
 			)
-			tw.tween_property(self, "shake_off", 1.0, 0.5)
-			tw.tween_property(self, "web", 0.0, 0.5).set_delay(0.15)
+			_web_tween.tween_property(self, "shake_off", 1.0, 0.5)
+			_web_tween.tween_property(self, "web", 0.0, 0.5).set_delay(0.15)
 		else:
 			web = 0.0
 			shake_off = 0.0
@@ -294,7 +305,7 @@ func _draw() -> void:
 	draw_set_transform(origin, lean, mirror)
 	var hc := Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy + sink)
 	if dead > 0.0:
-		draw_circle(hc, 15.0, head)
+		draw_circle(hc, 15.0 * (1.0 - dead * 0.15), head)  # swallowed whole
 		if art == "woman":
 			_draw_bow(hc + Vector2(-9.0, -11.0), body)
 		_draw_eyes(hc, eyes)
