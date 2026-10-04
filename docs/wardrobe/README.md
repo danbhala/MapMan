@@ -380,9 +380,8 @@ proposed; MapWoman is exactly the ending's MapWoman; practice clears don't
 count.
 
 Left for later, if wanted: the bench and feats (needs save counters),
-shuffling within tiers, seasonal looks. Known and not touched here: walking
-left, MapMan leans backwards (the lean is multiplied by the facing and then
-mirrored); the Classic walk columns of sheet 02 show it.
+shuffling within tiers, seasonal looks. (MapMan used to lean when walking;
+he no longer does, and his walks are the original sprite's frame for frame.)
 
 ## The prototype
 

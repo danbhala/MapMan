@@ -13,17 +13,22 @@ extends RefCounted
 ## Measuring draws nothing and grows `bounds` instead, in his node's units, so
 ## tests can check a look's size without a screen.
 
-## The body at rest: a bell from its hem at y -26 up to -60, 22 either side,
-## as wide and as tall against the head as the original sprite drew it.
+## The body at rest: a bell from its hem at y -26 up to -60, 21.9 either
+## side, measured off the original sprite (81 px of 162 wide, 137 px tall on
+## its 176x320 frames, 3.71 px to one of these units).
 const HEM := -26.0
 const BODY_TOP := -60.0
-const BODY_HALF := 22.0
+const BODY_HALF := 21.9
+## The bell is a touch fuller than a half-ellipse: its width follows
+## sqrt(1 - k^DOME) up its height, which fits the sprite to within a pixel.
+const DOME := 2.1
 ## Below the hem the bell rounds off, bulging this far down in the middle.
-const LIP := 4.5
-const HEAD_R := 15.0
+const LIP := 3.9
+## The sprite's head: 54 px across its 308.8 px height.
+const HEAD_R := 14.55
 ## Rest points stand this much higher on his legs than their numbers say:
 ## the sprite's legs were longer than the first drawn figure's.
-const RISE := 6.0
+const RISE := 6.6
 ## How wide the soft line round a filled shape's edge is: a hairline, so the
 ## line's own antialiasing softens the edge without the shape growing.
 const EDGE := 0.02
@@ -42,6 +47,8 @@ var bounds := Rect2()
 # The pose, set by Player before each draw.
 var look := Vector2.ZERO
 var walking := 0.0
+## 0 front or back on .. 1 side on: his back is a little slimmer side on.
+var side_on := 0.0
 var phase := 0.0
 var idle_clock := 0.0
 var blink := 0.0
@@ -133,9 +140,10 @@ func t(v: Vector2) -> Vector2:
 	return hat_xf * (hc + v)
 
 
-## Where an eye is (side -1 or 1), as the eyes have always been placed.
+## Where an eye is (side -1 or 1): where the sprite put them, 6.6 either side
+## of the head's centre and 4 below it, sliding a little with the look.
 func eye(side: float) -> Vector2:
-	return hc + Vector2(side * 5.5 + look.x * 3.5, 1.0 + look.y * 2.5)
+	return hc + Vector2(side * 6.6 + look.x * 2.0, 4.05 + look.y * 0.5)
 
 
 ## How open the eyes are: blinking shuts them, happiness widens them.
@@ -219,7 +227,7 @@ func classic_eyes(c: Color) -> void:
 		var pts := PackedVector2Array()
 		for k in 24:
 			var a := TAU * k / 24.0
-			pts.append(e + Vector2(cos(a) * 2.4, sin(a) * 2.4 * open))
+			pts.append(e + Vector2(cos(a) * 2.0, sin(a) * 2.0 * open))
 		poly(pts, c)
 
 
@@ -228,10 +236,10 @@ func band(y0: float, y1: float, c: Color) -> void:
 	var pts := PackedVector2Array()
 	for i in 7:
 		var y := lerpf(y0, y1, i / 6.0)
-		pts.append(b(-dome_w(y), y))
+		pts.append(b(edges(y).x, y))
 	for i in 7:
 		var y := lerpf(y1, y0, i / 6.0)
-		pts.append(b(dome_w(y), y))
+		pts.append(b(edges(y).y, y))
 	poly(pts, c)
 
 
@@ -240,7 +248,7 @@ func stripe(x0: float, x1: float, c: Color) -> void:
 	var pts := PackedVector2Array([b(x0, HEM)])
 	for i in 6:
 		var x := lerpf(x0, x1, i / 5.0)
-		pts.append(b(x, dome_top(x)))
+		pts.append(b(x, top_at(x)))
 	pts.append(b(x1, HEM))
 	poly(pts, c)
 
@@ -321,23 +329,55 @@ func body_points() -> PackedVector2Array:
 	var pts := PackedVector2Array()
 	for i in 25:
 		var a := PI * i / 24.0
-		pts.append(b(cos(a) * BODY_HALF, HEM - sin(a) * (HEM - BODY_TOP)))
+		var y := dome_top(cos(a) * BODY_HALF)
+		pts.append(b(cos(a) * BODY_HALF + (back_inset(y) if a > PI / 2.0 else 0.0), y))
 	for i in range(1, 24):
 		var a := PI * i / 24.0
 		pts.append(b(-cos(a) * BODY_HALF, HEM + sin(a) * LIP))
 	return pts
 
 
+## Side on, the sprite drew his back (the left side before mirroring) a
+## little straighter: its edge sits this far in from the bell's at rest
+## height y, most of the way up, nothing at the hem.
+func back_inset(y: float) -> float:
+	var k := clampf((HEM - y) / (HEM - BODY_TOP), 0.0, 1.0)
+	return 1.75 * pow(sin(k * PI / 2.0), 2.0) * side_on
+
+
+## The body's edge at rest height y: x of the left (back) and right edges.
+func edges(y: float) -> Vector2:
+	var w := dome_w(y)
+	return Vector2(-w + back_inset(y), w)
+
+
+## The body's top edge at rest x this frame (the back may be inset).
+func top_at(x: float) -> float:
+	if x >= 0.0 or side_on <= 0.0:
+		return dome_top(x)
+	# The back edge rises inwards, so the height where it passes x is found
+	# by halving: between the hem (far out) and the top (at the centre).
+	var lo := HEM
+	var hi := BODY_TOP
+	for _i in 24:
+		var mid := (lo + hi) / 2.0
+		if edges(mid).x < x:
+			lo = mid
+		else:
+			hi = mid
+	return (lo + hi) / 2.0
+
+
 ## Half the body's width at rest height y.
 static func dome_w(y: float) -> float:
 	var k := clampf((HEM - y) / (HEM - BODY_TOP), 0.0, 1.0)
-	return BODY_HALF * sqrt(1.0 - k * k)
+	return BODY_HALF * sqrt(1.0 - pow(k, DOME))
 
 
 ## The body's top edge at rest x.
 static func dome_top(x: float) -> float:
 	var k := clampf(x / BODY_HALF, -1.0, 1.0)
-	return HEM - (HEM - BODY_TOP) * sqrt(1.0 - k * k)
+	return HEM - (HEM - BODY_TOP) * pow(1.0 - k * k, 1.0 / DOME)
 
 
 ## A star's points, `inner` the ratio of the inner radius to the outer.
