@@ -93,41 +93,47 @@ static func vanish_moves(t: String, x_hides: int) -> int:
 
 
 func _texture_for(t: String, random_blank := true) -> Texture2D:
-	if vanish_moves(t, _x_hides) > 0:
-		return _tex("vanish.png")
+	var file := texture_file(t, _x_hides)
+	if file == "blank1.png" and random_blank:
+		file = "blank%d.png" % randi_range(1, 4)
+	return _tex(file)
+
+
+## The art for tile `t` (in TILE_DIR); plain tiles are blank1.png.
+static func texture_file(t: String, x_hides := 25) -> String:
+	if vanish_moves(t, x_hides) > 0:
+		return "vanish.png"
 	match t.to_lower():
 		"b":
-			return _tex("start.png")
+			return "start.png"
 		"h":
-			return _tex("hide.png")
+			return "hide.png"
 		"u":
-			return _tex("unhide.png")
+			return "unhide.png"
 		"s":
-			return _tex("south.png")
+			return "south.png"
 		"e":
-			return _tex("east.png")
+			return "east.png"
 		"w":
-			return _tex("west.png")
+			return "west.png"
 		"n":
-			return _tex("north.png")
+			return "north.png"
 	match t:
 		"p", "@":
-			return _tex("points.png")
+			return "points.png"
 		"d", "!":
-			return _tex("death.png")
+			return "death.png"
 		"l", "+":
-			return _tex("life.png")
+			return "life.png"
 		"m":
-			return _tex("more_time.png")
+			return "more_time.png"
 		"t":
-			return _tex("less_time.png")
+			return "less_time.png"
 		"y":
-			return _tex("sticky.png")
+			return "sticky.png"
 		"r":
-			return _tex("reverse.png")
-	if random_blank:
-		return _tex("blank%d.png" % randi_range(1, 4))
-	return _tex("blank1.png")
+			return "reverse.png"
+	return "blank1.png"
 
 
 # --- loading -------------------------------------------------------------

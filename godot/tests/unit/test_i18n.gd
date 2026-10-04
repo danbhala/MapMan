@@ -12,6 +12,12 @@ const UNTRANSLATED := [
 	"001-B",
 	"001-C",
 	"001-D",
+	"001-E",
+	"001-F",
+	"D%d",
+	"R%d",
+	"D%d-S",
+	"%s  ·  %s",
 	"%d/%d",
 	"END",
 	"CP",
@@ -67,6 +73,7 @@ func after_each() -> void:
 	Save.reduce_motion = false
 	Save.set_locale("")
 	_pin_wardrobe("classic", [])
+	DraftingSheet.tool = "c"
 
 
 ## The wardrobe with `released` in it, the last of them not seen yet (NEW on
@@ -88,7 +95,7 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT]:
+	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, DraftingSheet.TEXT]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]
@@ -96,12 +103,17 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 				if _has_letters(text) and text not in UNTRANSLATED:
 					var known: bool = msgids.has(text) or plurals.has(text)
 					assert_true(known, "catalog has %s: %s" % [key, text])
+	for entry in DraftingSheet.TOOLS:
+		if entry[1] != "":
+			assert_true(msgids.has(entry[1]), "catalog has the tool %s" % entry[1])
 
 
 func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
 	var literal := RegEx.create_from_string('\\btr(?:_n)?\\(\\s*"((?:[^"\\\\]|\\\\.)*)"')
 	var count := 0
-	for script in ["main.gd", "hud.gd", "menus.gd", "wardrobe_sheet.gd", "level_map.gd"]:
+	var scripts := ["main.gd", "hud.gd", "menus.gd", "wardrobe_sheet.gd", "level_map.gd"]
+	scripts.append_array(["drafting_sheet.gd", "draft.gd"])
+	for script in scripts:
 		var source := FileAccess.get_file_as_string("res://scripts/" + script)
 		for m in literal.search_all(source):
 			var text: String = m.get_string(1).c_unescape()
@@ -233,6 +245,52 @@ func _wardrobe_sheet(worn: String) -> void:
 	game.menus.show_wardrobe()
 
 
+## The drafting table's slots: a signed level, one still a draft (with an
+## exit, so the status asks for a test) and empty ones.
+func _drafts() -> Array:
+	var signed := Draft.new(0)
+	for x in 6:
+		signed.paint(Vector2i(x + 2, 4), "c")
+	signed.paint(Vector2i(1, 4), "b")
+	signed.paint(Vector2i(8, 4), "e")
+	signed.signed = true
+	var draft := Draft.new(1)
+	draft.paint(Vector2i(3, 3), "b")
+	draft.paint(Vector2i(4, 3), "e")
+	var drafts := [signed, draft]
+	for i in range(2, Draft.SLOTS):
+		drafts.append(Draft.new(i))
+	return drafts
+
+
+## The longest level codes there are, as received levels.
+func _received() -> Array:
+	var data: Dictionary = JSON.parse_string(
+		FileAccess.get_file_as_string("res://tests/data/level_codes.json")
+	)
+	var codes: Array = data.codes.map(func(c): return String(c.code))
+	codes.sort_custom(func(a, b): return a.length() > b.length())
+	return codes.slice(0, Draft.RECEIVED_KEPT)
+
+
+## The editor with the tool whose name takes the most room in the language
+## on screen, so the status line is at its longest.
+func _editor(draft: Draft) -> void:
+	var font := Blueprint.mono(500)
+	var widest := 0.0
+	for entry in DraftingSheet.TOOLS:
+		var name: String = (
+			tr(entry[1])
+			if entry[1] != ""
+			else tr_n(DraftingSheet.TEXT.vanish[0], DraftingSheet.TEXT.vanish[1], 3) % 3
+		)
+		var w := font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
+		if w > widest:
+			widest = w
+			DraftingSheet.tool = entry[0]
+	DraftingSheet.build_editor(game.menus, draft)
+
+
 func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
 	# Part way through: the first ten looks, the longest and MapWoman released.
@@ -263,6 +321,18 @@ func _open_every_sheet(check: Callable) -> void:
 		_wardrobe_sheet.bind(longest),
 		_wardrobe_sheet.bind("mapwoman"),
 		_wardrobe_sheet.bind("classic"),
+		func(): m.show_main(1842, true, 100, true),
+		func(): DraftingSheet.build(m, _drafts(), _received()),
+		func(): DraftingSheet.build(m, _drafts(), [], tr(DraftingSheet.TEXT.cleared) % 35),
+		func(): DraftingSheet.build_code_entry(m, _received()[0], "bad"),
+		func(): DraftingSheet.build_code_entry(m, "", "newer"),
+		func(): DraftingSheet.build_found(m, _received()[0]),
+		func(): DraftingSheet.build_share(m, _drafts()[0], true),
+		_editor.bind(Draft.new(5)),
+		_editor.bind(_drafts()[1]),
+		_editor.bind(_drafts()[0]),
+		func(): m.show_pause(false, 0, -1, "D6"),
+		func(): m.show_pause(false, 0, -1, "R"),
 	]
 	for open_sheet in sheets:
 		open_sheet.call()

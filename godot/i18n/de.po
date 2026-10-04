@@ -790,3 +790,233 @@ msgstr "Gesperrt, Freigabe bei Level %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Gesperrt, Freigabe fürs Durchspielen"
+
+#. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
+msgid "DRAFTING TABLE"
+msgstr "ZEICHENTISCH"
+
+#. Drafting table: heading over the six levels the player is drawing
+msgid "YOUR DRAFTS"
+msgstr "DEINE ENTWÜRFE"
+
+#. Drafting table: heading over levels other players sent as codes
+msgid "RECEIVED LEVELS"
+msgstr "ERHALTENE LEVELS"
+
+#. Drafting table: shown while no level has been received yet
+msgid "LEVELS FRIENDS SEND YOU APPEAR HERE"
+msgstr "LEVELS VON FREUNDEN ERSCHEINEN HIER"
+
+#. Drafting table: a draft slot with nothing drawn in it (small cell)
+msgid "EMPTY"
+msgstr "LEER"
+
+#. Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)
+msgid "DRAFT"
+msgstr "ENTWURF"
+
+#. Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)
+msgid "SIGNED"
+msgstr "SIGNIERT"
+
+#. Drafting table item: type or paste a code a friend sent, to play their level
+msgid "ENTER A LEVEL CODE"
+msgstr "LEVELCODE EINGEBEN"
+
+#. Drafting table note: the three steps of making a level
+msgid "DRAW A LEVEL · BEAT IT · SHARE ITS CODE"
+msgstr "LEVEL ZEICHNEN · SCHAFFEN · CODE TEILEN"
+
+#. Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)
+msgid "LEVEL CLEARED WITH %ds LEFT"
+msgstr "LEVEL GESCHAFFT, %ds ÜBRIG"
+
+#. Sheet title: the screen for typing or pasting a level code
+msgid "LEVEL CODE"
+msgstr "LEVELCODE"
+
+#. Level code sheet: instruction above the text box
+msgid "TYPE OR PASTE A LEVEL CODE"
+msgstr "LEVELCODE TIPPEN ODER EINFÜGEN"
+
+#. Level code sheet button: paste the clipboard into the text box
+msgid "PASTE"
+msgstr "EINFÜGEN"
+
+#. Level code sheet item: play the level the code describes
+msgid "PLAY THIS LEVEL"
+msgstr "DIESES LEVEL SPIELEN"
+
+#. Level code sheet: the code has a typo or isn't a level code
+msgid "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN"
+msgstr "CODE NICHT LESBAR. PRÜFEN UND NOCHMAL VERSUCHEN"
+
+#. Level code sheet: the code was made by a later version of the game. Keep MAPMAN.
+msgid "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN"
+msgstr "DIESES LEVEL BRAUCHT EIN NEUERES MAPMAN"
+
+#. Sheet title shown when the game opens with a copied level code: offer to play it
+msgid "A LEVEL CODE IS ON THE CLIPBOARD"
+msgstr "LEVELCODE IN DER ZWISCHENABLAGE"
+
+#. Item: play the level from the copied code
+msgid "PLAY IT"
+msgstr "SPIELEN"
+
+#. Item: ignore the copied code
+msgid "NOT NOW"
+msgstr "NICHT JETZT"
+
+#. Editor title: which of the six drafts is open (%d is 1 to 6)
+msgid "DRAFT %d"
+msgstr "ENTWURF %d"
+
+#. Editor button: leave the editor (the draft is kept)
+msgid "BACK"
+msgstr "ZURÜCK"
+
+#. Editor button: take back the last stroke
+msgid "UNDO"
+msgstr "RÜCKGÄNGIG"
+
+#. Editor button: play the draft; reaching an exit signs it
+msgid "TEST"
+msgstr "TESTEN"
+
+#. Editor button: show the draft's code and QR code (only once it is signed)
+msgid "SHARE"
+msgstr "TEILEN"
+
+#. Editor: small label over the meter showing how long the draft's code is
+msgid "CODE"
+msgstr "CODE"
+
+#. Editor status: the draft has no start tile yet
+msgid "PLACE ONE START TILE"
+msgstr "EIN STARTFELD SETZEN"
+
+#. Editor status: the draft has no exit yet
+msgid "PLACE AT LEAST ONE EXIT"
+msgstr "MINDESTENS EINEN AUSGANG SETZEN"
+
+#. Editor status: the draft can be played; beating it signs it so it can be shared
+msgid "TEST IT AND REACH AN EXIT TO SIGN IT"
+msgstr "TESTEN UND EINEN AUSGANG ERREICHEN ZUM SIGNIEREN"
+
+#. Editor status: the draft has been beaten and can be shared
+msgid "SIGNED · READY TO SHARE"
+msgstr "SIGNIERT · BEREIT ZUM TEILEN"
+
+#. Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it
+msgid "VANISH · %d MOVE"
+msgid_plural "VANISH · %d MOVES"
+msgstr[0] "VERSCHWINDET · %d ZUG"
+msgstr[1] "VERSCHWINDET · %d ZÜGE"
+
+#. Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code
+msgid "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE"
+msgstr "QR MIT DER HANDYKAMERA SCANNEN ODER CODE SENDEN"
+
+#. Share sheet item: copy the level code to the clipboard
+msgid "COPY CODE"
+msgstr "CODE KOPIEREN"
+
+#. Share sheet: confirms the code is on the clipboard
+msgid "CODE COPIED"
+msgstr "CODE KOPIERT"
+
+#. Share sheet item: return to the editor
+msgid "BACK TO THE DRAFT"
+msgstr "ZURÜCK ZUM ENTWURF"
+
+#. Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · DRAFT %d"
+msgstr "ARBEIT UNTERBROCHEN · ENTWURF %d"
+
+#. Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · RECEIVED LEVEL"
+msgstr "ARBEIT UNTERBROCHEN · ERHALTENES LEVEL"
+
+#. Editor palette: clears tiles
+msgid "ERASER"
+msgstr "RADIERER"
+
+#. Editor palette: a plain tile MapMan can walk on
+msgid "PATH"
+msgstr "WEG"
+
+#. Editor palette: where MapMan starts (one per level)
+msgid "START TILE"
+msgstr "STARTFELD"
+
+#. Editor palette: a level exit (one for each direction)
+msgid "EXIT"
+msgstr "AUSGANG"
+
+#. Editor palette: a tile that costs a life
+msgid "DEATH TILE"
+msgstr "TODESFELD"
+
+#. Editor palette: a star to collect
+msgid "STAR"
+msgstr "STERN"
+
+#. Editor palette: a tile that holds MapMan until the player shakes or taps
+msgid "STICKY TILE"
+msgstr "KLEBEFELD"
+
+#. Editor palette: a tile that reverses the controls
+msgid "REVERSE TILE"
+msgstr "UMKEHRFELD"
+
+#. Editor palette: a tile that hides the hideable tiles when stepped on
+msgid "HIDE TILES"
+msgstr "FELDER VERSTECKEN"
+
+#. Editor palette: a tile that shows the hidden tiles again
+msgid "UNHIDE TILES"
+msgstr "FELDER ZEIGEN"
+
+#. Editor palette: a path tile that is never drawn
+msgid "INVISIBLE PATH"
+msgstr "UNSICHTBARER WEG"
+
+#. Editor palette: a star that disappears while tiles are hidden
+msgid "HIDEABLE STAR"
+msgstr "VERSTECKBARER STERN"
+
+#. Editor palette: a death tile that disappears while tiles are hidden
+msgid "HIDEABLE DEATH TILE"
+msgstr "VERSTECKBARES TODESFELD"
+
+#. Editor palette: an extra life that disappears while tiles are hidden
+msgid "HIDEABLE EXTRA LIFE"
+msgstr "VERSTECKBARES EXTRALEBEN"
+
+#. Editor palette: marks tiles that are hidden when the level begins
+msgid "STARTS HIDDEN"
+msgstr "ANFANGS VERSTECKT"
+
+#. Screen reader: a draft slot with nothing in it (%d is 1 to 6)
+msgid "Draft %d, empty"
+msgstr "Entwurf %d, leer"
+
+#. Screen reader: a draft slot with a level not yet beaten
+msgid "Draft %d"
+msgstr "Entwurf %d"
+
+#. Screen reader: a draft its maker has beaten, ready to share
+msgid "Draft %d, signed"
+msgstr "Entwurf %d, signiert"
+
+#. Screen reader: a level a friend sent (%d counts them)
+msgid "Received level %d"
+msgstr "Erhaltenes Level %d"
+
+#. Screen reader: the text box for a level code
+msgid "Level code"
+msgstr "Levelcode"
+
+#. Screen reader: the QR code picture on the share sheet
+msgid "QR code of the level"
+msgstr "QR-Code des Levels"

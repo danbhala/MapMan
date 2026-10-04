@@ -34,6 +34,13 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
   end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
   for `menus.gd`.
+- The drafting table (`docs/drafting-table.md`): `scripts/draft.gd` is a
+  level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
+  editor, code entry and the share sheet (QR from `addons/kenyoni/qr_code/`).
+  `scripts/level_code.gd` turns a level into a short code and back, matching
+  `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
+  `main.gd` plays drafts and friends' codes with `custom` set ("draft",
+  "received"), like practice: no lives, score or saving.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

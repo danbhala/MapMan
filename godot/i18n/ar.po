@@ -822,3 +822,237 @@ msgstr "مقفل، يتاح في المستوى %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "مقفل، يتاح عند إنهاء اللعبة"
+
+#. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
+msgid "DRAFTING TABLE"
+msgstr "طاولة الرسم"
+
+#. Drafting table: heading over the six levels the player is drawing
+msgid "YOUR DRAFTS"
+msgstr "مسوداتك"
+
+#. Drafting table: heading over levels other players sent as codes
+msgid "RECEIVED LEVELS"
+msgstr "المستويات المستلمة"
+
+#. Drafting table: shown while no level has been received yet
+msgid "LEVELS FRIENDS SEND YOU APPEAR HERE"
+msgstr "تظهر هنا المستويات التي يرسلها أصدقاؤك"
+
+#. Drafting table: a draft slot with nothing drawn in it (small cell)
+msgid "EMPTY"
+msgstr "فارغ"
+
+#. Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)
+msgid "DRAFT"
+msgstr "مسودة"
+
+#. Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)
+msgid "SIGNED"
+msgstr "موقّع"
+
+#. Drafting table item: type or paste a code a friend sent, to play their level
+msgid "ENTER A LEVEL CODE"
+msgstr "إدخال رمز مستوى"
+
+#. Drafting table note: the three steps of making a level
+msgid "DRAW A LEVEL · BEAT IT · SHARE ITS CODE"
+msgstr "ارسم مستوى · اجتزه · شارك رمزه"
+
+#. Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)
+msgid "LEVEL CLEARED WITH %ds LEFT"
+msgstr "اجتزت المستوى وبقي %d ث"
+
+#. Sheet title: the screen for typing or pasting a level code
+msgid "LEVEL CODE"
+msgstr "رمز المستوى"
+
+#. Level code sheet: instruction above the text box
+msgid "TYPE OR PASTE A LEVEL CODE"
+msgstr "اكتب رمز المستوى أو الصقه"
+
+#. Level code sheet button: paste the clipboard into the text box
+msgid "PASTE"
+msgstr "لصق"
+
+#. Level code sheet item: play the level the code describes
+msgid "PLAY THIS LEVEL"
+msgstr "العب هذا المستوى"
+
+#. Level code sheet: the code has a typo or isn't a level code
+msgid "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN"
+msgstr "تعذّرت قراءة الرمز. تحقق منه وحاول مجددًا"
+
+#. Level code sheet: the code was made by a later version of the game. Keep MAPMAN.
+msgid "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN"
+msgstr "يحتاج هذا المستوى إلى إصدار أحدث من MAPMAN"
+
+#. Sheet title shown when the game opens with a copied level code: offer to play it
+msgid "A LEVEL CODE IS ON THE CLIPBOARD"
+msgstr "يوجد رمز مستوى في الحافظة"
+
+#. Item: play the level from the copied code
+msgid "PLAY IT"
+msgstr "العبه"
+
+#. Item: ignore the copied code
+msgid "NOT NOW"
+msgstr "ليس الآن"
+
+#. Editor title: which of the six drafts is open (%d is 1 to 6)
+msgid "DRAFT %d"
+msgstr "المسودة %d"
+
+#. Editor button: leave the editor (the draft is kept)
+msgid "BACK"
+msgstr "رجوع"
+
+#. Editor button: take back the last stroke
+msgid "UNDO"
+msgstr "تراجع"
+
+#. Editor button: play the draft; reaching an exit signs it
+msgid "TEST"
+msgstr "اختبار"
+
+#. Editor button: show the draft's code and QR code (only once it is signed)
+msgid "SHARE"
+msgstr "مشاركة"
+
+#. Editor: small label over the meter showing how long the draft's code is
+msgid "CODE"
+msgstr "الرمز"
+
+#. Editor status: the draft has no start tile yet
+msgid "PLACE ONE START TILE"
+msgstr "ضع بلاطة بداية واحدة"
+
+#. Editor status: the draft has no exit yet
+msgid "PLACE AT LEAST ONE EXIT"
+msgstr "ضع مخرجًا واحدًا على الأقل"
+
+#. Editor status: the draft can be played; beating it signs it so it can be shared
+msgid "TEST IT AND REACH AN EXIT TO SIGN IT"
+msgstr "اختبره واصل إلى مخرج لتوقيعه"
+
+#. Editor status: the draft has been beaten and can be shared
+msgid "SIGNED · READY TO SHARE"
+msgstr "موقّع · جاهز للمشاركة"
+
+#. Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it
+msgid "VANISH · %d MOVE"
+msgid_plural "VANISH · %d MOVES"
+msgstr[0] "تختفي · %d خطوات"
+msgstr[1] "تختفي · %d خطوة"
+msgstr[2] "تختفي · %d خطوتين"
+msgstr[3] "تختفي · %d خطوات"
+msgstr[4] "تختفي · %d خطوة"
+msgstr[5] "تختفي · %d خطوة"
+
+#. Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code
+msgid "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE"
+msgstr "امسح رمز QR بكاميرا الهاتف أو أرسل الرمز"
+
+#. Share sheet item: copy the level code to the clipboard
+msgid "COPY CODE"
+msgstr "نسخ الرمز"
+
+#. Share sheet: confirms the code is on the clipboard
+msgid "CODE COPIED"
+msgstr "تم نسخ الرمز"
+
+#. Share sheet item: return to the editor
+msgid "BACK TO THE DRAFT"
+msgstr "العودة إلى المسودة"
+
+#. Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · DRAFT %d"
+msgstr "العمل متوقف · المسودة %d"
+
+#. Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · RECEIVED LEVEL"
+msgstr "العمل متوقف · مستوى مستلم"
+
+#. Editor palette: clears tiles
+msgid "ERASER"
+msgstr "ممحاة"
+
+#. Editor palette: a plain tile MapMan can walk on
+msgid "PATH"
+msgstr "ممر"
+
+#. Editor palette: where MapMan starts (one per level)
+msgid "START TILE"
+msgstr "بلاطة البداية"
+
+#. Editor palette: a level exit (one for each direction)
+msgid "EXIT"
+msgstr "مخرج"
+
+#. Editor palette: a tile that costs a life
+msgid "DEATH TILE"
+msgstr "بلاطة سامة"
+
+#. Editor palette: a star to collect
+msgid "STAR"
+msgstr "نجمة"
+
+#. Editor palette: a tile that holds MapMan until the player shakes or taps
+msgid "STICKY TILE"
+msgstr "بلاطة لاصقة"
+
+#. Editor palette: a tile that reverses the controls
+msgid "REVERSE TILE"
+msgstr "بلاطة عكس"
+
+#. Editor palette: a tile that hides the hideable tiles when stepped on
+msgid "HIDE TILES"
+msgstr "إخفاء البلاطات"
+
+#. Editor palette: a tile that shows the hidden tiles again
+msgid "UNHIDE TILES"
+msgstr "إظهار البلاطات"
+
+#. Editor palette: a path tile that is never drawn
+msgid "INVISIBLE PATH"
+msgstr "ممر خفي"
+
+#. Editor palette: a star that disappears while tiles are hidden
+msgid "HIDEABLE STAR"
+msgstr "نجمة قابلة للإخفاء"
+
+#. Editor palette: a death tile that disappears while tiles are hidden
+msgid "HIDEABLE DEATH TILE"
+msgstr "بلاطة سامة قابلة للإخفاء"
+
+#. Editor palette: an extra life that disappears while tiles are hidden
+msgid "HIDEABLE EXTRA LIFE"
+msgstr "روح إضافية قابلة للإخفاء"
+
+#. Editor palette: marks tiles that are hidden when the level begins
+msgid "STARTS HIDDEN"
+msgstr "مخفية في البداية"
+
+#. Screen reader: a draft slot with nothing in it (%d is 1 to 6)
+msgid "Draft %d, empty"
+msgstr "المسودة %d، فارغة"
+
+#. Screen reader: a draft slot with a level not yet beaten
+msgid "Draft %d"
+msgstr "المسودة %d"
+
+#. Screen reader: a draft its maker has beaten, ready to share
+msgid "Draft %d, signed"
+msgstr "المسودة %d، موقّعة"
+
+#. Screen reader: a level a friend sent (%d counts them)
+msgid "Received level %d"
+msgstr "المستوى المستلم %d"
+
+#. Screen reader: the text box for a level code
+msgid "Level code"
+msgstr "رمز المستوى"
+
+#. Screen reader: the QR code picture on the share sheet
+msgid "QR code of the level"
+msgstr "رمز QR للمستوى"

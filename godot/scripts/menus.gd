@@ -15,6 +15,14 @@ const SHEET := Vector2(667, 375)
 const TITLE_BLOCK := Vector2(100, 63)
 ## The checkpoint picker's cells, top row first.
 const CHECKPOINT_ROWS := [[80, 85, 90, 95], [50, 60, 70, 75], [10, 20, 30, 40]]
+## The main menu's rows: their top and pitch, and both again when the
+## drafting table makes six of them, and the note under them.
+const MAIN_Y := 80.0
+const MAIN_PITCH := 44.0
+const MAIN_Y_SIX := 76.0
+const MAIN_PITCH_SIX := 38.0
+const MAIN_NOTE_Y := 308.0
+const MAIN_NOTE_Y_SIX := 312.0
 ## The lose-life sheet draws this many life discs at most, then "+N".
 const MAX_LIFE_DISCS := 6
 ## The parts list: its left edge and width, where text starts inside a row,
@@ -79,6 +87,7 @@ const TEXT := {
 	"main_title": "MAIN MENU",
 	"main_items":
 	["PLAY FROM START", "CONTINUE FROM CHECKPOINT", "PRACTICE A LEVEL", "TUTORIAL", "OPTIONS"],
+	"drafting_item": "DRAFTING TABLE",
 	"best_score": "BEST SCORE %d",
 	"level_count": ["%d LEVEL", "%d LEVELS"],
 	# 000 — first run
@@ -201,6 +210,8 @@ const LANGUAGES := [
 ]
 
 var current := ""
+## The box a level code is typed into, while its sheet is open.
+var code_input: LineEdit
 
 var _panel: Control
 var _bg: ColorRect
@@ -235,6 +246,9 @@ var _mouse_seen := false
 ## 0 on the final sheet after level 100.
 var _level := 0
 var _tutorial := false
+## The sheet number of a draft or a received level being played ("D1",
+## "R"), for the pause sheet; "" in the game itself.
+var _custom := ""
 ## The options row last toggled, so the redrawn sheet keeps the focus there.
 var _refocus_row := -1
 ## Right-to-left language (Arabic): the sheet is laid out as a mirror image,
@@ -322,6 +336,7 @@ func close() -> void:
 	_woman = null
 	_hero_mode = ""
 	_first_button = null
+	code_input = null
 	_tap_action = ""
 	current = ""
 	visible = false
@@ -406,7 +421,9 @@ func _layout() -> void:
 ## The sheet number of the level being played, with a sub-sheet letter.
 func _level_number(suffix: String) -> String:
 	var number: String = "%03d" % _level
-	if _tutorial:
+	if _custom != "":
+		number = _custom
+	elif _tutorial:
 		number = "T"
 	elif _level <= 0:
 		number = TEXT.final_number
@@ -528,9 +545,11 @@ func _connect(b: Button, act: String, enabled := true) -> void:
 
 
 ## A row of the parts list, numbered from 1, that reports `act`.
-func _item(index: int, text: String, act: String, y: float, enabled := true) -> Button:
+func _item(
+	index: int, text: String, act: String, y: float, enabled := true, height := Blueprint.TAP_HEIGHT
+) -> Button:
 	var pos := Vector2(_mx(LIST_X, LIST_W), y)
-	var size := Vector2(LIST_W, Blueprint.TAP_HEIGHT)
+	var size := Vector2(LIST_W, height)
 	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, size, enabled)
 	b.alignment = _align()
 	b.accessibility_name = _sentence(text)
@@ -540,10 +559,11 @@ func _item(index: int, text: String, act: String, y: float, enabled := true) -> 
 
 
 ## A parts list from `y` at `pitch`; `enabled` (optional) says which are open.
+## Rows closer than a tap's height are that much shorter.
 func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array = []) -> void:
 	for i in texts.size():
 		var on: bool = enabled[i] if i < enabled.size() else true
-		_item(i + 1, texts[i], acts[i], y + i * pitch, on)
+		_item(i + 1, texts[i], acts[i], y + i * pitch, on, minf(pitch, Blueprint.TAP_HEIGHT))
 
 
 ## The way back to the main menu, as the last row of a sheet.
@@ -854,18 +874,29 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
+## drafting: the drafting table is open (after level 10), a sixth row.
+func show_main(highscore: int, has_checkpoint: bool, levels := 0, drafting := false) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
-	_items(_tl("main_items"), acts, 80, 44, [true, has_checkpoint, true, true, true])
+	var texts := _tl("main_items")
+	var enabled := [true, has_checkpoint, true, true, true]
+	var note_y := MAIN_NOTE_Y
+	if drafting:
+		texts.insert(4, _t("drafting_item"))
+		acts.insert(4, "drafting table")
+		enabled.append(true)
+		_items(texts, acts, MAIN_Y_SIX, MAIN_PITCH_SIX, enabled)
+		note_y = MAIN_NOTE_Y_SIX
+	else:
+		_items(texts, acts, MAIN_Y, MAIN_PITCH, enabled)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
 	if levels > 0:
 		parts.append(_tn("level_count", levels))
 	if not parts.is_empty():
-		_note(_t("note") % " · ".join(parts), 308)
+		_note(_t("note") % " · ".join(parts), note_y)
 	_hero_on("tilt")
 	WardrobeSheet.main_menu_row(self)
 	_focus_first()
@@ -1007,12 +1038,19 @@ func _remember_row(row: int) -> void:
 	_refocus_row = row
 
 
-func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
+## custom: the sheet number of a draft ("D1") or a received level ("R")
+## being played, which ends back at the drafting table.
+func show_pause(tutorial: bool, level := 0, seconds := -1, custom := "") -> void:
 	_level = level
 	_tutorial = tutorial
+	_custom = custom
 	_open("pause", _level_number("A"), _t("paused_title"))
 	var status: String = _t("suspended_tutorial")
-	if not tutorial and level <= 0:
+	if custom.begins_with("D"):
+		status = tr(DraftingSheet.TEXT.suspended_draft) % int(custom.substr(1))
+	elif custom != "":
+		status = tr(DraftingSheet.TEXT.suspended_received)
+	elif not tutorial and level <= 0:
 		status = _t("suspended_final")
 	elif not tutorial:
 		status = _t("suspended") % level
@@ -1021,7 +1059,11 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 			status += _t("remaining") % [seconds / 60, seconds % 60]
 	_note(status, LIST_TOP, Blueprint.FAINT, 11)
 	_item(1, _t("resume"), "unpause", 90)
-	if tutorial:
+	if custom.begins_with("D"):
+		_item(2, tr(DraftingSheet.TEXT.back_to_draft), "end custom", 138)
+	elif custom != "":
+		_item(2, _t("end_game"), "end custom", 138)
+	elif tutorial:
 		_item(2, _t("end_tutorial"), "end tutorial", 138)
 	else:
 		_item(2, _t("end_game"), "confirm quit", 138)

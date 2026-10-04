@@ -46,6 +46,9 @@ var tutorial := false
 var completed := false
 ## Practising one level from the practice menu: no lives, score or checkpoints.
 var practice := false
+## Playing a level from the drafting table: "draft" (testing one, which a
+## win signs) or "received" (a friend's code). No lives, score or saving.
+var custom := ""
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -61,6 +64,11 @@ var vanish := 0
 var end_of_level_points := 0
 
 var _bg: ColorRect
+## The level being played from the drafting table, the draft being edited,
+## and where a received level goes back to: "drafting" or "main".
+var _custom_level: Dictionary = {}
+var _draft: Draft
+var _custom_return := "drafting"
 var _grid: Blueprint.Grid
 var _was_moving := false
 var _lose_reason := "death"
@@ -147,6 +155,7 @@ func _ready() -> void:
 	hud.show_bar(false)
 	hud.show_stats(false)
 	show_start_menu()
+	_check_clipboard()
 
 
 func _load_data() -> void:
@@ -311,6 +320,8 @@ func set_time_message(time_left: int) -> void:
 		hud.set_time_message(tr("GO!"))
 	elif _low_time:
 		hud.set_time_message(tr("HURRY UP!"))
+	elif custom != "":
+		hud.set_time_message("")
 	elif time_left > 15 and started() and String(levels[level - 1].get("message", "")) != "":
 		# Level messages are lowercase in the data; the sheets use capitals.
 		hud.set_time_message(tr(String(levels[level - 1]["message"]).to_upper()))
@@ -641,6 +652,8 @@ func _update_ending(delta: float) -> void:
 
 
 func _current_level_data() -> Dictionary:
+	if custom != "":
+		return _custom_level
 	if completed:
 		return completion_level
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
@@ -667,7 +680,7 @@ func load_level() -> void:
 		hud.set_timer(0, -1.0, true)
 		hud.blank_timer()
 		hud.set_time_message(tr("GET READY..."))
-		if not practice:
+		if not practice and custom == "":
 			Save.level_reached(level)
 	_update_stats()
 
@@ -704,6 +717,10 @@ func advance_level(check_point: bool) -> void:
 		Audio.play("end_level")
 		_hide_ending()
 		show_game_complete()
+		return
+	if custom != "":
+		Audio.play("end_level")
+		_end_custom(true)
 		return
 	if not tutorial:
 		var new_best := false
@@ -800,7 +817,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
-	if not tutorial and not practice:
+	if not tutorial and not practice and custom == "":
 		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
 	_lose_reason = reason
@@ -811,7 +828,7 @@ func lose_life(reason := "death") -> void:
 
 
 func finish_lose_life() -> void:
-	if practice:
+	if practice or custom != "":
 		# No lives in practice: straight back to the start of the level.
 		load_level()
 		reset_all()
@@ -835,6 +852,7 @@ func game_over(show_score := true) -> void:
 	_hide_ending()
 	completed = false
 	practice = false
+	custom = ""
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -852,6 +870,7 @@ func game_over(show_score := true) -> void:
 ## Start a normal game at any level (dev menu).
 func dev_go_to_level(n: int) -> void:
 	menus.close()
+	custom = ""
 	new_game(clampi(n, 1, levels.size()))
 
 
@@ -862,6 +881,9 @@ func dev_skip_level() -> void:
 	if practice:
 		# Skipping never saves checkpoints or unlocks levels from practice.
 		_end_practice()
+		return
+	if custom != "":
+		_end_custom(false)
 		return
 	menus.close()
 	end_of_level_points = 0
@@ -899,7 +921,94 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size())
+	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.drafting_open())
+
+
+# --- the drafting table (DraftingSheet) ------------------------------------------
+
+
+func show_drafting_table(note := "") -> void:
+	Audio.play_menu()
+	DraftingSheet.build(menus, Save.all_drafts(), Save.received, note)
+
+
+func open_draft(slot: int, signed_now := false) -> void:
+	if _draft == null or _draft.slot != slot:
+		_draft = Save.all_drafts()[slot]
+	DraftingSheet.build_editor(menus, _draft, signed_now)
+
+
+## Play `level_data` from the drafting table: kind "draft" tests the draft
+## being edited, "received" plays a friend's code.
+func start_custom(level_data: Dictionary, kind: String) -> void:
+	# Like practice, this leaves the first-play screen for "play from start".
+	var first_play := Save.first_play
+	custom = kind
+	_custom_level = level_data
+	menus.close()
+	new_game(1)
+	if first_play:
+		Save.first_play = true
+		Save.save_all()
+	hud.show_stats(false)
+	hud.show_level(false)
+
+
+## Back from a draft or a received level; won: an exit was reached.
+func _end_custom(won: bool) -> void:
+	var kind := custom
+	var seconds := _seconds_remaining()
+	game_over(false)
+	if kind == "draft":
+		if won:
+			_draft.signed = true
+			Save.store_draft(_draft)
+		open_draft(_draft.slot, won)
+		return
+	var note := ""
+	if won:
+		note = tr(DraftingSheet.TEXT.cleared) % seconds
+	if _custom_return == "drafting" and Save.drafting_open():
+		show_drafting_table(note)
+	else:
+		show_start_menu()
+
+
+## Play a code; returns why it can't be played ("bad", "newer") or "".
+func play_code(code: String, back_to := "drafting") -> String:
+	var got := LevelCode.decode(code)
+	if got.has("newer"):
+		return "newer"
+	if not got.has("rows") or not _playable(got.rows):
+		return "bad"
+	Save.receive(code)
+	_custom_return = back_to
+	start_custom(LevelCode.to_level(got), "received")
+	return ""
+
+
+## A level needs a start tile and an exit to be played.
+func _playable(rows: Array) -> bool:
+	var text := "".join(rows)
+	if text.count("b") != 1:
+		return false
+	for e in ["n", "e", "s", "w"]:
+		if text.contains(e):
+			return true
+	return false
+
+
+## A level code someone copied (from a chat, or a QR code read by the
+## phone's camera) is offered once, as the game opens on the main menu.
+func _check_clipboard() -> void:
+	if menus.current != "main" or not DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD):
+		return
+	var code := LevelCode.find(DisplayServer.clipboard_get())
+	if code == "" or code == Save.clipboard_seen or code in Save.received:
+		return
+	Save.clipboard_seen = code
+	Save.save_all()
+	DraftingSheet.build_found(menus, code)
 
 
 func show_pause_menu() -> void:
@@ -907,7 +1016,12 @@ func show_pause_menu() -> void:
 	paused = true
 	# The final sheet after level 100 has no number and no clock.
 	var clock := -1 if tutorial or completed else _seconds_remaining()
-	menus.show_pause(tutorial, 0 if completed else level, clock)
+	var number := ""
+	if custom == "draft":
+		number = "D%d" % (_draft.slot + 1)
+	elif custom == "received":
+		number = "R"
+	menus.show_pause(tutorial, 0 if completed else level, clock, number)
 
 
 func _on_menu_action(act: String) -> void:
@@ -948,6 +1062,36 @@ func _on_menu_action(act: String) -> void:
 			menus.show_language()
 		"wardrobe":
 			menus.show_wardrobe()
+		"drafting table":
+			if menus.current == "editor" and _draft != null:
+				Save.store_draft(_draft)
+			show_drafting_table()
+		"enter code":
+			DraftingSheet.build_code_entry(menus, "")
+		"paste code":
+			var pasted := DisplayServer.clipboard_get().strip_edges().left(200)
+			DraftingSheet.build_code_entry(menus, pasted)
+		"play code":
+			var text := menus.code_input.text if menus.code_input else ""
+			var why := play_code(text)
+			if why != "":
+				DraftingSheet.build_code_entry(menus, text, why)
+		"play found code":
+			if play_code(Save.clipboard_seen, "main") != "":
+				show_start_menu()
+		"test draft":
+			if _draft != null and _draft.problem() == "":
+				Save.store_draft(_draft)
+				start_custom(_draft.level(), "draft")
+		"share draft":
+			if _draft != null and _draft.signed:
+				DraftingSheet.build_share(menus, _draft)
+		"copy code":
+			DisplayServer.clipboard_set(LevelCode.PREFIX + " " + _draft.code())
+			DraftingSheet.build_share(menus, _draft, true)
+		"end custom":
+			menus.close()
+			_end_custom(false)
 		"main menu":
 			if menus.current == "wardrobe":
 				# Looked at: nothing in it is new any more (the marks stay
@@ -1007,6 +1151,12 @@ func _on_menu_action(act: String) -> void:
 			elif act.begins_with("practice level "):
 				menus.close()
 				start_practice(int(act.get_slice(" ", 2)))
+			elif act.begins_with("draft "):
+				open_draft(int(act.get_slice(" ", 1)))
+			elif act.begins_with("received "):
+				var i := int(act.get_slice(" ", 1))
+				if i < Save.received.size():
+					play_code(Save.received[i])
 			elif act.begins_with("wear "):
 				# Only from the wardrobe, between games: he wears it from now on.
 				if Save.wear(act.get_slice(" ", 1)):
@@ -1054,6 +1204,8 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		if game_active and not dead and not menus.visible and is_inside_tree():
 			show_pause_menu()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_inside_tree():
+		_check_clipboard()
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
 
@@ -1072,6 +1224,12 @@ func go_back() -> void:
 			_on_menu_action("unpause")
 		"options", "restart", "first_play", "game_over", "congratulations", "practice", "wardrobe":
 			_on_menu_action("main menu")
+		"drafting", "found_code":
+			_on_menu_action("main menu")
+		"editor", "enter_code":
+			_on_menu_action("drafting table")
+		"share":
+			open_draft(_draft.slot)
 		"language":
 			_on_menu_action("options")
 		"main":

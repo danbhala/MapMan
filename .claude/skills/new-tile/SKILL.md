@@ -33,5 +33,12 @@ any step either won't load, won't draw, or won't be tested.
 7. **Tutorial:** consider a level in `godot/data/tutorial.json` with a one-line
    `description`, as the original did for each tile; the description is a
    msgid too, so catalog and translate it as in step 4.
-8. Run the `/verify` skill. If the bottom bar or tiles look different, check the
+8. **Drafting table:** append the tile's character to `SYMBOLS` in both
+   `godot/tools/level_code.py` and `godot/scripts/level_code.gd` (it takes
+   one of the spare symbols; never reorder them or touch
+   `godot/data/level_code_v0.json`, or shared codes misread), add it with a
+   name msgid to `DraftingSheet.TOOLS` and its swatch art, then rerun
+   `python3 godot/tools/level_code.py --fixtures`. See
+   `docs/drafting-table.md`.
+9. Run the `/verify` skill. If the bottom bar or tiles look different, check the
    screenshots and update the baseline only for intended changes.
