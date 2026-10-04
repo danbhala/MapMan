@@ -242,6 +242,18 @@ msgstr "注記：毒タイルを迂回せよ"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "注記：図面1枚につき T-0:20 · 近道せよ"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "注記：隠れた毒タイルに印が付く"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "注記：安全な経路を毎回開始時に下書きする"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "この図面を飛ばす"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "手直し"

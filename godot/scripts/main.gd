@@ -13,6 +13,12 @@ const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
 const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
+## Help for a sheet that keeps beating the player, by lives lost on it this
+## session. Each tier keeps the ones before it; clearing the sheet ends them.
+const ASSIST_MARKS := 2  # hidden death tiles are marked, and a death step needs a held tilt
+const ASSIST_ROUTE := 4  # the safe route is sketched as each try starts
+const ASSIST_SKIP := 6  # the lost-life sheet offers to skip the sheet
+const ROUTE_SKETCH_SECONDS := 2.5
 
 ## The frame, grid and notes take an effect's colour while it is on.
 const REVERSE_COLOR := Blueprint.PINK
@@ -56,6 +62,9 @@ var stuck := false:
 var reverse := false
 var vanish := 0
 var end_of_level_points := 0
+## Lives lost on each level (level -> count) in the main game this session,
+## for the assists. Not saved: a fresh start is a fresh chance.
+var losses := {}
 
 var _bg: ColorRect
 var _grid: Blueprint.Grid
@@ -65,6 +74,9 @@ var _lose_reason := "death"
 var _moves := 0  # moves made in this attempt at the level, for the play log
 ## The direction the player was last steering, so it only needs keep_threshold.
 var _held_step := Vector2i.ZERO
+## When MapMan last came to rest on a tile; with the assists on, a step onto a
+## death tile sooner than guard_hold after it is ignored (a corner overshot).
+var _landed_at := 0.0
 
 # the ending (completion.py): MapWoman, the vortex and the hearts
 var _woman: Player
@@ -420,17 +432,30 @@ func _try_axis(
 		threshold = minf(threshold, Dev.t("keep_threshold"))
 	if absf(value) <= threshold:
 		return face
+	var actual := -step if reverse else step
+	if can_move and _guarded(actual):
+		return face  # like a wall: the other axis may still move him
 	var seconds := STOP_TIME * (0.5 if absf(value) > Dev.t("fast_threshold") else 1.0)
 	if can_move:
 		move(step, seconds)
 	# Hold the way MapMan actually went, not a way a wall blocked.
 	if map.moving or _held_step == Vector2i.ZERO:
 		_held_step = step
-	var actual := -step if reverse else step
 	if map.moving:
 		player.face_direction(actual, true)
 		return Callable()
 	return func(): player.face_direction(actual, false)
+
+
+## The corner guard (assist tier ASSIST_MARKS): a step onto a death tile is
+## only taken once MapMan has rested on his tile for guard_hold seconds, so
+## the tilt that carried him along a row doesn't carry him off its end.
+func _guarded(actual: Vector2i) -> bool:
+	if not assists_on(ASSIST_MARKS):
+		return false
+	if not map.deaths.get(map.position_key + actual, false):
+		return false
+	return _now() - _landed_at < Dev.t("guard_hold")
 
 
 func move(step: Vector2i, seconds: float) -> void:
@@ -453,6 +478,7 @@ func update_player(delta: float) -> void:
 		return
 	if _was_moving:
 		_was_moving = false
+		_landed_at = _now()
 		player.land()
 	if map.at_end():
 		player.cheer()
@@ -651,6 +677,58 @@ func reset_all(reset_stars := true) -> void:
 	_update_stats()
 	tilt.touch(false, Vector2.ZERO)
 	_calibrate_pending = true
+	_landed_at = _now()
+	_apply_assists()
+
+
+# --- assists -----------------------------------------------------------------
+
+
+## Lives lost on this level in the main game; the tutorial, practice and the
+## ending never count, so they never get help.
+func losses_here() -> int:
+	if tutorial or practice or completed:
+		return 0
+	return losses.get(level, 0)
+
+
+func assists_on(tier: int) -> bool:
+	return losses_here() >= tier
+
+
+## The help the next try gets, for the lost-life sheet: "", "marks", "route"
+## or "skip".
+func assist_name() -> String:
+	if assists_on(ASSIST_SKIP):
+		return "skip"
+	if assists_on(ASSIST_ROUTE):
+		return "route"
+	if assists_on(ASSIST_MARKS):
+		return "marks"
+	return ""
+
+
+## At the start of a try: mark the hidden death tiles and sketch the route,
+## as far as the sheet's losses have earned.
+func _apply_assists() -> void:
+	map.set_marks(assists_on(ASSIST_MARKS))
+	if assists_on(ASSIST_ROUTE):
+		map.sketch_route(ROUTE_SKETCH_SECONDS)
+
+
+## Give up on a sheet the assists offered to skip: on to the next one with no
+## points, no best and no checkpoint, as if walked around.
+func skip_level() -> void:
+	if not assists_on(ASSIST_SKIP):
+		return
+	Dev.record(level, "skip", _time_left, _moves)
+	menus.close()
+	losses.erase(level)
+	level += 1
+	finish_advancing_level()
+	# The next level is reached, so any look its number releases comes too.
+	Save.sync_wardrobe()
+	Save.save_all()
 
 
 func advance_level(check_point: bool) -> void:
@@ -661,6 +739,8 @@ func advance_level(check_point: bool) -> void:
 		_hide_ending()
 		show_game_complete()
 		return
+	if not tutorial and not practice:
+		losses.erase(level)
 	if not tutorial:
 		var new_best := false
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
@@ -758,6 +838,8 @@ func lose_life(reason := "death") -> void:
 	_timer_stop()
 	if not tutorial and not practice:
 		Dev.record(level, reason, _time_left, _moves)
+		if not completed:
+			losses[level] = losses.get(level, 0) + 1
 	Audio.play("lose_life")
 	_lose_reason = reason
 	player.show_player()
@@ -778,7 +860,7 @@ func finish_lose_life() -> void:
 	if lives < 1:
 		game_over()
 	elif not tutorial:
-		menus.show_lose_life(lives, level, _lose_reason)
+		menus.show_lose_life(lives, level, _lose_reason, assist_name())
 	else:
 		reset_all()
 
@@ -928,6 +1010,8 @@ func _on_menu_action(act: String) -> void:
 		"try again":
 			menus.close()
 			reset_all(false)
+		"skip sheet":
+			skip_level()
 		"unpause":
 			menus.close()
 			paused = false

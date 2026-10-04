@@ -252,6 +252,8 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_confirm_quit(),
 		func(): m.show_lose_life(2, 35),
 		func(): m.show_lose_life(15, 35, "timeout"),
+		func(): m.show_lose_life(1, 35, "death", "marks"),
+		func(): m.show_lose_life(1, 35, "timeout", "skip"),
 		func(): m.show_game_over(1842, true, true, 1790),
 		func(): m.show_restart([10, 30]),
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),

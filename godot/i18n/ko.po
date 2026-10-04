@@ -242,6 +242,18 @@ msgstr "주: 독 타일을 우회할 것"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "주: 도면당 T-0:20 · 지름길로 갈 것"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "주: 숨겨진 독 타일에 표시가 붙음"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "주: 매 시도 시작 시 안전 경로를 스케치함"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "이 도면 건너뛰기"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "재작업"
