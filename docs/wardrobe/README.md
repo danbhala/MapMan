@@ -362,8 +362,9 @@ checked.
   translation; sheet 001-D and the slips lay out in every language.
 - Screenshot baselines: `25_wardrobe` (new), `08_level_clear` (the slip for
   Signal red at level 10), `01_main_menu` and `21_main_menu_ar` (the row).
-  `11_ending` and `12_ending_meeting` moved by a few random tile outlines: the
-  slip's small MapMan takes one random number when it is made.
+  `09_tutorial`, `11_ending` and `12_ending_meeting` moved by a few random
+  tile outlines: the slip's small MapMan takes one random number when it is
+  made.
 - Visual review: sheets 01, 02 and 04 and the parade from
   `tools/wardrobe_sheets.sh`; `tools/i18n_shots.sh` includes the wardrobe
   screens in every language.
