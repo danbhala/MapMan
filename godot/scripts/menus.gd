@@ -174,6 +174,7 @@ const LANGUAGES := [
 	["fr", "Français"],
 	["it", "Italiano"],
 	["de", "Deutsch"],
+	["ga", "Gaeilge"],
 	["ru", "Русский"],
 	["tr", "Türkçe"],
 	["id", "Bahasa Indonesia"],
