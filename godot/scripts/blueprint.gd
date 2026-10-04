@@ -46,8 +46,20 @@ static func mono(weight := 500) -> Font:
 
 
 ## False when the player asked for less motion: animations then skip to the end.
+## Looks Save up in the tree rather than naming the autoload: scripts a test
+## names at parse time (LevelMap, and so this one) compile before the
+## autoloads exist, and a bare `Save` there is a compile error.
 static func motion() -> bool:
-	return not Save.reduce_motion
+	var save := autoload("Save")
+	return save == null or not save.reduce_motion
+
+
+## An autoload by name, or null outside the game (see motion()).
+static func autoload(name: String) -> Node:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	return tree.root.get_node_or_null(name)
 
 
 ## The theme for buttons on a sheet: a parts-list row with a rule under it.
@@ -190,6 +202,8 @@ static func truncated(points: PackedVector2Array, share: float) -> PackedVector2
 		if seg <= left:
 			out.append(points[i + 1])
 			left -= seg
+			if left <= 0.0:
+				break
 		else:
 			out.append(points[i].lerp(points[i + 1], left / seg if seg > 0.0 else 1.0))
 			break
@@ -259,7 +273,7 @@ static func stamp(
 	tw.chain().tween_property(n, "scale", Vector2.ONE, 0.09).set_trans(Tween.TRANS_BACK).set_ease(
 		Tween.EASE_OUT
 	)
-	tw.chain().tween_callback(func(): Audio.play("stamp"))
+	tw.chain().tween_callback(func(): autoload("Audio").play("stamp"))
 	return n
 
 

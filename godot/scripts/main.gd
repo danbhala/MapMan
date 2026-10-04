@@ -14,12 +14,12 @@ const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
 const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
 
-const BASE_BG := Color("#71c0e2")
-const REVERSE_BG := Color("#e28c9b")
-const VANISH_BG := Color("#d593e2")
-const STUCK_BG := Color("#7ce2c0")
-const DEATH_BG := Color("#aeaeae")
-const HIDDEN_BG := Color("#b1aaea")
+## The frame, grid and notes take an effect's colour while it is on.
+const REVERSE_COLOR := Blueprint.PINK
+const VANISH_COLOR := Blueprint.LILAC
+const STUCK_COLOR := Blueprint.GOLD
+const DEATH_COLOR := Blueprint.PINK
+const HIDDEN_COLOR := Blueprint.MINT
 
 var levels: Array = []
 var tutorial_levels: Array = []
@@ -46,13 +46,19 @@ var score := 0
 var lives := INITIAL_LIVES
 var stars := 0
 var dead := false
-var stuck := false
+var stuck := false:
+	set(on):
+		stuck = on
+		if player:
+			player.set_stuck(on)
 var reverse := false
 var vanish := 0
 var end_of_level_points := 0
 
 var _bg: ColorRect
-var _gradient: TextureRect
+var _grid: Blueprint.Grid
+var _was_moving := false
+var _lose_reason := "death"
 
 var _moves := 0  # moves made in this attempt at the level, for the play log
 ## The direction the player was last steering, so it only needs keep_threshold.
@@ -89,16 +95,11 @@ func _ready() -> void:
 	bg_layer.layer = -10
 	add_child(bg_layer)
 	_bg = ColorRect.new()
-	_bg.color = BASE_BG
+	_bg.color = Blueprint.FIELD
 	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bg_layer.add_child(_bg)
-	_gradient = TextureRect.new()
-	_gradient.texture = load("res://assets/background/gradient.png")
-	_gradient.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_gradient.stretch_mode = TextureRect.STRETCH_SCALE
-	_gradient.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bg_layer.add_child(_gradient)
+	_grid = Blueprint.grid(bg_layer, _screen_size())
 
 	map = LevelMap.new()
 	add_child(map)
@@ -125,6 +126,7 @@ func _ready() -> void:
 	menu_layer.layer = 10
 	add_child(menu_layer)
 	menus = Menus.new()
+	menus.tilt = tilt
 	menu_layer.add_child(menus)
 	menus.action.connect(_on_menu_action)
 
@@ -154,8 +156,8 @@ func _load_data() -> void:
 func _layout() -> void:
 	var s := get_viewport_rect().size
 	tilt.screen_size = s
-	_gradient.position = Vector2.ZERO
-	_gradient.size = Vector2(s.x, s.y - Hud.BAR_HEIGHT)
+	_grid.size = s
+	_grid.queue_redraw()
 
 
 func _screen_size() -> Vector2:
@@ -247,7 +249,10 @@ func loaded() -> void:
 
 
 func _update_stats() -> void:
-	hud.set_level(level, levels.size())
+	if tutorial:
+		hud.set_level_text("TUTORIAL %d / %d" % [level, tutorial_levels.size()])
+	else:
+		hud.set_level(level, levels.size())
 	hud.set_score(score)
 	hud.set_lives(lives)
 
@@ -265,21 +270,25 @@ func set_time_message(time_left: int) -> void:
 		hud.set_time_message("")
 
 
+## The field stays blue; the frame, the grid and the note change colour
+## with the effect in force, worst first.
 func set_background() -> void:
+	var color := Blueprint.INK
 	if not game_active:
-		_bg.color = BASE_BG
+		color = Blueprint.INK
 	elif map.tiles_hidden:
-		_bg.color = HIDDEN_BG
+		color = HIDDEN_COLOR
 	elif dead:
-		_bg.color = DEATH_BG
+		color = DEATH_COLOR
 	elif reverse:
-		_bg.color = REVERSE_BG
+		color = REVERSE_COLOR
 	elif vanish > 0:
-		_bg.color = VANISH_BG
+		color = VANISH_COLOR
 	elif stuck:
-		_bg.color = STUCK_BG
-	else:
-		_bg.color = BASE_BG
+		color = STUCK_COLOR
+	hud.set_state_color(color)
+	_grid.color = Color(color, Blueprint.GRID.a if color == Blueprint.INK else 0.22)
+	_grid.queue_redraw()
 
 
 func set_controls_message() -> void:
@@ -428,8 +437,13 @@ func move(step: Vector2i, seconds: float) -> void:
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
 	if map.moving:
+		_was_moving = true
 		return
+	if _was_moving:
+		_was_moving = false
+		player.land()
 	if map.at_end():
+		player.cheer()
 		advance_level(map.is_checkpoint)
 		return
 
@@ -437,6 +451,7 @@ func update_player(delta: float) -> void:
 		Audio.play("reverse")
 		reverse = not reverse
 		map.clear(map.reverses)
+		player.spin_around()
 
 	if vanish > 0 and not dead:
 		player.vanish()
@@ -462,6 +477,8 @@ func update_player(delta: float) -> void:
 	if map.on(map.points):
 		Audio.play("points")
 		map.clear(map.points)
+		map.float_text("+1 ★", Blueprint.GOLD)
+		player.cheer()
 		if not tutorial:
 			stars += 1
 		_flash("_last_points")
@@ -473,6 +490,8 @@ func update_player(delta: float) -> void:
 	if map.on(map.lives):
 		Audio.play("life")
 		map.clear(map.lives)
+		map.float_text("+1 ♥", Blueprint.PINK)
+		player.cheer()
 		if not tutorial:
 			lives += 1
 		_flash("_last_life")
@@ -484,11 +503,13 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.more_times):
 		map.clear(map.more_times)
+		map.float_text("+5 S", Blueprint.INK)
 		_time_left += 5.0
 		_flash("_last_more_time")
 
 	if map.on(map.less_times):
 		map.clear(map.less_times)
+		map.float_text("−5 S", Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
 
@@ -604,6 +625,7 @@ func reset_all(reset_stars := true) -> void:
 	map.clear(map.reverses)
 	map.clear(map.hides)
 	map.reset_hide()
+	player.reset_pose()
 	_timer_stop()
 	_timer_reset()
 	hud.clear_effect()
@@ -649,7 +671,7 @@ func advance_level(check_point: bool) -> void:
 		return
 	var time_bonus := _seconds_remaining() / 2
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
-	menus.show_end_level(score, POINTS_PER_LEVEL, time_bonus, stars, check_point)
+	menus.show_end_level(score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level)
 
 
 func next_level() -> void:
@@ -706,6 +728,8 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	reset_all()
 	hud.show_bar(true)
 	hud.show_stats(not tutorial)
+	if tutorial:
+		hud.show_level(true)  # just the sheet number, no score or lives
 
 
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
@@ -714,6 +738,7 @@ func lose_life(reason := "death") -> void:
 	if not tutorial and not practice:
 		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
+	_lose_reason = reason
 	player.show_player()
 	player.face_death()
 	dead = true
@@ -732,7 +757,7 @@ func finish_lose_life() -> void:
 	if lives < 1:
 		game_over()
 	elif not tutorial:
-		menus.show_lose_life(lives)
+		menus.show_lose_life(lives, level, _lose_reason)
 	else:
 		reset_all()
 
@@ -751,8 +776,9 @@ func game_over(show_score := true) -> void:
 	set_background()
 	if show_score:
 		Audio.play_game_over()
+		var previous_best := Save.highscore
 		var pb := Save.submit_score(score)
-		menus.show_game_over(score, pb, Save.has_any_checkpoint())
+		menus.show_game_over(score, pb, Save.has_any_checkpoint(), previous_best)
 
 
 # --- dev menu ----------------------------------------------------------------
@@ -808,13 +834,13 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint())
+	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size())
 
 
 func show_pause_menu() -> void:
 	_timer_stop()
 	paused = true
-	menus.show_pause(tutorial)
+	menus.show_pause(tutorial, level, -1 if tutorial or completed else _seconds_remaining())
 
 
 func _on_menu_action(act: String) -> void:
@@ -842,6 +868,10 @@ func _on_menu_action(act: String) -> void:
 			Save.vibration_on = act == "vibration on"
 			Save.save_all()
 			Haptics.feel("toggle")
+			menus.show_options()
+		"reduce motion on", "reduce motion off":
+			Save.reduce_motion = act == "reduce motion on"
+			Save.save_all()
 			menus.show_options()
 		"main menu":
 			if game_active:

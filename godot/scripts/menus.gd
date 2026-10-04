@@ -1,51 +1,196 @@
 class_name Menus
 extends Control
-## Full-screen menus drawn with the original menu art. Port of the parts of
-## game_menus.py the playable core needs. Every button reports its action
-## string (the same strings the original used) through the `action` signal.
+## Every menu is a drawing sheet on blue paper. The frame, the grid, the header
+## and the title block hug the screen; the sheet's parts list, notes, stamps and
+## MapMan himself sit on a 667×375 panel centred in it (`_panel`). Every button
+## reports its action string (the strings the original used) through the
+## `action` signal; main.gd handles them in _on_menu_action().
 
 signal action(name: String)
 
-const BASE_BG := Color("#71c0e2")
-const SCALE := 1.0 / 3.0  # menu art is @3x
-const SPACE := 13.5  # space_x / space_y in points
-const PANEL_SIZE := Vector2(1843, 1036)
-const PANEL_H_PTS := 1036.0 / 3.0
-## Each menu's title. The art has them baked in, in a font we can't bundle;
-## _open() wipes them and draws these in Liberation Sans Bold instead, so
-## every title (ours included) matches.
-const TITLES := {
-	"welcome": "WELCOME",
-	"newbie": "NEWBIE?",
-	"options": "OPTIONS",
-	"paused_game": "PAUSED",
-	"confirm_quit": "CONFIRM",
-	"lose_life": "OH NO!",
-	"game_over": "GAME OVER",
-	"restart_from_checkpoint": "RESTART",
-	"end_level": "LEVEL CLEAR",
-	"end_level_checkpoint": "LEVEL CLEAR",
-	"congratulations": "CONGRATULATIONS",
-	"completion": "COMPLETION",
-}
-## Where the art's white panel starts (row 260 of the @3x art is its edge).
-const PANEL_TOP_ROW := 260
-## Title size: the art's titles are Arial-width letters at this size.
-const TITLE_PX := 120
-
 ## Practice grid: levels per page, as 5 columns of 4 rows.
 const PRACTICE_PAGE := 20
+## The panel every sheet is laid out on; wider screens get margins.
+const SHEET := Vector2(667, 375)
+const TITLE_BLOCK := Vector2(200, 63)
+## The checkpoint picker's cells, top row first.
+const CHECKPOINT_ROWS := [[80, 85, 90, 95], [50, 60, 70, 75], [10, 20, 30, 40]]
+## The parts list: its left edge and width, where text starts inside a row,
+## the width of one character of the 16 px row font (0.6 em), and the column
+## headings' y.
+const LIST_X := 40.0
+const LIST_W := 380.0
+const TEXT_X := 52.0
+const CHAR_W := 9.6
+const LIST_TOP := 60.0
+const ROW_H := 34.0
+## Where MapMan stands, how big he is, and his height in his own units.
+const HERO_POS := Vector2(520, 230)
+const HERO_SCALE := 1.2
+const HERO_HEIGHT := 77.0
+## The resting tilt follows the phone at this rate (per second); a lean away
+## from it turns his eyes this much, and they get there at this rate.
+const REST_RATE := 0.4
+const LOOK_GAIN := 4.0
+const LOOK_RATE := 8.0
+## Seconds for the frame to draw on, before a stamp may land on it, and for a
+## stamp to fall (Blueprint.stamp) until it hits the sheet.
+const DRAW_ON := 0.5
+const STAMP_DELAY := 0.45
+const STAMP_FALL := 0.16
+## The total counts up a point per tick, five at a time past BIG_ROW points.
+const TICK := 0.1
+const BIG_ROW := 50
+
+## Every word on the sheets (plain English until translation comes).
+const TEXT := {
+	"header": "MAPMAN  —  SHEET %s  —  %s",
+	"title_block": "REV %s\nSCALE 1:3\nSHEET %s",
+	"drawn_by": "DRAWN BY\ndanbhala\n2026",
+	"rev_dev": "DEV",
+	"col_item": "ITEM",
+	"col_description": "DESCRIPTION",
+	"col_parameter": "PARAMETER",
+	"col_value": "VALUE",
+	"col_qty": "QTY",
+	"return_item": "<  RETURN TO SHEET 001",
+	"main_menu": "MAIN MENU",
+	"total": "TOTAL",
+	"plus": "+%d",
+	"note": "NOTE: %s",
+	# 001 — main menu
+	"main_number": "001",
+	"main_title": "MAIN MENU",
+	"main_items":
+	["PLAY FROM START", "CONTINUE FROM CHECKPOINT", "PRACTICE A LEVEL", "TUTORIAL", "OPTIONS"],
+	"best_score": "BEST SCORE %d",
+	"level_count": "%d LEVELS",
+	# 000 — first run
+	"first_number": "000",
+	"first_title": "FIRST RUN",
+	"first_intro": "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE",
+	"first_items": ["TAKE THE TUTORIAL", "SKIP TO THE GAME", "MAIN MENU"],
+	# 001-B — options
+	"options_number": "001-B",
+	"options_title": "OPTIONS",
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
+	"on": "[X]",
+	"off": "[ ]",
+	# nnn-A — paused, and the question before quitting
+	"paused_title": "PAUSED",
+	"suspended": "WORK SUSPENDED AT LEVEL %d",
+	"remaining": " · T-%d:%02d REMAINING",
+	"suspended_tutorial": "WORK SUSPENDED · TUTORIAL",
+	"resume": "RESUME",
+	"end_game": "END GAME",
+	"end_tutorial": "END TUTORIAL",
+	"pause_note": "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE",
+	"on_hold": "ON HOLD",
+	"confirm_title": "CONFIRM",
+	"confirm_question": "END THIS GAME?\nPROGRESS SINCE THE LAST CHECKPOINT IS LOST",
+	"keep_playing": "NO, KEEP PLAYING",
+	"end_the_game": "YES, END THE GAME",
+	# nnn — a life lost
+	"defect_title": "LEVEL %d — DEFECT",
+	"defect_death": "DEFECT: STEPPED ON A DEATH TILE",
+	"defect_timeout": "DEFECT: OUT OF TIME",
+	"lives_remaining": "LIVES REMAINING",
+	"try_again": "TRY AGAIN FROM THE START TILE",
+	"death_note": "NOTE: ROUTE AROUND THE DEATH TILES",
+	"timeout_note": "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY",
+	"rework": "REWORK",
+	# END — game over
+	"end_number": "END",
+	"game_over_title": "GAME OVER",
+	"final_score": "FINAL SCORE",
+	"previous_best": "PREVIOUS BEST  %d",
+	"game_over_items": ["PLAY FROM START", "RESTART FROM A CHECKPOINT", "MAIN MENU"],
+	"new_best": "NEW BEST",
+	# CP — the checkpoint picker
+	"cp_number": "CP",
+	"checkpoints_title": "CHECKPOINTS",
+	"checkpoints_header": "RESTART FROM A SAVED CHECKPOINT",
+	"saved": "SAVED",
+	"locked": "LOCKED",
+	# P-nn — practice
+	"practice_number": "P-%02d",
+	"practice_title": "PRACTICE — LEVELS %d–%d",
+	"practice_columns": "PART   BEST",
+	"part": "L%02d",
+	"best_with_stars": "%ds ★%d",
+	"best": "%ds",
+	"no_best": "—",
+	"previous_page": "<  P-%02d",
+	"next_page": "P-%02d  >",
+	"practice_caption": "SHEET %d OF %d · %d PARTS RELEASED",
+	# nnn — level clear
+	"inspection_title": "LEVEL %d — INSPECTION",
+	"checkpoint_title": "LEVEL %d — CHECKPOINT",
+	"level_bonus": "LEVEL BONUS",
+	"time_bonus": "TIME BONUS",
+	"stars_collected": "STARS COLLECTED",
+	"seconds": "%d s",
+	"tap_next": "TAP TO CONTINUE TO SHEET %03d",
+	"checkpoint_saved": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
+	"passed": "PASSED",
+	# 100 — the end
+	"end_sheet": "100",
+	"congratulations_title": "CONGRATULATIONS",
+	"congratulations_note": "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE",
+	"completion_title": "FINAL INSPECTION",
+	"score_at_100": "SCORE AT LEVEL 100",
+	"completion_bonus": "COMPLETION BONUS",
+	"lives_bonus": "LIVES REMAINING ×50",
+	"completion_caption": "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING",
+	"approved": "APPROVED",
+	# for screen readers
+	"a11y_previous": "Previous page",
+	"a11y_next": "Next page",
+	"a11y_level": "Level %d",
+	"a11y_level_locked": "Level %d, locked",
+	"a11y_checkpoint": "Restart after level %d",
+	"a11y_checkpoint_locked": "Checkpoint at level %d, not reached",
+	"a11y_toggle": "%s, %s",
+	"a11y_on": "on",
+	"a11y_off": "off",
+	"a11y_lives": "%d lives remaining",
+}
 
 var current := ""
+## The game's tilt reader; main.gd hands it over.
+var tilt: TiltInput
+
 var _panel: Control
+var _bg: ColorRect
+var _grid: Blueprint.Grid
+var _frame: Line2D
+var _header: Label
+var _block: Control
+var _hero: Player
+var _woman: Player
+## "tilt" (eyes follow the tilt, or the mouse), "down" (head hung), "right",
+## or "pair" (the two of them, facing each other).
+var _hero_mode := ""
 var _first_button: Control
 var _tap_action := ""
 var _tap_ready_at := 0.0
-var _tween: Tween
-## Button art with its baked-in text wiped, for buttons the original lacked.
-var _blank_buttons := {}
-## Menu art with the baked-in title wiped, by art name.
-var _blank_panels := {}
+## Tweens of our own (count-ups, cheers) to stop when the sheet closes.
+var _tweens: Array[Tween] = []
+## Whether the sheet now opening plays its opening motion: not with reduced
+## motion, and not when the same sheet is redrawn (an options toggle).
+var _animate := true
+## Seconds into the opening cascade so far: each row revealed adds its pitch.
+var _cascade := 0.0
+## Seconds since the sheet opened, for the idle glance.
+var _clock := 0.0
+## The phone's resting gravity, a slow average, so a lean reads the same
+## however the phone is held.
+var _rest := Vector3.ZERO
+## A desktop: his eyes follow the mouse once it has moved.
+var _mouse_seen := false
+## The level the pause sheet was opened on, for the confirm sheet's number.
+var _level := 0
+var _tutorial := false
 
 
 func _ready() -> void:
@@ -53,232 +198,26 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	get_viewport().size_changed.connect(_recentre)
+	get_viewport().size_changed.connect(_layout)
 
 
-func _bottom() -> float:
-	return -PANEL_H_PTS * 0.35
-
-
-func _top() -> float:
-	return PANEL_H_PTS * 0.25
-
-
-## Convert the original's point coordinates (origin at the panel centre, y up)
-## and anchor into a top-left position in the panel's @3x pixel space.
-func _place(node: Control, size_px: Vector2, pos_pts: Vector2, anchor: Vector2) -> void:
-	node.position = Vector2(
-		pos_pts.x * 3.0 - anchor.x * size_px.x, -pos_pts.y * 3.0 - (1.0 - anchor.y) * size_px.y
-	)
-
-
-func _recentre() -> void:
-	if _panel:
-		_panel.position = get_viewport_rect().size / 2.0
-
-
-func close() -> void:
-	if _tween:
-		_tween.kill()
-	for c in get_children():
-		c.queue_free()
-	_panel = null
-	_first_button = null
-	_tap_action = ""
-	current = ""
-	visible = false
-
-
-## title: overrides the art's own title (TITLES) when not empty.
-func _open(tag: String, bg_name: String, fade := true, title := "") -> void:
-	close()
-	current = tag
-	visible = true
-	var bg := ColorRect.new()
-	bg.color = BASE_BG
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
-
-	_panel = Control.new()
-	_panel.scale = Vector2.ONE * SCALE
-	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_panel)
-	_recentre()
-
-	var art := TextureRect.new()
-	art.texture = _blank_panel(bg_name)
-	art.position = -PANEL_SIZE / 2.0
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(art)
-	_title(title if title != "" else TITLES.get(bg_name, ""))
-
-	if fade:
-		_panel.modulate.a = 0.0
-		_tween = create_tween()
-		_tween.tween_property(_panel, "modulate:a", 1.0, 0.4)
-
-
-## The menu art without its title: everything above the panel is plain
-## background in every menu, apart from the title.
-func _blank_panel(bg_name: String) -> Texture2D:
-	if not _blank_panels.has(bg_name):
-		var img: Image = load("res://assets/menu/%s.png" % bg_name).get_image()
-		img.decompress()
-		img.fill_rect(Rect2i(0, 0, img.get_width(), PANEL_TOP_ROW), BASE_BG)
-		_blank_panels[bg_name] = ImageTexture.create_from_image(img)
-	return _blank_panels[bg_name]
-
-
-## The menu title, standing on the panel's top edge.
-func _title(text: String) -> void:
-	if text == "":
+func _process(delta: float) -> void:
+	if _hero == null:
 		return
-	Hud.fonts()
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_override("font", Hud.sans_bold)
-	l.add_theme_font_size_override("font_size", TITLE_PX)
-	l.add_theme_color_override("font_color", Color.WHITE)
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(l)
-	l.size = l.get_minimum_size()
-	var edge := PANEL_TOP_ROW - PANEL_SIZE.y / 2.0
-	l.position = Vector2(-l.size.x / 2.0, edge - Hud.sans_bold.get_ascent(TITLE_PX))
+	_clock += delta
+	match _hero_mode:
+		"tilt":
+			_hero.look = _hero.look.lerp(_look_target(delta), minf(1.0, delta * LOOK_RATE))
+		"down":
+			_hero.look = Vector2(0.0, 0.6)
+	_hero.tick(delta)
+	if _woman:
+		_woman.tick(delta)
 
 
-func _button(
-	tag: String, act: String, pos_pts: Vector2, anchor: Vector2, enabled := true
-) -> TextureButton:
-	var b := TextureButton.new()
-	var normal: Texture2D = load("res://assets/buttons/%s.png" % tag)
-	var on: Texture2D = load("res://assets/buttons/%s_on.png" % tag)
-	b.texture_normal = normal
-	b.texture_pressed = on
-	b.texture_hover = on
-	b.texture_focused = on
-	b.size = normal.get_size()
-	_place(b, normal.get_size(), pos_pts, anchor)
-	if enabled:
-		b.pressed.connect(func(): action.emit(act))
-	else:
-		b.disabled = true
-		b.focus_mode = Control.FOCUS_NONE
-	_panel.add_child(b)
-	if enabled and _first_button == null:
-		_first_button = b
-	return b
-
-
-## A button in the original's style with our own text: the art of `tag` with
-## its baked-in text wiped, and `text` drawn over it.
-func _text_button(
-	tag: String,
-	text: String,
-	act: String,
-	pos_pts: Vector2,
-	anchor: Vector2,
-	size_pts := Vector2.ZERO
-) -> TextureButton:
-	var b := TextureButton.new()
-	var normal := _blank_button(tag)
-	var on := _blank_button(tag + "_on")
-	b.texture_normal = normal
-	b.texture_pressed = on
-	b.texture_hover = on
-	b.texture_focused = on
-	var size_px := normal.get_size()
-	if size_pts != Vector2.ZERO:  # stretch the art to a smaller button
-		b.ignore_texture_size = true
-		b.stretch_mode = TextureButton.STRETCH_SCALE
-		size_px = size_pts * 3.0
-	b.size = size_px
-	_place(b, size_px, pos_pts, anchor)
-	b.pressed.connect(func(): action.emit(act))
-	_panel.add_child(b)
-	Hud.fonts()
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_override("font", Hud.mono)
-	l.add_theme_font_size_override("font_size", 40)
-	l.add_theme_color_override("font_color", Color.WHITE)
-	# A thin outline in the same colour matches the art's heavier lettering.
-	l.add_theme_color_override("font_outline_color", Color.WHITE)
-	l.add_theme_constant_override("outline_size", 3)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	l.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(l)
-	if _first_button == null:
-		_first_button = b
-	return b
-
-
-## Blend each row of the button from its left edge to its right edge, which
-## keeps the art's soft gradient but drops the text in the middle.
-func _blank_button(tag: String) -> Texture2D:
-	if _blank_buttons.has(tag):
-		return _blank_buttons[tag]
-	var img: Image = load("res://assets/buttons/%s.png" % tag).get_image()
-	img.decompress()
-	var w := img.get_width()
-	var margin := int(w * 0.12)
-	for y in img.get_height():
-		var left := img.get_pixel(margin, y)
-		var right := img.get_pixel(w - 1 - margin, y)
-		for x in range(margin, w - margin):
-			var c := left.lerp(right, float(x - margin) / float(w - 1 - 2 * margin))
-			c.a = img.get_pixel(x, y).a
-			img.set_pixel(x, y, c)
-	var tex := ImageTexture.create_from_image(img)
-	_blank_buttons[tag] = tex
-	return tex
-
-
-func _label(
-	text: String,
-	size_pts: float,
-	color: Color,
-	pos_pts: Vector2,
-	anchor: Vector2,
-	font: Font = null
-) -> Label:
-	Hud.fonts()
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_override("font", font if font else Hud.mono)
-	l.add_theme_font_size_override("font_size", int(size_pts * 3.0))
-	l.add_theme_color_override("font_color", color)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(l)
-	var sz := l.get_minimum_size()
-	l.size = sz
-	_place(l, sz, pos_pts, anchor)
-	return l
-
-
-func _main_menu_button() -> void:
-	var b := _button(
-		"main_menu", "main menu", Vector2(0, _bottom() - SPACE / 2.0), Vector2(0.5, 1.0)
-	)
-	b.z_index = 1
-
-
-func _two_buttons(
-	lhs_tag: String, lhs_act: String, rhs_tag: String, rhs_act: String, rhs_enabled := true
-) -> void:
-	var y := _bottom() + SPACE
-	var lw: float = load("res://assets/buttons/%s.png" % lhs_tag).get_width() / 3.0
-	var rw: float = load("res://assets/buttons/%s.png" % rhs_tag).get_width() / 3.0
-	_button(lhs_tag, lhs_act, Vector2(-lw / 2.0 - SPACE / 2.0, y), Vector2(0.5, 0.0))
-	_button(rhs_tag, rhs_act, Vector2(rw / 2.0 + SPACE / 2.0, y), Vector2(0.5, 0.0), rhs_enabled)
-
-
-func _focus_first() -> void:
-	if _first_button:
-		_first_button.call_deferred("grab_focus")
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_mouse_seen = true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -293,7 +232,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-	# Taps on the background (not on a button) for "tap to continue" menus.
+	# Taps on the sheet (not on a button) for "tap to continue" menus.
 	if _tap_action == "" or Time.get_ticks_msec() / 1000.0 < _tap_ready_at:
 		return
 	if (
@@ -305,6 +244,418 @@ func _gui_input(event: InputEvent) -> void:
 		action.emit(_tap_action)
 
 
+func close() -> void:
+	for tw in _tweens:
+		if tw.is_valid():
+			tw.kill()
+	_tweens.clear()
+	for c in get_children():
+		c.queue_free()
+	_panel = null
+	_hero = null
+	_woman = null
+	_hero_mode = ""
+	_first_button = null
+	_tap_action = ""
+	current = ""
+	visible = false
+
+
+# --- the sheet --------------------------------------------------------------
+
+
+## A fresh sheet: the field, grid and frame over the whole screen, the header,
+## the title block and an empty panel. `number` is the sheet number for the
+## header and the title block.
+func _open(tag: String, number: String, title: String, frame_color := Blueprint.INK) -> void:
+	_animate = Blueprint.motion() and current != tag
+	close()
+	current = tag
+	visible = true
+	_cascade = 0.0
+	_clock = 0.0
+	var vp := get_viewport_rect().size
+	_bg = Blueprint.rect(self, Blueprint.FIELD, Vector2.ZERO, vp)
+	_grid = Blueprint.grid(self, vp)
+	_frame = Blueprint.line(self, Blueprint.frame_points(vp), frame_color, Blueprint.FRAME_WIDTH)
+	var heading: String = TEXT.header % [number, title]
+	_header = Blueprint.label(self, heading, 14, Blueprint.INK, Vector2.ZERO, 700)
+	_header.accessibility_name = _sentence(title)
+	_block = _title_block(number, frame_color)
+	_panel = Control.new()
+	_panel.size = SHEET
+	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_panel)
+	_layout()
+	if _animate:
+		Blueprint.draw_on(_frame, DRAW_ON)
+		Blueprint.reveal(_header, 0.1)
+		Blueprint.reveal(_block, 0.3)
+
+
+## The title block in the frame's bottom-right corner: revision, scale and
+## sheet number on the left, who drew it on the right.
+func _title_block(number: String, color: Color) -> Control:
+	var block := Control.new()
+	block.size = TITLE_BLOCK
+	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(block)
+	Blueprint.line(block, Blueprint.box_points(Vector2.ZERO, TITLE_BLOCK), color, 1.2)
+	var mid := TITLE_BLOCK.x / 2.0
+	Blueprint.line(block, PackedVector2Array([Vector2(mid, 0), Vector2(mid, TITLE_BLOCK.y)]), color)
+	var rev: String = Dev.build_info.version
+	if rev == "":
+		rev = TEXT.rev_dev
+	var left: String = TEXT.title_block % [rev, number]
+	Blueprint.label(block, left, 11, Blueprint.INK, Vector2(11, 8))
+	Blueprint.label(block, TEXT.drawn_by, 11, Blueprint.INK, Vector2(mid + 11, 8))
+	return block
+
+
+## Centre the panel and fit the frame to the screen (also on a resize).
+func _layout() -> void:
+	if _panel == null:
+		return
+	var vp := get_viewport_rect().size
+	_panel.position = ((vp - SHEET) / 2.0).floor()
+	_bg.size = vp
+	_grid.size = vp
+	_grid.queue_redraw()
+	_frame.points = Blueprint.frame_points(vp)
+	_header.position = Vector2(Blueprint.INSET + 16, Blueprint.INSET + 10)
+	_block.position = vp - Vector2(Blueprint.INSET, Blueprint.INSET) - TITLE_BLOCK
+
+
+## The sheet number of the level being played, with a sub-sheet letter.
+func _level_number(suffix: String) -> String:
+	return ("T" if _tutorial else "%03d" % _level) + "-" + suffix
+
+
+## "PLAY FROM START" -> "Play from start", for screen readers.
+func _sentence(text: String) -> String:
+	return text.left(1) + text.substr(1).to_lower()
+
+
+# --- the parts ----------------------------------------------------------------
+
+
+## A strip across the panel at `y`, so a row's pieces can fade in as one.
+func _row(y: float, height := ROW_H) -> Control:
+	var row := Control.new()
+	row.position = Vector2(0, y)
+	row.size = Vector2(SHEET.x, height)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(row)
+	return row
+
+
+## Fade a row in, each a little after the one before, when the sheet opens.
+func _reveal(node: CanvasItem, pitch := 0.07) -> void:
+	if _animate:
+		Blueprint.reveal(node, 0.1 + _cascade)
+	_cascade += pitch
+
+
+## Faint column headings over a list, like ITEM and DESCRIPTION. The last one
+## can sit flush with the list's right edge.
+func _columns(names: Array, xs: Array, right_last := false) -> void:
+	var row := _row(LIST_TOP, 16)
+	for i in names.size():
+		if right_last and i == names.size() - 1:
+			var right := LIST_X + LIST_W - 120.0
+			var pos := Vector2(right, 0)
+			Blueprint.label(
+				row, names[i], 11, Blueprint.FAINT, pos, 500, 120.0, HORIZONTAL_ALIGNMENT_RIGHT
+			)
+		else:
+			Blueprint.label(row, names[i], 11, Blueprint.FAINT, Vector2(xs[i], 0))
+	_reveal(row)
+
+
+## A note or status line in the sheet's small print.
+func _note(text: String, y: float, color := Blueprint.FAINT, size := 10) -> Label:
+	var l := Blueprint.label(_panel, text, size, color, Vector2(LIST_X, y), 500, LIST_W)
+	_reveal(l)
+	return l
+
+
+func _rule(y: float) -> void:
+	_reveal(Blueprint.rule(_panel, y, LIST_X, LIST_X + LIST_W))
+
+
+## Make a button report `act`; the first one on a sheet gets the focus.
+func _connect(b: Button, act: String, enabled := true) -> void:
+	if not enabled:
+		return
+	b.pressed.connect(func(): action.emit(act))
+	if _first_button == null:
+		_first_button = b
+
+
+## A row of the parts list, numbered from 1, that reports `act`.
+func _item(index: int, text: String, act: String, y: float, enabled := true) -> Button:
+	var pos := Vector2(LIST_X, y)
+	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, Vector2(LIST_W, 40), enabled)
+	b.accessibility_name = _sentence(text)
+	_connect(b, act, enabled)
+	_reveal(b)
+	return b
+
+
+## A parts list from `y` at `pitch`; `enabled` (optional) says which are open.
+func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array = []) -> void:
+	for i in texts.size():
+		var on: bool = enabled[i] if i < enabled.size() else true
+		_item(i + 1, texts[i], acts[i], y + i * pitch, on)
+
+
+## The way back to the main menu, as the last row of a sheet.
+func _return_item(y: float) -> void:
+	var b := Blueprint.item(_panel, TEXT.return_item, Vector2(LIST_X, y))
+	b.accessibility_name = _sentence(TEXT.main_menu)
+	_connect(b, "main menu")
+	_reveal(b)
+
+
+## A button that draws nothing of its own, over a cell drawn by hand.
+func _clear_button(b: Button) -> void:
+	var clear := StyleBoxFlat.new()
+	clear.draw_center = false
+	b.add_theme_stylebox_override("normal", clear)
+	b.add_theme_stylebox_override("disabled", clear)
+
+
+## A boxed cell of a grid (the checkpoint and practice pickers): a title and a
+## detail line, filled faintly when open. The whole cell is a button.
+func _cell(
+	pos: Vector2,
+	size: Vector2,
+	open: bool,
+	title: String,
+	detail: String,
+	act: String,
+	a11y: String
+) -> Button:
+	var cell := Control.new()
+	cell.position = pos
+	cell.size = size
+	cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(cell)
+	var color := Blueprint.INK if open else Blueprint.FAINT
+	if open:
+		Blueprint.rect(cell, Blueprint.HOVER, Vector2.ONE, size - Vector2(2, 2))
+	Blueprint.line(cell, Blueprint.box_points(Vector2.ZERO, size), color, 1.2 if open else 0.8)
+	Blueprint.label(cell, title, 15, color, Vector2(8, 4), 700 if open else 400)
+	Blueprint.label(cell, detail, 10, color, Vector2(8, size.y - 18))
+	var b := Button.new()
+	b.theme = Blueprint.theme()
+	b.size = size
+	b.disabled = not open
+	if not open:
+		b.focus_mode = Control.FOCUS_NONE
+	b.accessibility_name = a11y
+	_clear_button(b)
+	cell.add_child(b)
+	_connect(b, act, open)
+	_reveal(cell, 0.03)
+	return b
+
+
+## A page arrow on the practice sheet.
+func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11y: String) -> void:
+	var b := Button.new()
+	b.theme = Blueprint.theme()
+	b.text = text
+	b.add_theme_font_size_override("font_size", 12)
+	b.alignment = align
+	b.position = Vector2(x, 282)
+	b.size = Vector2(102, 26)
+	b.accessibility_name = a11y
+	_clear_button(b)
+	_panel.add_child(b)
+	_connect(b, act)
+	_reveal(b)
+
+
+## A line of an inspection table: name, quantity (optional) and value.
+func _table_row(y: float, name: String, qty: String, value: String) -> Control:
+	var row := _row(y)
+	Blueprint.label(row, name, 15, Blueprint.INK, Vector2(LIST_X, 0))
+	if qty != "":
+		Blueprint.label(row, qty, 15, Blueprint.INK, Vector2(226, 0))
+	var right := LIST_X + LIST_W - 120.0
+	var pos := Vector2(right, 0)
+	Blueprint.label(row, value, 15, Blueprint.INK, pos, 700, 120.0, HORIZONTAL_ALIGNMENT_RIGHT)
+	Blueprint.rule(row, 26, LIST_X, LIST_X + LIST_W)
+	return row
+
+
+## TOTAL under a table, with the double rule; returns the figure's label.
+func _total(y: float, text: String) -> Label:
+	var row := _row(y)
+	Blueprint.label(row, TEXT.total, 15, Blueprint.INK, Vector2(LIST_X, 0), 700)
+	var pos := Vector2(LIST_X + LIST_W - 120.0, -6)
+	var l := Blueprint.label(
+		row, text, 22, Blueprint.INK, pos, 700, 120.0, HORIZONTAL_ALIGNMENT_RIGHT
+	)
+	Blueprint.rule(row, 26, LIST_X, LIST_X + LIST_W)
+	Blueprint.rule(row, 29, LIST_X, LIST_X + LIST_W)
+	_reveal(row)
+	return l
+
+
+## FINAL SCORE in big figures, with the previous best under it when known.
+func _score_block(score: int, previous_best: int) -> void:
+	var row := _row(70, 100)
+	Blueprint.label(row, TEXT.final_score, 15, Blueprint.INK, Vector2(LIST_X, 0))
+	Blueprint.label(row, str(score), 48, Blueprint.INK, Vector2(LIST_X, 20), 800)
+	if previous_best > 0:
+		var text: String = TEXT.previous_best % previous_best
+		Blueprint.label(row, text, 12, Blueprint.FAINT, Vector2(LIST_X, 80))
+	_reveal(row)
+
+
+## The TOTAL counts up from `start` as each row is revealed in turn, a tick
+## at a time; `rows` are [{"node": CanvasItem, "points": int}]. `then` runs
+## once it's all in (at once with reduced motion).
+func _count_up(label: Label, start: int, rows: Array, then: Callable) -> void:
+	var sum := [start]
+	if not _animate:
+		for r in rows:
+			sum[0] += r.points
+		label.text = str(sum[0])
+		then.call()
+		return
+	var tw := create_tween()
+	_tweens.append(tw)
+	tw.tween_interval(DRAW_ON)
+	for r in rows:
+		var node: CanvasItem = r.node
+		node.modulate.a = 0.0
+		tw.tween_callback(func(): Blueprint.reveal(node))
+		tw.tween_interval(0.25)
+		var step: int = 5 if r.points > BIG_ROW else 1
+		var left: int = r.points
+		while left > 0:
+			var take := mini(step, left)
+			left -= take
+			tw.tween_interval(TICK)
+			tw.tween_callback(_tick.bind(label, sum, take))
+	tw.tween_callback(then)
+
+
+func _tick(label: Label, sum: Array, take: int) -> void:
+	sum[0] += take
+	label.text = str(sum[0])
+	Audio.play("star", 0.2)
+
+
+## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
+## motion or on a redrawn sheet); MapMan cheers as it lands.
+func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY) -> void:
+	if not _animate:
+		Blueprint.stamp(_panel, text, pos, color)
+		_cheer()
+		return
+	Blueprint.stamp(_panel, text, pos, color, true, delay)
+	var tw := create_tween()
+	_tweens.append(tw)
+	tw.tween_callback(_cheer).set_delay(delay + STAMP_FALL)
+
+
+## Wide eyes and a hop (just the eyes with reduced motion: nothing landed).
+func _cheer() -> void:
+	for p in [_hero, _woman]:
+		if p == null:
+			continue
+		if Blueprint.motion():
+			p.cheer()
+		else:
+			p.happy = 1.0
+
+
+# --- the hero ---------------------------------------------------------------------
+
+
+func _figure(art: String, pos: Vector2) -> Player:
+	var p := Player.new()
+	p.art = art
+	p.position = pos
+	p.scale = Vector2.ONE * HERO_SCALE
+	_panel.add_child(p)
+	p.show_player()
+	return p
+
+
+## MapMan on an inked ellipse, with his height dimensioned beside him.
+## mode: "tilt" (eyes follow the tilt), "down" (head hung) or "right".
+func _hero_on(mode: String) -> void:
+	var ellipse := Blueprint.ellipse_points(HERO_POS + Vector2(0, 2), 34, 12)
+	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
+	_dimension()
+	_hero = _figure("man", HERO_POS)
+	_hero_mode = mode
+	if mode == "right":
+		_hero.face_right_idle()
+	else:
+		_hero.auto_look = false
+
+
+## A dimension line from his feet to the top of his head.
+func _dimension() -> void:
+	var x := HERO_POS.x + 50.0
+	var top := HERO_POS.y - (HERO_HEIGHT + Player.FEET_LIFT) * HERO_SCALE
+	var feet := HERO_POS.y - Player.FEET_LIFT * HERO_SCALE
+	var c := Blueprint.FAINT
+	Blueprint.line(_panel, PackedVector2Array([Vector2(x, top), Vector2(x, feet)]), c)
+	for y: float in [top, feet]:
+		Blueprint.line(_panel, PackedVector2Array([Vector2(x - 5, y), Vector2(x + 5, y)]), c)
+	var mid := (top + feet) / 2.0 - 7.0
+	Blueprint.label(_panel, str(roundi(feet - top)), 10, c, Vector2(x + 8, mid))
+
+
+## MapMan and MapWoman together, facing each other, as at the end.
+func _pair_on() -> void:
+	var ellipse := Blueprint.ellipse_points(Vector2(500, 236), 60, 14)
+	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
+	_hero = _figure("man", Vector2(478, 232))
+	_hero.face_right_idle()
+	_woman = _figure("woman", Vector2(524, 232))
+	_woman.flip = -1.0
+	_woman.face_left_idle()
+	_hero_mode = "pair"
+
+
+## Where MapMan looks: the way the phone is tilted (relative to how it is
+## held), the mouse on a desktop, or a slow glance about when neither has
+## been seen (so screenshots stay the same from run to run).
+func _look_target(delta: float) -> Vector2:
+	if TiltInput.has_accelerometer():
+		var g := Input.get_gravity().normalized()
+		if _rest == Vector3.ZERO:
+			_rest = g
+		else:
+			_rest = _rest.lerp(g, minf(1.0, delta * REST_RATE)).normalized()
+		return _clamp_look(TiltInput.steer_from_gravity(g, _rest) * LOOK_GAIN)
+	if _mouse_seen:
+		var head := _hero.global_position - Vector2(0, 62.0 * HERO_SCALE)
+		return _clamp_look((get_global_mouse_position() - head) / 150.0)
+	return Vector2(sin(_clock * 0.8) * 0.5, sin(_clock * 0.5) * 0.2)
+
+
+## Looking up further than this would turn his back (Player draws no face).
+func _clamp_look(v: Vector2) -> Vector2:
+	return Vector2(clampf(v.x, -1.0, 1.0), clampf(v.y, -0.5, 1.0))
+
+
+# --- tap to continue, focus ---------------------------------------------------------
+
+
+func _focus_first() -> void:
+	if _first_button:
+		_first_button.call_deferred("grab_focus")
+
+
 func _tap_to(act: String, delay := 0.3) -> void:
 	_tap_action = act
 	_tap_ready_at = Time.get_ticks_msec() / 1000.0 + delay
@@ -313,342 +664,261 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool) -> void:
-	_open("main", "welcome")
-	var space_y := SPACE * 0.75
-	var y := _bottom() + space_y
-	# Options and practice share the bottom row; each is half its width.
-	_button("options", "options", Vector2(-SPACE / 2.0, y), Vector2(1.0, 0.0))
-	_text_button("options", "practice", "practice", Vector2(SPACE / 2.0, y), Vector2(0.0, 0.0))
-	y += 119.0 / 3.0 + space_y
-	_button("tutorial", "tutorial", Vector2(0, y), Vector2(0.5, 0.0))
-	y += 119.0 / 3.0 + space_y
-	var cp_tag := "restart_active" if has_checkpoint else "restart_inactive"
-	_button(cp_tag, "restart from checkpoint", Vector2(0, y), Vector2(0.5, 0.0), has_checkpoint)
-	y += 119.0 / 3.0 + space_y
-	_button("play_from_start", "play from start", Vector2(0, y), Vector2(0.5, 0.0))
-	_first_button = _panel.get_child(_panel.get_child_count() - 1)
+func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
+	_open("main", TEXT.main_number, TEXT.main_title)
+	_columns([TEXT.col_item, TEXT.col_description], [TEXT_X, TEXT_X + 6 * CHAR_W])
+	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
+	_items(TEXT.main_items, acts, 80, 44, [true, has_checkpoint, true, true, true])
+	var parts: Array[String] = []
 	if highscore > 0:
-		_label(
-			"best score %d" % highscore,
-			20,
-			Color.WHITE,
-			Vector2(0, _bottom() - SPACE * 1.2),
-			Vector2(0.5, 1.0)
-		)
+		parts.append(TEXT.best_score % highscore)
+	if levels > 0:
+		parts.append(TEXT.level_count % levels)
+	if not parts.is_empty():
+		_note(TEXT.note % " · ".join(parts), 308)
+	_hero_on("tilt")
 	_focus_first()
 
 
 func show_first_play() -> void:
-	_open("first_play", "newbie")
-	_two_buttons("take_tutorial", "take tutorial", "play_game", "play game")
-	_main_menu_button()
+	_open("first_play", TEXT.first_number, TEXT.first_title)
+	_note(TEXT.first_intro, LIST_TOP, Blueprint.FAINT, 11)
+	_items(TEXT.first_items, ["take tutorial", "play game", "main menu"], 84)
+	_hero_on("tilt")
 	_focus_first()
 
 
 func show_options() -> void:
-	_open("options", "options")
-	# The art has "playing position" printed on it; that setting is replaced
-	# by automatic tilt calibration, so cover it with a heading of our own.
-	var cover := ColorRect.new()
-	cover.color = Color.WHITE
-	cover.position = Vector2(-560, -150)
-	cover.size = Vector2(1120, 110)
-	cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(cover)
-	_label("sound and vibration", 16, Color.BLACK, Vector2(0, 50), Vector2(0.5, 0.5))
-
-	# Three columns: music, sound effects, vibration (the last is ours).
-	var bw := 359.0 / 3.0
-	var bh := 110.0 / 3.0
-	var x_left := -bw * 1.5 - SPACE
-	var x_right := -bw * 0.5
-	var x_vib := bw * 0.5 + SPACE
-	var y := _bottom() + SPACE * 2.0
-	var m_off := "options_musicoff" + ("" if Save.music_on else "_active")
-	var m_on := "options_musicon" + ("_active" if Save.music_on else "")
-	var f_off := "options_fxoff" + ("" if Save.fx_on else "_active")
-	var f_on := "options_fxon" + ("_active" if Save.fx_on else "")
-	_button(m_off, "music off", Vector2(x_left, y), Vector2.ZERO)
-	_button(m_on, "music on", Vector2(x_left, y + bh + SPACE), Vector2.ZERO)
-	_button(f_off, "fx off", Vector2(x_right, y), Vector2.ZERO)
-	_button(f_on, "fx on", Vector2(x_right, y + bh + SPACE), Vector2.ZERO)
-	# The fx buttons' art in the matching on/off state, with our own text.
-	var v_off := "options_fxoff" + ("" if Save.vibration_on else "_active")
-	var v_on := "options_fxon" + ("_active" if Save.vibration_on else "")
-	_text_button(v_off, "vibrate off", "vibration off", Vector2(x_vib, y), Vector2.ZERO)
-	_text_button(v_on, "vibrate on", "vibration on", Vector2(x_vib, y + bh + SPACE), Vector2.ZERO)
-	_main_menu_button()
+	_open("options", TEXT.options_number, TEXT.options_title)
+	_columns([TEXT.col_parameter, TEXT.col_value], [TEXT_X, TEXT_X + 20 * CHAR_W])
+	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
+	var acts := ["music", "fx", "vibration", "reduce motion"]
+	for i in acts.size():
+		var on: bool = states[i]
+		var text := "%-20s%s" % [TEXT.options[i], TEXT.on if on else TEXT.off]
+		var b := Blueprint.item(_panel, text, Vector2(LIST_X, 80 + i * 44))
+		var state: String = TEXT.a11y_on if on else TEXT.a11y_off
+		b.accessibility_name = TEXT.a11y_toggle % [_sentence(TEXT.options[i]), state]
+		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
+		_reveal(b)
+	_return_item(80 + acts.size() * 44)
+	_hero_on("tilt")
 	_focus_first()
 
 
-func show_pause(tutorial: bool) -> void:
-	_open("pause", "paused_game")
+func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
+	_level = level
+	_tutorial = tutorial
+	_open("pause", _level_number("A"), TEXT.paused_title)
+	var status: String = TEXT.suspended_tutorial
+	if not tutorial:
+		status = TEXT.suspended % level
+		if seconds >= 0:
+			@warning_ignore("integer_division")
+			status += TEXT.remaining % [seconds / 60, seconds % 60]
+	_note(status, LIST_TOP, Blueprint.FAINT, 11)
+	_item(1, TEXT.resume, "unpause", 90)
 	if tutorial:
-		_two_buttons("paused_tutorial_return", "unpause", "paused_tutorial_end", "end tutorial")
+		_item(2, TEXT.end_tutorial, "end tutorial", 138)
 	else:
-		_two_buttons("paused_game_return", "unpause", "paused_game_end", "confirm quit")
+		_item(2, TEXT.end_game, "confirm quit", 138)
+	_note(TEXT.pause_note, 200)
+	_hero_on("tilt")
+	_reveal(Blueprint.stamp(_panel, TEXT.on_hold, Vector2(230, 240), Blueprint.GOLD))
 	_focus_first()
 
 
 func show_confirm_quit() -> void:
-	_open("confirm_quit", "confirm_quit")
-	_two_buttons("confirm_quit_yes", "end game", "confirm_quit_no", "unpause")
+	_open("confirm_quit", _level_number("A"), TEXT.confirm_title, Blueprint.PINK)
+	_note(TEXT.confirm_question, LIST_TOP, Blueprint.PINK, 11)
+	_item(1, TEXT.keep_playing, "unpause", 100)
+	_item(2, TEXT.end_the_game, "end game", 148)
+	_hero_on("tilt")
 	_focus_first()
 
 
-func show_lose_life(lives: int) -> void:
-	_open("lose_life", "lose_life")
-	_button("try_again", "try again", Vector2(0, _bottom() + SPACE), Vector2(0.5, 0.0))
-	_label(str(lives), 22, BASE_BG, Vector2(-22, 23), Vector2(0.5, 0.0))
+## reason: "death" (a death tile) or "timeout" (the clock ran out).
+func show_lose_life(lives: int, level := 0, reason := "death") -> void:
+	_level = level
+	_open("lose_life", "%03d" % level, TEXT.defect_title % level, Blueprint.PINK)
+	var timeout := reason == "timeout"
+	_note(TEXT.defect_timeout if timeout else TEXT.defect_death, LIST_TOP, Blueprint.PINK, 11)
+	var row := _row(96, 24)
+	var l := Blueprint.label(row, TEXT.lives_remaining, 15, Blueprint.INK, Vector2(LIST_X, 0))
+	l.accessibility_name = TEXT.a11y_lives % lives
+	for i in maxi(3, lives):
+		var pts := Blueprint.ellipse_points(Vector2(250 + i * 36, 8), 11, 10, 20)
+		if i < lives:
+			var disc := Polygon2D.new()
+			disc.polygon = pts
+			disc.color = Blueprint.PINK
+			disc.antialiased = true
+			row.add_child(disc)
+		Blueprint.line(row, pts, Blueprint.PINK, 1.5)
+	_reveal(row)
+	_rule(128)
+	_item(1, TEXT.try_again, "try again", 150)
+	_note(TEXT.timeout_note if timeout else TEXT.death_note, 212)
+	_hero_on("down")
+	_stamp(TEXT.rework, Vector2(222, 240), Blueprint.PINK)
 	_focus_first()
 
 
-func show_game_over(score: int, pb: bool, has_checkpoint: bool) -> void:
-	_open("game_over", "game_over")
-	var cp_tag := "game_over_checkpoint" if has_checkpoint else "game_over_checkpoint_locked"
-	_two_buttons(
-		"game_over_restart", "play from start", cp_tag, "restart from checkpoint", has_checkpoint
-	)
-	_main_menu_button()
-	var text := ("%d - new PB!" % score) if pb else str(score)
-	_label(text, 30, Color.BLACK, Vector2(0, 35), Vector2(0.5, 0.5))
+func show_game_over(score: int, pb: bool, has_checkpoint: bool, previous_best := 0) -> void:
+	_open("game_over", TEXT.end_number, TEXT.game_over_title, Blueprint.PINK)
+	_score_block(score, previous_best)
+	_rule(182)
+	var acts := ["play from start", "restart from checkpoint", "main menu"]
+	_items(TEXT.game_over_items, acts, 192, 44, [true, has_checkpoint, true])
+	_hero_on("down")
+	if pb:
+		_stamp(TEXT.new_best, Vector2(220, 100), Blueprint.GOLD)
 	_focus_first()
 
 
+## The checkpoint picker: `reached` holds the levels whose checkpoint is saved.
 func show_restart(reached: Array) -> void:
-	_open("restart", "restart_from_checkpoint")
-	var rows := [[80, 85, 90, 95], [50, 60, 70, 75], [10, 20, 30, 40]]
-	var bw := 259.0 / 3.0
-	var bh := 117.0 / 3.0
-	var width := 4.0 * bw + 3.0 * SPACE
-	var y := _bottom() + SPACE
-	for row in rows:
-		var x := -0.5 * width
-		for level in row:
-			var ok: bool = level in reached
-			var tag := "Checkpoint_%d" % level if ok else "Checkpoint_%d_locked" % level
-			_button(tag, "L%d" % level, Vector2(x, y), Vector2.ZERO, ok)
-			x += bw + SPACE
-		y += bh + SPACE
-	_main_menu_button()
+	_open("restart", TEXT.cp_number, TEXT.checkpoints_title)
+	_columns([TEXT.checkpoints_header], [LIST_X])
+	for r in CHECKPOINT_ROWS.size():
+		for c in CHECKPOINT_ROWS[r].size():
+			var level: int = CHECKPOINT_ROWS[r][c]
+			var open := level in reached
+			var pos := Vector2(LIST_X + c * 100, 80 + r * 50)
+			var detail: String = TEXT.saved if open else TEXT.locked
+			var a11y: String = (
+				(TEXT.a11y_checkpoint if open else TEXT.a11y_checkpoint_locked) % level
+			)
+			_cell(pos, Vector2(90, 40), open, str(level), detail, "L%d" % level, a11y)
+	_return_item(240)
+	_hero_on("tilt")
 	_focus_first()
 
 
 ## Practice: pick any level reached in the main game and play just that one.
 ## furthest: levels 1..furthest are open. bests: Save.bests.
-## note: a line under the heading, e.g. how the last practice run went.
+## note: shown in place of the caption, e.g. how the last practice run went.
 func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note := "") -> void:
-	_open("practice", "restart_from_checkpoint", true, "PRACTICE")
-	# The art says "select checkpoint" under the title: cover it with our own.
-	var heading_cover := ColorRect.new()
-	heading_cover.color = Color.WHITE
-	heading_cover.position = Vector2(-340, -200)
-	heading_cover.size = Vector2(680, 70)
-	heading_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(heading_cover)
 	var first := page * PRACTICE_PAGE + 1
 	var last := mini(first + PRACTICE_PAGE - 1, count)
-	var heading := note if note != "" else "levels %d-%d" % [first, last]
-	_label(heading, 13, Color.BLACK, Vector2(0, 54), Vector2(0.5, 0.5))
-
-	var cw := 70.0
-	var ch := 31.0
-	var gap := 8.0
-	var x0 := -2.5 * cw - 2.0 * gap
-	var y := 33.0
-	for i in range(PRACTICE_PAGE):
+	var title: String = TEXT.practice_title % [first, last]
+	_open("practice", TEXT.practice_number % (page + 1), title)
+	var on_page := last - first + 1
+	var heads := _row(56, 12)
+	for c in mini(5, on_page):
+		var pos := Vector2(LIST_X + c * 118, 0)
+		Blueprint.label(heads, TEXT.practice_columns, 9, Blueprint.FAINT, pos)
+	_reveal(heads)
+	for i in on_page:
 		var level := first + i
-		if level > count:
-			break
-		var pos := Vector2(x0 + (i % 5) * (cw + gap), y - (i / 5) * (ch + gap / 2.0))
-		_level_cell(level, level <= furthest, bests.get(level, {}), pos, Vector2(cw, ch))
-
+		var open := level <= furthest
+		@warning_ignore("integer_division")
+		var pos := Vector2(LIST_X + (i % 5) * 118, 72 + (i / 5) * 50)
+		var a11y: String = (TEXT.a11y_level if open else TEXT.a11y_level_locked) % level
+		var act := "practice level %d" % level
+		_cell(
+			pos,
+			Vector2(108, 42),
+			open,
+			TEXT.part % level,
+			_best_text(bests, level, open),
+			act,
+			a11y
+		)
 	var pages := ceili(float(count) / PRACTICE_PAGE)
-	# Page arrows either side of the main menu button.
-	var arrow_y := _bottom() - SPACE / 2.0
-	var arrow := Vector2(45, load("res://assets/buttons/main_menu.png").get_height() / 3.0)
 	if page > 0:
-		var act := "practice page %d" % (page - 1)
-		_text_button("options", "<", act, Vector2(-83, arrow_y), Vector2(1.0, 1.0), arrow)
+		var text: String = TEXT.previous_page % page
+		_arrow(
+			text, "practice page %d" % (page - 1), 28, HORIZONTAL_ALIGNMENT_LEFT, TEXT.a11y_previous
+		)
 	if page < pages - 1:
-		var act := "practice page %d" % (page + 1)
-		_text_button("options", ">", act, Vector2(83, arrow_y), Vector2(0.0, 1.0), arrow)
-	_main_menu_button()
+		var text: String = TEXT.next_page % (page + 2)
+		_arrow(
+			text, "practice page %d" % (page + 1), 330, HORIZONTAL_ALIGNMENT_RIGHT, TEXT.a11y_next
+		)
+	var caption: String = TEXT.practice_caption % [page + 1, pages, mini(furthest, count)]
+	if note != "":
+		caption = note.to_upper()
+	var pos := Vector2(130, 288)
+	var l := Blueprint.label(
+		_panel, caption, 10, Blueprint.FAINT, pos, 500, 200.0, HORIZONTAL_ALIGNMENT_CENTER
+	)
+	_reveal(l)
+	_return_item(318)
 	_focus_first()
 
 
-## One level in the practice grid: its number, and its best time and stars.
-func _level_cell(
-	level: int, open: bool, best: Dictionary, pos_pts: Vector2, size_pts: Vector2
-) -> void:
-	var tag := "Checkpoint_10" if open else "Checkpoint_10_locked"
-	var b := TextureButton.new()
-	b.texture_normal = _blank_button(tag)
-	b.texture_pressed = _blank_button(tag + "_on")
-	b.texture_hover = b.texture_pressed
-	b.texture_focused = b.texture_pressed
-	b.ignore_texture_size = true
-	b.stretch_mode = TextureButton.STRETCH_SCALE
-	var size_px := size_pts * 3.0
-	b.size = size_px
-	_place(b, size_px, pos_pts, Vector2(0, 1))
-	if open:
-		b.pressed.connect(func(): action.emit("practice level %d" % level))
-		if _first_button == null:
-			_first_button = b
-	else:
-		b.disabled = true
-		b.focus_mode = Control.FOCUS_NONE
-	_panel.add_child(b)
-	Hud.fonts()
-	var number := Label.new()
-	number.text = str(level)
-	number.add_theme_font_override("font", Hud.mono)
-	number.add_theme_font_size_override("font_size", 40)
-	number.add_theme_color_override("font_color", Color.WHITE)
-	number.add_theme_color_override("font_outline_color", Color.WHITE)
-	number.add_theme_constant_override("outline_size", 3)
-	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	number.position = Vector2(0, 2)
-	number.size = Vector2(size_px.x, 50)
-	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(number)
-	if open and not best.is_empty():
-		var detail := Label.new()
-		detail.text = "%ds" % best.time + ("   %d" % best.stars if best.stars > 0 else "")
-		detail.add_theme_font_override("font", Hud.mono)
-		detail.add_theme_font_size_override("font_size", 24)
-		detail.add_theme_color_override("font_color", Color.WHITE)
-		detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		detail.position = Vector2(0, 54)
-		detail.size = Vector2(size_px.x, 30)
-		detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		b.add_child(detail)
-		if best.stars > 0:
-			# The HUD's star, just before the star count.
-			var star := TextureRect.new()
-			star.texture = load("res://assets/star/star_white_transparent.png")
-			star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			star.size = Vector2(24, 23)
-			var text_w := Hud.mono.get_string_size(detail.text, 0, -1, 24).x
-			star.position = Vector2((size_px.x + text_w) / 2.0 - 44, 58)
-			star.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			b.add_child(star)
+## A level's best in the practice grid: "9s ★1", "12s", "—", or LOCKED.
+func _best_text(bests: Dictionary, level: int, open: bool) -> String:
+	if not open:
+		return TEXT.locked
+	var best: Dictionary = bests.get(level, {})
+	if best.is_empty():
+		return TEXT.no_best
+	if best.stars > 0:
+		return TEXT.best_with_stars % [best.time, best.stars]
+	return TEXT.best % best.time
 
 
-## Level clear: the three bonuses count down into the score, star by star.
+## Level clear: the bonuses are added into the score one row at a time.
 func show_end_level(
-	score: int, level_bonus: int, time_bonus: int, stars: int, checkpoint: bool
+	score: int, level_bonus: int, time_bonus: int, stars: int, checkpoint: bool, level := 0
 ) -> void:
-	_open("end_level", "end_level_checkpoint" if checkpoint else "end_level", false)
-	var score_label := _label(
-		"score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0)
-	)
-	var rows: Array[StarRow] = []
-	rows.append(StarRow.new(self, level_bonus, _top() - 4.5 * SPACE))
-	rows.append(StarRow.new(self, time_bonus, _top() - 9.0 * SPACE))
+	var title: String = (TEXT.checkpoint_title if checkpoint else TEXT.inspection_title) % level
+	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
+	_columns([TEXT.col_item, TEXT.col_qty, TEXT.col_value], [LIST_X, 226], true)
+	var specs := [
+		[TEXT.level_bonus, "1", level_bonus],
+		[TEXT.time_bonus, TEXT.seconds % time_bonus, time_bonus],
+	]
 	if stars > 0:
-		rows.append(StarRow.new(self, stars, _top() - 13.1 * SPACE))
+		specs.append([TEXT.stars_collected, str(stars), stars])
+	var rows := []
+	var y := 84.0
+	for s in specs:
+		rows.append({"node": _table_row(y, s[0], s[1], TEXT.plus % s[2]), "points": s[2]})
+		y += ROW_H
+	var total := _total(y + 4, str(score))
+	if checkpoint:
+		_note(TEXT.checkpoint_saved, 244, Blueprint.GOLD, 11)
+	_note(TEXT.tap_next % (level + 1), 264, Blueprint.FAINT, 11)
+	_hero_on("right")
+	_count_up(
+		total, score, rows, func(): _stamp(TEXT.passed, Vector2(470, 90), Blueprint.GOLD, 0.0)
+	)
 	_tap_to("next level")
-	_count_up(rows, score, score_label, "score %d")
 
 
 func show_congratulations(score: int, pb: bool) -> void:
-	_open("congratulations", "congratulations")
-	var text := ("%d - new PB!" % score) if pb else str(score)
-	_label(text, 30, Color.BLACK, Vector2(0, 5), Vector2(0.5, 0.5))
-	_main_menu_button()
+	_open("congratulations", TEXT.end_sheet, TEXT.congratulations_title, Blueprint.GOLD)
+	_score_block(score, 0)
+	_rule(182)
+	_item(1, TEXT.main_menu, "main menu", 192)
+	_note(TEXT.congratulations_note, 300)
+	_pair_on()
+	if pb:
+		_stamp(TEXT.new_best, Vector2(220, 100), Blueprint.GOLD)
 	_focus_first()
 
 
+## The final inspection: the completion and lives bonuses join the score.
 func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
-	_open("completion", "completion", false)
-	var score_label := _label(
-		"score %d" % score, 20, Color.WHITE, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0)
+	_open("completion", TEXT.end_sheet, TEXT.completion_title, Blueprint.GOLD)
+	_columns([TEXT.col_item, TEXT.col_value], [LIST_X], true)
+	var specs := [
+		[TEXT.score_at_100, str(score), 0],
+		[TEXT.completion_bonus, TEXT.plus % completion_bonus, completion_bonus],
+		[TEXT.lives_bonus, TEXT.plus % lives_bonus, lives_bonus],
+	]
+	var rows := []
+	var y := 84.0
+	for s in specs:
+		rows.append({"node": _table_row(y, s[0], "", s[1]), "points": s[2]})
+		y += ROW_H
+	var total := _total(y + 4, str(score))
+	_note(TEXT.completion_caption, 260, Blueprint.GOLD, 11)
+	_pair_on()
+	_count_up(
+		total, score, rows, func(): _stamp(TEXT.approved, Vector2(458, 84), Blueprint.GOLD, 0.0)
 	)
-	var rows: Array[StarRow] = []
-	rows.append(StarRow.new(self, completion_bonus, _top() - 5.0 * SPACE))
-	rows.append(StarRow.new(self, lives_bonus, _top() - 12.0 * SPACE))
 	_tap_to("completion done")
-	_count_up(rows, score, score_label, "score %d")
-
-
-func _count_up(rows: Array[StarRow], score: int, score_label: Label, fmt: String) -> void:
-	_tween = create_tween()
-	var total := [score]
-	for row in rows:
-		_tween.tween_interval(0.2)
-		var points := row.points
-		while points > 0:
-			var step := 5 if points > StarRow.THRESHOLD else 1
-			points -= step
-			_tween.tween_interval(0.2 if points + step == row.points else 0.1)
-			_tween.tween_callback(
-				func():
-					row.take(step)
-					total[0] += step
-					score_label.text = fmt % total[0]
-					var sz := score_label.get_minimum_size()
-					score_label.size = sz
-					_place(score_label, sz, Vector2(0, _bottom() - SPACE * 1.2), Vector2(0.5, 1.0))
-					Audio.play("star", 0.2)
-			)
-
-
-class StarRow:
-	## A row of blue stars (or "N ★" when there are too many) on a score menu.
-	const LONG_STARS := 12
-	const THRESHOLD := 50
-	var menus: Menus
-	var points: int
-	var remaining: int
-	var y: float
-	var stars: Array[TextureRect] = []
-	var label: Label
-
-	func _init(m: Menus, p: int, y_pts: float) -> void:
-		menus = m
-		points = p
-		remaining = p
-		y = y_pts
-		var tex: Texture2D = load("res://assets/star/star_blue.png")
-		for i in LONG_STARS:
-			var r := TextureRect.new()
-			r.texture = tex
-			r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			m._panel.add_child(r)
-			stars.append(r)
-		label = m._label("", 25, Menus.BASE_BG, Vector2(0, y), Vector2(0.5, 0.5))
-		_update()
-
-	func take(step: int) -> void:
-		remaining = maxi(0, remaining - step)
-		_update()
-
-	func _update() -> void:
-		var star_w := 84.0 / 3.0
-		var star_size := Vector2(84, 81)
-		if remaining > LONG_STARS:
-			label.text = str(remaining)
-			var lsz := label.get_minimum_size()
-			label.size = lsz
-			var lw := lsz.x / 3.0
-			var width := (lw + star_w) * 1.1
-			menus._place(
-				label, lsz, Vector2(-0.5 * width + 0.5 * lw, y - 0.1 * 27.0), Vector2(0.5, 0.5)
-			)
-			for i in stars.size():
-				stars[i].visible = i == 0
-			menus._place(
-				stars[0], star_size, Vector2(0.5 * width - 0.5 * star_w, y), Vector2(0.5, 0.5)
-			)
-		else:
-			label.text = ""
-			var lhs := -0.5 * (remaining * star_w - star_w)
-			for i in stars.size():
-				stars[i].visible = i < remaining
-				if i < remaining:
-					menus._place(
-						stars[i], star_size, Vector2(lhs + i * star_w, y), Vector2(0.5, 0.5)
-					)

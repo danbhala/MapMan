@@ -10,6 +10,9 @@ const TILE_DIR := "res://assets/tiles/"
 const ASSET_SCALE := 1.0 / 3.0  # the imported art is the original @3x set
 const TILE_ALPHA := 0.8
 const APPEAR_TIME := 0.25
+const FOLD_TIME := 0.25
+## Hiding and unhiding ripple out from the player, this long per tile away.
+const RIPPLE_STEP := 0.02
 
 ## Original tile pitch in points (96x69 px @3x).
 const TILE_W := 32.0
@@ -347,31 +350,86 @@ func _process(delta: float) -> void:
 
 # Hiding uses visibility, not scale: Godot never stores a scale of exactly
 # zero, so a "scale == 0" check can't tell a hidden tile from a visible one.
-func _hide_tile(tile: Tile) -> void:
+# The fold and unfold animations run on top: a hidden tile is hidden at once
+# and a stand-in folds away; an unhidden one is visible at once and unfolds.
+func _hide_tile(tile: Tile, animate := false) -> void:
 	if tile.can_hide and tile.sprite:
+		if animate and tile.sprite.visible and Blueprint.motion():
+			_fold(tile)
 		tile.sprite.visible = false
 
 
-func _unhide_tile(tile: Tile) -> void:
+func _unhide_tile(tile: Tile, animate := false) -> void:
 	if tile.sprite:
+		if animate and not tile.sprite.visible and Blueprint.motion():
+			_unfold(tile)
 		tile.sprite.visible = true
+
+
+func _ripple_delay(tile: Tile) -> float:
+	var d := tile.key - position_key
+	return (absi(d.x) + absi(d.y)) * RIPPLE_STEP
+
+
+## A copy of the tile folds flat (scale.y to zero) and goes.
+func _fold(tile: Tile) -> void:
+	var ghost := Sprite2D.new()
+	ghost.texture = tile.sprite.texture
+	ghost.position = tile.sprite.position
+	ghost.scale = tile.sprite.scale
+	ghost.modulate = tile.sprite.modulate
+	add_child(ghost)
+	var tw := create_tween()
+	tw.tween_interval(_ripple_delay(tile))
+	tw.tween_property(ghost, "scale:y", 0.0, FOLD_TIME).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(ghost.queue_free)
+
+
+## The tile unfolds from flat to full height.
+func _unfold(tile: Tile) -> void:
+	var full: float = tile.sprite.scale.y
+	tile.sprite.scale.y = 0.001
+	var tw := create_tween()
+	tw.tween_interval(_ripple_delay(tile))
+	(
+		tw
+		. tween_property(tile.sprite, "scale:y", full, APPEAR_TIME)
+		. set_trans(Tween.TRANS_BACK)
+		. set_ease(Tween.EASE_OUT)
+	)
 
 
 func unhide_tile_at(key: Vector2i) -> void:
 	if tiles.has(key):
-		_unhide_tile(tiles[key])
+		_unhide_tile(tiles[key], true)
 
 
 func hide_tiles() -> void:
 	for tile: Tile in tiles.values():
-		_hide_tile(tile)
+		_hide_tile(tile, true)
 	tiles_hidden = true
 
 
 func unhide_tiles() -> void:
 	for tile: Tile in tiles.values():
-		_unhide_tile(tile)
+		_unhide_tile(tile, true)
 	tiles_hidden = false
+
+
+## A short note that floats up from the player's tile and fades: "+1 ★".
+func float_text(text: String, color: Color) -> void:
+	if not tiles.has(position_key):
+		return
+	var pos: Vector2 = tiles[position_key].position
+	var l := Blueprint.label(self, text, 13, color, pos + Vector2(-40, -92), 700, 80, 1)
+	l.z_index = 15
+	if not Blueprint.motion():
+		get_tree().create_timer(0.9).timeout.connect(l.queue_free)
+		return
+	var tw := create_tween().set_parallel()
+	tw.tween_property(l, "position:y", pos.y - 128, 0.9).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(l, "modulate:a", 0.0, 0.9).set_delay(0.3)
+	tw.chain().tween_callback(l.queue_free)
 
 
 func reset_hide() -> void:
@@ -439,11 +497,22 @@ func on(effect: Dictionary) -> bool:
 	return effect.get(position_key, false)
 
 
-## Consume the effect under the player and draw a plain tile there.
+## Consume the effect under the player and draw a plain tile there, with a
+## little pop as it goes.
 func clear(effect: Dictionary) -> void:
 	if effect.has(position_key):
 		effect[position_key] = false
-		tiles[position_key].sprite.texture = _tex("blank1.png")
+		var sprite: Sprite2D = tiles[position_key].sprite
+		sprite.texture = _tex("blank1.png")
+		if Blueprint.motion() and sprite.visible:
+			var tw := create_tween()
+			tw.tween_property(sprite, "scale", Vector2.ONE * ASSET_SCALE * 1.18, 0.08)
+			(
+				tw
+				. tween_property(sprite, "scale", Vector2.ONE * ASSET_SCALE, 0.16)
+				. set_trans(Tween.TRANS_BACK)
+				. set_ease(Tween.EASE_OUT)
+			)
 
 
 func vanish_duration() -> int:

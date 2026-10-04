@@ -134,6 +134,25 @@ func run() -> void:
 	game.reverse = false
 	game.vanish = 0
 
+	# Stuck in a cobweb, then the tiles hidden.
+	game.stuck = true
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+	await shot("15_stuck")
+	game.stuck = false
+	game.map.hide_tiles()
+	game._flash("_last_hide")
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+	await shot("16_tiles_hidden")
+	game.map.unhide_tiles()
+	game._flash("_last_hide")
+	game.set_background()
+	game.set_controls_message()
+	await frames(40)
+
 	game.advance_level(false)
 	await frames(80)
 	await shot("08_level_clear")
@@ -147,7 +166,15 @@ func run() -> void:
 	await frames(60)
 	await shot("09_tutorial")
 
+	# Losing a life with lives to spare, then the last one.
 	game.tutorial = false
+	game.lives = 2
+	game.lose_life()
+	await frames(90)
+	await shot("17_lose_life")
+	game._on_menu_action("try again")
+	while not game._timer_running:
+		await process_frame
 	game.lives = 1
 	game.lose_life()
 	await frames(90)
@@ -179,6 +206,26 @@ func run() -> void:
 	game._on_menu_action("practice")
 	await frames(40)
 	await shot("14_practice")
+
+	# The remaining sheets: checkpoints, confirm quit, first run.
+	save.checkpoints = {10: 120, 30: 400}
+	game._on_menu_action("main menu")
+	game._on_menu_action("restart from checkpoint")
+	await frames(40)
+	await shot("18_checkpoints")
+	game._on_menu_action("main menu")
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.show_pause_menu()
+	game._on_menu_action("confirm quit")
+	await frames(40)
+	await shot("19_confirm_quit")
+	game._on_menu_action("end game")
+	save.first_play = true
+	game._on_menu_action("play from start")
+	await frames(40)
+	await shot("20_first_play")
 
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
