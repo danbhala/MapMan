@@ -12,8 +12,10 @@ now ported to Godot 4.5.
   from `Script/`. Rerunning it overwrites hand edits to `godot/data/levels.json`.
 - `android-build` branch – holds only the latest APK for phones. Never commit
   APKs or `godot/build/` to master.
-- `docs/wardrobe/` – the plan for unlockable looks (the wardrobe), not built
-  yet: read its README before touching outfits, unlocks or how MapMan is drawn.
+- `docs/wardrobe/` – the wardrobe of looks MapMan can collect and wear: its
+  design and the rules that keep extra parts on him from breaking his
+  animations. Read its README before touching looks, releases or how MapMan
+  is drawn.
 
 ## Checking your work
 
@@ -57,7 +59,7 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
 
 ## Workflow
 
-- Skills: `/verify`, `/new-level`, `/new-tile`, `/build-apk`, `/commit`
+- Skills: `/verify`, `/new-level`, `/new-tile`, `/new-look`, `/build-apk`, `/commit`
   (every commit), `/open-pr` (every PR: title, body, labels), `/release`
   (merging and shipping).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
