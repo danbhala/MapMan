@@ -150,6 +150,10 @@ func _build_panel(theme: Theme) -> Control:
 	)
 	row.add_child(_toggle("Tilt gauge", Dev.show_tilt, func(on): Dev.show_tilt = on))
 	box.add_child(row)
+	row = HBoxContainer.new()
+	row.add_child(_button_for("Release every look", _on_release_looks))
+	row.add_child(_button_for("Empty the wardrobe", _on_empty_wardrobe))
+	box.add_child(row)
 
 	# Tilt tuning
 	box.add_child(_heading("Tilt tuning (saved on this phone, applies to this app)"))
@@ -192,6 +196,28 @@ func _on_play_from_here() -> void:
 func _on_skip_level() -> void:
 	close()
 	game.dev_skip_level()
+
+
+## Every look in the wardrobe, to try them on (dev builds only).
+func _on_release_looks() -> void:
+	if not Dev.enabled:
+		return
+	for id in Wardrobe.ids():
+		Save.release(id)
+	_toast_text("Every look released")
+
+
+## Back to Classic with nothing released. Progress releases its looks again
+## on the next launch.
+func _on_empty_wardrobe() -> void:
+	if not Dev.enabled:
+		return
+	Save.released.clear()
+	Save.seen.clear()
+	Save.worn = "classic"
+	Save.save_all()
+	game.player.outfit = "classic"
+	_toast_text("Wardrobe emptied")
 
 
 func _on_reset_tuning() -> void:

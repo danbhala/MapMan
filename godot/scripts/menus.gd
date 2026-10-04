@@ -901,6 +901,13 @@ func _language_name(code: String) -> String:
 ## The language sheet: the phone's language, then every language in its own
 ## name, as boxes that flow across the sheet, the current one marked. Picking
 ## one reports "language <code>".
+## 001-D: the wardrobe (docs/wardrobe).
+func show_wardrobe() -> void:
+	_open("wardrobe", "001-D", "")
+	_return_item(306)
+	_focus_first()
+
+
 func show_language() -> void:
 	_open("language", TEXT.language_number, _t("language_title"))
 	var choices: Array = [["system", _t("phone_language")]]
@@ -1145,7 +1152,8 @@ func show_end_level(
 	checkpoint: bool,
 	level := 0,
 	seconds_left := -1,
-	last := false
+	last := false,
+	_released := ""
 ) -> void:
 	var title: String = (_t("checkpoint_title") if checkpoint else _t("inspection_title")) % level
 	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
@@ -1173,7 +1181,7 @@ func show_end_level(
 	_tap_to("next level")
 
 
-func show_congratulations(score: int, pb: bool) -> void:
+func show_congratulations(score: int, pb: bool, _released := "") -> void:
 	_open("congratulations", TEXT.end_sheet, _t("congratulations_title"), Blueprint.GOLD)
 	_score_block(score, 0)
 	_rule(182)

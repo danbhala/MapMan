@@ -92,6 +92,10 @@ func run() -> void:
 	save.highscore = 0
 	save.checkpoints.clear()
 	save.first_play = false
+	# Classic, and an empty wardrobe: level 10's clear releases its look.
+	save.worn = "classic"
+	save.released.clear()
+	save.seen.clear()
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	game = load("res://scenes/main.tscn").instantiate()

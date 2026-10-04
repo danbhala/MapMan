@@ -74,6 +74,9 @@ func run() -> void:
 	save.persist = false  # never touch the player's real progress
 	save.highscore = 0
 	save.first_play = false
+	save.worn = "classic"
+	save.released.clear()
+	save.seen.clear()
 	save.has_completed = false
 	save.checkpoints.clear()
 	save.music_on = true

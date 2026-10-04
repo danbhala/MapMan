@@ -179,6 +179,9 @@ func run() -> void:
 	dev.persist = false
 	save.highscore = 0
 	save.first_play = false
+	save.worn = "classic"
+	save.released.clear()
+	save.seen.clear()
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	await frames(5)

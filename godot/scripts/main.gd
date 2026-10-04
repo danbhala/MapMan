@@ -76,6 +76,8 @@ var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 var _practice_page := 0
+## Finishing the game this time released MapWoman: the last sheet says so.
+var _mapwoman_released := false
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -541,6 +543,8 @@ func _flash(which: String) -> void:
 
 func _start_ending() -> void:
 	# MapWoman waits on the bottom path, four tiles in, like the original's (4, 1).
+	# Playing as MapWoman (a look from the wardrobe), MapMan waits for her.
+	_woman.art = "man" if player.outfit == "mapwoman" else "woman"
 	_woman_key = Vector2i(4, completion_level["rows"].size() - 2)
 	_ending_phase = EndingPhase.WAITING
 	_ending_clock = 0.0
@@ -677,12 +681,16 @@ func advance_level(check_point: bool) -> void:
 	if tutorial:
 		next_level()
 		return
+	# The first clear of every 5th level in the main game releases a look.
+	var released := Wardrobe.released_at(level)
+	if not Save.release(released):
+		released = ""
 	var time_bonus := _seconds_remaining() / 2
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
 	)
 
 
@@ -704,9 +712,11 @@ func finish_advancing_level() -> void:
 			level = 1
 			hud.show_stats(true)
 		else:
-			# Past the last level: the bonus map where MapWoman waits.
+			# Past the last level: the bonus map where MapWoman waits. Finishing
+			# the game releases her into the wardrobe.
 			completed = true
 			Save.has_completed = true
+			_mapwoman_released = Save.release("mapwoman")
 			Save.save_all()
 			hud.show_stats(false)
 	load_level()
@@ -731,6 +741,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	tutorial = is_tutorial
 	completed = false
 	practice = false
+	player.outfit = Save.worn
 	score = 0
 	level = start_level
 	lives = INITIAL_LIVES
@@ -889,6 +900,10 @@ func _on_menu_action(act: String) -> void:
 			menus.show_options()
 		"language":
 			menus.show_language()
+		"wardrobe":
+			# The sheet marks what's new, then nothing is new any more.
+			menus.show_wardrobe()
+			Save.mark_seen()
 		"main menu":
 			if game_active:
 				game_over(false)
@@ -929,7 +944,8 @@ func _on_menu_action(act: String) -> void:
 			hud.show_bar(false)
 			hud.show_stats(false)
 			set_background()
-			menus.show_congratulations(score, pb)
+			menus.show_congratulations(score, pb, "mapwoman" if _mapwoman_released else "")
+			_mapwoman_released = false
 		_:
 			if act.begins_with("language "):
 				# "language system" follows the phone; otherwise a locale code.
@@ -941,6 +957,11 @@ func _on_menu_action(act: String) -> void:
 			elif act.begins_with("practice level "):
 				menus.close()
 				start_practice(int(act.get_slice(" ", 2)))
+			elif act.begins_with("wear "):
+				# Only from the wardrobe, between games: he wears it from now on.
+				if Save.wear(act.get_slice(" ", 1)):
+					player.outfit = Save.worn
+				menus.show_wardrobe()
 			elif act.begins_with("L") and act.substr(1).is_valid_int():
 				menus.close()
 				new_game(int(act.substr(1)) + 1)
@@ -999,7 +1020,7 @@ func go_back() -> void:
 				show_pause_menu()
 		"pause", "confirm_quit":
 			_on_menu_action("unpause")
-		"options", "restart", "first_play", "game_over", "congratulations", "practice":
+		"options", "restart", "first_play", "game_over", "congratulations", "practice", "wardrobe":
 			_on_menu_action("main menu")
 		"language":
 			_on_menu_action("options")
