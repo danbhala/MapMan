@@ -137,6 +137,8 @@ func poly(pts: PackedVector2Array, c: Color) -> void:
 
 ## A closed outline.
 func outline(pts: PackedVector2Array, c: Color, width: float) -> void:
+	if pts.is_empty():
+		return
 	var closed := pts.duplicate()
 	closed.append(pts[0])
 	polyline(closed, c, width)
@@ -344,6 +346,8 @@ static func tapered(spine: Array[Vector2], widths: Array[float]) -> PackedVector
 		left.append(spine[i] + normal * widths[i])
 		right.append(spine[i] - normal * widths[i])
 	var out := left.duplicate()
+	if widths[n - 1] > 0.0:
+		out.append(right[n - 1])  # a blunt end; a pointed one shares its tip
 	for i in range(n - 2, -1, -1):
 		out.append(right[i])
 	return out
@@ -351,8 +355,8 @@ static func tapered(spine: Array[Vector2], widths: Array[float]) -> PackedVector
 
 ## The band of a circle of radius r between heights y0 and y1 above its centre.
 static func chord_band(r: float, y0: float, y1: float) -> PackedVector2Array:
-	var w0 := sqrt(r * r - y0 * y0)
-	var w1 := sqrt(r * r - y1 * y1)
+	var w0 := sqrt(maxf(r * r - y0 * y0, 0.0))
+	var w1 := sqrt(maxf(r * r - y1 * y1, 0.0))
 	return PackedVector2Array(
 		[Vector2(-w0, y0), Vector2(w0, y0), Vector2(w1, y1), Vector2(-w1, y1)]
 	)
