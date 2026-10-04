@@ -191,5 +191,7 @@
   "Wardrobe, %d of %d released": "옷장, %d/%d 해금",
   "%s, worn": "%s, 착용 중",
   "Locked, released at level %d": "잠김, 레벨 %d에서 해금",
-  "Locked, released for finishing the game": "잠김, 게임 클리어 시 해금"
+  "Locked, released for finishing the game": "잠김, 게임 클리어 시 해금",
+  "TAP TO START": "탭하여 시작",
+  "SKIP": "건너뛰기"
 }

@@ -191,5 +191,7 @@
   "Wardrobe, %d of %d released": "Lemari baju, %d dari %d dirilis",
   "%s, worn": "%s, dipakai",
   "Locked, released at level %d": "Terkunci, dirilis di level %d",
-  "Locked, released for finishing the game": "Terkunci, dirilis setelah permainan tamat"
+  "Locked, released for finishing the game": "Terkunci, dirilis setelah permainan tamat",
+  "TAP TO START": "KETUK UNTUK MULAI",
+  "SKIP": "LEWATI"
 }

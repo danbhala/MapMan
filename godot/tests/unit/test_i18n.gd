@@ -88,7 +88,7 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT]:
+	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]

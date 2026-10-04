@@ -191,5 +191,7 @@
   "Wardrobe, %d of %d released": "クローゼット、%d/%d 解放済み",
   "%s, worn": "%s、着用中",
   "Locked, released at level %d": "未開放、レベル%dで解放",
-  "Locked, released for finishing the game": "未開放、ゲームクリアで解放"
+  "Locked, released for finishing the game": "未開放、ゲームクリアで解放",
+  "TAP TO START": "タップしてスタート",
+  "SKIP": "スキップ"
 }

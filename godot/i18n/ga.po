@@ -814,3 +814,11 @@ msgstr "Faoi ghlas, scaoilfear ag leibhéal %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Faoi ghlas, scaoilfear ag an deireadh"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "TAPÁIL LE TOSÚ"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "LÉIM"

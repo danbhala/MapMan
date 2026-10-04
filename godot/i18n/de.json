@@ -197,5 +197,7 @@
   "Wardrobe, %d of %d released": "Garderobe, %d von %d freigegeben",
   "%s, worn": "%s, angelegt",
   "Locked, released at level %d": "Gesperrt, Freigabe bei Level %d",
-  "Locked, released for finishing the game": "Gesperrt, Freigabe fürs Durchspielen"
+  "Locked, released for finishing the game": "Gesperrt, Freigabe fürs Durchspielen",
+  "TAP TO START": "ZUM STARTEN ANTIPPEN",
+  "SKIP": "ÜBERSPRINGEN"
 }

@@ -203,5 +203,7 @@
   "Wardrobe, %d of %d released": "Гардероб, выпущено %d из %d",
   "%s, worn": "%s, надето",
   "Locked, released at level %d": "Закрыто, выпуск на уровне %d",
-  "Locked, released for finishing the game": "Закрыто, выпуск за прохождение игры"
+  "Locked, released for finishing the game": "Закрыто, выпуск за прохождение игры",
+  "TAP TO START": "КОСНИТЕСЬ, ЧТОБЫ НАЧАТЬ",
+  "SKIP": "ПРОПУСТИТЬ"
 }

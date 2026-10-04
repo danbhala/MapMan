@@ -35,6 +35,8 @@ var menus: Menus
 var tilt := TiltInput.new()
 var dev_panel: DevPanel
 var gauge: TiltGauge
+## The intro and title screen at launch; null once the main menu is up.
+var intro: Intro
 ## Show the tilt gauge without an accelerometer (screenshots, desktop tests).
 var show_gauge_anyway := false
 
@@ -146,6 +148,18 @@ func _ready() -> void:
 
 	hud.show_bar(false)
 	hud.show_stats(false)
+	# Only a real launch plays the intro: tests and tools build Main themselves.
+	if get_tree().current_scene == self:
+		intro = Intro.new()
+		add_child(intro)
+		intro.finished.connect(_end_intro)
+	else:
+		show_start_menu()
+
+
+func _end_intro() -> void:
+	intro.queue_free()
+	intro = null
 	show_start_menu()
 
 
@@ -1061,6 +1075,9 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if intro:
+		intro.advance()
+		return
 	if dev_panel and dev_panel.is_open():
 		dev_panel.close()
 		return

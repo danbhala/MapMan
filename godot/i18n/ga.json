@@ -215,5 +215,7 @@
   "Wardrobe, %d of %d released": "Vardrús, %d as %d scaoilte",
   "%s, worn": "%s, in úsáid",
   "Locked, released at level %d": "Faoi ghlas, scaoilfear ag leibhéal %d",
-  "Locked, released for finishing the game": "Faoi ghlas, scaoilfear ag an deireadh"
+  "Locked, released for finishing the game": "Faoi ghlas, scaoilfear ag an deireadh",
+  "TAP TO START": "TAPÁIL LE TOSÚ",
+  "SKIP": "LÉIM"
 }

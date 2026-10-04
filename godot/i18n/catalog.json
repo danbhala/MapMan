@@ -983,6 +983,16 @@
       "id": "Locked, released for finishing the game",
       "note": "Screen reader: MapWoman before the game is finished",
       "max": 44
+    },
+    {
+      "id": "TAP TO START",
+      "note": "Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.",
+      "max": 24
+    },
+    {
+      "id": "SKIP",
+      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
+      "max": 12
     }
   ]
 }

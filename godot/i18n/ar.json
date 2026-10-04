@@ -221,5 +221,7 @@
   "Wardrobe, %d of %d released": "الخزانة، %d من أصل %d متاحة",
   "%s, worn": "%s، مرتدى",
   "Locked, released at level %d": "مقفل، يتاح في المستوى %d",
-  "Locked, released for finishing the game": "مقفل، يتاح عند إنهاء اللعبة"
+  "Locked, released for finishing the game": "مقفل، يتاح عند إنهاء اللعبة",
+  "TAP TO START": "انقر للبدء",
+  "SKIP": "تخطي"
 }

@@ -191,5 +191,7 @@
   "Wardrobe, %d of %d released": "Gardırop, %d / %d yayınlandı",
   "%s, worn": "%s, giyili",
   "Locked, released at level %d": "Kilitli, %d. bölümde yayınlanır",
-  "Locked, released for finishing the game": "Kilitli, oyunu bitirince yayınlanır"
+  "Locked, released for finishing the game": "Kilitli, oyunu bitirince yayınlanır",
+  "TAP TO START": "BAŞLAMAK İÇİN DOKUN",
+  "SKIP": "GEÇ"
 }

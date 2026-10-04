@@ -197,5 +197,7 @@
   "Wardrobe, %d of %d released": "Vestuario, %d de %d liberados",
   "%s, worn": "%s, puesto",
   "Locked, released at level %d": "Bloqueado, se libera en el nivel %d",
-  "Locked, released for finishing the game": "Bloqueado, se libera al terminar el juego"
+  "Locked, released for finishing the game": "Bloqueado, se libera al terminar el juego",
+  "TAP TO START": "TOCA PARA EMPEZAR",
+  "SKIP": "SALTAR"
 }

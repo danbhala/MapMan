@@ -191,5 +191,7 @@
   "Wardrobe, %d of %d released": "衣櫥，已解鎖%d/%d",
   "%s, worn": "%s，穿戴中",
   "Locked, released at level %d": "未解鎖，第%d關解鎖",
-  "Locked, released for finishing the game": "未解鎖，破關後解鎖"
+  "Locked, released for finishing the game": "未解鎖，破關後解鎖",
+  "TAP TO START": "點一下開始",
+  "SKIP": "略過"
 }

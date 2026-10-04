@@ -197,5 +197,7 @@
   "Wardrobe, %d of %d released": "Garde-robe, %d sur %d débloqués",
   "%s, worn": "%s, porté",
   "Locked, released at level %d": "Verrouillé, déblocage au niveau %d",
-  "Locked, released for finishing the game": "Verrouillé, déblocage en fin de jeu"
+  "Locked, released for finishing the game": "Verrouillé, déblocage en fin de jeu",
+  "TAP TO START": "TOUCHEZ POUR COMMENCER",
+  "SKIP": "PASSER"
 }

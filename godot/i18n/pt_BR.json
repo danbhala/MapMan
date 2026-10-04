@@ -197,5 +197,7 @@
   "Wardrobe, %d of %d released": "Guarda-roupa, %d de %d liberados",
   "%s, worn": "%s, em uso",
   "Locked, released at level %d": "Bloqueado, liberação no nível %d",
-  "Locked, released for finishing the game": "Bloqueado, liberação ao terminar o jogo"
+  "Locked, released for finishing the game": "Bloqueado, liberação ao terminar o jogo",
+  "TAP TO START": "TOQUE PARA COMEÇAR",
+  "SKIP": "PULAR"
 }
