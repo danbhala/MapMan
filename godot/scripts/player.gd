@@ -29,6 +29,18 @@ const FEET_LIFT := 4.0
 const STRIDE := 9.0
 ## Walking towards or away from us, how far each foot lifts in turn.
 const STEP_LIFT := 8.0
+## Hip to foot, standing.
+const LEG_LENGTH := 30.5
+## He is drawn with the sprite's proportions (longer legs than the first
+## drawn figure, OutfitPen.RISE) and scaled to stand as tall as ever: 77
+## units from his feet to the top of his head.
+const FIGURE_SCALE := 77.0 / 83.0
+## The sprite's side-on walk, a step in seven frames: the back leg's thigh
+## swings (radians, + forward) and its knee bends, kicking the foot up behind
+## and bringing it through; the front leg only rocks its foot forward.
+const BACK_THIGH: Array[float] = [0.0, 0.0, 0.05, 0.2, 0.35, 0.45, 0.2]
+const BACK_KNEE: Array[float] = [0.0, 0.3, 0.5, 0.7, 0.85, 0.9, 0.4]
+const FRONT_ROCK: Array[float] = [0.0, 0.15, 0.18, 0.06, 0.0, 0.0, 0.0]
 
 ## "man" or "woman": whether the figure wears MapWoman's bow. Read each draw,
 ## so the ending can turn the figure waiting there into either.
@@ -46,8 +58,8 @@ var look := Vector2.ZERO
 var auto_look := true
 ## 0 standing .. 1 walking. Eases towards the facing's walk state.
 var walking := 0.0
-## 0 front or back on .. 1 side on. Seen side on the legs swing; seen front
-## or back on they lift and drop in turn, as the sprite's frames did.
+## 0 front or back on .. 1 side on: which of the sprite's walks his legs
+## follow (_leg_pose()).
 var side_on := 0.0
 ## Lands on a tile: a squash that springs back.
 var squash := 0.0
@@ -318,19 +330,18 @@ func _paint(measuring: bool) -> Rect2:
 	var bob := absf(sin(_phase)) * 2.5 * walking + sin(_hop * PI) * 8.0
 	var sy := 1.0 - squash * 0.18
 	var sx := 1.0 + squash * 0.18
-	var swing := sin(_phase) * 0.5 * walking
-	var lean := (look.x * 0.05 + walking * side_on * 0.08) * signf(fx)
+	var lean := look.x * 0.05 * signf(fx)
 	var pal := {"body": BODY_COLOR, "head": HEAD_COLOR, "eyes": EYE_COLOR}
 	pal.merge(Outfits.palette(outfit), true)
 	var body: Color = pal.body
 	var origin := Vector2(shake_x, -FEET_LIFT)
-	var mirror := Vector2(fx if absf(fx) > 0.05 else 0.05, 1.0)
+	var mirror := Vector2(fx if absf(fx) > 0.05 else 0.05, 1.0) * FIGURE_SCALE
 	# Dying, the legs draw up into the body, which settles on the ground, and
 	# the head sinks into it, as the sprite's death frames did; the body is
 	# drawn over the head to swallow it.
 	var leg := 1.0 - dead
-	var drop := dead * 26.0
-	var sink := dead * 47.0
+	var drop := dead * (OutfitPen.RISE - OutfitPen.HEM - OutfitPen.LIP)
+	var sink := dead * 45.0
 	# What sticks out of the head fades before the body takes it.
 	var fade := clampf(1.0 - dead * 2.2, 0.0, 1.0)
 
@@ -350,25 +361,17 @@ func _paint(measuring: bool) -> Rect2:
 	pen.drop = drop
 	pen.motion = Blueprint.motion()
 	pen.hips.clear()
+	pen.knees.clear()
 	pen.feet.clear()
 	for side: float in [-1.0, 1.0]:
-		var a := swing * side
-		var hip := Vector2(side * 5.0, (-27.0 - bob) * sy + drop)
+		var hip := pen.b(side * 7.5, OutfitPen.HEM - 1.0)
+		var pose := _leg_pose(side, bob)
 		pen.hips.append(hip)
-		# Front or back on, each foot rises under its own hip, tucking in a
-		# little, while the other stays down: the legs never cross.
-		var lift := maxf(0.0, sin(_phase) * side) * STEP_LIFT * walking
-		var step := Vector2(-side * lift * 0.2, 27.0 - lift)
-		var stride := Vector2(sin(a) * 22.0, cos(a) * 27.0)
-		var foot := step.lerp(stride, side_on)
-		pen.feet.append(hip + Vector2(foot.x, foot.y * sy) * leg)
-	var pts := PackedVector2Array()
-	for i in 25:
-		var ang := PI * i / 24.0
-		pts.append(Vector2(cos(ang) * 18.0 * sx, (-26.0 - bob - sin(ang) * 30.0) * sy + drop))
-	pts.append(Vector2(-18.0 * sx, (-26.0 - bob) * sy + drop))
+		pen.knees.append(hip + Vector2(pose[0].x, pose[0].y * sy) * leg)
+		pen.feet.append(hip + Vector2(pose[1].x, pose[1].y * sy) * leg)
+	var pts := pen.body_points()
 	pen.body = pts
-	var head_at := Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy)
+	var head_at := Vector2(look.x * 3.0, (-62.0 - OutfitPen.RISE - bob - squash * 5.0) * sy)
 	pen.hc = head_at + Vector2(0.0, sink)
 	pen.hr = OutfitPen.HEAD_R * (1.0 - dead * 0.15)
 	var has_back := Outfits.has_back(outfit)
@@ -382,7 +385,7 @@ func _paint(measuring: bool) -> Rect2:
 		pen.alpha = 1.0
 	pen.set_frame(origin, 0.0, mirror)
 	for i in 2:
-		_draw_leg(pen.hips[i], pen.feet[i], pal)
+		_draw_leg(i, pal)
 	Outfits.draw(pen, Outfits.Layer.LEGS, outfit)
 	pen.set_frame(origin, lean, mirror)
 	if dead > 0.0:
@@ -422,15 +425,50 @@ func _paint(measuring: bool) -> Rect2:
 	return pen.bounds
 
 
-func _draw_leg(hip: Vector2, foot: Vector2, pal: Dictionary) -> void:
-	var legs: Color = pal.get("legs", pal.body)
-	if pal.has("glow"):
-		_pen.line(hip, foot, Color(pal.glow, 0.35), 8.5)
-	if pal.has("leg_outline"):
-		_pen.line(hip, foot, pal.leg_outline, 6.6)
-		_pen.line(hip, foot, legs, 3.6)
+## Knee and foot of the leg on `side` (-1 left, 1 right, before mirroring)
+## relative to its hip, at full length: front or back on, each foot rises in
+## turn under its own hip, the knee bowing out and the foot tucking in, as the
+## sprite drew it; side on, the sprite's step (BACK_THIGH, FRONT_ROCK).
+func _leg_pose(side: float, bob: float) -> Array[Vector2]:
+	var length := LEG_LENGTH + bob  # the planted foot stays on the ground
+	var lift := maxf(0.0, sin(_phase) * side) * STEP_LIFT * walking
+	var foot := Vector2(-side * lift * 0.2, length - lift)
+	var knee := foot * 0.5 + Vector2(side * lift * 0.25, 0.0)
+	if side_on <= 0.0:
+		return [knee, foot]
+	var u := fposmod(_phase / PI, 1.0) * 7.0
+	var thigh := 0.0
+	var bend := 0.0
+	if side < 0.0:
+		thigh = _keyframe(BACK_THIGH, u) * walking
+		bend = _keyframe(BACK_KNEE, u) * walking
 	else:
-		_pen.line(hip, foot, legs, 4.5)
+		thigh = _keyframe(FRONT_ROCK, u) * walking
+	var side_knee := Vector2(sin(thigh), cos(thigh)) * length * 0.5
+	var side_foot := side_knee + Vector2(sin(thigh - bend), cos(thigh - bend)) * length * 0.5
+	return [knee.lerp(side_knee, side_on), foot.lerp(side_foot, side_on)]
+
+
+## A looping table of values, one a frame, read at frame `u` (blended).
+static func _keyframe(keys: Array[float], u: float) -> float:
+	var i := floori(u) % keys.size()
+	return lerpf(keys[i], keys[(i + 1) % keys.size()], u - floorf(u))
+
+
+func _draw_leg(i: int, pal: Dictionary) -> void:
+	var legs: Color = pal.get("legs", pal.body)
+	var foot := _pen.feet[i]
+	if pal.has("glow"):
+		_pen.leg_line(i, 0.0, 1.0, Color(pal.glow, 0.35), 9.0)
+		_pen.dot(foot, 4.5, Color(pal.glow, 0.35))
+	if pal.has("leg_outline"):
+		_pen.leg_line(i, 0.0, 1.0, pal.leg_outline, 7.0)
+		_pen.dot(foot, 3.5, pal.leg_outline)
+		_pen.leg_line(i, 0.0, 1.0, legs, 4.0)
+		_pen.dot(foot, 2.0, legs)
+	else:
+		_pen.leg_line(i, 0.0, 1.0, legs, 5.0)
+		_pen.dot(foot, 2.5, legs)
 
 
 func _draw_body(pts: PackedVector2Array, pal: Dictionary) -> void:
@@ -498,7 +536,7 @@ func _draw_hat_flying(head_at: Vector2) -> void:
 ## Cobweb strands anchored on him; shaken, they fly outwards and fade.
 func _draw_web(origin: Vector2) -> void:
 	draw_set_transform(origin, 0.0, Vector2.ONE)
-	var wc := Vector2(0, -40)
+	var wc := Vector2(0, -46)
 	var wcol := Color(WEB_COLOR, web * (1.0 - shake_off) * 0.9)
 	for i in 9:
 		var a := TAU * i / 9.0 - 0.3

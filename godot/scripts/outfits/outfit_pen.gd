@@ -13,11 +13,17 @@ extends RefCounted
 ## Measuring draws nothing and grows `bounds` instead, in his node's units, so
 ## tests can check a look's size without a screen.
 
-## The body at rest: a bell from its hem at y -26 up to -56, 18 either side.
+## The body at rest: a bell from its hem at y -26 up to -60, 22 either side,
+## as wide and as tall against the head as the original sprite drew it.
 const HEM := -26.0
-const BODY_TOP := -56.0
-const BODY_HALF := 18.0
+const BODY_TOP := -60.0
+const BODY_HALF := 22.0
+## Below the hem the bell rounds off, bulging this far down in the middle.
+const LIP := 4.5
 const HEAD_R := 15.0
+## Rest points stand this much higher on his legs than their numbers say:
+## the sprite's legs were longer than the first drawn figure's.
+const RISE := 6.0
 
 var canvas: CanvasItem
 var measuring := false
@@ -41,6 +47,7 @@ var drop := 0.0
 var hc := Vector2.ZERO
 var hr := HEAD_R
 var hips: Array[Vector2] = []
+var knees: Array[Vector2] = []
 var feet: Array[Vector2] = []
 ## The body outline this frame.
 var body := PackedVector2Array()
@@ -80,7 +87,23 @@ func set_frame(origin: Vector2, rotation: float, scale: Vector2) -> void:
 
 ## A point of the body at rest, moved to the pose.
 func b(x: float, y: float) -> Vector2:
-	return Vector2(x * sx, (y - bob) * sy + drop)
+	return Vector2(x * sx, (y - RISE - bob) * sy + drop)
+
+
+## A point down leg i (0 the left, 1 the right), from the hip (t 0) through
+## the knee (0.5) to the foot (1). Legs bend in a smooth curve.
+func leg(i: int, t: float) -> Vector2:
+	# A quadratic curve through the knee: its control point overshoots it.
+	var ctrl := knees[i] * 2.0 - (hips[i] + feet[i]) * 0.5
+	return hips[i].lerp(ctrl, t).lerp(ctrl.lerp(feet[i], t), t)
+
+
+## Leg i from t0 to t1 (see leg()), as a curve `width` wide.
+func leg_line(i: int, t0: float, t1: float, c: Color, width: float) -> void:
+	var pts := PackedVector2Array()
+	for k in 7:
+		pts.append(leg(i, lerpf(t0, t1, k / 6.0)))
+	polyline(pts, c, width)
 
 
 ## b() for a list of rest points.
@@ -279,6 +302,18 @@ func _hat_points(offsets: PackedVector2Array) -> PackedVector2Array:
 # --- shapes -------------------------------------------------------------------------
 
 
+## The body's outline at rest: the bell, then its rounded lip below the hem.
+func body_points() -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in 25:
+		var a := PI * i / 24.0
+		pts.append(b(cos(a) * BODY_HALF, HEM - sin(a) * (HEM - BODY_TOP)))
+	for i in range(1, 24):
+		var a := PI * i / 24.0
+		pts.append(b(-cos(a) * BODY_HALF, HEM + sin(a) * LIP))
+	return pts
+
+
 ## Half the body's width at rest height y.
 static func dome_w(y: float) -> float:
 	var k := clampf((HEM - y) / (HEM - BODY_TOP), 0.0, 1.0)
@@ -373,8 +408,9 @@ static func rotated(pts: Array, pivot: Vector2, angle: float) -> PackedVector2Ar
 func _grow(pts: PackedVector2Array, pad: float) -> void:
 	if alpha <= 0.0:
 		return  # faded right out: not part of what is seen
+	var reach := _xf.get_scale().abs() * pad  # a round end grows with the frame
 	for p in pts:
 		var at := _xf * p
-		var box := Rect2(at - Vector2(pad, pad), Vector2(pad, pad) * 2.0)
+		var box := Rect2(at - reach, reach * 2.0)
 		bounds = box if not _measured else bounds.merge(box)
 		_measured = true

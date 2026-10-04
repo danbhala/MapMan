@@ -1,9 +1,10 @@
 class_name OutfitBodies
 extends RefCounted
 ## What a look puts on his legs, body and neck (docs/wardrobe). Leg parts
-## follow pen.hips and pen.feet. Body points are given at rest through
-## pen.b() / pen.bp() / pen.band() / pen.stripe(): the bell runs from its hem
-## at y -26 up to -56, 18 either side, and the head covers it above about -47.
+## follow the curve of each leg (pen.leg(), pen.leg_line()). Body points are
+## given at rest through pen.b() / pen.bp() / pen.band() / pen.stripe(): the
+## bell runs from its hem at y -26 up to -60, 22 either side, rounding off
+## below the hem, and the head covers it above about -47.
 ## Front-only details check pen.front(), and turn with his face (look.x).
 ## Neck pieces fade as he dies (Player sets pen.alpha).
 
@@ -40,8 +41,7 @@ static func _legs(pen: OutfitPen, id: String) -> void:
 			_boots(pen, DARK, 5.2)
 		"robot":
 			for i in 2:
-				var top := pen.hips[i].lerp(pen.feet[i], 0.1)
-				pen.line(top, pen.hips[i].lerp(pen.feet[i], 0.9), STEEL, 1.4)
+				pen.leg_line(i, 0.1, 0.9, STEEL, 1.4)
 
 
 static func _body(pen: OutfitPen, id: String) -> void:
@@ -118,15 +118,16 @@ static func _neck(pen: OutfitPen, id: String) -> void:
 ## Boots: the bottom of each leg, a little wider.
 static func _boots(pen: OutfitPen, c: Color, width: float) -> void:
 	for i in 2:
-		pen.line(pen.hips[i].lerp(pen.feet[i], 0.72), pen.feet[i], c, width)
+		pen.leg_line(i, 0.72, 1.0, c, width)
+		pen.dot(pen.feet[i], width / 2.0, c)
 
 
 ## A bone down each leg, knobbed at both ends until they draw up into him.
 static func _leg_bones(pen: OutfitPen) -> void:
 	for i in 2:
-		var top := pen.hips[i].lerp(pen.feet[i], 0.07)
-		var bottom := pen.hips[i].lerp(pen.feet[i], 0.93)
-		pen.line(top, bottom, BONE, 1.5)
+		var top := pen.leg(i, 0.07)
+		var bottom := pen.leg(i, 0.93)
+		pen.leg_line(i, 0.07, 0.93, BONE, 1.5)
 		if pen.dead < 0.8:
 			pen.dot(top, 1.3, BONE)
 			pen.dot(bottom, 1.3, BONE)
