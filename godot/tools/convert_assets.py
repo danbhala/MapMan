@@ -179,6 +179,24 @@ def loading_rows(loading_str, rows):
     return [lines[len(lines) - len(rows) + i] for i in range(len(rows))]
 
 
+
+# Typos in the original's tutorial text, fixed here so the game's strings (and
+# their translations in godot/i18n) stay stable when this script is rerun.
+COPY_FIXES = {
+    'free him u and': 'free him and',
+    'keep an out for': 'keep an eye out for',
+    'as they that will': 'as they will',
+    'off course then bonus': 'off course than bonus',
+    'Be careful for the poison': 'Be careful of the poison',
+    'These tile causes': 'These tiles cause',
+}
+
+
+def fix_copy(text):
+    for wrong, right in COPY_FIXES.items():
+        text = text.replace(wrong, right)
+    return text
+
 def convert_levels():
     data_dir = os.path.join(DST, 'data')
     os.makedirs(data_dir, exist_ok=True)
@@ -209,7 +227,7 @@ def convert_levels():
             'delay': g['DEFAULT_DELAY'],
             'x_hides': g['DEFAULT_X_HIDES'],
             'checkpoint': number in t['checkpoints'],
-            'description': t['descriptions'][number],
+            'description': fix_copy(t['descriptions'][number]),
         })
     with open(os.path.join(data_dir, 'tutorial.json'), 'w') as f:
         json.dump({'levels': tutorial}, f, indent=1)

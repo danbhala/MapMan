@@ -30,6 +30,15 @@ const FONT_PATH := "res://assets/fonts/JetBrainsMono-Variable.ttf"
 ## The star, heart and skull JetBrains Mono lacks, from a DejaVu Sans subset,
 ## so they draw the same on every machine instead of from a system font.
 const SYMBOLS_PATH := "res://assets/fonts/MapManSymbols.ttf"
+## Scripts JetBrains Mono has no glyphs for, as Noto Sans subsets cut down to
+## the characters the translations use (tools/subset_fonts.py).
+const SCRIPT_FONTS := [
+	"res://assets/fonts/i18n/NotoSansArabic-Subset.ttf",
+	"res://assets/fonts/i18n/NotoSansJP-Subset.ttf",
+	"res://assets/fonts/i18n/NotoSansKR-Subset.ttf",
+	"res://assets/fonts/i18n/NotoSansSC-Subset.ttf",
+	"res://assets/fonts/i18n/NotoSansTC-Subset.otf",
+]
 const STAMP_ROTATION := -0.12
 ## The height of a tappable row or cell: 48 dp on a 360-450 dp phone screen.
 const TAP_HEIGHT := 44.0
@@ -48,8 +57,17 @@ static func mono(weight := 500) -> Font:
 		v.variation_opentype = {
 			TextServerManager.get_primary_interface().name_to_tag("wght"): weight
 		}
-		var symbols: Font = load(SYMBOLS_PATH)
-		v.fallbacks = [symbols]
+		var fallbacks: Array[Font] = [load(SYMBOLS_PATH)]
+		for path in SCRIPT_FONTS:
+			if ResourceLoader.exists(path):
+				# The same weight for the fallback, so bold stays bold in every script.
+				var f := FontVariation.new()
+				f.base_font = load(path)
+				f.variation_opentype = {
+					TextServerManager.get_primary_interface().name_to_tag("wght"): weight
+				}
+				fallbacks.append(f)
+		v.fallbacks = fallbacks
 		_fonts[weight] = v
 	return _fonts[weight]
 

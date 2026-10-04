@@ -62,7 +62,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him u and get moving again."
+   "description": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him and get moving again."
   },
   {
    "number": 5,
@@ -94,7 +94,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Also keep an out for extra lives,\nbut take care as they that will take you\neven more off course then bonus points"
+   "description": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points"
   },
   {
    "number": 7,
@@ -109,7 +109,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Be careful for the poison tiles, if you step on them you will lose a life."
+   "description": "Be careful of the poison tiles, if you step on them you will lose a life."
   },
   {
    "number": 8,
@@ -143,7 +143,7 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "These tile causes other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
+   "description": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
   },
   {
    "number": 10,

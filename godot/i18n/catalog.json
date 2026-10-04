@@ -1,0 +1,742 @@
+{
+  "_about": "Every player-facing string, as the English msgid the code passes to tr()/tr_n(). Translations live in <locale>.json next to this file; tools/i18n.py turns them into the .po files Godot loads. 'max' is a width budget in Latin characters (CJK text should use about half).",
+  "locales": {
+    "es": {
+      "name": "Español",
+      "nplurals": 2,
+      "plural": "(n != 1)"
+    },
+    "pt_BR": {
+      "name": "Português (Brasil)",
+      "nplurals": 2,
+      "plural": "(n > 1)"
+    },
+    "fr": {
+      "name": "Français",
+      "nplurals": 2,
+      "plural": "(n > 1)"
+    },
+    "it": {
+      "name": "Italiano",
+      "nplurals": 2,
+      "plural": "(n != 1)"
+    },
+    "de": {
+      "name": "Deutsch",
+      "nplurals": 2,
+      "plural": "(n != 1)"
+    },
+    "ru": {
+      "name": "Русский",
+      "nplurals": 3,
+      "plural": "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)"
+    },
+    "tr": {
+      "name": "Türkçe",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "id": {
+      "name": "Bahasa Indonesia",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "ja": {
+      "name": "日本語",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "ko": {
+      "name": "한국어",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "zh_CN": {
+      "name": "简体中文",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "zh_TW": {
+      "name": "繁體中文",
+      "nplurals": 1,
+      "plural": "0"
+    },
+    "ar": {
+      "name": "العربية",
+      "nplurals": 6,
+      "plural": "(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5)"
+    }
+  },
+  "strings": [
+    {
+      "id": "MAPMAN  —  SHEET %s  —  %s",
+      "note": "Header of every menu sheet: the game name, the sheet number (%s, e.g. 001 or P-02), the sheet title (%s). Keep MAPMAN. Blueprint drawing-sheet vocabulary throughout.",
+      "max": 60
+    },
+    {
+      "id": "REV %s\nSCALE 1:3\nSHEET %s",
+      "note": "Title block, three lines: revision (%s is a version like 1.3.0), scale, sheet number (%s). Each line at most 11 characters.",
+      "max": 11
+    },
+    {
+      "id": "ITEM",
+      "note": "Column heading over a parts list",
+      "max": 11
+    },
+    {
+      "id": "DESCRIPTION",
+      "note": "Column heading over a parts list",
+      "max": 14
+    },
+    {
+      "id": "PARAMETER",
+      "note": "Column heading on the options sheet",
+      "max": 14
+    },
+    {
+      "id": "VALUE",
+      "note": "Column heading",
+      "max": 11
+    },
+    {
+      "id": "QTY",
+      "note": "Column heading: quantity",
+      "max": 6
+    },
+    {
+      "id": "<  RETURN TO SHEET 001",
+      "note": "Row that goes back to the main menu (sheet 001). Keep the '<  ' prefix.",
+      "max": 33
+    },
+    {
+      "id": "MAIN MENU",
+      "note": "Sheet title and a row text",
+      "max": 26
+    },
+    {
+      "id": "TOTAL",
+      "note": "Label of the total row on a score table",
+      "max": 12
+    },
+    {
+      "id": "NOTE: %s",
+      "note": "Small print prefix; %s is a sentence",
+      "max": 70
+    },
+    {
+      "id": "FIRST RUN",
+      "note": "Sheet title",
+      "max": 26
+    },
+    {
+      "id": "OPTIONS",
+      "note": "Sheet title and a row text",
+      "max": 26
+    },
+    {
+      "id": "PAUSED",
+      "note": "Sheet title",
+      "max": 26
+    },
+    {
+      "id": "CONFIRM",
+      "note": "Sheet title (confirm quitting)",
+      "max": 26
+    },
+    {
+      "id": "LEVEL %d — DEFECT",
+      "note": "Sheet title when a life is lost; defect as on an inspection report",
+      "max": 26
+    },
+    {
+      "id": "GAME OVER",
+      "note": "Sheet title",
+      "max": 26
+    },
+    {
+      "id": "CHECKPOINTS",
+      "note": "Sheet title: pick a checkpoint to restart from",
+      "max": 26
+    },
+    {
+      "id": "PRACTICE — LEVELS %d–%d",
+      "note": "Sheet title: practice mode, a range of levels",
+      "max": 30
+    },
+    {
+      "id": "LEVEL %d — INSPECTION",
+      "note": "Sheet title after clearing a level: the score is 'inspected'",
+      "max": 26
+    },
+    {
+      "id": "LEVEL %d — CHECKPOINT",
+      "note": "Sheet title after clearing a checkpoint level",
+      "max": 26
+    },
+    {
+      "id": "CONGRATULATIONS",
+      "note": "Sheet title after finishing the game",
+      "max": 26
+    },
+    {
+      "id": "FINAL INSPECTION",
+      "note": "Sheet title: final score table",
+      "max": 26
+    },
+    {
+      "id": "LANGUAGE",
+      "note": "Options row and the language sheet's title",
+      "max": 18
+    },
+    {
+      "id": "PHONE'S LANGUAGE",
+      "note": "Language sheet: follow the phone's system language",
+      "max": 24
+    },
+    {
+      "id": "PLAY FROM START",
+      "note": "Main menu row",
+      "max": 33
+    },
+    {
+      "id": "CONTINUE FROM CHECKPOINT",
+      "note": "Main menu row",
+      "max": 33
+    },
+    {
+      "id": "PRACTICE A LEVEL",
+      "note": "Main menu row",
+      "max": 33
+    },
+    {
+      "id": "TUTORIAL",
+      "note": "Main menu row",
+      "max": 33
+    },
+    {
+      "id": "BEST SCORE %d",
+      "note": "Main menu small print",
+      "max": 30
+    },
+    {
+      "id": "%d LEVEL",
+      "plural": "%d LEVELS",
+      "note": "Main menu small print, n is 100",
+      "max": 20
+    },
+    {
+      "id": "NEW TO MAPMAN? THE TUTORIAL TAKES A MINUTE",
+      "note": "First run sheet, small print",
+      "max": 60
+    },
+    {
+      "id": "TAKE THE TUTORIAL",
+      "note": "First run row",
+      "max": 33
+    },
+    {
+      "id": "SKIP TO THE GAME",
+      "note": "First run row",
+      "max": 33
+    },
+    {
+      "id": "MUSIC",
+      "note": "Options row (a toggle)",
+      "max": 18
+    },
+    {
+      "id": "SOUND EFFECTS",
+      "note": "Options row (a toggle)",
+      "max": 18
+    },
+    {
+      "id": "VIBRATION",
+      "note": "Options row (a toggle)",
+      "max": 18
+    },
+    {
+      "id": "REDUCE MOTION",
+      "note": "Options row: turns decorative animation off",
+      "max": 18
+    },
+    {
+      "id": "WORK SUSPENDED AT LEVEL %d",
+      "note": "Pause sheet status line; work suspended as on a drawing office note",
+      "max": 40
+    },
+    {
+      "id": " · T-%d:%02d REMAINING",
+      "note": "Appended to the status line: minutes:seconds left on the clock. Keep the leading ' · ' and T-%d:%02d.",
+      "max": 24
+    },
+    {
+      "id": "WORK SUSPENDED · TUTORIAL",
+      "note": "Pause sheet status line in the tutorial",
+      "max": 40
+    },
+    {
+      "id": "WORK SUSPENDED · FINAL SHEET",
+      "note": "Pause sheet status line on the final map",
+      "max": 40
+    },
+    {
+      "id": "RESUME",
+      "note": "Pause row",
+      "max": 33
+    },
+    {
+      "id": "END GAME",
+      "note": "Pause row",
+      "max": 33
+    },
+    {
+      "id": "END TUTORIAL",
+      "note": "Pause row",
+      "max": 33
+    },
+    {
+      "id": "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE",
+      "note": "Pause sheet small print",
+      "max": 60
+    },
+    {
+      "id": "ON HOLD",
+      "note": "Rubber stamp on the pause sheet; one or two short words",
+      "max": 10
+    },
+    {
+      "id": "END THIS GAME?\nPROGRESS SINCE THE LAST CHECKPOINT IS LOST",
+      "note": "Confirm sheet, two lines",
+      "max": 50
+    },
+    {
+      "id": "NO, KEEP PLAYING",
+      "note": "Confirm row",
+      "max": 33
+    },
+    {
+      "id": "YES, END THE GAME",
+      "note": "Confirm row",
+      "max": 33
+    },
+    {
+      "id": "DEFECT: STEPPED ON A DEATH TILE",
+      "note": "Lost-life sheet, cause line",
+      "max": 45
+    },
+    {
+      "id": "DEFECT: OUT OF TIME",
+      "note": "Lost-life sheet, cause line",
+      "max": 45
+    },
+    {
+      "id": "LIVES REMAINING",
+      "note": "Lost-life sheet label, discs follow",
+      "max": 20
+    },
+    {
+      "id": "TRY AGAIN FROM THE START TILE",
+      "note": "Lost-life row",
+      "max": 33
+    },
+    {
+      "id": "NOTE: ROUTE AROUND THE DEATH TILES",
+      "note": "Lost-life small print",
+      "max": 60
+    },
+    {
+      "id": "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY",
+      "note": "Lost-life small print after a timeout: 20 seconds per level",
+      "max": 60
+    },
+    {
+      "id": "REWORK",
+      "note": "Rubber stamp on the lost-life sheet",
+      "max": 10
+    },
+    {
+      "id": "FINAL SCORE",
+      "note": "Game over label",
+      "max": 20
+    },
+    {
+      "id": "PREVIOUS BEST  %d",
+      "note": "Game over small print",
+      "max": 30
+    },
+    {
+      "id": "RESTART FROM A CHECKPOINT",
+      "note": "Game over row",
+      "max": 33
+    },
+    {
+      "id": "NEW BEST",
+      "note": "Rubber stamp: a new high score",
+      "max": 10
+    },
+    {
+      "id": "RESTART FROM A SAVED CHECKPOINT",
+      "note": "Checkpoints sheet heading",
+      "max": 45
+    },
+    {
+      "id": "SAVED",
+      "note": "Checkpoint cell: reached and saved",
+      "max": 12
+    },
+    {
+      "id": "LOCKED",
+      "note": "Cell: not reached yet",
+      "max": 12
+    },
+    {
+      "id": "PART   BEST",
+      "note": "Practice grid column pair heading: level ('part' of the drawing) and best result. Keep the three spaces.",
+      "max": 14
+    },
+    {
+      "id": "L%02d",
+      "note": "Level cell label, L for level; keep short",
+      "max": 5
+    },
+    {
+      "id": "%ds ★%d",
+      "note": "Best in a practice cell: seconds left, star count. Keep ★.",
+      "max": 10
+    },
+    {
+      "id": "%ds",
+      "note": "Seconds, short unit",
+      "max": 5
+    },
+    {
+      "id": "SHEET %d OF %d",
+      "note": "Practice caption: page x of y",
+      "max": 20
+    },
+    {
+      "id": "%d PART RELEASED",
+      "plural": "%d PARTS RELEASED",
+      "note": "Practice caption: levels unlocked",
+      "max": 24
+    },
+    {
+      "id": "LEVEL BONUS",
+      "note": "Score table row",
+      "max": 20
+    },
+    {
+      "id": "TIME BONUS",
+      "note": "Score table row",
+      "max": 20
+    },
+    {
+      "id": "STARS COLLECTED",
+      "note": "Score table row",
+      "max": 20
+    },
+    {
+      "id": "%d s",
+      "note": "Seconds with a space, quantity column",
+      "max": 6
+    },
+    {
+      "id": "TAP TO CONTINUE TO SHEET %03d",
+      "note": "Level clear small print; next level number",
+      "max": 45
+    },
+    {
+      "id": "TAP TO CONTINUE TO THE FINAL SHEET",
+      "note": "Level 100 clear small print",
+      "max": 45
+    },
+    {
+      "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
+      "note": "Checkpoint level clear small print",
+      "max": 60
+    },
+    {
+      "id": "PASSED",
+      "note": "Rubber stamp on a cleared level",
+      "max": 10
+    },
+    {
+      "id": "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE",
+      "note": "Congratulations small print",
+      "max": 70
+    },
+    {
+      "id": "SCORE AT LEVEL 100",
+      "note": "Final score table row",
+      "max": 20
+    },
+    {
+      "id": "COMPLETION BONUS",
+      "note": "Final score table row",
+      "max": 20
+    },
+    {
+      "id": "LIVES REMAINING ×50",
+      "note": "Final score table row: 50 points per life left",
+      "max": 20
+    },
+    {
+      "id": "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING",
+      "note": "Final inspection small print",
+      "max": 60
+    },
+    {
+      "id": "APPROVED",
+      "note": "Rubber stamp on the final sheet",
+      "max": 10
+    },
+    {
+      "id": "SHEET %03d / %d",
+      "note": "HUD header: level number / level count",
+      "max": 20
+    },
+    {
+      "id": "TUTORIAL %d / %d",
+      "note": "HUD header in the tutorial",
+      "max": 20
+    },
+    {
+      "id": "GO!",
+      "note": "HUD note at level start",
+      "max": 20
+    },
+    {
+      "id": "HURRY UP!",
+      "note": "HUD note, three seconds left",
+      "max": 20
+    },
+    {
+      "id": "GET READY...",
+      "note": "HUD note while the level loads",
+      "max": 20
+    },
+    {
+      "id": "TILT TO MOVE",
+      "note": "HUD note on level 1",
+      "max": 24
+    },
+    {
+      "id": "BONUS POINTS",
+      "note": "HUD note: a star was collected",
+      "max": 24
+    },
+    {
+      "id": "EXTRA TIME",
+      "note": "HUD note",
+      "max": 24
+    },
+    {
+      "id": "TIME LOST",
+      "note": "HUD note",
+      "max": 24
+    },
+    {
+      "id": "EXTRA LIFE",
+      "note": "HUD note",
+      "max": 24
+    },
+    {
+      "id": "CONTROLS REVERSED",
+      "note": "HUD note: tilt directions are mirrored",
+      "max": 36
+    },
+    {
+      "id": "TILES HIDDEN",
+      "note": "HUD note",
+      "max": 36
+    },
+    {
+      "id": "TILES UNHIDDEN",
+      "note": "HUD note: the hidden tiles are back",
+      "max": 36
+    },
+    {
+      "id": "SEE YOU AGAIN IN %d MOVE",
+      "plural": "SEE YOU AGAIN IN %d MOVES",
+      "note": "HUD note while MapMan is invisible",
+      "max": 36
+    },
+    {
+      "id": "CONTROLS REVERSED &\nSEE YOU AGAIN IN %d MOVE",
+      "plural": "CONTROLS REVERSED &\nSEE YOU AGAIN IN %d MOVES",
+      "note": "HUD note, two lines, both effects at once",
+      "max": 36
+    },
+    {
+      "id": "CONTROLS REVERSED &\nTILES HIDDEN",
+      "note": "HUD note, two lines",
+      "max": 36
+    },
+    {
+      "id": "STUCK, SHAKE TO RELEASE",
+      "note": "HUD note: caught in a cobweb; shake the phone",
+      "max": 36
+    },
+    {
+      "id": "STUCK, TAP TO RELEASE",
+      "note": "HUD note on a desktop without sensors",
+      "max": 36
+    },
+    {
+      "id": "STUCK & CONTROLS REVERSED. SHAKE TO RELEASE.",
+      "note": "HUD note, both effects",
+      "max": 48
+    },
+    {
+      "id": "STUCK & CONTROLS REVERSED. TAP TO RELEASE.",
+      "note": "HUD note, both effects, desktop",
+      "max": 48
+    },
+    {
+      "id": "LEVEL %d: %ds LEFT",
+      "note": "Practice result caption: seconds left on the clock",
+      "max": 30
+    },
+    {
+      "id": "LEVEL %d: %ds LEFT, NEW BEST!",
+      "note": "Practice result caption",
+      "max": 30
+    },
+    {
+      "id": "+5 S",
+      "note": "Floating note on an extra-time tile: five seconds",
+      "max": 6
+    },
+    {
+      "id": "−5 S",
+      "note": "Floating note on a time-loss tile; keep the minus sign U+2212",
+      "max": 6
+    },
+    {
+      "id": "Previous page",
+      "note": "Screen reader name of the practice page arrow",
+      "max": 30
+    },
+    {
+      "id": "Next page",
+      "note": "Screen reader name",
+      "max": 30
+    },
+    {
+      "id": "Level %d",
+      "note": "Screen reader name of a practice cell",
+      "max": 30
+    },
+    {
+      "id": "Level %d, locked",
+      "note": "Screen reader name",
+      "max": 30
+    },
+    {
+      "id": "Restart after level %d",
+      "note": "Screen reader name of a checkpoint cell",
+      "max": 40
+    },
+    {
+      "id": "Checkpoint at level %d, not reached",
+      "note": "Screen reader name",
+      "max": 40
+    },
+    {
+      "id": "on",
+      "note": "Screen reader state of a toggle",
+      "max": 10
+    },
+    {
+      "id": "off",
+      "note": "Screen reader state of a toggle",
+      "max": 10
+    },
+    {
+      "id": "%d life remaining",
+      "plural": "%d lives remaining",
+      "note": "Screen reader",
+      "max": 30
+    },
+    {
+      "id": "Level",
+      "note": "Screen reader name of the HUD level label",
+      "max": 20
+    },
+    {
+      "id": "Score",
+      "note": "Screen reader name",
+      "max": 20
+    },
+    {
+      "id": "Lives",
+      "note": "Screen reader name",
+      "max": 20
+    },
+    {
+      "id": "Time left",
+      "note": "Screen reader name",
+      "max": 20
+    },
+    {
+      "id": "Tilt your device to move around the map.\nHead for the exit tile to progress to the next level.",
+      "note": "Tutorial lesson 1, shown in the bottom bar (two lines, up to about 85 characters a line)",
+      "max": 170
+    },
+    {
+      "id": "Stepping on this tile will reverse the controls.\nStep on another and they go back to normal.",
+      "note": "Tutorial lesson 2",
+      "max": 170
+    },
+    {
+      "id": "Stepping on this tile will make Map Man disappear.\nDon't worry after a few moves he will show up again.",
+      "note": "Tutorial lesson 3",
+      "max": 170
+    },
+    {
+      "id": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him and get moving again.",
+      "note": "Tutorial lesson 4",
+      "max": 170
+    },
+    {
+      "id": "Watch out for bonus points,\n although you may have to go out of your way to get them",
+      "note": "Tutorial lesson 5",
+      "max": 170
+    },
+    {
+      "id": "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points",
+      "note": "Tutorial lesson 6",
+      "max": 170
+    },
+    {
+      "id": "Be careful of the poison tiles, if you step on them you will lose a life.",
+      "note": "Tutorial lesson 7",
+      "max": 170
+    },
+    {
+      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
+      "note": "Tutorial lesson 8",
+      "max": 170
+    },
+    {
+      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
+      "note": "Tutorial lesson 9",
+      "max": 170
+    },
+    {
+      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
+      "note": "Tutorial lesson 10",
+      "max": 170
+    },
+    {
+      "id": "If you need a break from playing, tap the screen during play to pause. Once paused you can either resume play or exit the game.",
+      "note": "Tutorial lesson 11",
+      "max": 170
+    },
+    {
+      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "note": "Tutorial lesson 12",
+      "max": 170
+    }
+  ]
+}

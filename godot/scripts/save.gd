@@ -9,6 +9,8 @@ var fx_on := true
 var vibration_on := true
 ## Skip the decorative animation (stamps, sheets drawing on, tiles folding).
 var reduce_motion := false
+## Locale code of the chosen language, or "" to follow the phone's.
+var locale := ""
 ## "sitting" or "standing": how far the phone is tilted back when neutral.
 var playing_position := "sitting"
 var highscore := 0
@@ -28,6 +30,22 @@ var _cfg := ConfigFile.new()
 
 func _ready() -> void:
 	load_all()
+	apply_locale()
+
+
+## Use the chosen language, or the phone's when none is chosen.
+func apply_locale() -> void:
+	if locale != "":
+		TranslationServer.set_locale(locale)
+	else:
+		TranslationServer.set_locale(OS.get_locale())
+
+
+## Switch language for good: "" follows the phone again.
+func set_locale(code: String) -> void:
+	locale = code
+	apply_locale()
+	save_all()
 
 
 ## path: tests load an old save from elsewhere; the game uses PATH.
@@ -38,6 +56,7 @@ func load_all(path := PATH) -> void:
 	fx_on = _cfg.get_value("options", "fx", true)
 	vibration_on = _cfg.get_value("options", "vibration", true)
 	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
+	locale = _cfg.get_value("options", "locale", "")
 	playing_position = _cfg.get_value("options", "playing_position", "sitting")
 	if playing_position not in ["sitting", "standing"]:
 		playing_position = "sitting"
@@ -70,6 +89,7 @@ func save_all() -> void:
 	_cfg.set_value("options", "fx", fx_on)
 	_cfg.set_value("options", "vibration", vibration_on)
 	_cfg.set_value("options", "reduce_motion", reduce_motion)
+	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)
 	_cfg.set_value("progress", "highscore", highscore)
 	_cfg.set_value("progress", "first_play", first_play)

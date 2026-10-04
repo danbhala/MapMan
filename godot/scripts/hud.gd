@@ -14,7 +14,7 @@ const TUTORIAL_SIZE := 12
 const TIMER_SPAN := 20.0
 const TIMER_LENGTH := 150.0
 
-## Every word the HUD shows (plain English until translation comes).
+## Every word the HUD shows, as the English msgid tr() translates (i18n/).
 const TEXT := {
 	"sheet": "SHEET %03d / %d",
 	"tutorial_sheet": "TUTORIAL %d / %d",
@@ -96,17 +96,17 @@ func _ready() -> void:
 	header = Blueprint.rect(self, Blueprint.STRIP, Vector2.ZERO, Vector2.ZERO)
 	level_label = Blueprint.label(header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	level_label.accessibility_name = TEXT.a11y_level
+	level_label.accessibility_name = tr(TEXT.a11y_level)
 	score_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	score_label.accessibility_name = TEXT.a11y_score
+	score_label.accessibility_name = tr(TEXT.a11y_score)
 	lives_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_RIGHT
 	)
 	lives_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lives_label.accessibility_name = TEXT.a11y_lives
+	lives_label.accessibility_name = tr(TEXT.a11y_lives)
 
 	bar = Blueprint.rect(self, Blueprint.BAR, Vector2.ZERO, Vector2.ZERO)
 	effect_single = TextureRect.new()
@@ -140,7 +140,7 @@ func _ready() -> void:
 	bar.add_child(timer_line)
 	timer_label = Blueprint.label(bar, "", TIMER_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	timer_label.accessibility_name = TEXT.a11y_time
+	timer_label.accessibility_name = tr(TEXT.a11y_time)
 
 	get_viewport().size_changed.connect(layout)
 	layout()
@@ -199,11 +199,11 @@ func set_state_color(color: Color) -> void:
 
 
 func set_level(level: int, count: int) -> void:
-	level_label.text = TEXT.sheet % [level, count]
+	level_label.text = tr(TEXT.sheet) % [level, count]
 
 
 func set_tutorial_level(level: int, count: int) -> void:
-	level_label.text = TEXT.tutorial_sheet % [level, count]
+	level_label.text = tr(TEXT.tutorial_sheet) % [level, count]
 
 
 func set_score(score: int) -> void:
@@ -235,16 +235,23 @@ func show_bar(on: bool) -> void:
 
 ## The note shows the controls message if there is one, else the time message.
 ## During the tutorial the bar belongs to the lesson, so the note (without
-## its icon) sits in the header strip instead.
+## its icon) sits in the header strip instead. Messages arrive translated and
+## already in the sheet's capitals.
 func _refresh_note() -> void:
 	var text := _controls_text if _controls_text != "" else _time_text
 	note_label.text = "" if _tutorial else text
 	header_note.text = text if _tutorial else ""
+	# Right-to-left languages read the note from the right edge of its box.
+	var ts := TextServerManager.get_primary_interface()
+	var rtl := ts.is_locale_right_to_left(TranslationServer.get_locale())
+	var side := HORIZONTAL_ALIGNMENT_RIGHT if rtl else HORIZONTAL_ALIGNMENT_LEFT
+	note_label.horizontal_alignment = side
+	tutorial_label.horizontal_alignment = side
 	_show_icons(not _tutorial)
 
 
 func set_controls_message(text: String, _size := 20) -> void:
-	_controls_text = text.to_upper()
+	_controls_text = text
 	_refresh_note()
 
 
@@ -260,7 +267,7 @@ func set_tutorial_text(text: String) -> void:
 
 
 func set_time_message(text: String, _size := 30) -> void:
-	_time_text = text.to_upper()
+	_time_text = text
 	_refresh_note()
 
 

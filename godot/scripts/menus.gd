@@ -65,7 +65,7 @@ const TEXT := {
 	"main_items":
 	["PLAY FROM START", "CONTINUE FROM CHECKPOINT", "PRACTICE A LEVEL", "TUTORIAL", "OPTIONS"],
 	"best_score": "BEST SCORE %d",
-	"level_count": "%d LEVELS",
+	"level_count": ["%d LEVEL", "%d LEVELS"],
 	# 000 — first run
 	"first_number": "000",
 	"first_title": "FIRST RUN",
@@ -77,6 +77,10 @@ const TEXT := {
 	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
 	"on": "[X]",
 	"off": "[ ]",
+	# 001-C — language
+	"language_number": "001-C",
+	"language_title": "LANGUAGE",
+	"phone_language": "PHONE'S LANGUAGE",
 	# nnn-A — paused, and the question before quitting
 	"paused_title": "PAUSED",
 	"suspended": "WORK SUSPENDED AT LEVEL %d",
@@ -126,7 +130,8 @@ const TEXT := {
 	"no_best": "—",
 	"previous_page": "<  P-%02d",
 	"next_page": "P-%02d  >",
-	"practice_caption": "SHEET %d OF %d · %d PARTS RELEASED",
+	"practice_page": "SHEET %d OF %d",
+	"released": ["%d PART RELEASED", "%d PARTS RELEASED"],
 	# nnn — level clear
 	"inspection_title": "LEVEL %d — INSPECTION",
 	"checkpoint_title": "LEVEL %d — CHECKPOINT",
@@ -158,8 +163,26 @@ const TEXT := {
 	"a11y_toggle": "%s, %s",
 	"a11y_on": "on",
 	"a11y_off": "off",
-	"a11y_lives": "%d lives remaining",
+	"a11y_lives": ["%d life remaining", "%d lives remaining"],
 }
+## The languages on the language sheet: locale code and the name in that
+## language. The codes match the .po files in i18n/.
+const LANGUAGES := [
+	["en", "English"],
+	["es", "Español"],
+	["pt_BR", "Português (Brasil)"],
+	["fr", "Français"],
+	["it", "Italiano"],
+	["de", "Deutsch"],
+	["ru", "Русский"],
+	["tr", "Türkçe"],
+	["id", "Bahasa Indonesia"],
+	["ja", "日本語"],
+	["ko", "한국어"],
+	["zh_CN", "简体中文"],
+	["zh_TW", "繁體中文"],
+	["ar", "العربية"],
+]
 
 var current := ""
 
@@ -197,6 +220,9 @@ var _level := 0
 var _tutorial := false
 ## The options row last toggled, so the redrawn sheet keeps the focus there.
 var _refocus_row := -1
+## Right-to-left language (Arabic): the sheet is laid out as a mirror image,
+## with the parts list on the right and MapMan on the left.
+var _rtl := false
 
 
 func _ready() -> void:
@@ -291,6 +317,8 @@ func close() -> void:
 func _open(tag: String, number: String, title: String, frame_color := Blueprint.INK) -> void:
 	_animate = Blueprint.motion() and current != tag
 	close()
+	var ts := TextServerManager.get_primary_interface()
+	_rtl = ts.is_locale_right_to_left(TranslationServer.get_locale())
 	current = tag
 	visible = true
 	_cascade = 0.0
@@ -299,7 +327,7 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 	_bg = Blueprint.rect(self, Blueprint.FIELD, Vector2.ZERO, vp)
 	_grid = Blueprint.grid(self, vp)
 	_frame = Blueprint.line(self, Blueprint.frame_points(vp), frame_color, Blueprint.FRAME_WIDTH)
-	var heading: String = TEXT.header % [number, title]
+	var heading: String = _t("header") % [number, title]
 	_header = Blueprint.label(self, heading, 14, Blueprint.INK, Vector2.ZERO, 700)
 	_header.accessibility_name = _sentence(title)
 	_block = _title_block(number, frame_color)
@@ -327,7 +355,7 @@ func _title_block(number: String, color: Color) -> Control:
 	var rev: String = Dev.build_info.version.get_slice("-", 0)
 	if rev == "":
 		rev = TEXT.rev_dev
-	var text: String = TEXT.title_block % [rev, number]
+	var text: String = _t("title_block") % [rev, number]
 	Blueprint.label(block, text, 11, Blueprint.INK, Vector2(11, 8))
 	return block
 
@@ -342,8 +370,14 @@ func _layout() -> void:
 	_grid.size = vp
 	_grid.queue_redraw()
 	_frame.points = Blueprint.frame_points(vp)
-	_header.position = Vector2(Blueprint.INSET + 16, Blueprint.INSET + 10)
+	_header.size = _header.get_minimum_size()
+	var header_x := Blueprint.INSET + 16
+	if _rtl:
+		header_x = vp.x - Blueprint.INSET - 16 - _header.size.x
+	_header.position = Vector2(header_x, Blueprint.INSET + 10)
 	_block.position = vp - Vector2(Blueprint.INSET, Blueprint.INSET) - TITLE_BLOCK
+	if _rtl:
+		_block.position.x = Blueprint.INSET
 
 
 ## The sheet number of the level being played, with a sub-sheet letter.
@@ -359,6 +393,44 @@ func _level_number(suffix: String) -> String:
 ## "PLAY FROM START" -> "Play from start", for screen readers.
 func _sentence(text: String) -> String:
 	return text.left(1) + text.substr(1).to_lower()
+
+
+## The x of a piece `w` wide whose left edge is at `x` on a left-to-right
+## sheet: the same piece sits at the mirror image on a right-to-left one.
+func _mx(x: float, w: float) -> float:
+	return SHEET.x - x - w if _rtl else x
+
+
+## Text in a box hugs the reading side.
+func _align() -> HorizontalAlignment:
+	return HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
+
+
+## A label `w` wide at the mirrored place of `x`, aligned to the reading side.
+func _text(
+	parent: Node, text: String, size: int, color: Color, x: float, y: float, w: float, weight := 500
+) -> Label:
+	var l := Blueprint.label(parent, text, size, color, Vector2(_mx(x, w), y), weight, w, _align())
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	return l
+
+
+## A TEXT entry in the current language: the English is the msgid (i18n/).
+func _t(key: String) -> String:
+	return tr(TEXT[key])
+
+
+## A TEXT list in the current language.
+func _tl(key: String) -> Array[String]:
+	var out: Array[String] = []
+	for text in TEXT[key]:
+		out.append(tr(text))
+	return out
+
+
+## A TEXT [singular, plural] pair in the current language, filled with n.
+func _tn(key: String, n: int) -> String:
+	return tr_n(TEXT[key][0], TEXT[key][1], n) % n
 
 
 # --- the parts ----------------------------------------------------------------
@@ -387,25 +459,27 @@ func _columns(names: Array, xs: Array, right_last := false) -> void:
 	var row := _row(LIST_TOP, 16)
 	for i in names.size():
 		if right_last and i == names.size() - 1:
-			var right := LIST_X + LIST_W - 120.0
-			var pos := Vector2(right, 0)
-			Blueprint.label(
-				row, names[i], 11, Blueprint.FAINT, pos, 500, 120.0, HORIZONTAL_ALIGNMENT_RIGHT
+			# The value column ends flush with the list's far edge.
+			var l := _text(row, names[i], 11, Blueprint.FAINT, LIST_X + LIST_W - 120.0, 0, 120.0)
+			l.horizontal_alignment = (
+				HORIZONTAL_ALIGNMENT_LEFT if _rtl else HORIZONTAL_ALIGNMENT_RIGHT
 			)
 		else:
-			Blueprint.label(row, names[i], 11, Blueprint.FAINT, Vector2(xs[i], 0))
+			_text(row, names[i], 11, Blueprint.FAINT, xs[i], 0, 160.0)
 	_reveal(row)
 
 
 ## A note or status line in the sheet's small print.
 func _note(text: String, y: float, color := Blueprint.FAINT, size := 10) -> Label:
-	var l := Blueprint.label(_panel, text, size, color, Vector2(LIST_X, y), 500, LIST_W)
+	var pos := Vector2(_mx(LIST_X, LIST_W), y)
+	var l := Blueprint.label(_panel, text, size, color, pos, 500, LIST_W, _align())
 	_reveal(l)
 	return l
 
 
 func _rule(y: float) -> void:
-	_reveal(Blueprint.rule(_panel, y, LIST_X, LIST_X + LIST_W))
+	var x := _mx(LIST_X, LIST_W)
+	_reveal(Blueprint.rule(_panel, y, x, x + LIST_W))
 
 
 ## Make a button report `act`; the first one on a sheet gets the focus.
@@ -419,9 +493,10 @@ func _connect(b: Button, act: String, enabled := true) -> void:
 
 ## A row of the parts list, numbered from 1, that reports `act`.
 func _item(index: int, text: String, act: String, y: float, enabled := true) -> Button:
-	var pos := Vector2(LIST_X, y)
+	var pos := Vector2(_mx(LIST_X, LIST_W), y)
 	var size := Vector2(LIST_W, Blueprint.TAP_HEIGHT)
 	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, size, enabled)
+	b.alignment = _align()
 	b.accessibility_name = _sentence(text)
 	_connect(b, act, enabled)
 	_reveal(b)
@@ -437,8 +512,9 @@ func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array =
 
 ## The way back to the main menu, as the last row of a sheet.
 func _return_item(y: float) -> void:
-	var b := Blueprint.item(_panel, TEXT.return_item, Vector2(LIST_X, y))
-	b.accessibility_name = _sentence(TEXT.main_menu)
+	var b := Blueprint.item(_panel, _t("return_item"), Vector2(_mx(LIST_X, LIST_W), y))
+	b.alignment = _align()
+	b.accessibility_name = _sentence(_t("main_menu"))
 	_connect(b, "main menu")
 	_reveal(b)
 
@@ -463,7 +539,7 @@ func _cell(
 	a11y: String
 ) -> Button:
 	var cell := Control.new()
-	cell.position = pos
+	cell.position = Vector2(_mx(pos.x, size.x), pos.y)
 	cell.size = size
 	cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(cell)
@@ -471,8 +547,13 @@ func _cell(
 	if open:
 		Blueprint.rect(cell, Blueprint.HOVER, Vector2.ONE, size - Vector2(2, 2))
 	Blueprint.line(cell, Blueprint.box_points(Vector2.ZERO, size), color, 1.2 if open else 0.8)
-	Blueprint.label(cell, title, 15, color, Vector2(8, 4), 700 if open else 400)
-	Blueprint.label(cell, detail, 10, color, Vector2(8, size.y - 18))
+	var inner := size.x - 16.0
+	var t := Blueprint.label(
+		cell, title, 15, color, Vector2(8, 4), 700 if open else 400, inner, _align()
+	)
+	t.autowrap_mode = TextServer.AUTOWRAP_OFF
+	var d := Blueprint.label(cell, detail, 10, color, Vector2(8, size.y - 18), 500, inner, _align())
+	d.autowrap_mode = TextServer.AUTOWRAP_OFF
 	var b := Button.new()
 	b.theme = Blueprint.theme()
 	b.size = size
@@ -494,7 +575,13 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 	b.text = text
 	b.add_theme_font_size_override("font_size", 12)
 	b.alignment = align
-	b.position = Vector2(x, 266)
+	if _rtl:
+		b.alignment = (
+			HORIZONTAL_ALIGNMENT_RIGHT
+			if align == HORIZONTAL_ALIGNMENT_LEFT
+			else HORIZONTAL_ALIGNMENT_LEFT
+		)
+	b.position = Vector2(_mx(x, 102), 266)
 	b.size = Vector2(102, Blueprint.TAP_HEIGHT)
 	b.accessibility_name = a11y
 	_clear_button(b)
@@ -506,26 +593,30 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 ## A line of an inspection table: name, quantity (optional) and value.
 func _table_row(y: float, name: String, qty: String, value: String) -> Control:
 	var row := _row(y)
-	Blueprint.label(row, name, 15, Blueprint.INK, Vector2(LIST_X, 0))
+	_text(row, name, 15, Blueprint.INK, LIST_X, 0, 180.0)
 	if qty != "":
-		Blueprint.label(row, qty, 15, Blueprint.INK, Vector2(226, 0))
-	var right := LIST_X + LIST_W - 120.0
-	var pos := Vector2(right, 0)
-	Blueprint.label(row, value, 15, Blueprint.INK, pos, 700, 120.0, HORIZONTAL_ALIGNMENT_RIGHT)
-	Blueprint.rule(row, 26, LIST_X, LIST_X + LIST_W)
+		_text(row, qty, 15, Blueprint.INK, 226.0, 0, 60.0)
+	_value(row, value, 15, 0)
+	var x := _mx(LIST_X, LIST_W)
+	Blueprint.rule(row, 26, x, x + LIST_W)
 	return row
+
+
+## A figure in the value column, flush with the list's far edge.
+func _value(parent: Node, text: String, size: int, y: float, weight := 700) -> Label:
+	var l := _text(parent, text, size, Blueprint.INK, LIST_X + LIST_W - 120.0, y, 120.0, weight)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT if _rtl else HORIZONTAL_ALIGNMENT_RIGHT
+	return l
 
 
 ## TOTAL under a table, with the double rule; returns the figure's label.
 func _total(y: float, text: String) -> Label:
 	var row := _row(y)
-	Blueprint.label(row, TEXT.total, 15, Blueprint.INK, Vector2(LIST_X, 0), 700)
-	var pos := Vector2(LIST_X + LIST_W - 120.0, -6)
-	var l := Blueprint.label(
-		row, text, 22, Blueprint.INK, pos, 700, 120.0, HORIZONTAL_ALIGNMENT_RIGHT
-	)
-	Blueprint.rule(row, 26, LIST_X, LIST_X + LIST_W)
-	Blueprint.rule(row, 29, LIST_X, LIST_X + LIST_W)
+	_text(row, _t("total"), 15, Blueprint.INK, LIST_X, 0, 180.0, 700)
+	var l := _value(row, text, 22, -6)
+	var x := _mx(LIST_X, LIST_W)
+	Blueprint.rule(row, 26, x, x + LIST_W)
+	Blueprint.rule(row, 29, x, x + LIST_W)
 	_reveal(row)
 	return l
 
@@ -533,11 +624,11 @@ func _total(y: float, text: String) -> Label:
 ## FINAL SCORE in big figures, with the previous best under it when known.
 func _score_block(score: int, previous_best: int) -> void:
 	var row := _row(70, 100)
-	Blueprint.label(row, TEXT.final_score, 15, Blueprint.INK, Vector2(LIST_X, 0))
-	Blueprint.label(row, str(score), 48, Blueprint.INK, Vector2(LIST_X, 20), 800)
+	_text(row, _t("final_score"), 15, Blueprint.INK, LIST_X, 0, 160.0)
+	_text(row, str(score), 48, Blueprint.INK, LIST_X, 20, 160.0, 800)
 	if previous_best > 0:
-		var text: String = TEXT.previous_best % previous_best
-		Blueprint.label(row, text, 12, Blueprint.FAINT, Vector2(LIST_X, 80))
+		var text: String = _t("previous_best") % previous_best
+		_text(row, text, 12, Blueprint.FAINT, LIST_X, 80, 200.0)
 	_reveal(row)
 
 
@@ -579,12 +670,13 @@ func _tick(label: Label, sum: Array, take: int) -> void:
 ## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
 ## motion or on a redrawn sheet); MapMan cheers as it lands, if it's good news.
 func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, cheer := true) -> void:
+	var at := Vector2(_mx(pos.x, 120.0), pos.y)
 	if not _animate:
-		Blueprint.stamp(_panel, text, pos, color)
+		Blueprint.stamp(_panel, text, at, color)
 		if cheer:
 			_cheer()
 		return
-	Blueprint.stamp(_panel, text, pos, color, true, delay)
+	Blueprint.stamp(_panel, text, at, color, true, delay)
 	if not cheer:
 		return
 	var tw := create_tween()
@@ -619,10 +711,11 @@ func _figure(art: String, pos: Vector2) -> Player:
 ## MapMan on an inked ellipse, with his height dimensioned beside him.
 ## mode: "tilt" (eyes follow the tilt), "down" (head hung) or "right".
 func _hero_on(mode: String) -> void:
-	var ellipse := Blueprint.ellipse_points(HERO_POS + Vector2(0, 2), 34, 12)
+	var at := Vector2(_mx(HERO_POS.x, 0), HERO_POS.y)
+	var ellipse := Blueprint.ellipse_points(at + Vector2(0, 2), 34, 12)
 	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
-	_dimension()
-	_hero = _figure("man", HERO_POS)
+	_dimension(at)
+	_hero = _figure("man", at)
 	_hero_mode = mode
 	if mode == "right":
 		_hero.face_right_idle()
@@ -631,27 +724,38 @@ func _hero_on(mode: String) -> void:
 
 
 ## A dimension line from his feet to the top of his head.
-func _dimension() -> void:
-	var x := HERO_POS.x + 50.0
-	var top := HERO_POS.y - (HERO_HEIGHT + Player.FEET_LIFT) * HERO_SCALE
-	var feet := HERO_POS.y - Player.FEET_LIFT * HERO_SCALE
+func _dimension(at: Vector2) -> void:
+	var x := at.x + (-50.0 if _rtl else 50.0)
+	var top := at.y - (HERO_HEIGHT + Player.FEET_LIFT) * HERO_SCALE
+	var feet := at.y - Player.FEET_LIFT * HERO_SCALE
 	var c := Blueprint.FAINT
 	Blueprint.line(_panel, PackedVector2Array([Vector2(x, top), Vector2(x, feet)]), c)
 	for y: float in [top, feet]:
 		Blueprint.line(_panel, PackedVector2Array([Vector2(x - 5, y), Vector2(x + 5, y)]), c)
 	var mid := (top + feet) / 2.0 - 7.0
-	Blueprint.label(_panel, str(roundi(feet - top)), 10, c, Vector2(x + 8, mid))
+	var label_x := x - 28.0 if _rtl else x + 8.0
+	var l := Blueprint.label(
+		_panel, str(roundi(feet - top)), 10, c, Vector2(label_x, mid), 500, 20.0
+	)
+	l.horizontal_alignment = _align()
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 
 
 ## MapMan and MapWoman together, facing each other, as at the end.
 func _pair_on() -> void:
-	var ellipse := Blueprint.ellipse_points(Vector2(500, 236), 60, 14)
+	var ellipse := Blueprint.ellipse_points(Vector2(_mx(500, 0), 236), 60, 14)
 	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
-	_hero = _figure("man", Vector2(478, 232))
-	_hero.face_right_idle()
-	_woman = _figure("woman", Vector2(524, 232))
-	_woman.flip = -1.0
-	_woman.face_left_idle()
+	_hero = _figure("man", Vector2(_mx(478, 0), 232))
+	_woman = _figure("woman", Vector2(_mx(524, 0), 232))
+	# They face each other, whichever side each stands on.
+	if _rtl:
+		_hero.flip = -1.0
+		_hero.face_left_idle()
+		_woman.face_right_idle()
+	else:
+		_hero.face_right_idle()
+		_woman.flip = -1.0
+		_woman.face_left_idle()
 	_hero_mode = "pair"
 
 
@@ -694,48 +798,92 @@ func _tap_to(act: String, delay := 0.3) -> void:
 
 
 func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
-	_open("main", TEXT.main_number, TEXT.main_title)
-	_columns([TEXT.col_item, TEXT.col_description], [TEXT_X, TEXT_X + 6 * CHAR_W])
+	_open("main", TEXT.main_number, _t("main_title"))
+	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
-	_items(TEXT.main_items, acts, 80, 44, [true, has_checkpoint, true, true, true])
+	_items(_tl("main_items"), acts, 80, 44, [true, has_checkpoint, true, true, true])
 	var parts: Array[String] = []
 	if highscore > 0:
-		parts.append(TEXT.best_score % highscore)
+		parts.append(_t("best_score") % highscore)
 	if levels > 0:
-		parts.append(TEXT.level_count % levels)
+		parts.append(_tn("level_count", levels))
 	if not parts.is_empty():
-		_note(TEXT.note % " · ".join(parts), 308)
+		_note(_t("note") % " · ".join(parts), 308)
 	_hero_on("tilt")
 	_focus_first()
 
 
 func show_first_play() -> void:
-	_open("first_play", TEXT.first_number, TEXT.first_title)
-	_note(TEXT.first_intro, LIST_TOP, Blueprint.FAINT, 11)
-	_items(TEXT.first_items, ["take tutorial", "play game", "main menu"], 84)
+	_open("first_play", TEXT.first_number, _t("first_title"))
+	_note(_t("first_intro"), LIST_TOP, Blueprint.FAINT, 11)
+	_items(_tl("first_items"), ["take tutorial", "play game", "main menu"], 84)
 	_hero_on("tilt")
 	_focus_first()
 
 
 func show_options() -> void:
-	_open("options", TEXT.options_number, TEXT.options_title)
-	_columns([TEXT.col_parameter, TEXT.col_value], [TEXT_X, TEXT_X + 20 * CHAR_W])
+	_open("options", TEXT.options_number, _t("options_title"))
+	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
 	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
 	var acts := ["music", "fx", "vibration", "reduce motion"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
+	var names := _tl("options")
 	for i in acts.size():
 		var on: bool = states[i]
-		var text := "%-20s%s" % [TEXT.options[i], TEXT.on if on else TEXT.off]
-		var b := Blueprint.item(_panel, text, Vector2(LIST_X, 80 + i * 44))
-		var state: String = TEXT.a11y_on if on else TEXT.a11y_off
-		b.accessibility_name = TEXT.a11y_toggle % [_sentence(TEXT.options[i]), state]
+		var b := _value_row(names[i], TEXT.on if on else TEXT.off, 80 + i * 44)
+		var state: String = _t("a11y_on") if on else _t("a11y_off")
+		b.accessibility_name = TEXT.a11y_toggle % [_sentence(names[i]), state]
 		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
 		b.pressed.connect(_remember_row.bind(i))
-		_reveal(b)
 		if i == refocus:
 			_first_button = b
-	_return_item(80 + acts.size() * 44)
+	var lang := _value_row(_t("language_title"), _language_name(Save.locale), 80 + acts.size() * 44)
+	_connect(lang, "language")
+	_return_item(80 + (acts.size() + 1) * 44)
+	_hero_on("tilt")
+	_focus_first()
+
+
+## An options row: the parameter on the left, its value in the VALUE column.
+func _value_row(name: String, value: String, y: float) -> Button:
+	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y))
+	b.alignment = _align()
+	var x := 12.0 if _rtl else TEXT_X - LIST_X + 20 * CHAR_W
+	var l := Blueprint.label(b, value, 16, Blueprint.INK, Vector2(x, 0))
+	l.size.y = Blueprint.TAP_HEIGHT
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_reveal(b)
+	return b
+
+
+## The name of a locale in its own language; "" is the phone's language.
+func _language_name(code: String) -> String:
+	for entry in LANGUAGES:
+		if entry[0] == code:
+			return entry[1]
+	return _t("phone_language")
+
+
+## The language sheet: the phone's language, then every language in its own
+## name, the current one marked. Picking one reports "language <code>".
+func show_language() -> void:
+	_open("language", TEXT.language_number, _t("language_title"))
+	var choices: Array = [["system", _t("phone_language")]]
+	for entry in LANGUAGES:
+		choices.append(entry)
+	for i in choices.size():
+		var code: String = choices[i][0]
+		var name: String = choices[i][1]
+		var chosen := (Save.locale == "" and code == "system") or Save.locale == code
+		@warning_ignore("integer_division")
+		var pos := Vector2(LIST_X + (i % 3) * 128, 72 + (i / 3) * 48)
+		var detail: String = TEXT.on if chosen else ""
+		_cell(pos, Vector2(120, Blueprint.TAP_HEIGHT), true, name, detail, "language " + code, name)
+	var back := Blueprint.item(_panel, "<  " + _t("options_title"), Vector2(LIST_X, 318))
+	back.accessibility_name = _sentence(_t("options_title"))
+	_connect(back, "options")
+	_reveal(back)
 	_hero_on("tilt")
 	_focus_first()
 
@@ -747,32 +895,33 @@ func _remember_row(row: int) -> void:
 func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 	_level = level
 	_tutorial = tutorial
-	_open("pause", _level_number("A"), TEXT.paused_title)
-	var status: String = TEXT.suspended_tutorial
+	_open("pause", _level_number("A"), _t("paused_title"))
+	var status: String = _t("suspended_tutorial")
 	if not tutorial and level <= 0:
-		status = TEXT.suspended_final
+		status = _t("suspended_final")
 	elif not tutorial:
-		status = TEXT.suspended % level
+		status = _t("suspended") % level
 		if seconds >= 0:
 			@warning_ignore("integer_division")
-			status += TEXT.remaining % [seconds / 60, seconds % 60]
+			status += _t("remaining") % [seconds / 60, seconds % 60]
 	_note(status, LIST_TOP, Blueprint.FAINT, 11)
-	_item(1, TEXT.resume, "unpause", 90)
+	_item(1, _t("resume"), "unpause", 90)
 	if tutorial:
-		_item(2, TEXT.end_tutorial, "end tutorial", 138)
+		_item(2, _t("end_tutorial"), "end tutorial", 138)
 	else:
-		_item(2, TEXT.end_game, "confirm quit", 138)
-	_note(TEXT.pause_note, 200)
+		_item(2, _t("end_game"), "confirm quit", 138)
+	_note(_t("pause_note"), 200)
 	_hero_on("tilt")
-	_reveal(Blueprint.stamp(_panel, TEXT.on_hold, Vector2(230, 240), Blueprint.GOLD))
+	var hold := Vector2(_mx(230, 120.0), 240)
+	_reveal(Blueprint.stamp(_panel, _t("on_hold"), hold, Blueprint.GOLD))
 	_focus_first()
 
 
 func show_confirm_quit() -> void:
-	_open("confirm_quit", _level_number("A"), TEXT.confirm_title, Blueprint.PINK)
-	_note(TEXT.confirm_question, LIST_TOP, Blueprint.PINK, 11)
-	_item(1, TEXT.keep_playing, "unpause", 100)
-	_item(2, TEXT.end_the_game, "end game", 148)
+	_open("confirm_quit", _level_number("A"), _t("confirm_title"), Blueprint.PINK)
+	_note(_t("confirm_question"), LIST_TOP, Blueprint.PINK, 11)
+	_item(1, _t("keep_playing"), "unpause", 100)
+	_item(2, _t("end_the_game"), "end game", 148)
 	_hero_on("tilt")
 	_focus_first()
 
@@ -780,15 +929,15 @@ func show_confirm_quit() -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func show_lose_life(lives: int, level := 0, reason := "death") -> void:
 	_level = level
-	_open("lose_life", "%03d" % level, TEXT.defect_title % level, Blueprint.PINK)
+	_open("lose_life", "%03d" % level, _t("defect_title") % level, Blueprint.PINK)
 	var timeout := reason == "timeout"
-	_note(TEXT.defect_timeout if timeout else TEXT.defect_death, LIST_TOP, Blueprint.PINK, 11)
+	_note(_t("defect_timeout") if timeout else _t("defect_death"), LIST_TOP, Blueprint.PINK, 11)
 	var row := _row(96, 24)
-	var l := Blueprint.label(row, TEXT.lives_remaining, 15, Blueprint.INK, Vector2(LIST_X, 0))
-	l.accessibility_name = TEXT.a11y_lives % lives
+	var l := _text(row, _t("lives_remaining"), 15, Blueprint.INK, LIST_X, 0, 190.0)
+	l.accessibility_name = _tn("a11y_lives", lives)
 	var discs := clampi(lives, 3, MAX_LIFE_DISCS)
 	for i in discs:
-		var pts := Blueprint.ellipse_points(Vector2(250 + i * 36, 8), 11, 10, 20)
+		var pts := Blueprint.ellipse_points(Vector2(_mx(250 + i * 36, 0), 8), 11, 10, 20)
 		if i < lives:
 			var disc := Polygon2D.new()
 			disc.polygon = pts
@@ -798,41 +947,42 @@ func show_lose_life(lives: int, level := 0, reason := "death") -> void:
 		Blueprint.line(row, pts, Blueprint.PINK, 1.5)
 	if lives > MAX_LIFE_DISCS:
 		var extra: String = TEXT.more_lives % (lives - MAX_LIFE_DISCS)
-		var pos := Vector2(250 + discs * 36 - 8, 0)
-		Blueprint.label(row, extra, 15, Blueprint.PINK, pos, 700)
+		var pos := Vector2(_mx(250 + discs * 36 - 8, 40.0), 0)
+		var more := Blueprint.label(row, extra, 15, Blueprint.PINK, pos, 700, 40.0)
+		more.horizontal_alignment = _align()
 	_reveal(row)
 	_rule(128)
-	_item(1, TEXT.try_again, "try again", 150)
-	_note(TEXT.timeout_note if timeout else TEXT.death_note, 212)
+	_item(1, _t("try_again"), "try again", 150)
+	_note(_t("timeout_note") if timeout else _t("death_note"), 212)
 	_hero_on("down")
-	_stamp(TEXT.rework, Vector2(222, 240), Blueprint.PINK, STAMP_DELAY, false)
+	_stamp(_t("rework"), Vector2(222, 240), Blueprint.PINK, STAMP_DELAY, false)
 	_focus_first()
 
 
 func show_game_over(score: int, pb: bool, has_checkpoint: bool, previous_best := 0) -> void:
-	_open("game_over", TEXT.end_number, TEXT.game_over_title, Blueprint.PINK)
+	_open("game_over", TEXT.end_number, _t("game_over_title"), Blueprint.PINK)
 	_score_block(score, previous_best)
 	_rule(182)
 	var acts := ["play from start", "restart from checkpoint", "main menu"]
-	_items(TEXT.game_over_items, acts, 192, 44, [true, has_checkpoint, true])
+	_items(_tl("game_over_items"), acts, 192, 44, [true, has_checkpoint, true])
 	_hero_on("down")
 	if pb:
-		_stamp(TEXT.new_best, Vector2(220, 100), Blueprint.GOLD)
+		_stamp(_t("new_best"), Vector2(220, 100), Blueprint.GOLD)
 	_focus_first()
 
 
 ## The checkpoint picker: `reached` holds the levels whose checkpoint is saved.
 func show_restart(reached: Array) -> void:
-	_open("restart", TEXT.cp_number, TEXT.checkpoints_title)
-	_columns([TEXT.checkpoints_header], [LIST_X])
+	_open("restart", TEXT.cp_number, _t("checkpoints_title"))
+	_columns([_t("checkpoints_header")], [LIST_X])
 	for r in CHECKPOINT_ROWS.size():
 		for c in CHECKPOINT_ROWS[r].size():
 			var level: int = CHECKPOINT_ROWS[r][c]
 			var open := level in reached
 			var pos := Vector2(LIST_X + c * 100, 80 + r * 50)
-			var detail: String = TEXT.saved if open else TEXT.locked
+			var detail: String = _t("saved") if open else _t("locked")
 			var a11y: String = (
-				(TEXT.a11y_checkpoint if open else TEXT.a11y_checkpoint_locked) % level
+				(_t("a11y_checkpoint") if open else _t("a11y_checkpoint_locked")) % level
 			)
 			var size := Vector2(90, Blueprint.TAP_HEIGHT)
 			_cell(pos, size, open, str(level), detail, "L%d" % level, a11y)
@@ -847,26 +997,25 @@ func show_restart(reached: Array) -> void:
 func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note := "") -> void:
 	var first := page * PRACTICE_PAGE + 1
 	var last := mini(first + PRACTICE_PAGE - 1, count)
-	var title: String = TEXT.practice_title % [first, last]
+	var title: String = _t("practice_title") % [first, last]
 	_open("practice", TEXT.practice_number % (page + 1), title)
 	var on_page := last - first + 1
 	var heads := _row(56, 12)
 	for c in mini(5, on_page):
-		var pos := Vector2(LIST_X + c * 118, 0)
-		Blueprint.label(heads, TEXT.practice_columns, 9, Blueprint.FAINT, pos)
+		_text(heads, _t("practice_columns"), 9, Blueprint.FAINT, LIST_X + c * 118, 0, 108.0)
 	_reveal(heads)
 	for i in on_page:
 		var level := first + i
 		var open := level <= furthest
 		@warning_ignore("integer_division")
 		var pos := Vector2(LIST_X + (i % 5) * 118, 72 + (i / 5) * 50)
-		var a11y: String = (TEXT.a11y_level if open else TEXT.a11y_level_locked) % level
+		var a11y: String = (_t("a11y_level") if open else _t("a11y_level_locked")) % level
 		var act := "practice level %d" % level
 		_cell(
 			pos,
 			Vector2(108, Blueprint.TAP_HEIGHT),
 			open,
-			TEXT.part % level,
+			_t("part") % level,
 			_best_text(bests, level, open),
 			act,
 			a11y
@@ -875,16 +1024,21 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	if page > 0:
 		var text: String = TEXT.previous_page % page
 		_arrow(
-			text, "practice page %d" % (page - 1), 28, HORIZONTAL_ALIGNMENT_LEFT, TEXT.a11y_previous
+			text,
+			"practice page %d" % (page - 1),
+			28,
+			HORIZONTAL_ALIGNMENT_LEFT,
+			_t("a11y_previous")
 		)
 	if page < pages - 1:
 		var text: String = TEXT.next_page % (page + 2)
 		_arrow(
-			text, "practice page %d" % (page + 1), 330, HORIZONTAL_ALIGNMENT_RIGHT, TEXT.a11y_next
+			text, "practice page %d" % (page + 1), 330, HORIZONTAL_ALIGNMENT_RIGHT, _t("a11y_next")
 		)
-	var caption: String = TEXT.practice_caption % [page + 1, pages, mini(furthest, count)]
+	var caption: String = _t("practice_page") % [page + 1, pages]
+	caption += " · " + _tn("released", mini(furthest, count))
 	if note != "":
-		caption = note.to_upper()
+		caption = note
 	var pos := Vector2(130, 281)
 	var l := Blueprint.label(
 		_panel, caption, 10, Blueprint.FAINT, pos, 500, 200.0, HORIZONTAL_ALIGNMENT_CENTER
@@ -897,13 +1051,13 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 ## A level's best in the practice grid: "9s ★1", "12s", "—", or LOCKED.
 func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 	if not open:
-		return TEXT.locked
+		return _t("locked")
 	var best: Dictionary = bests.get(level, {})
 	if best.is_empty():
 		return TEXT.no_best
 	if best.stars > 0:
-		return TEXT.best_with_stars % [best.time, best.stars]
-	return TEXT.best % best.time
+		return _t("best_with_stars") % [best.time, best.stars]
+	return _t("best") % best.time
 
 
 ## Level clear: the bonuses are added into the score one row at a time.
@@ -919,16 +1073,16 @@ func show_end_level(
 	seconds_left := -1,
 	last := false
 ) -> void:
-	var title: String = (TEXT.checkpoint_title if checkpoint else TEXT.inspection_title) % level
+	var title: String = (_t("checkpoint_title") if checkpoint else _t("inspection_title")) % level
 	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
-	_columns([TEXT.col_item, TEXT.col_qty, TEXT.col_value], [LIST_X, 226], true)
+	_columns([_t("col_item"), _t("col_qty"), _t("col_value")], [LIST_X, 226], true)
 	var clock := seconds_left if seconds_left >= 0 else time_bonus * 2
 	var specs := [
-		[TEXT.level_bonus, "1", level_bonus],
-		[TEXT.time_bonus, TEXT.seconds % clock, time_bonus],
+		[_t("level_bonus"), "1", level_bonus],
+		[_t("time_bonus"), _t("seconds") % clock, time_bonus],
 	]
 	if stars > 0:
-		specs.append([TEXT.stars_collected, str(stars), stars])
+		specs.append([_t("stars_collected"), str(stars), stars])
 	var rows := []
 	var y := 84.0
 	for s in specs:
@@ -936,35 +1090,35 @@ func show_end_level(
 		y += ROW_H
 	var total := _total(y + 4, str(score))
 	if checkpoint:
-		_note(TEXT.checkpoint_saved, 244, Blueprint.GOLD, 11)
-	_note(TEXT.tap_final if last else TEXT.tap_next % (level + 1), 264, Blueprint.FAINT, 11)
+		_note(_t("checkpoint_saved"), 244, Blueprint.GOLD, 11)
+	_note(_t("tap_final") if last else _t("tap_next") % (level + 1), 264, Blueprint.FAINT, 11)
 	_hero_on("right")
 	_count_up(
-		total, score, rows, func(): _stamp(TEXT.passed, Vector2(470, 90), Blueprint.GOLD, 0.0)
+		total, score, rows, func(): _stamp(_t("passed"), Vector2(470, 90), Blueprint.GOLD, 0.0)
 	)
 	_tap_to("next level")
 
 
 func show_congratulations(score: int, pb: bool) -> void:
-	_open("congratulations", TEXT.end_sheet, TEXT.congratulations_title, Blueprint.GOLD)
+	_open("congratulations", TEXT.end_sheet, _t("congratulations_title"), Blueprint.GOLD)
 	_score_block(score, 0)
 	_rule(182)
-	_item(1, TEXT.main_menu, "main menu", 192)
-	_note(TEXT.congratulations_note, 300)
+	_item(1, _t("main_menu"), "main menu", 192)
+	_note(_t("congratulations_note"), 300)
 	_pair_on()
 	if pb:
-		_stamp(TEXT.new_best, Vector2(220, 100), Blueprint.GOLD)
+		_stamp(_t("new_best"), Vector2(220, 100), Blueprint.GOLD)
 	_focus_first()
 
 
 ## The final inspection: the completion and lives bonuses join the score.
 func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
-	_open("completion", TEXT.end_sheet, TEXT.completion_title, Blueprint.GOLD)
-	_columns([TEXT.col_item, TEXT.col_value], [LIST_X], true)
+	_open("completion", TEXT.end_sheet, _t("completion_title"), Blueprint.GOLD)
+	_columns([_t("col_item"), _t("col_value")], [LIST_X], true)
 	var specs := [
-		[TEXT.score_at_100, str(score), 0],
-		[TEXT.completion_bonus, TEXT.plus % completion_bonus, completion_bonus],
-		[TEXT.lives_bonus, TEXT.plus % lives_bonus, lives_bonus],
+		[_t("score_at_100"), str(score), 0],
+		[_t("completion_bonus"), TEXT.plus % completion_bonus, completion_bonus],
+		[_t("lives_bonus"), TEXT.plus % lives_bonus, lives_bonus],
 	]
 	var rows := []
 	var y := 84.0
@@ -972,9 +1126,9 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 		rows.append({"node": _table_row(y, s[0], "", s[1]), "points": s[2]})
 		y += ROW_H
 	var total := _total(y + 4, str(score))
-	_note(TEXT.completion_caption, 260, Blueprint.GOLD, 11)
+	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
 	_pair_on()
 	_count_up(
-		total, score, rows, func(): _stamp(TEXT.approved, Vector2(458, 84), Blueprint.GOLD, 0.0)
+		total, score, rows, func(): _stamp(_t("approved"), Vector2(458, 84), Blueprint.GOLD, 0.0)
 	)
 	_tap_to("completion done")

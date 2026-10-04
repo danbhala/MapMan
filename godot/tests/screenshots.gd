@@ -231,6 +231,43 @@ func run() -> void:
 	await frames(70)
 	await shot("20_first_play")
 
+	# Other languages: a mirrored Arabic sheet, Japanese and Russian text, and
+	# the HUD's notes in Arabic during play.
+	save.set_locale("ar")
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("21_main_menu_ar")
+	save.set_locale("ja")
+	game._on_menu_action("options")
+	await frames(70)
+	await shot("22_options_ja")
+	save.set_locale("ru")
+	game._on_menu_action("main menu")
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.level = 10
+	game.load_level()
+	game.reset_all()
+	while not game._timer_running:
+		await process_frame
+	game.advance_level(true)
+	await frames(200)
+	await shot("23_level_clear_ru")
+	game._on_menu_action("next level")
+	save.set_locale("ar")
+	game.load_level()
+	game.reset_all()
+	while not game._timer_running:
+		await process_frame
+	game.reverse = true
+	game.vanish = 3
+	game.set_background()
+	game.set_controls_message()
+	await frames(2)
+	await shot("24_playing_ar")
+	save.set_locale("")
+
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
 		quit(0)

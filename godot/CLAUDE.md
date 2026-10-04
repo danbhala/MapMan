@@ -30,6 +30,16 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
   let a cheat work when `Dev.enabled` is false.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
+- Languages: every player-facing string is an English msgid passed to `tr()`
+  (plurals through `tr_n()`), listed with a note and a width budget in
+  `i18n/catalog.json`. Translations are `i18n/<locale>.json`; `tools/i18n.py`
+  turns them into the `.po` files `project.godot` loads (run it after editing,
+  `--check` in CI). `tools/subset_fonts.py` cuts Noto Sans fonts down to the
+  characters the translations use (`assets/fonts/i18n/`), so add a glyph source
+  there before adding a script. `Save.locale` is the chosen language ("" follows
+  the phone); Arabic mirrors the sheets (`Menus._mx()`). `tests/unit/test_i18n.gd`
+  checks the catalog, the translations, the glyphs and that every sheet fits
+  in every language.
 - Tile art is the original @3x set, drawn at scale 1/3 (the menu, button and
   character art is no longer used). Fonts are bundled (JetBrains Mono,
   Liberation; OFL) so screenshots match on every machine.
