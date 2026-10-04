@@ -7,6 +7,14 @@ extends Node2D
 ## The facing API is the one the sprite version had (face_*, vanish,
 ## show_player, update_at, death_finished). The dials the game and the menus
 ## turn are look, land(), cheer(), spin_around(), set_stuck() and face_death().
+##
+## He wears one look from the wardrobe at a time (`outfit`, docs/wardrobe).
+## He is drawn in layers, back to front: back, legs, body, neck, head, eyes,
+## face, hat, front. Outfits adds the look's parts to each; every part follows
+## the same dials because it is drawn from the same pose (OutfitPen). Seen
+## from behind, a cape covers his back and the face and front details go.
+## Dying, the body swallows the head as ever, things sticking out of the head
+## and neck fade first, and the hat flies off.
 
 const HEAD_COLOR := Color("#dfe9ff")
 const BODY_COLOR := Color.BLACK
@@ -22,6 +30,11 @@ const STRIDE := 9.0
 
 ## "man" or "woman". Set before adding to the tree.
 var art := "man"
+## The look he wears: a Wardrobe id ("classic" is plain MapMan).
+var outfit := "classic":
+	set(id):
+		outfit = id
+		queue_redraw()
 var is_hidden := true
 
 ## Where the eyes (and a little of the head) point: -1..1 on each axis.
@@ -59,6 +72,7 @@ var _death_clock := 0.0
 var _idle_clock := 0.0
 var _death_tween: Tween
 var _web_tween: Tween
+var _pen := OutfitPen.new()
 
 
 func _ready() -> void:
@@ -273,15 +287,35 @@ func death_finished() -> bool:
 
 
 func _draw() -> void:
+	_paint(false)
+
+
+## The box he and his look cover in this pose, in his own units. Draws
+## nothing, so it works outside _draw() and without a screen.
+func measure() -> Rect2:
+	return _paint(true)
+
+
+## How tall he stands in look `id`, from his feet to the top of his head or
+## hat, facing us: for the dimension line on the menus.
+static func standing_height(id: String) -> float:
+	var p := Player.new()
+	p.outfit = id
+	var box := p.measure()
+	p.free()
+	return -box.position.y - FEET_LIFT
+
+
+func _paint(measuring: bool) -> Rect2:
 	var fx := flip * cos(spin * TAU)
 	var bob := absf(sin(_phase)) * 2.5 * walking + sin(_hop * PI) * 8.0
 	var sy := 1.0 - squash * 0.18
 	var sx := 1.0 + squash * 0.18
 	var swing := sin(_phase) * 0.5 * walking
 	var lean := (look.x * 0.05 + walking * 0.08) * signf(fx)
-	var body := BODY_COLOR
-	var head := HEAD_COLOR
-	var eyes := EYE_COLOR
+	var pal := {"body": BODY_COLOR, "head": HEAD_COLOR, "eyes": EYE_COLOR}
+	pal.merge(Outfits.palette(outfit), true)
+	var body: Color = pal.body
 	var origin := Vector2(shake_x, -FEET_LIFT)
 	var mirror := Vector2(fx if absf(fx) > 0.05 else 0.05, 1.0)
 	# Dying, the legs draw up into the body, which settles on the ground, and
@@ -290,48 +324,128 @@ func _draw() -> void:
 	var leg := 1.0 - dead
 	var drop := dead * 26.0
 	var sink := dead * 47.0
+	# What sticks out of the head fades before the body takes it.
+	var fade := clampf(1.0 - dead * 2.2, 0.0, 1.0)
 
-	draw_set_transform(origin, 0.0, mirror)
+	var pen := _pen
+	pen.begin(self, measuring)
+	pen.look = look
+	pen.walking = walking
+	pen.phase = _phase
+	pen.idle_clock = _idle_clock
+	pen.blink = _blink
+	pen.happy = happy
+	pen.squash = squash
+	pen.dead = dead
+	pen.bob = bob
+	pen.sx = sx
+	pen.sy = sy
+	pen.drop = drop
+	pen.motion = Blueprint.motion()
+	pen.hips.clear()
+	pen.feet.clear()
 	for side: float in [-1.0, 1.0]:
 		var a := swing * side
 		var hip := Vector2(side * 5.0, (-27.0 - bob) * sy + drop)
-		var foot := hip + Vector2(sin(a) * 22.0, cos(a) * 27.0 * sy) * leg
-		draw_line(hip, foot, body, 4.5, true)
+		pen.hips.append(hip)
+		pen.feet.append(hip + Vector2(sin(a) * 22.0, cos(a) * 27.0 * sy) * leg)
 	var pts := PackedVector2Array()
 	for i in 25:
 		var ang := PI * i / 24.0
 		pts.append(Vector2(cos(ang) * 18.0 * sx, (-26.0 - bob - sin(ang) * 30.0) * sy + drop))
 	pts.append(Vector2(-18.0 * sx, (-26.0 - bob) * sy + drop))
-	draw_set_transform(origin, lean, mirror)
-	var hc := Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy + sink)
+	pen.body = pts
+	pen.hc = Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy + sink)
+	pen.hr = 15.0 * (1.0 - dead * 0.15) if dead > 0.0 else 15.0
+	var has_back := Outfits.has_back(outfit)
+	var behind := pen.from_behind()
+	var woman := art == "woman" or outfit == "mapwoman"
+
+	if has_back and (not behind or dead > 0.0):
+		pen.set_frame(origin, lean, mirror)
+		pen.alpha = 1.0 - dead
+		Outfits.draw(pen, Outfits.Layer.BACK, outfit)
+		pen.alpha = 1.0
+	pen.set_frame(origin, 0.0, mirror)
+	for i in 2:
+		_draw_leg(pen.hips[i], pen.feet[i], pal)
+	Outfits.draw(pen, Outfits.Layer.LEGS, outfit)
+	pen.set_frame(origin, lean, mirror)
 	if dead > 0.0:
-		draw_circle(hc, 15.0 * (1.0 - dead * 0.15), head)  # swallowed whole
-		if art == "woman":
-			_draw_bow(hc + Vector2(-9.0, -11.0), body)
-		_draw_eyes(hc, eyes)
-		draw_colored_polygon(pts, body)
+		_draw_head(pal)  # swallowed whole
+		if woman:
+			_draw_bow(pen.hc + Vector2(-9.0, -11.0), Color(body, body.a * fade))
+		pen.alpha = fade
+		Outfits.draw(pen, Outfits.Layer.HEAD, outfit)
+		pen.alpha = 1.0
+		_draw_eyes(pal)
+		pen.alpha = fade
+		Outfits.draw(pen, Outfits.Layer.FACE, outfit)
+		pen.alpha = 1.0
+		_draw_body(pts, pal)
+		Outfits.draw(pen, Outfits.Layer.BODY, outfit)
+		pen.alpha = 1.0 - dead
+		Outfits.draw(pen, Outfits.Layer.NECK, outfit)
+		pen.alpha = 1.0
+		_draw_hat_flying(bob, sy)
 	else:
-		draw_colored_polygon(pts, body)
-		draw_circle(hc, 15.0, head)
-		if art == "woman":
-			_draw_bow(hc + Vector2(-9.0, -11.0), body)
-		_draw_eyes(hc, eyes)
-	if web > 0.02:
+		_draw_body(pts, pal)
+		Outfits.draw(pen, Outfits.Layer.BODY, outfit)
+		Outfits.draw(pen, Outfits.Layer.NECK, outfit)
+		if has_back and behind:
+			Outfits.draw(pen, Outfits.Layer.BACK, outfit)  # a cape covers his back
+		_draw_head(pal)
+		if woman:
+			_draw_bow(pen.hc + Vector2(-9.0, -11.0), body)
+		Outfits.draw(pen, Outfits.Layer.HEAD, outfit)
+		_draw_eyes(pal)
+		Outfits.draw(pen, Outfits.Layer.FACE, outfit)
+		Outfits.draw(pen, Outfits.Layer.HAT, outfit)
+	Outfits.draw(pen, Outfits.Layer.FRONT, outfit)
+	if web > 0.02 and not measuring:
 		_draw_web(origin)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	pen.set_frame(Vector2.ZERO, 0.0, Vector2.ONE)
+	return pen.bounds
 
 
-func _draw_eyes(hc: Vector2, eyes: Color) -> void:
-	if look.y <= -0.6:  # seen from behind there is no face
+func _draw_leg(hip: Vector2, foot: Vector2, pal: Dictionary) -> void:
+	var legs: Color = pal.get("legs", pal.body)
+	if pal.has("glow"):
+		_pen.line(hip, foot, Color(pal.glow, 0.35), 8.5)
+	if pal.has("leg_outline"):
+		_pen.line(hip, foot, pal.leg_outline, 6.6)
+		_pen.line(hip, foot, legs, 3.6)
+	else:
+		_pen.line(hip, foot, legs, 4.5)
+
+
+func _draw_body(pts: PackedVector2Array, pal: Dictionary) -> void:
+	if pal.has("glow"):
+		_pen.outline(pts, Color(pal.glow, 0.3), 6.0)
+	_pen.poly(pts, pal.body)
+	if pal.has("outline"):
+		_pen.outline(pts, pal.outline, 1.4)
+	if pal.has("glow"):
+		_pen.outline(pts, pal.glow, 1.3)
+
+
+func _draw_head(pal: Dictionary) -> void:
+	if Outfits.head_shape(_pen, outfit, pal.head):
 		return
-	var open := maxf(1.0 - _blink, 0.12) * (1.0 + happy * 0.3)
-	for side: float in [-1.0, 1.0]:
-		var e := hc + Vector2(side * 5.5 + look.x * 3.5, 1.0 + look.y * 2.5)
-		var eye := PackedVector2Array()
-		for k in 12:
-			var ea := TAU * k / 12.0
-			eye.append(e + Vector2(cos(ea) * 2.4, sin(ea) * 2.4 * open))
-		draw_colored_polygon(eye, eyes)
+	var hc := _pen.hc
+	var r := _pen.hr
+	if pal.has("head_glow"):
+		_pen.arc(hc, r + 0.6, 0.0, TAU, Color(pal.head_glow, 0.3), 4.5)
+	_pen.dot(hc, r, pal.head)
+	if pal.has("head_outline"):
+		_pen.arc(hc, r, 0.0, TAU, pal.head_outline, 1.3)
+	if pal.has("head_glow"):
+		_pen.arc(hc, r, 0.0, TAU, pal.head_glow, 1.1)
+
+
+func _draw_eyes(pal: Dictionary) -> void:
+	if not Outfits.eyes(_pen, outfit, pal.eyes):
+		_pen.classic_eyes(pal.eyes)
 
 
 func _draw_bow(at: Vector2, color: Color) -> void:
@@ -340,8 +454,30 @@ func _draw_bow(at: Vector2, color: Color) -> void:
 		for k in 14:
 			var a := TAU * k / 14.0
 			loop.append(at + Vector2(side * 5.0 + cos(a) * 5.0, sin(a) * 3.2).rotated(-0.5))
-		draw_colored_polygon(loop, color)
-	draw_circle(at, 2.2, color)
+		_pen.poly(loop, color)
+	_pen.dot(at, 2.2, color)
+
+
+## The hat leaves his head as he dies: up, back and turning, fading out.
+## Worked out from `dead`, so nothing is left to reset.
+func _draw_hat_flying(bob: float, sy: float) -> void:
+	if dead >= 0.98:
+		return
+	var pen := _pen
+	var keep := pen.hc
+	pen.hc = Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy)
+	var pivot := pen.hc + Vector2(0.0, -15.0)
+	var lift := Vector2(-dead * 9.0, -dead * 30.0)
+	pen.hat_xf = (
+		Transform2D(0.0, pivot + lift)
+		* Transform2D(-dead * 1.3, Vector2.ZERO)
+		* Transform2D(0.0, -pivot)
+	)
+	pen.alpha = clampf(1.0 - dead * 1.1, 0.0, 1.0)
+	Outfits.draw(pen, Outfits.Layer.HAT, outfit)
+	pen.alpha = 1.0
+	pen.hat_xf = Transform2D.IDENTITY
+	pen.hc = keep
 
 
 ## Cobweb strands anchored on him; shaken, they fly outwards and fade.
