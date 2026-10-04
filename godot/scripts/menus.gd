@@ -15,6 +15,8 @@ const SHEET := Vector2(667, 375)
 const TITLE_BLOCK := Vector2(200, 63)
 ## The checkpoint picker's cells, top row first.
 const CHECKPOINT_ROWS := [[80, 85, 90, 95], [50, 60, 70, 75], [10, 20, 30, 40]]
+## The lose-life sheet draws this many life discs at most, then "+N".
+const MAX_LIFE_DISCS := 6
 ## The parts list: its left edge and width, where text starts inside a row,
 ## the width of one character of the 16 px row font (0.6 em), and the column
 ## headings' y.
@@ -81,6 +83,8 @@ const TEXT := {
 	"suspended": "WORK SUSPENDED AT LEVEL %d",
 	"remaining": " · T-%d:%02d REMAINING",
 	"suspended_tutorial": "WORK SUSPENDED · TUTORIAL",
+	"suspended_final": "WORK SUSPENDED · FINAL SHEET",
+	"final_number": "END",
 	"resume": "RESUME",
 	"end_game": "END GAME",
 	"end_tutorial": "END TUTORIAL",
@@ -95,6 +99,7 @@ const TEXT := {
 	"defect_death": "DEFECT: STEPPED ON A DEATH TILE",
 	"defect_timeout": "DEFECT: OUT OF TIME",
 	"lives_remaining": "LIVES REMAINING",
+	"more_lives": "+%d",
 	"try_again": "TRY AGAIN FROM THE START TILE",
 	"death_note": "NOTE: ROUTE AROUND THE DEATH TILES",
 	"timeout_note": "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY",
@@ -131,6 +136,7 @@ const TEXT := {
 	"stars_collected": "STARS COLLECTED",
 	"seconds": "%d s",
 	"tap_next": "TAP TO CONTINUE TO SHEET %03d",
+	"tap_final": "TAP TO CONTINUE TO THE FINAL SHEET",
 	"checkpoint_saved": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
 	"passed": "PASSED",
 	# 100 — the end
@@ -157,8 +163,6 @@ const TEXT := {
 }
 
 var current := ""
-## The game's tilt reader; main.gd hands it over.
-var tilt: TiltInput
 
 var _panel: Control
 var _bg: ColorRect
@@ -188,9 +192,12 @@ var _clock := 0.0
 var _rest := Vector3.ZERO
 ## A desktop: his eyes follow the mouse once it has moved.
 var _mouse_seen := false
-## The level the pause sheet was opened on, for the confirm sheet's number.
+## The level the pause sheet was opened on, for the confirm sheet's number;
+## 0 on the final sheet after level 100.
 var _level := 0
 var _tutorial := false
+## The options row last toggled, so the redrawn sheet keeps the focus there.
+var _refocus_row := -1
 
 
 func _ready() -> void:
@@ -235,7 +242,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	var tapped := event.is_action_pressed("ui_accept") or event.is_action_pressed("shake")
 	if tapped:
 		get_viewport().set_input_as_handled()
-		action.emit(_tap_action)
+		_emit_tap()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -248,7 +255,15 @@ func _gui_input(event: InputEvent) -> void:
 		and event.button_index == MOUSE_BUTTON_LEFT
 	):
 		accept_event()
-		action.emit(_tap_action)
+		_emit_tap()
+
+
+## Emits a copy: a signal passes a member variable by reference, and the
+## game's handler closes this sheet (clearing _tap_action) before any other
+## listener, such as a test, sees the value.
+func _emit_tap() -> void:
+	var act := _tap_action
+	action.emit(act)
 
 
 func close() -> void:
@@ -335,7 +350,12 @@ func _layout() -> void:
 
 ## The sheet number of the level being played, with a sub-sheet letter.
 func _level_number(suffix: String) -> String:
-	return ("T" if _tutorial else "%03d" % _level) + "-" + suffix
+	var number: String = "%03d" % _level
+	if _tutorial:
+		number = "T"
+	elif _level <= 0:
+		number = TEXT.final_number
+	return number + "-" + suffix
 
 
 ## "PLAY FROM START" -> "Play from start", for screen readers.
@@ -475,8 +495,8 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 	b.text = text
 	b.add_theme_font_size_override("font_size", 12)
 	b.alignment = align
-	b.position = Vector2(x, 282)
-	b.size = Vector2(102, 26)
+	b.position = Vector2(x, 266)
+	b.size = Vector2(102, Blueprint.TAP_HEIGHT)
 	b.accessibility_name = a11y
 	_clear_button(b)
 	_panel.add_child(b)
@@ -558,13 +578,16 @@ func _tick(label: Label, sum: Array, take: int) -> void:
 
 
 ## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
-## motion or on a redrawn sheet); MapMan cheers as it lands.
-func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY) -> void:
+## motion or on a redrawn sheet); MapMan cheers as it lands, if it's good news.
+func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, cheer := true) -> void:
 	if not _animate:
 		Blueprint.stamp(_panel, text, pos, color)
-		_cheer()
+		if cheer:
+			_cheer()
 		return
 	Blueprint.stamp(_panel, text, pos, color, true, delay)
+	if not cheer:
+		return
 	var tw := create_tween()
 	_tweens.append(tw)
 	tw.tween_callback(_cheer).set_delay(delay + STAMP_FALL)
@@ -700,6 +723,8 @@ func show_options() -> void:
 	_columns([TEXT.col_parameter, TEXT.col_value], [TEXT_X, TEXT_X + 20 * CHAR_W])
 	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
 	var acts := ["music", "fx", "vibration", "reduce motion"]
+	var refocus := _refocus_row if not _animate else -1
+	_refocus_row = -1
 	for i in acts.size():
 		var on: bool = states[i]
 		var text := "%-20s%s" % [TEXT.options[i], TEXT.on if on else TEXT.off]
@@ -707,10 +732,17 @@ func show_options() -> void:
 		var state: String = TEXT.a11y_on if on else TEXT.a11y_off
 		b.accessibility_name = TEXT.a11y_toggle % [_sentence(TEXT.options[i]), state]
 		_connect(b, "%s %s" % [acts[i], "off" if on else "on"])
+		b.pressed.connect(_remember_row.bind(i))
 		_reveal(b)
+		if i == refocus:
+			_first_button = b
 	_return_item(80 + acts.size() * 44)
 	_hero_on("tilt")
 	_focus_first()
+
+
+func _remember_row(row: int) -> void:
+	_refocus_row = row
 
 
 func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
@@ -718,7 +750,9 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 	_tutorial = tutorial
 	_open("pause", _level_number("A"), TEXT.paused_title)
 	var status: String = TEXT.suspended_tutorial
-	if not tutorial:
+	if not tutorial and level <= 0:
+		status = TEXT.suspended_final
+	elif not tutorial:
 		status = TEXT.suspended % level
 		if seconds >= 0:
 			@warning_ignore("integer_division")
@@ -753,7 +787,8 @@ func show_lose_life(lives: int, level := 0, reason := "death") -> void:
 	var row := _row(96, 24)
 	var l := Blueprint.label(row, TEXT.lives_remaining, 15, Blueprint.INK, Vector2(LIST_X, 0))
 	l.accessibility_name = TEXT.a11y_lives % lives
-	for i in maxi(3, lives):
+	var discs := clampi(lives, 3, MAX_LIFE_DISCS)
+	for i in discs:
 		var pts := Blueprint.ellipse_points(Vector2(250 + i * 36, 8), 11, 10, 20)
 		if i < lives:
 			var disc := Polygon2D.new()
@@ -762,12 +797,16 @@ func show_lose_life(lives: int, level := 0, reason := "death") -> void:
 			disc.antialiased = true
 			row.add_child(disc)
 		Blueprint.line(row, pts, Blueprint.PINK, 1.5)
+	if lives > MAX_LIFE_DISCS:
+		var extra: String = TEXT.more_lives % (lives - MAX_LIFE_DISCS)
+		var pos := Vector2(250 + discs * 36 - 8, 0)
+		Blueprint.label(row, extra, 15, Blueprint.PINK, pos, 700)
 	_reveal(row)
 	_rule(128)
 	_item(1, TEXT.try_again, "try again", 150)
 	_note(TEXT.timeout_note if timeout else TEXT.death_note, 212)
 	_hero_on("down")
-	_stamp(TEXT.rework, Vector2(222, 240), Blueprint.PINK)
+	_stamp(TEXT.rework, Vector2(222, 240), Blueprint.PINK, STAMP_DELAY, false)
 	_focus_first()
 
 
@@ -796,7 +835,8 @@ func show_restart(reached: Array) -> void:
 			var a11y: String = (
 				(TEXT.a11y_checkpoint if open else TEXT.a11y_checkpoint_locked) % level
 			)
-			_cell(pos, Vector2(90, 40), open, str(level), detail, "L%d" % level, a11y)
+			var size := Vector2(90, Blueprint.TAP_HEIGHT)
+			_cell(pos, size, open, str(level), detail, "L%d" % level, a11y)
 	_return_item(240)
 	_hero_on("tilt")
 	_focus_first()
@@ -825,7 +865,7 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 		var act := "practice level %d" % level
 		_cell(
 			pos,
-			Vector2(108, 42),
+			Vector2(108, Blueprint.TAP_HEIGHT),
 			open,
 			TEXT.part % level,
 			_best_text(bests, level, open),
@@ -846,12 +886,12 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	var caption: String = TEXT.practice_caption % [page + 1, pages, mini(furthest, count)]
 	if note != "":
 		caption = note.to_upper()
-	var pos := Vector2(130, 288)
+	var pos := Vector2(130, 281)
 	var l := Blueprint.label(
 		_panel, caption, 10, Blueprint.FAINT, pos, 500, 200.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	_reveal(l)
-	_return_item(318)
+	_return_item(312)
 	_focus_first()
 
 
@@ -869,6 +909,7 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear: the bonuses are added into the score one row at a time.
 ## seconds_left: the clock at the exit, shown as the time bonus's quantity.
+## last: this was level 100, so the final sheet comes next.
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -876,7 +917,8 @@ func show_end_level(
 	stars: int,
 	checkpoint: bool,
 	level := 0,
-	seconds_left := -1
+	seconds_left := -1,
+	last := false
 ) -> void:
 	var title: String = (TEXT.checkpoint_title if checkpoint else TEXT.inspection_title) % level
 	_open("end_level", "%03d" % level, title, Blueprint.GOLD if checkpoint else Blueprint.INK)
@@ -896,7 +938,7 @@ func show_end_level(
 	var total := _total(y + 4, str(score))
 	if checkpoint:
 		_note(TEXT.checkpoint_saved, 244, Blueprint.GOLD, 11)
-	_note(TEXT.tap_next % (level + 1), 264, Blueprint.FAINT, 11)
+	_note(TEXT.tap_final if last else TEXT.tap_next % (level + 1), 264, Blueprint.FAINT, 11)
 	_hero_on("right")
 	_count_up(
 		total, score, rows, func(): _stamp(TEXT.passed, Vector2(470, 90), Blueprint.GOLD, 0.0)

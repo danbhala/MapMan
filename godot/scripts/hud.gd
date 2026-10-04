@@ -14,6 +14,19 @@ const TUTORIAL_SIZE := 12
 const TIMER_SPAN := 20.0
 const TIMER_LENGTH := 150.0
 
+## Every word the HUD shows (plain English until translation comes).
+const TEXT := {
+	"sheet": "SHEET %03d / %d",
+	"tutorial_sheet": "TUTORIAL %d / %d",
+	"score": "★ %d",
+	"lives": "♥ %d",
+	"countdown": "T-0:%02d",
+	"a11y_level": "Level",
+	"a11y_score": "Score",
+	"a11y_lives": "Lives",
+	"a11y_time": "Time left",
+}
+
 static var mono: Font
 static var sans_bold: Font
 static var sans: Font
@@ -23,6 +36,7 @@ var header: ColorRect
 var level_label: Label
 var score_label: Label
 var lives_label: Label
+var header_note: Label
 
 var bar: ColorRect
 var effect_single: TextureRect
@@ -36,6 +50,7 @@ var timer_line: TimerLine
 var _effect_textures := {}
 var _controls_text := ""
 var _time_text := ""
+var _tutorial := false
 var _state_color := Blueprint.INK
 
 
@@ -81,17 +96,17 @@ func _ready() -> void:
 	header = Blueprint.rect(self, Blueprint.STRIP, Vector2.ZERO, Vector2.ZERO)
 	level_label = Blueprint.label(header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	level_label.accessibility_name = "Level"
+	level_label.accessibility_name = TEXT.a11y_level
 	score_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	score_label.accessibility_name = "Score"
+	score_label.accessibility_name = TEXT.a11y_score
 	lives_label = Blueprint.label(
 		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 700, 0.0, HORIZONTAL_ALIGNMENT_RIGHT
 	)
 	lives_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lives_label.accessibility_name = "Lives"
+	lives_label.accessibility_name = TEXT.a11y_lives
 
 	bar = Blueprint.rect(self, Blueprint.BAR, Vector2.ZERO, Vector2.ZERO)
 	effect_single = TextureRect.new()
@@ -112,6 +127,12 @@ func _ready() -> void:
 	note_label = Blueprint.label(bar, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 500, 10.0)
 	note_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	note_label.accessibility_live = DisplayServer.LIVE_POLITE
+	# In the tutorial the bar holds the lesson, so the note moves up here.
+	header_note = Blueprint.label(
+		header, "", TEXT_SIZE, Blueprint.INK, Vector2.ZERO, 500, 10.0, HORIZONTAL_ALIGNMENT_CENTER
+	)
+	header_note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	header_note.accessibility_live = DisplayServer.LIVE_POLITE
 	tutorial_label = Blueprint.label(bar, "", TUTORIAL_SIZE, Blueprint.INK, Vector2.ZERO, 500, 10.0)
 	tutorial_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	tutorial_label.accessibility_live = DisplayServer.LIVE_POLITE
@@ -119,7 +140,7 @@ func _ready() -> void:
 	bar.add_child(timer_line)
 	timer_label = Blueprint.label(bar, "", TIMER_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	timer_label.accessibility_name = "Time left"
+	timer_label.accessibility_name = TEXT.a11y_time
 
 	get_viewport().size_changed.connect(layout)
 	layout()
@@ -138,6 +159,8 @@ func layout() -> void:
 	level_label.size = Vector2(200, HEADER_HEIGHT)
 	score_label.position = Vector2(0, 0)
 	score_label.size = Vector2(inner_w, HEADER_HEIGHT)
+	header_note.position = Vector2(212, 0)
+	header_note.size = Vector2(inner_w - 212 - 132, HEADER_HEIGHT)
 	lives_label.position = Vector2(inner_w - 12 - 120, 0)
 	lives_label.size = Vector2(120, HEADER_HEIGHT)
 
@@ -167,6 +190,7 @@ func set_state_color(color: Color) -> void:
 	_state_color = color
 	frame.default_color = color
 	note_label.add_theme_color_override("font_color", color)
+	header_note.add_theme_color_override("font_color", color)
 	timer_line.color = color
 	timer_line.queue_redraw()
 
@@ -175,19 +199,19 @@ func set_state_color(color: Color) -> void:
 
 
 func set_level(level: int, count: int) -> void:
-	level_label.text = "SHEET %03d / %d" % [level, count]
+	level_label.text = TEXT.sheet % [level, count]
 
 
-func set_level_text(text: String) -> void:
-	level_label.text = text
+func set_tutorial_level(level: int, count: int) -> void:
+	level_label.text = TEXT.tutorial_sheet % [level, count]
 
 
 func set_score(score: int) -> void:
-	score_label.text = "★ %d" % score
+	score_label.text = TEXT.score % score
 
 
 func set_lives(lives: int) -> void:
-	lives_label.text = "♥ %d" % lives
+	lives_label.text = TEXT.lives % lives
 
 
 func show_stats(on: bool) -> void:
@@ -210,8 +234,13 @@ func show_bar(on: bool) -> void:
 
 
 ## The note shows the controls message if there is one, else the time message.
+## During the tutorial the bar belongs to the lesson, so the note (without
+## its icon) sits in the header strip instead.
 func _refresh_note() -> void:
-	note_label.text = _controls_text if _controls_text != "" else _time_text
+	var text := _controls_text if _controls_text != "" else _time_text
+	note_label.text = "" if _tutorial else text
+	header_note.text = text if _tutorial else ""
+	_show_icons(not _tutorial)
 
 
 func set_controls_message(text: String, _size := 20) -> void:
@@ -220,11 +249,14 @@ func set_controls_message(text: String, _size := 20) -> void:
 
 
 func set_tutorial_text(text: String) -> void:
-	tutorial_label.text = text
-	# The tutorial fills the bar: no countdown runs during it.
+	# The lesson fills the bar on two wrapped lines; its own line breaks would
+	# make a third. No countdown runs during it.
+	tutorial_label.text = text.replace("\n", " ")
+	_tutorial = text != ""
 	var s := get_viewport_rect().size
 	var inner_w := s.x - 2.0 * (Blueprint.INSET + 1.0)
-	_layout_note(inner_w if text != "" else inner_w - TIMER_LENGTH - 80.0)
+	_layout_note(inner_w if _tutorial else inner_w - TIMER_LENGTH - 80.0)
+	_refresh_note()
 
 
 func set_time_message(text: String, _size := 30) -> void:
@@ -259,7 +291,7 @@ func show_effect(name: String) -> void:
 	effect_single.visible = true
 	effect_top.visible = false
 	effect_bottom.visible = false
-	layout()
+	_show_icons(not _tutorial)
 
 
 func show_double_effect(top: String, bottom: String) -> void:
@@ -268,13 +300,21 @@ func show_double_effect(top: String, bottom: String) -> void:
 	effect_single.visible = false
 	effect_top.visible = true
 	effect_bottom.visible = true
-	layout()
+	_show_icons(not _tutorial)
 
 
 func clear_effect() -> void:
 	effect_single.visible = false
 	effect_top.visible = false
 	effect_bottom.visible = false
+	layout()
+
+
+## The icons only show in the bar; the tutorial's header note has none.
+func _show_icons(on: bool) -> void:
+	effect_single.modulate.a = 1.0 if on else 0.0
+	effect_top.modulate.a = 1.0 if on else 0.0
+	effect_bottom.modulate.a = 1.0 if on else 0.0
 	layout()
 
 

@@ -183,13 +183,15 @@ func show_player() -> void:
 
 ## Stepped onto a tile: a little squash that springs back.
 func land() -> void:
-	squash = 0.4
+	if Blueprint.motion():
+		squash = 0.4
 
 
-## A star, a life or the exit: wide eyes and a hop.
+## A star, a life or the exit: wide eyes, and a hop unless motion is reduced.
 func cheer() -> void:
 	happy = 1.0
-	_hop = 1.0
+	if Blueprint.motion():
+		_hop = 1.0
 
 
 ## The controls reversed: a full turn on the spot.

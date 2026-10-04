@@ -107,6 +107,14 @@ func test_reduce_motion_is_saved_with_the_options() -> void:
 	assert_eq(game.menus.current, "options", "stays on the options sheet")
 	game._on_menu_action("reduce motion off")
 	assert_false(Save.reduce_motion)
+	# And it survives the trip through the save file.
+	var path := "user://test_reduce_motion.cfg"
+	var cfg := ConfigFile.new()
+	cfg.set_value("options", "reduce_motion", true)
+	cfg.save(path)
+	Save.load_all(path)
+	assert_true(Save.reduce_motion, "read back from the options section")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
 func test_stamp_slams_only_with_motion() -> void:
@@ -117,6 +125,16 @@ func test_stamp_slams_only_with_motion() -> void:
 	Save.reduce_motion = true
 	var quiet := Blueprint.stamp(game, "PASSED", Vector2.ZERO, Blueprint.GOLD, true)
 	assert_eq(quiet.scale, Vector2.ONE, "no slam with reduced motion")
+
+
+func test_delayed_stamp_waits_before_it_slams() -> void:
+	var late := Blueprint.stamp(game, "REWORK", Vector2.ZERO, Blueprint.PINK, true, 0.45)
+	await wait_seconds(0.2)
+	assert_eq(late.modulate.a, 0.0, "still in the air at 0.2 s")
+	assert_gt(late.scale.x, 2.0)
+	await wait_seconds(0.6)
+	assert_almost_eq(late.modulate.a, 1.0, 0.01, "down by 0.8 s")
+	assert_almost_eq(late.scale.x, 1.0, 0.01)
 
 
 func test_truncated_line_keeps_a_share_of_its_length() -> void:
@@ -194,10 +212,40 @@ func test_countdown_reads_as_a_dimension() -> void:
 
 
 func test_tutorial_fills_the_header_and_bar() -> void:
-	game.tutorial_levels = [{"rows": ["bw"], "description": "Tilt to move."}]
+	game.tutorial_levels = [{"rows": ["brw"], "description": "Tilt to move.\nThen go."}]
 	game.new_game(1, true)
 	game._update_stats()
 	assert_true(game.hud.level_label.visible)
 	assert_eq(game.hud.level_label.text, "TUTORIAL 1 / 1")
 	assert_false(game.hud.score_label.visible)
-	assert_eq(game.hud.tutorial_label.text, "Tilt to move.")
+	assert_eq(game.hud.tutorial_label.text, "Tilt to move. Then go.", "one wrapped paragraph")
+	# An effect's note goes up into the header, not over the lesson.
+	game.map._load_elapsed = game.map._load_time
+	game.loaded()
+	_step_on(1)
+	assert_true(game.reverse)
+	assert_eq(game.hud.header_note.text, "CONTROLS REVERSED")
+	assert_eq(game.hud.note_label.text, "")
+	assert_eq(game.hud.effect_single.modulate.a, 0.0, "no icon in the bar during the lesson")
+
+
+func test_lives_row_caps_its_discs() -> void:
+	game.menus.show_lose_life(15, 7)
+	var labels: Array = game.menus._panel.find_children("*", "Label", true, false)
+	var texts := []
+	for l in labels:
+		texts.append(l.text)
+	assert_has(texts, "+9", "six discs, then the rest as a number")
+
+
+func test_final_sheet_pause_has_no_level() -> void:
+	game.completed = true
+	game.level = 101
+	game.game_active = true
+	game.show_pause_menu()
+	var labels: Array = game.menus.find_children("*", "Label", true, false)
+	var header := ""
+	for l in labels:
+		if String(l.text).begins_with("MAPMAN"):
+			header = l.text
+	assert_string_contains(header, "SHEET END-A")

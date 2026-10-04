@@ -20,6 +20,8 @@ const VANISH_COLOR := Blueprint.LILAC
 const STUCK_COLOR := Blueprint.GOLD
 const DEATH_COLOR := Blueprint.PINK
 const HIDDEN_COLOR := Blueprint.MINT
+## The notes that float up from a tile as it is collected.
+const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
 var tutorial_levels: Array = []
@@ -126,7 +128,6 @@ func _ready() -> void:
 	menu_layer.layer = 10
 	add_child(menu_layer)
 	menus = Menus.new()
-	menus.tilt = tilt
 	menu_layer.add_child(menus)
 	menus.action.connect(_on_menu_action)
 
@@ -250,7 +251,7 @@ func loaded() -> void:
 
 func _update_stats() -> void:
 	if tutorial:
-		hud.set_level_text("TUTORIAL %d / %d" % [level, tutorial_levels.size()])
+		hud.set_tutorial_level(level, tutorial_levels.size())
 	else:
 		hud.set_level(level, levels.size())
 	hud.set_score(score)
@@ -477,7 +478,7 @@ func update_player(delta: float) -> void:
 	if map.on(map.points):
 		Audio.play("points")
 		map.clear(map.points)
-		map.float_text("+1 ★", Blueprint.GOLD)
+		map.float_text(FLOATS.star, Blueprint.GOLD)
 		player.cheer()
 		if not tutorial:
 			stars += 1
@@ -490,7 +491,7 @@ func update_player(delta: float) -> void:
 	if map.on(map.lives):
 		Audio.play("life")
 		map.clear(map.lives)
-		map.float_text("+1 ♥", Blueprint.PINK)
+		map.float_text(FLOATS.life, Blueprint.PINK)
 		player.cheer()
 		if not tutorial:
 			lives += 1
@@ -503,13 +504,13 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.more_times):
 		map.clear(map.more_times)
-		map.float_text("+5 S", Blueprint.INK)
+		map.float_text(FLOATS.more_time, Blueprint.INK)
 		_time_left += 5.0
 		_flash("_last_more_time")
 
 	if map.on(map.less_times):
 		map.clear(map.less_times)
-		map.float_text("−5 S", Blueprint.PINK)
+		map.float_text(FLOATS.less_time, Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
 
@@ -621,11 +622,11 @@ func reset_all(reset_stars := true) -> void:
 	map.reset()
 	dead = false
 	reverse = false
+	player.reset_pose()  # before stuck: a web that is gone needs no shaking off
 	stuck = false
 	map.clear(map.reverses)
 	map.clear(map.hides)
 	map.reset_hide()
-	player.reset_pose()
 	_timer_stop()
 	_timer_reset()
 	hud.clear_effect()
@@ -671,8 +672,10 @@ func advance_level(check_point: bool) -> void:
 		return
 	var time_bonus := _seconds_remaining() / 2
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
+	var clock := _seconds_remaining()
+	var last := level >= levels.size()
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, _seconds_remaining()
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last
 	)
 
 
@@ -842,7 +845,9 @@ func show_start_menu() -> void:
 func show_pause_menu() -> void:
 	_timer_stop()
 	paused = true
-	menus.show_pause(tutorial, level, -1 if tutorial or completed else _seconds_remaining())
+	# The final sheet after level 100 has no number and no clock.
+	var clock := -1 if tutorial or completed else _seconds_remaining()
+	menus.show_pause(tutorial, 0 if completed else level, clock)
 
 
 func _on_menu_action(act: String) -> void:

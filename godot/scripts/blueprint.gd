@@ -31,6 +31,8 @@ const FONT_PATH := "res://assets/fonts/JetBrainsMono-Variable.ttf"
 ## so they draw the same on every machine instead of from a system font.
 const SYMBOLS_PATH := "res://assets/fonts/MapManSymbols.ttf"
 const STAMP_ROTATION := -0.12
+## The height of a tappable row or cell: 48 dp on a 360-450 dp phone screen.
+const TAP_HEIGHT := 44.0
 
 static var _fonts := {}
 static var _theme: Theme
@@ -143,7 +145,7 @@ static func label(
 
 ## A row of the parts list: "01    PLAY FROM START", with a rule under it.
 static func item(
-	parent: Node, text: String, pos: Vector2, size := Vector2(380, 40), enabled := true
+	parent: Node, text: String, pos: Vector2, size := Vector2(380, TAP_HEIGHT), enabled := true
 ) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -280,7 +282,8 @@ static func stamp(
 	var tw := n.create_tween().set_parallel()
 	if delay > 0.0:
 		tw.tween_interval(delay)
-		tw = tw.chain().set_parallel()
+		# chain() alone: set_parallel() here would cancel the step it opens.
+		tw.chain()
 	tw.tween_property(n, "scale", Vector2(0.94, 0.94), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(
 		Tween.EASE_IN
 	)

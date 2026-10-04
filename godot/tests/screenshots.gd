@@ -146,6 +146,9 @@ func run() -> void:
 	game.set_background()
 	game.set_controls_message()
 	await frames(40)
+	game._flash("_last_hide")  # the flash is wall-clock timed: keep it on a slow runner
+	game.set_controls_message()
+	await frames(1)
 	await shot("16_tiles_hidden")
 	game.map.unhide_tiles()
 	game._flash("_last_hide")
