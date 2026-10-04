@@ -3,7 +3,7 @@ extends RefCounted
 ## Hats and helmets (docs/wardrobe), in the HAT layer. Every point goes
 ## through pen.t() (the hat_* calls), relative to the head's centre: the hat
 ## rides the head, and flies off and fades as he dies. The head's top is at
-## y -15; keep within the size budget (test_outfits.gd).
+## y -OutfitPen.HEAD_R (14.55); keep within the size budget (test_outfits.gd).
 
 const PINK := Blueprint.PINK
 const GOLD := Blueprint.GOLD
@@ -172,13 +172,17 @@ static func _top_hat(pen: OutfitPen) -> void:
 
 ## A doctor's head mirror on a band round his head; from behind, the band.
 static func _head_mirror(pen: OutfitPen) -> void:
+	# The band's ends sit on the head's edge, just inside it: at its height
+	# the head is narrower than at the centre.
+	var ends_y := -5.6
+	var ends_x := sqrt(OutfitPen.HEAD_R * OutfitPen.HEAD_R - ends_y * ends_y) - 0.6
 	var band := PackedVector2Array(
 		[
-			Vector2(-14.8, -5.6),
+			Vector2(-ends_x, ends_y),
 			Vector2(-7, -8.3),
 			Vector2(0, -8.9),
 			Vector2(7, -8.3),
-			Vector2(14.8, -5.6)
+			Vector2(ends_x, ends_y)
 		]
 	)
 	pen.hat_polyline(band, IRON, 1.7)
