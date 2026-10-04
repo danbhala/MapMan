@@ -19,6 +19,7 @@ const PATTERNS := {
 	"love": [150, 0.4],
 	"lose_life": [250, 1.0],
 	"toggle": [40, 0.6],  # turning vibration on in the options
+	"stamp": [60, 0.9],  # a rubber stamp landing on a menu sheet
 }
 
 ## The last buzz requested, for tests: [name, milliseconds, strength].

@@ -7,6 +7,8 @@ const PATH := "user://mapman.cfg"
 var music_on := true
 var fx_on := true
 var vibration_on := true
+## Skip the decorative animation (stamps, sheets drawing on, tiles folding).
+var reduce_motion := false
 ## "sitting" or "standing": how far the phone is tilted back when neutral.
 var playing_position := "sitting"
 var highscore := 0
@@ -35,6 +37,7 @@ func load_all(path := PATH) -> void:
 	music_on = _cfg.get_value("options", "music", true)
 	fx_on = _cfg.get_value("options", "fx", true)
 	vibration_on = _cfg.get_value("options", "vibration", true)
+	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
 	playing_position = _cfg.get_value("options", "playing_position", "sitting")
 	if playing_position not in ["sitting", "standing"]:
 		playing_position = "sitting"
@@ -66,6 +69,7 @@ func save_all() -> void:
 	_cfg.set_value("options", "music", music_on)
 	_cfg.set_value("options", "fx", fx_on)
 	_cfg.set_value("options", "vibration", vibration_on)
+	_cfg.set_value("options", "reduce_motion", reduce_motion)
 	_cfg.set_value("options", "playing_position", playing_position)
 	_cfg.set_value("progress", "highscore", highscore)
 	_cfg.set_value("progress", "first_play", first_play)
