@@ -50,9 +50,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   always a whole tile at one of two speeds), about two bytes a step. The
   level clear's WATCH REPLAY plays every try of the level at once
   (`scripts/replay.gd`), and the best win of each level (most time left) is
-  saved in `Save.ghosts` and walks beside MapMan as a faint ghost when
-  `Save.ghost_on` (Options: BEST-RUN GHOST). The ghost Player is only made
-  when a level has one: a Player draws on the random numbers.
+  saved in `Save.ghosts` and walks beside MapMan as a faint ghost
+  (`scripts/best_ghost.gd`) when `Save.ghost_on` (Options: BEST-RUN GHOST).
+  `scripts/tries.gd` keeps the level's tries for `main.gd`. The ghost is
+  only made when a level has one: a Player draws on the random numbers.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

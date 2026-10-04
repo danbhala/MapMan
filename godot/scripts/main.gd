@@ -12,10 +12,6 @@ const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
-## How faint the best-run ghost is beside the player.
-const GHOST_ALPHA := 0.35
-## The most tries at one level the replay keeps (the latest).
-const MAX_TRIES := 60
 const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
 ## Help for a sheet that keeps beating the player, by lives lost on it this
 ## session. Each tier keeps the ones before it; clearing the sheet ends them.
@@ -100,17 +96,10 @@ var _practice_page := 0
 ## from it, and each of those goes back to it.
 var _between := false
 
-# tries (RunRecord): the one being played and its clock, every try at this
-# level so far (for the level clear's replay), the best run beside the player
-# as a ghost, and the replay while it plays
-var _run: RunRecord
-var _run_clock := 0.0
-var _tries: Array[RunRecord] = []
-var _tries_level := 0
-var _ghost: Player
-var _ghost_run: RunRecord
-var _ghost_dir := Vector2i(9, 9)
-var _ghost_moving := false
+# every try at this level (for the replay), the best run beside the player
+# (made when first needed: a Player draws on the random numbers), the replay
+var _tries := Tries.new()
+var _ghost: BestGhost
 var _replay: Replay
 
 # countdown
@@ -272,10 +261,11 @@ func _process(delta: float) -> void:
 		if player.death_finished():
 			finish_lose_life()
 	elif started():
-		_run_clock += delta
+		_tries.clock += delta
 		move_player(delta)
 		update_player(delta)
-		_update_ghost(delta)
+		if _ghost:
+			_ghost.follow(map, _tries.clock, delta)
 		_update_stats()
 		var time_left := _seconds_remaining()
 		set_time_message(time_left)
@@ -529,8 +519,7 @@ func _guarded(actual: Vector2i) -> bool:
 func move(step: Vector2i, seconds: float) -> void:
 	map.move(-step if reverse else step, seconds)
 	if map.moving:
-		if _run:
-			_run.add_step(_run_clock, -step if reverse else step, seconds)
+		_tries.step(-step if reverse else step, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
@@ -546,88 +535,28 @@ func move(step: Vector2i, seconds: float) -> void:
 func _begin_try() -> void:
 	if completed:
 		return
-	if level != _tries_level:
-		_tries.clear()
-		_tries_level = level
-	_run = RunRecord.new()
-	_run_clock = 0.0
-	_ghost_run = null
+	_tries.begin(level)
+	var best: RunRecord = null
 	if Save.ghost_on and Save.ghosts.has(level):
-		_ghost_run = RunRecord.decode(Save.ghosts[level])
-	if _ghost_run and _ghost == null:
-		# Made when first needed: a Player draws on the random numbers, and
-		# a game without a ghost keeps the same ones (screenshots).
-		_ghost = Player.new()
+		best = RunRecord.decode(Save.ghosts[level])
+	if best and _ghost == null:
+		_ghost = BestGhost.new()
 		add_child(_ghost)
-		_ghost.z_index = 9  # behind MapMan (Player._ready() sets 10)
-	_hide_ghost()
-	_ghost_dir = Vector2i(9, 9)
-
-
-## The try ends ("win", "death", "timeout"; "" drops it unfinished) and joins
-## the level's tries; returns it, or null when none was going.
-func _end_try(how: String) -> RunRecord:
-	_ghost_run = null
-	_hide_ghost()
-	var run := _run
-	_run = null
-	if run == null or how == "":
-		return null
-	run.finish(_run_clock, how, _time_left)
-	_tries.append(run)
-	if _tries.size() > MAX_TRIES:
-		_tries.pop_front()
-	return run
-
-
-## The best run walks the level alongside, faint, on the same clock.
-func _update_ghost(delta: float) -> void:
-	if _ghost_run == null:
-		return
-	if _run_clock >= _ghost_run.end_time:
-		# At the exit (or where it ended): his run is done.
-		_ghost_run = null
-		_hide_ghost()
-		return
-	var at := _ghost_run.at(map.start_position, _run_clock)
-	if not map.tiles.has(at.key) or not map.tiles.has(at.next):
-		_ghost_run = null
-		_hide_ghost()
-		return
-	if _ghost.is_hidden:
-		_ghost.outfit = player.outfit
-		_ghost.reset_pose()
-		_ghost.is_hidden = false
-		_ghost.visible = true
-	var a: Vector2 = map.tiles[at.key].position
-	_ghost.update_at(a.lerp(map.tiles[at.next].position, at.share), delta)
-	_ghost.modulate.a = GHOST_ALPHA
-	if at.dir != _ghost_dir or at.moving != _ghost_moving:
-		if at.dir == Vector2i.ZERO:
-			_ghost.face_idle()
-		else:
-			_ghost.face_direction(at.dir, at.moving)
-		_ghost_dir = at.dir
-		_ghost_moving = at.moving
-
-
-func _hide_ghost() -> void:
 	if _ghost:
-		_ghost.vanish()
+		_ghost.start(best, player.outfit)
 
 
-## Whether the level clear can offer a replay: the latest try won it, on
-## foot (a level can't be won without a step, but tests skip them).
-func _replayable() -> bool:
-	if _tries.is_empty() or _tries_level != level:
-		return false
-	return _tries[-1].won() and _tries[-1].step_count() > 0
+## The try ends ("win", "death", "timeout"; "" drops it); returns it, or null.
+func _end_try(how: String) -> RunRecord:
+	if _ghost:
+		_ghost.stop()
+	return _tries.end(how, _time_left)
 
 
 ## WATCH REPLAY: the level again, every try on it at once. The level clear
 ## waits, hidden, and comes back when the replay ends or is tapped away.
 func _start_replay() -> void:
-	if _replay or not _replayable():
+	if _replay or not _tries.replayable(level):
 		return
 	menus.visible = false
 	hud.visible = false
@@ -635,10 +564,10 @@ func _start_replay() -> void:
 	map.load_level(_current_level_data(), _screen_size())
 	_replay = Replay.new()
 	add_child(_replay)
-	var n := _tries.size()
+	var n := _tries.list.size()
 	_replay.setup(
 		map,
-		_tries,
+		_tries.list,
 		player.outfit,
 		tr("REPLAY — LEVEL %d") % level,
 		tr_n("%d TRY", "%d TRIES", n) % n
@@ -958,17 +887,9 @@ func advance_level(check_point: bool) -> void:
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	_between = true
+	var tries := _tries.list.size() if _tries.replayable(level) else 0
 	menus.show_end_level(
-		score,
-		POINTS_PER_LEVEL,
-		time_bonus,
-		stars,
-		check_point,
-		level,
-		clock,
-		last,
-		released,
-		_tries.size() if _replayable() else 0
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, tries
 	)
 
 

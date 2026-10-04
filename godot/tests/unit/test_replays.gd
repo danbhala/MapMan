@@ -48,7 +48,7 @@ func _start_try() -> void:
 
 ## One step, landed, `seconds` on the run clock after the last.
 func _step(dir: Vector2i, wait := 0.5) -> void:
-	game._run_clock += wait
+	game._tries.clock += wait
 	game.move(dir, STEP)
 	game.map.update_move(STEP)
 
@@ -111,10 +111,10 @@ func test_every_try_is_kept_and_the_clear_offers_a_replay() -> void:
 	_step(Vector2i.RIGHT, 0.2)
 	_step(Vector2i.RIGHT, 0.2)
 	game.advance_level(false)
-	assert_eq(game._tries.size(), 2, "the lost try and the win")
-	assert_eq(game._tries[0].result, "death")
-	assert_eq(game._tries[1].step_count(), 3)
-	assert_true(game._tries[1].won())
+	assert_eq(game._tries.list.size(), 2, "the lost try and the win")
+	assert_eq(game._tries.list[0].result, "death")
+	assert_eq(game._tries.list[1].step_count(), 3)
+	assert_true(game._tries.list[1].won())
 	assert_eq(game.menus.current, "end_level")
 	assert_not_null(_button("WATCH REPLAY"))
 
@@ -128,7 +128,7 @@ func test_a_new_level_starts_its_tries_afresh() -> void:
 	game.load_level()
 	game.reset_all()
 	_start_try()
-	assert_eq(game._tries.size(), 0, "level 2's tries are gone")
+	assert_eq(game._tries.list.size(), 0, "level 2's tries are gone")
 
 
 func test_the_replay_plays_and_comes_back_to_the_level_clear() -> void:
@@ -168,7 +168,7 @@ func test_no_replay_without_a_win_on_this_level() -> void:
 	_start_try()
 	_step(Vector2i.LEFT)
 	game.lose_life("death")
-	assert_false(game._replayable())
+	assert_false(game._tries.replayable(game.level))
 	game._on_menu_action("replay")
 	assert_null(game._replay)
 
@@ -182,11 +182,12 @@ func test_a_win_is_kept_as_the_level_ghost_and_runs_next_time() -> void:
 	assert_true(Save.ghosts.has(2), "the win is the level's ghost")
 	game.new_game(2)
 	_start_try()
-	assert_not_null(game._ghost_run, "the ghost walks this try")
-	game._run_clock = 0.6
-	game._update_ghost(0.1)
+	assert_not_null(game._ghost.run, "the ghost walks this try")
+	game._ghost.follow(game.map, 0.6, 0.1)
 	assert_true(game._ghost.visible)
-	assert_almost_eq(game._ghost.modulate.a, game.GHOST_ALPHA, 0.001)
+	assert_almost_eq(game._ghost.modulate.a, BestGhost.ALPHA, 0.001)
+	game._ghost.follow(game.map, 60.0, 0.1)
+	assert_false(game._ghost.visible, "gone once his run is over")
 
 
 func test_the_ghost_can_be_turned_off() -> void:
@@ -200,7 +201,7 @@ func test_the_ghost_can_be_turned_off() -> void:
 	assert_eq(game.menus.current, "options")
 	game.new_game(2)
 	_start_try()
-	assert_null(game._ghost_run, "no ghost")
+	assert_true(game._ghost == null or game._ghost.run == null, "no ghost")
 
 
 func test_only_a_better_win_replaces_the_ghost() -> void:
