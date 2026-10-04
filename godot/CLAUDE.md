@@ -89,9 +89,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   anything moving comes from Player's dials, so `reset_pose()` resets it and
   screenshots stay the same. Front-only details check `pen.front()`. Look at
   every pose (`tools/wardrobe_sheets.sh`) before calling a look done.
-- Tests and screenshot tools that open menus must pin `Save.worn`,
-  `released` and `seen`: MapMan wears the worn look on every sheet, and the
-  main menu shows the wardrobe's count.
+- The screenshot tools, and tests that check a sheet's layout or picture,
+  must pin `Save.worn`, `released` and `seen`: MapMan wears the worn look on
+  every sheet, and the main menu shows the wardrobe's count, and the autoload
+  reads this machine's real save even with `persist` off.
 
 ## Tests
 

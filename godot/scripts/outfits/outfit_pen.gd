@@ -96,14 +96,6 @@ func h(x: float, y: float) -> Vector2:
 	return hc + Vector2(x, y) * (hr / HEAD_R)
 
 
-## h() for a list of points.
-func hp(pts: Array) -> PackedVector2Array:
-	var out := PackedVector2Array()
-	for v: Vector2 in pts:
-		out.append(h(v.x, v.y))
-	return out
-
-
 ## A point of a hat, relative to the head's centre.
 func t(v: Vector2) -> Vector2:
 	return hat_xf * (hc + v)
@@ -217,12 +209,7 @@ func stripe(x0: float, x1: float, c: Color) -> void:
 func star(at: Vector2, radius: float, c: Color, points := 5, inner := 0.45) -> void:
 	if radius < 0.2:
 		return
-	var pts := PackedVector2Array()
-	for i in points * 2:
-		var r := radius if i % 2 == 0 else radius * inner
-		var a := -PI / 2.0 + PI * i / points
-		pts.append(at + Vector2(cos(a), sin(a)) * r)
-	poly(pts, c)
+	poly(star_points(at, radius, points, inner), c)
 
 
 ## An arc as a polyline (it can sit anywhere, and fades like the rest).
@@ -277,12 +264,7 @@ func hat_dot(at: Vector2, radius: float, c: Color) -> void:
 
 
 func hat_star(at: Vector2, radius: float, c: Color) -> void:
-	var pts := PackedVector2Array()
-	for i in 10:
-		var r := radius if i % 2 == 0 else radius * 0.45
-		var a := -PI / 2.0 + PI * i / 5.0
-		pts.append(at + Vector2(cos(a), sin(a)) * r)
-	hat_poly(pts, c)
+	hat_poly(star_points(at, radius), c)
 
 
 func _hat_points(offsets: PackedVector2Array) -> PackedVector2Array:
@@ -305,6 +287,18 @@ static func dome_w(y: float) -> float:
 static func dome_top(x: float) -> float:
 	var k := clampf(x / BODY_HALF, -1.0, 1.0)
 	return HEM - (HEM - BODY_TOP) * sqrt(1.0 - k * k)
+
+
+## A star's points, `inner` the ratio of the inner radius to the outer.
+static func star_points(
+	at: Vector2, radius: float, points := 5, inner := 0.45
+) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in points * 2:
+		var r := radius if i % 2 == 0 else radius * inner
+		var a := -PI / 2.0 + PI * i / points
+		pts.append(at + Vector2(cos(a), sin(a)) * r)
+	return pts
 
 
 static func ellipse(c: Vector2, rx: float, ry: float, n := 20, rot := 0.0) -> PackedVector2Array:
@@ -373,6 +367,8 @@ static func rotated(pts: Array, pivot: Vector2, angle: float) -> PackedVector2Ar
 
 
 func _grow(pts: PackedVector2Array, pad: float) -> void:
+	if alpha <= 0.0:
+		return  # faded right out: not part of what is seen
 	for p in pts:
 		var at := _xf * p
 		var box := Rect2(at - Vector2(pad, pad), Vector2(pad, pad) * 2.0)

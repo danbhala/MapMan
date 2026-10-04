@@ -28,7 +28,8 @@ const FEET_LIFT := 4.0
 ## Steps per second of walking, as a phase rate.
 const STRIDE := 9.0
 
-## "man" or "woman". Set before adding to the tree.
+## "man" or "woman": whether the figure wears MapWoman's bow. Read each draw,
+## so the ending can turn the figure waiting there into either.
 var art := "man"
 ## The look he wears: a Wardrobe id ("classic" is plain MapMan).
 var outfit := "classic":
@@ -355,8 +356,9 @@ func _paint(measuring: bool) -> Rect2:
 		pts.append(Vector2(cos(ang) * 18.0 * sx, (-26.0 - bob - sin(ang) * 30.0) * sy + drop))
 	pts.append(Vector2(-18.0 * sx, (-26.0 - bob) * sy + drop))
 	pen.body = pts
-	pen.hc = Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy + sink)
-	pen.hr = 15.0 * (1.0 - dead * 0.15) if dead > 0.0 else 15.0
+	var head_at := Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy)
+	pen.hc = head_at + Vector2(0.0, sink)
+	pen.hr = OutfitPen.HEAD_R * (1.0 - dead * 0.15)
 	var has_back := Outfits.has_back(outfit)
 	var behind := pen.from_behind()
 	var woman := art == "woman" or outfit == "mapwoman"
@@ -387,7 +389,7 @@ func _paint(measuring: bool) -> Rect2:
 		pen.alpha = 1.0 - dead
 		Outfits.draw(pen, Outfits.Layer.NECK, outfit)
 		pen.alpha = 1.0
-		_draw_hat_flying(bob, sy)
+		_draw_hat_flying(head_at)
 	else:
 		_draw_body(pts, pal)
 		Outfits.draw(pen, Outfits.Layer.BODY, outfit)
@@ -458,15 +460,16 @@ func _draw_bow(at: Vector2, color: Color) -> void:
 	_pen.dot(at, 2.2, color)
 
 
-## The hat leaves his head as he dies: up, back and turning, fading out.
-## Worked out from `dead`, so nothing is left to reset.
-func _draw_hat_flying(bob: float, sy: float) -> void:
+## The hat leaves his head as he dies, from where the head was before it
+## sank: up, back and turning, fading out. Worked out from `dead`, so nothing
+## is left to reset.
+func _draw_hat_flying(head_at: Vector2) -> void:
 	if dead >= 0.98:
 		return
 	var pen := _pen
 	var keep := pen.hc
-	pen.hc = Vector2(look.x * 3.0, (-62.0 - bob - squash * 5.0) * sy)
-	var pivot := pen.hc + Vector2(0.0, -15.0)
+	pen.hc = head_at
+	var pivot := head_at + Vector2(0.0, -OutfitPen.HEAD_R)
 	var lift := Vector2(-dead * 9.0, -dead * 30.0)
 	pen.hat_xf = (
 		Transform2D(0.0, pivot + lift)

@@ -333,9 +333,10 @@ checked.
 16. **Look at the pose check before calling a look done**
     (`tools/wardrobe_sheets.sh`). The bugs above don't show on a still of
     him standing.
-17. **Pin the wardrobe in tests and screenshot tools.** MapMan wears
-    `Save.worn` on every sheet and the main menu shows the count, so anything
-    that opens a menu sets `worn`, `released` and `seen` first.
+17. **Pin the wardrobe in the screenshot tools and in tests that check a
+    sheet's layout or picture.** MapMan wears `Save.worn` on every sheet and
+    the main menu shows the count, and the autoload reads the machine's real
+    save even with `persist` off: set `worn`, `released` and `seen` first.
 
 ## Testing
 

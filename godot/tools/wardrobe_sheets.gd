@@ -28,16 +28,6 @@ const POSE_NAMES := {
 	"dying": "DYING",
 	"dead": "DEAD",
 }
-## Each tier's colour on the sheets.
-const TIER_COLOURS := {
-	"start": Blueprint.FAINT,
-	"common": Blueprint.INK,
-	"uncommon": Blueprint.MINT,
-	"rare": Blueprint.LILAC,
-	"epic": Blueprint.PINK,
-	"legendary": Blueprint.GOLD,
-	"special": Blueprint.GOLD,
-}
 ## The collection's rows: the tiers in each, and its name.
 const ROWS := [
 	[["start", "common"], "COMMON"],
@@ -262,13 +252,13 @@ func collection() -> void:
 		var tiers: Array = ROWS[r][0]
 		var y0 := 150.0 + r * 320.0
 		var main: String = tiers[1] if tiers[0] == "start" else tiers[0]  # Classic heads no row
-		text(vp, ROWS[r][1], 24, TIER_COLOURS[main], Vector2(56, y0 + 110), 800)
+		text(vp, ROWS[r][1], 24, Wardrobe.TIER_COLOURS[main], Vector2(56, y0 + 110), 800)
 		var levels := row_levels(tiers).replace(" + ", "\nAND ")
 		text(vp, "LEVELS " + levels, 16, Blueprint.FAINT, Vector2(58, y0 + 146))
 		var ids := row_ids(tiers)
 		for c in ids.size():
 			var entry := Wardrobe.look(ids[c])
-			var colour: Color = TIER_COLOURS[entry.tier]
+			var colour: Color = Wardrobe.TIER_COLOURS[entry.tier]
 			var x0 := 248.0 + c * 305.0
 			var box := Blueprint.box_points(Vector2(x0, y0), Vector2(290, 305))
 			Blueprint.line(vp, box, Color(colour, 0.8), 1.5)
@@ -303,7 +293,7 @@ func poses(file_name: String, ids: Array, page: int, pages: int) -> void:
 		var entry := Wardrobe.look(ids[r])
 		Blueprint.rule(vp, y0, 50, size.x - 50, Color(1, 1, 1, 0.25))
 		text(vp, entry.name, 20, Blueprint.INK, Vector2(56, y0 + 68), 800)
-		text(vp, detail(entry), 14, TIER_COLOURS[entry.tier], Vector2(58, y0 + 98))
+		text(vp, detail(entry), 14, Wardrobe.TIER_COLOURS[entry.tier], Vector2(58, y0 + 98))
 		for i in POSES.size():
 			figure(vp, entry.id, Vector2(300 + i * 150 + 75, y0 + 172), 1.45, POSES[i])
 	await save_sheet(vp, file_name)

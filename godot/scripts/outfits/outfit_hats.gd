@@ -5,12 +5,12 @@ extends RefCounted
 ## rides the head, and flies off and fades as he dies. The head's top is at
 ## y -15; keep within the size budget (test_outfits.gd).
 
-const PINK := Color("#ff9fb5")
-const GOLD := Color("#ffd166")
+const PINK := Blueprint.PINK
+const GOLD := Blueprint.GOLD
 const CREAM := Color("#f4ecd8")
 const DARK := Color("#1b1b1f")
 const BRASS := Color("#d4a017")
-const STEEL := Color("#4b5563")
+const IRON := Color("#4b5563")
 
 
 static func draw(pen: OutfitPen, id: String) -> void:
@@ -181,13 +181,13 @@ static func _head_mirror(pen: OutfitPen) -> void:
 			Vector2(14.8, -5.6)
 		]
 	)
-	pen.hat_polyline(band, STEEL, 1.7)
+	pen.hat_polyline(band, IRON, 1.7)
 	if pen.from_behind():
 		return
 	var c := Vector2(4.6, -9.6)
 	pen.hat_dot(c, 6.4, Color("#8a99a8"))
 	pen.hat_dot(c, 5.5, Color("#dfe6ee"))
-	pen.hat_dot(c, 1.2, STEEL)
+	pen.hat_dot(c, 1.2, IRON)
 	pen.hat_line(c + Vector2(-3.2, -2.2), c + Vector2(-1.2, -3.6), Color.WHITE, 1.1)
 
 

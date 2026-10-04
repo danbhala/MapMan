@@ -76,7 +76,7 @@ func build() -> void:
 		var tiers: Array = Sheets.ROWS[r][0]
 		var top := 96.0 + r * 241.0
 		var main: String = tiers[1] if tiers[0] == "start" else tiers[0]
-		text(root, Sheets.ROWS[r][1], 20, Sheets.TIER_COLOURS[main], Vector2(44, top + 92), 800)
+		text(root, Sheets.ROWS[r][1], 20, Wardrobe.TIER_COLOURS[main], Vector2(44, top + 92), 800)
 		var levels := "LV " + Sheets.row_levels(tiers).replace(" + ", "\n+ ")
 		text(root, levels, 14, Blueprint.FAINT, Vector2(46, top + 122))
 		Blueprint.rule(root, top, 40, SIZE.x - 40, Color(1, 1, 1, 0.18))

@@ -19,8 +19,8 @@ const PALETTES := {
 	"racing_green": {"body": Color("#1f7a4f")},
 	"blueprint":
 	{
-		"body": Color("#16407a"),
-		"head": Color("#16407a"),
+		"body": Blueprint.FIELD,
+		"head": Blueprint.FIELD,
 		"eyes": Color.WHITE,
 		"outline": Color.WHITE,
 		"head_outline": Color.WHITE,
@@ -74,6 +74,8 @@ static func has_back(id: String) -> bool:
 
 ## The parts of look `id` in `layer`.
 static func draw(pen: OutfitPen, layer: Layer, id: String) -> void:
+	if id == "classic":
+		return  # the common case: nothing to look up
 	match layer:
 		Layer.BACK, Layer.FRONT:
 			OutfitBacks.draw(pen, layer, id)
@@ -88,10 +90,10 @@ static func draw(pen: OutfitPen, layer: Layer, id: String) -> void:
 ## Draws the head when the look changes its shape, and says so; otherwise
 ## Player draws the round head.
 static func head_shape(pen: OutfitPen, id: String, colour: Color) -> bool:
-	return OutfitFaces.head_shape(pen, id, colour)
+	return id != "classic" and OutfitFaces.head_shape(pen, id, colour)
 
 
 ## Draws the eyes when the look changes them, and says so; otherwise Player
 ## draws the classic eyes.
 static func eyes(pen: OutfitPen, id: String, colour: Color) -> bool:
-	return OutfitFaces.eyes(pen, id, colour)
+	return id != "classic" and OutfitFaces.eyes(pen, id, colour)

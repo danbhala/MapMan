@@ -33,16 +33,6 @@ const TEXT := {
 	"a11y_locked": "Locked, released at level %d",
 	"a11y_locked_end": "Locked, released for finishing the game",
 }
-## The colour a tier frames its looks in; Classic's frame is faint.
-const TIER_COLOURS := {
-	"start": Blueprint.FAINT,
-	"common": Blueprint.INK,
-	"uncommon": Blueprint.MINT,
-	"rare": Blueprint.LILAC,
-	"epic": Blueprint.PINK,
-	"legendary": Blueprint.GOLD,
-	"special": Blueprint.GOLD,
-}
 ## The WARDROBE row on the main menu, under MapMan and clear of the title
 ## block on a 16:9 screen: room for the catalog's 12 letters of WARDROBE
 ## (GUARDA-ROUPA) beside its count, which takes this much at the far end
@@ -50,8 +40,8 @@ const TIER_COLOURS := {
 const ROW_POS := Vector2(436, 246)
 const ROW_SIZE := Vector2(196, Blueprint.TAP_HEIGHT)
 const COUNT_W := 52.0
-const TAG_END := 640.0
-const TAG_Y := 236.0
+const TAG_END := ROW_POS.x + ROW_SIZE.x + 8.0
+const TAG_Y := ROW_POS.y - 10.0
 ## Sheet 001-D: a cell per look, six to a row from the parts list's edge.
 const COLUMNS := 6
 const CELL := Vector2(60, 52)
@@ -170,7 +160,7 @@ static func _cell(m: Menus, i: int) -> Button:
 	m._panel.add_child(cell)
 	var open := Save.is_released(id)
 	var worn := open and id == Save.worn
-	var colour: Color = TIER_COLOURS[look.tier]
+	var colour: Color = Wardrobe.TIER_COLOURS[look.tier]
 	if open:
 		if worn:
 			Blueprint.rect(cell, Blueprint.HOVER, Vector2.ONE, CELL - Vector2(2, 2))

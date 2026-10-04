@@ -9,7 +9,7 @@ extends RefCounted
 
 const CREAM := Color("#f4ecd8")
 const DARK := Color("#1b1b1f")
-const GOLD := Color("#ffd166")
+const GOLD := Blueprint.GOLD
 const BONE := Color("#efe8d6")
 const STEEL := Color("#a9b4c2")
 const GUNMETAL := Color("#3d4652")
@@ -207,7 +207,7 @@ static func _suit_panel(pen: OutfitPen, s: float) -> void:
 		pen.poly(pen.bp(OutfitPen.rrect(Vector2(s, -37), Vector2(6.2, 3.9), 1.2)), Color("#3d5a80"))
 		pen.dot(pen.b(s - 3.0, -37), 1.2, Color("#ef476f"))
 		pen.dot(pen.b(s, -37), 1.2, GOLD)
-		pen.dot(pen.b(s + 3.0, -37), 1.2, Color("#8be0c8"))
+		pen.dot(pen.b(s + 3.0, -37), 1.2, Blueprint.MINT)
 	pen.band(-29.6, -27.4, Color("#c4ccd6"))
 
 
@@ -218,7 +218,7 @@ static func _robot_panel(pen: OutfitPen, s: float) -> void:
 		pen.dot(pen.b(s - 3.0, -37), 2.2, GUNMETAL)
 		pen.line(pen.b(s - 3.0, -37), pen.b(s - 1.6, -38.8), Color.WHITE, 0.8)
 		pen.dot(pen.b(s + 2.6, -38.6), 1.0, Color("#ef476f"))
-		pen.dot(pen.b(s + 5.0, -38.6), 1.0, Color("#8be0c8"))
+		pen.dot(pen.b(s + 5.0, -38.6), 1.0, Blueprint.MINT)
 		pen.line(pen.b(s + 1.4, -35.3), pen.b(s + 5.6, -35.3), GUNMETAL, 0.9)
 	for x: float in [-14.0, -7.0, 0.0, 7.0, 14.0]:
 		pen.dot(pen.b(x, -28.4), 0.9, Color("#4d5866"))

@@ -5,7 +5,7 @@ extends RefCounted
 ## over his body when he walks away; they fade as he dies. FRONT parts are
 ## decoration (sparkles, a twinkle): only with pen.motion, and never dying.
 
-const GOLD := Color("#ffd166")
+const GOLD := Blueprint.GOLD
 
 
 static func draw(pen: OutfitPen, layer: Outfits.Layer, id: String) -> void:

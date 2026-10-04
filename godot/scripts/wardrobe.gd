@@ -44,6 +44,17 @@ const TIERS := {
 	"legendary": "LEGENDARY",
 	"special": "SPECIAL",
 }
+## The colour each tier frames its looks in, on the sheets and in the tools;
+## Classic's is faint.
+const TIER_COLOURS := {
+	"start": Blueprint.FAINT,
+	"common": Blueprint.INK,
+	"uncommon": Blueprint.MINT,
+	"rare": Blueprint.LILAC,
+	"epic": Blueprint.PINK,
+	"legendary": Blueprint.GOLD,
+	"special": Blueprint.GOLD,
+}
 
 
 ## The look with this id, or {} if there is none.
