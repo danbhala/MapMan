@@ -194,11 +194,15 @@
   "IN THE WARDROBE FROM THE START": "DISPONIBLE DÈS LE DÉBUT",
   "RELEASED FOR FINISHING THE GAME": "DÉBLOCAGE EN FIN DE JEU",
   "NEW IN THE WARDROBE": "NOUVEAU LOOK DÉBLOQUÉ",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "PORTEZ-LE VIA LA GARDE-ROBE, PLANCHE 001",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN REJOINT LA GARDE-ROBE",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "INCARNEZ-LA : MAPMAN VOUS ATTEND À LA FIN",
   "Wardrobe, %d of %d released": "Garde-robe, %d sur %d débloqués",
   "%s, worn": "%s, porté",
   "Locked, released at level %d": "Verrouillé, déblocage au niveau %d",
-  "Locked, released for finishing the game": "Verrouillé, déblocage en fin de jeu"
+  "Locked, released for finishing the game": "Verrouillé, déblocage en fin de jeu",
+  "WEAR IT": "PORTER",
+  "NEXT LEVEL": "NIVEAU SUIVANT",
+  "<  RETURN TO SHEET %03d": "<  RETOUR À LA PLANCHE %03d",
+  "NEXT": "SUIVANT",
+  "MENU": "MENU"
 }

@@ -194,11 +194,15 @@
   "IN THE WARDROBE FROM THE START": "DISPONIBLE DESDE EL INICIO",
   "RELEASED FOR FINISHING THE GAME": "SE LIBERA AL TERMINAR EL JUEGO",
   "NEW IN THE WARDROBE": "NUEVO EN EL VESTUARIO",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "PÓNTELO EN EL VESTUARIO DE LA HOJA 001",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN SE UNE AL VESTUARIO",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "JUEGA CON ELLA: MAPMAN TE ESPERA AL FINAL",
   "Wardrobe, %d of %d released": "Vestuario, %d de %d liberados",
   "%s, worn": "%s, puesto",
   "Locked, released at level %d": "Bloqueado, se libera en el nivel %d",
-  "Locked, released for finishing the game": "Bloqueado, se libera al terminar el juego"
+  "Locked, released for finishing the game": "Bloqueado, se libera al terminar el juego",
+  "WEAR IT": "PONERLO",
+  "NEXT LEVEL": "SIGUIENTE NIVEL",
+  "<  RETURN TO SHEET %03d": "<  VOLVER A LA HOJA %03d",
+  "NEXT": "SIGUIENTE",
+  "MENU": "MENÚ"
 }

@@ -188,11 +188,15 @@
   "IN THE WARDROBE FROM THE START": "처음부터 보유",
   "RELEASED FOR FINISHING THE GAME": "게임 클리어 시 해금",
   "NEW IN THE WARDROBE": "옷장에 새로 추가",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "도면 001의 옷장에서 착용하세요",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN이 옷장에 합류",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "그녀로 플레이: 마지막에 MAPMAN이 기다려요",
   "Wardrobe, %d of %d released": "옷장, %d/%d 해금",
   "%s, worn": "%s, 착용 중",
   "Locked, released at level %d": "잠김, 레벨 %d에서 해금",
-  "Locked, released for finishing the game": "잠김, 게임 클리어 시 해금"
+  "Locked, released for finishing the game": "잠김, 게임 클리어 시 해금",
+  "WEAR IT": "입기",
+  "NEXT LEVEL": "다음 레벨",
+  "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기",
+  "NEXT": "다음",
+  "MENU": "메뉴"
 }

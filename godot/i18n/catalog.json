@@ -476,6 +476,21 @@
       "max": 45
     },
     {
+      "id": "NEXT LEVEL",
+      "note": "Level clear: what NEXT does, for screen readers",
+      "max": 16
+    },
+    {
+      "id": "NEXT",
+      "note": "Level clear button, first of three side by side: on to the next level",
+      "max": 10
+    },
+    {
+      "id": "MENU",
+      "note": "Level clear button, last of three side by side: back to the main menu (asks first)",
+      "max": 12
+    },
+    {
       "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
       "note": "Checkpoint level clear small print",
       "max": 60
@@ -484,6 +499,11 @@
       "id": "PASSED",
       "note": "Rubber stamp on a cleared level",
       "max": 10
+    },
+    {
+      "id": "<  RETURN TO SHEET %03d",
+      "note": "Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number",
+      "max": 30
     },
     {
       "id": "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE",
@@ -965,9 +985,9 @@
       "max": 24
     },
     {
-      "id": "WEAR IT FROM THE WARDROBE ON SHEET 001",
-      "note": "Slip on the level-clear sheet; keep 001, the main menu's sheet number",
-      "max": 40
+      "id": "WEAR IT",
+      "note": "Button on the level-clear slip: wear the look just released, now",
+      "max": 9
     },
     {
       "id": "MAPWOMAN JOINS THE WARDROBE",

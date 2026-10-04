@@ -188,11 +188,15 @@
   "IN THE WARDROBE FROM THE START": "BAŞTAN BERİ GARDIROPTA",
   "RELEASED FOR FINISHING THE GAME": "OYUNU BİTİRİNCE YAYINLANIR",
   "NEW IN THE WARDROBE": "GARDIROBA YENİ EKLENDİ",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "PAFTA 001'DEKİ GARDIROPTAN GİYEBİLİRSİN",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN GARDIROBA KATILDI",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "ONUNLA OYNA: MAPMAN SENİ SONDA BEKLİYOR",
   "Wardrobe, %d of %d released": "Gardırop, %d / %d yayınlandı",
   "%s, worn": "%s, giyili",
   "Locked, released at level %d": "Kilitli, %d. bölümde yayınlanır",
-  "Locked, released for finishing the game": "Kilitli, oyunu bitirince yayınlanır"
+  "Locked, released for finishing the game": "Kilitli, oyunu bitirince yayınlanır",
+  "WEAR IT": "GİY",
+  "NEXT LEVEL": "SONRAKİ BÖLÜM",
+  "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN",
+  "NEXT": "SONRAKİ",
+  "MENU": "MENÜ"
 }

@@ -171,6 +171,9 @@ var _facing := Vector2i.ZERO  # ZERO is the neutral, front-on idle
 var _walk_target := 0.0
 var _look_target := Vector2.ZERO
 var _hop := 0.0
+## A jump when he is tapped on a menu: higher and longer than a hop, with a
+## squash as he lands.
+var _jump := 0.0
 var _phase := 0.0
 var _blink := 0.0
 var _blink_clock := 0.0
@@ -247,6 +250,7 @@ func reset_pose() -> void:
 	squash = 0.0
 	happy = 0.0
 	_hop = 0.0
+	_jump = 0.0
 	queue_redraw()
 
 
@@ -320,6 +324,13 @@ func cheer() -> void:
 		_hop = 1.0
 
 
+## Tapped on a menu: wide eyes and a jump (just the eyes with reduced motion).
+func jump() -> void:
+	happy = 1.0
+	if Blueprint.motion() and _jump == 0.0:
+		_jump = 1.0
+
+
 ## The controls reversed: a full turn on the spot.
 func spin_around() -> void:
 	if not Blueprint.motion() or not is_inside_tree():
@@ -382,6 +393,10 @@ func tick(delta: float) -> void:
 	squash = move_toward(squash, 0.0, delta * 3.0)
 	happy = move_toward(happy, 0.0, delta * 0.8)
 	_hop = move_toward(_hop, 0.0, delta * 4.0)
+	if _jump > 0.0:
+		_jump = move_toward(_jump, 0.0, delta * 2.2)
+		if _jump == 0.0:
+			squash = 0.7
 	if _dying:
 		_death_clock += delta
 	queue_redraw()
@@ -417,7 +432,8 @@ static func standing_height(id: String) -> float:
 
 func _paint(measuring: bool) -> Rect2:
 	var fx := flip * cos(spin * TAU)
-	var bob := sin(_hop * PI) * 8.0  # a landing hop; walking never moves the body
+	# A landing hop or a jump; walking never moves the body.
+	var bob := sin(_hop * PI) * 8.0 + sin(_jump * PI) * 24.0
 	var sy := 1.0 - squash * 0.18
 	var sx := 1.0 + squash * 0.18
 	var pal := {"body": BODY_COLOR, "head": HEAD_COLOR, "eyes": EYE_COLOR}

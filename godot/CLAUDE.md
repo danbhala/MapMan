@@ -39,6 +39,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
   end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
   for `menus.gd`.
+- The level clear of the main game (`scripts/clear_sheet.gd`, for
+  `menus.gd`) counts its bonuses in (a tap mid-count finishes it), then
+  offers NEXT, WARDROBE and MAIN MENU. Until NEXT banks the level
+  (`main.gd` `_between`), the wardrobe and the quit question opened from it
+  come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
+  sheet makes him jump (`Menus._poke()`, `Player.jump()`).
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
