@@ -25,8 +25,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
   dev cheats, build info and the play log. Dev tools are on when
-  `Dev.enabled`: the "Android Dev" export preset (feature tag `dev`, app
-  "MapMan Dev", package `com.danbhala.mapman.dev`, own save) or any debug run.
+  `Dev.enabled`: the "Android Dev" and "iOS Dev" export presets (feature tag
+  `dev`, app "MapMan Dev" through `config/name.dev`, package/bundle ID
+  `com.danbhala.mapman.dev`, own save) or any debug run.
   `scripts/dev_panel.gd` is the DEV button, dev menu and tilt gauge. Never
   let a cheat work when `Dev.enabled` is false.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
@@ -48,6 +49,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   sized outside the tree measures its text with the default theme's font and
   keeps that box. Figures ("+10", "T-0:20") are forced left-to-right
   (`Blueprint.direction()`) so they don't flip on an Arabic phone.
+- The iOS presets ("iOS", "iOS Dev") export the Xcode project only; CI's
+  `.github/actions/build-ipa` signs, archives and uploads it to TestFlight.
+  Their App Store icon, `assets/icon/app_icon_1024.png`, is drawn by
+  `tools/app_icon.gd` (opaque, 1024×1024: App Store Connect refuses alpha).
 - Tile art is the original @3x set, drawn at scale 1/3 (the menu, button and
   character art is no longer used). Fonts are bundled (JetBrains Mono,
   Liberation; OFL) so screenshots match on every machine.

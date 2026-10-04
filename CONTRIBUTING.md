@@ -35,9 +35,15 @@ Write `feat` and `fix` subjects for players: they become release notes.
   own save and has a DEV menu (level select, cheats, tilt tuning, play log).
   The latest master build is always at
   https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk
+- Every PR and master push also uploads a **MapMan Dev** build to TestFlight
+  (once the Apple secrets below are set); testers install it with the
+  TestFlight app on an iPhone, about 10 minutes after the PR comment says so.
 - release-please keeps a `chore(master): release X.Y.Z` PR open. Merging it tags
-  the release, publishes it on GitHub with the APK, and updates
+  the release, publishes it on GitHub with the APK and the `.ipa`, uploads a
+  **MapMan** build to TestFlight, and updates
   https://github.com/danbhala/MapMan/raw/android-build/MapMan.apk
+  Submitting a TestFlight build to the App Store is done by hand in App Store
+  Connect.
 
 ## Asking Claude from GitHub
 
@@ -59,3 +65,30 @@ These can only be changed by the repo owner on github.com:
   status checks `verify` and `Conventional PR title`.
 - **Settings → Secrets and variables → Actions:** add `ANTHROPIC_API_KEY` (or
   `CLAUDE_CODE_OAUTH_TOKEN`, from `claude setup-token`) for the @claude action.
+
+### iPhone builds (TestFlight)
+
+The Test builds and Release workflows skip their iPhone job, with a notice,
+until these are set up. Once, by the owner:
+
+1. Join the Apple Developer Program.
+2. In the developer portal, register two App IDs with no extra capabilities:
+   `com.danbhala.mapman` (MapMan) and `com.danbhala.mapman.dev` (MapMan Dev).
+3. In App Store Connect, create an app record for each (name, primary language,
+   bundle ID, SKU). Under TestFlight, add an internal group to each with the
+   testers' Apple IDs (internal testing needs no review).
+4. Create an App Store Connect API key (Users and Access → Integrations, role
+   App Manager): note the Key ID and the Issuer ID, download the `.p8`.
+5. Create an **Apple Distribution** certificate and export it with its private
+   key as a `.p12` (Keychain Access on a Mac, or make the CSR with openssl,
+   upload it in the portal, and join the downloaded `.cer` and the key with
+   `openssl pkcs12 -export`).
+6. **Settings → Secrets and variables → Actions:** add `APPLE_TEAM_ID`,
+   `APPSTORE_ISSUER_ID`, `APPSTORE_KEY_ID`, `APPSTORE_PRIVATE_KEY` (the `.p8`
+   file's text), `IOS_DIST_CERT_P12_BASE64` (`base64 -i dist.p12`) and
+   `IOS_DIST_CERT_PASSWORD`.
+
+No provisioning profile needs storing: each build fetches the app's App Store
+profile with the API key (`fastlane sigh`, which creates it the first time).
+Build numbers only go up (the run number for MapMan Dev, major×10000 +
+minor×100 + patch for MapMan), and TestFlight builds expire after 90 days.

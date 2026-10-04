@@ -1,11 +1,17 @@
-name: Test APK
+name: Test builds
 
 # Builds the "MapMan Dev" app (installs alongside the real MapMan, has the DEV
-# menu) for every pull request and for master, and publishes each to its own
-# branch so a phone can download it from a plain link:
+# menu) for every pull request and for master.
+#
+# Android: publishes each APK to its own branch so a phone can download it from
+# a plain link:
 #   PR #12  -> https://github.com/danbhala/MapMan/raw/apk-pr-12/MapMan-Dev.apk
 #   master  -> https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk
 # The PR gets a comment with the link. The branch is deleted when the PR closes.
+#
+# iPhone: uploads the build to the MapMan Dev app's TestFlight, where testers
+# install it with the TestFlight app; the PR gets a second comment. Needs the
+# Apple secrets (see CONTRIBUTING.md); without them the job skips.
 
 on:
   pull_request:
@@ -108,6 +114,100 @@ jobs:
           📱 **Test build ready: MapMan Dev $VERSION** (commit $(git rev-parse --short HEAD))
 
           [Download MapMan-Dev.apk](https://github.com/$REPO/raw/$BRANCH/MapMan-Dev.apk). Open the link on your phone and install. It sits alongside the real MapMan with its own save; tap **DEV** for level select, cheats, tilt tuning and the play log."
+          id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -f body="$body" > /dev/null
+          fi
+
+  ios:
+    # Same-repo PRs only: forks get no secrets.
+    if: >-
+      github.event.action != 'closed' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - name: Check for the Apple secrets
+        id: secrets
+        env:
+          TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          ISSUER: ${{ secrets.APPSTORE_ISSUER_ID }}
+          KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          KEY: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+          P12: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+        run: |
+          missing=""
+          for name in TEAM ISSUER KEY_ID KEY P12 P12_PASSWORD; do
+            [ -z "${!name}" ] && missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Skipping the iPhone build: the Apple secrets are not set (see CONTRIBUTING.md, iPhone builds)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Work out names
+        if: steps.secrets.outputs.ready == 'true'
+        id: names
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          base=$(cat version.txt)
+          if [ -n "$PR" ]; then
+            echo "source=pr-$PR" >> "$GITHUB_OUTPUT"
+            echo "version=$base-pr.$PR" >> "$GITHUB_OUTPUT"
+          else
+            echo "source=master" >> "$GITHUB_OUTPUT"
+            echo "version=$base-master" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: ./.github/actions/setup-godot
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          ios: "true"
+
+      - uses: ./.github/actions/build-ipa
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          preset: iOS Dev
+          bundle-id: com.danbhala.mapman.dev
+          version-name: ${{ steps.names.outputs.version }}
+          # TestFlight refuses a build number it has seen before for the app.
+          build-number: ${{ github.run_number }}
+          source: ${{ steps.names.outputs.source }}
+          output: MapMan-Dev.ipa
+          team-id: ${{ secrets.APPLE_TEAM_ID }}
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+          certificate-p12: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
+          certificate-password: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+
+      - name: Comment the TestFlight build on the PR
+        if: steps.secrets.outputs.ready == 'true' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          VERSION: ${{ steps.names.outputs.version }}
+          BUILD: ${{ github.run_number }}
+        run: |
+          marker="<!-- test-ios -->"
+          body="$marker
+          🍏 **TestFlight build $BUILD uploaded: MapMan Dev $VERSION** (commit $(git rev-parse --short HEAD))
+
+          It appears in the TestFlight app on your iPhone in about 10 minutes, as MapMan Dev ${VERSION%%-*} ($BUILD). It sits alongside the real MapMan with its own save; tap **DEV** for level select, cheats, tilt tuning and the play log."
           id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
             --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
           if [ -n "$id" ]; then

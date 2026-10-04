@@ -11,7 +11,9 @@ now ported to Godot 4.5.
 - `godot/tools/convert_assets.py` – regenerates `godot/assets/` and `godot/data/`
   from `Script/`. Rerunning it overwrites hand edits to `godot/data/levels.json`.
 - `android-build` branch – holds only the latest APK for phones. Never commit
-  APKs or `godot/build/` to master.
+  APKs, `.ipa`s or `godot/build/` to master.
+- iPhone builds go through TestFlight (Test builds and Release workflows,
+  `.github/actions/build-ipa`); the Apple setup is in `CONTRIBUTING.md`.
 
 ## Checking your work
 
@@ -66,8 +68,9 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   these rules, including repo settings only the owner can change.
 - Branch per change, PR into master. Commit as the user's GitHub noreply
   address (`2726152+danbhala@users.noreply.github.com`); their email is private.
-- Every PR gets a "MapMan Dev" test APK (Test APK workflow) and a comment with
-  its download link; master's latest is at
+- Every PR gets a "MapMan Dev" test APK (Test builds workflow) and a comment
+  with its download link, plus a TestFlight build for iPhone once the Apple
+  secrets are set (a second comment); master's latest is at
   `https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk`. Point the
   user at the PR's link when a change needs trying on the phone.
 - The user plays on an Android phone (OnePlus 12). Tilt, shake and feel can

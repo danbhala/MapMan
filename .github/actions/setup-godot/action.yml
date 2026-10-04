@@ -1,5 +1,7 @@
 name: Set up Godot
-description: Installs Godot (cached) and, optionally, its Android export templates and Android settings.
+description: >-
+  Installs Godot (cached) and, optionally, its Android export templates and
+  Android settings (Linux runners) or its iOS export templates (macOS runners).
 
 inputs:
   version:
@@ -7,6 +9,9 @@ inputs:
     default: "4.5.1"
   android:
     description: Also install Android export templates and point Godot at the runner's SDK
+    default: "false"
+  ios:
+    description: Also install iOS export templates (macOS runners only)
     default: "false"
 
 runs:
@@ -19,7 +24,8 @@ runs:
         path: |
           ~/godot
           ~/.local/share/godot/export_templates
-        key: godot-${{ inputs.version }}-android-${{ inputs.android }}
+          ~/Library/Application Support/Godot/export_templates
+        key: godot-${{ inputs.version }}-${{ runner.os }}-android-${{ inputs.android }}-ios-${{ inputs.ios }}
 
     - name: Download Godot
       if: steps.cache.outputs.cache-hit != 'true'
@@ -27,25 +33,43 @@ runs:
       env:
         V: ${{ inputs.version }}
         ANDROID: ${{ inputs.android }}
+        IOS: ${{ inputs.ios }}
+        OS: ${{ runner.os }}
       run: |
         base="https://github.com/godotengine/godot/releases/download/${V}-stable"
         mkdir -p ~/godot
-        curl -sSfL -o /tmp/godot.zip "$base/Godot_v${V}-stable_linux.x86_64.zip"
-        unzip -q /tmp/godot.zip -d ~/godot
-        mv ~/godot/Godot_v${V}-stable_linux.x86_64 ~/godot/godot
-        if [ "$ANDROID" = "true" ]; then
-          templates=~/.local/share/godot/export_templates/${V}.stable
+        if [ "$OS" = "macOS" ]; then
+          curl -sSfL -o /tmp/godot.zip "$base/Godot_v${V}-stable_macos.universal.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          templates="$HOME/Library/Application Support/Godot/export_templates/${V}.stable"
+        else
+          curl -sSfL -o /tmp/godot.zip "$base/Godot_v${V}-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          mv ~/godot/Godot_v${V}-stable_linux.x86_64 ~/godot/godot
+          templates="$HOME/.local/share/godot/export_templates/${V}.stable"
+        fi
+        rm /tmp/godot.zip
+        wanted=()
+        [ "$ANDROID" = "true" ] && wanted+=(templates/android_release.apk)
+        [ "$IOS" = "true" ] && wanted+=(templates/ios.zip)
+        if [ ${#wanted[@]} -gt 0 ]; then
           mkdir -p "$templates"
           curl -sSfL -o /tmp/templates.tpz "$base/Godot_v${V}-stable_export_templates.tpz"
-          unzip -q -j /tmp/templates.tpz templates/android_release.apk templates/version.txt -d "$templates"
+          unzip -q -j /tmp/templates.tpz "${wanted[@]}" templates/version.txt -d "$templates"
           rm /tmp/templates.tpz
         fi
 
     - name: Put godot on PATH
       shell: bash
+      env:
+        OS: ${{ runner.os }}
       run: |
         mkdir -p ~/.local/bin
-        ln -sf ~/godot/godot ~/.local/bin/godot
+        if [ "$OS" = "macOS" ]; then
+          ln -sf ~/godot/Godot.app/Contents/MacOS/Godot ~/.local/bin/godot
+        else
+          ln -sf ~/godot/godot ~/.local/bin/godot
+        fi
         echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
     - name: Point Godot at the runner's Android SDK and Java
