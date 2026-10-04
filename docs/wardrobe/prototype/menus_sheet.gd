@@ -45,7 +45,7 @@ func run() -> void:
 		Blueprint
 		. label(
 			vp,
-			"MOCKUPS ON THE GAME'S OWN SHEETS, AT THE ONEPLUS 12'S SHAPE (2.2:1)  ·  PROPOSED PIECES ADDED ON TOP",
+			"THE GAME'S OWN SHEETS, AT THE ONEPLUS 12'S SHAPE (2.2:1)  ·  TEN LOOKS RELEASED, THE COWBOY WORN",
 			17,
 			Color(1, 1, 1, 0.66),
 			Vector2(58, 92)
