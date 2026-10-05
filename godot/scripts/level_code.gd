@@ -26,6 +26,9 @@ const B32 := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 ## What a shared code starts with, so a phone's camera or a chat shows whose
 ## it is; reading a code skips it.
 const PREFIX := "MAPMAN"
+## A shared level as a link to the repo's Pages site (`site/`): a page that
+## shows the code and opens it in the game (as `mapman://level/<code>`).
+const LINK := "https://danbhala.github.io/MapMan/"
 const EDGE := -1
 const WEIGHT := 8
 const ADAPT := 8
@@ -277,12 +280,17 @@ static func decode(code: String) -> Dictionary:
 	}
 
 
-## A code reduced to its characters: upper case, without the MAPMAN prefix,
-## dashes or spaces, with O read as 0 and I or L as 1. "" when it holds
-## anything else.
+## A code reduced to its characters: upper case, without the MAPMAN prefix
+## or the link before it, dashes or spaces, with O read as 0 and I or L as 1.
+## "" when it holds anything else.
 static func clean(code: String) -> String:
 	var text := code.to_upper().strip_edges()
-	if text.begins_with(PREFIX):
+	# A link ends in the code: https://danbhala.github.io/MapMan/<code>, or
+	# mapman://level/<code> from the page.
+	if text.contains("://") and text.contains(PREFIX):
+		text = text.get_slice("?", 0).get_slice("#", 0).rstrip("/")
+		text = text.substr(text.rfind("/") + 1)
+	elif text.begins_with(PREFIX):
 		text = text.substr(PREFIX.length())
 	var out := ""
 	for ch in text:
@@ -306,10 +314,9 @@ static func pretty(code: String) -> String:
 	return "-".join(groups)
 
 
-## The text a level is shared as: what COPY CODE puts on the clipboard and
-## the QR code holds, "MAPMAN 0MM3-C7P1-…". Reading takes it back (clean()).
-static func share_text(code: String) -> String:
-	return PREFIX + " " + pretty(code)
+## The link a level is shared as.
+static func link(code: String) -> String:
+	return LINK + pretty(code)
 
 
 ## How many characters a code takes, not counting dashes.

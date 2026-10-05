@@ -102,14 +102,15 @@ repeated patterns shortens them.
 ## 4. Hand it back
 
 - The code exactly as the `CODE` line prints it (`MAPMAN XXXX-XXXX-...`),
-  which is also what the QR holds.
+  and the `LINK` line, which is what the QR holds.
 - The QR PNG's path (attach it when the session can attach files).
 - The level as a code block (the tool's left-hand picture, or the rows), a
   name for it, and one line on what makes it tick ("the short way costs you
   5 seconds; the long way slides across the ice").
-- How to play it: in MapMan, DRAFTING TABLE (open after level 11) → SCAN A
-  QR CODE, or copy the code and open MapMan, which offers it from the
-  clipboard, or ENTER A LEVEL CODE.
+- How to play it: scan the QR with the phone's camera (or tap the link) and
+  press OPEN IN MAPMAN on the page; or in MapMan, DRAFTING TABLE (open after
+  level 11) → SCAN A QR CODE or ENTER A LEVEL CODE; or copy the code and
+  open MapMan, which offers it from the clipboard.
 
 ## Worked example: the spiral
 
@@ -134,7 +135,8 @@ time: medium for its length, easy on hazards) and
 
 ```
 CODE  MAPMAN 0S01-6SZK-476Z-CV1S-3E6R-79E6-QS87-FQZ5-CT5D-S4NT-ZPR
-QR    .../spiral-qr.png (version 3, 592 px), reads back: MAPMAN 0S01-...
+LINK  https://danbhala.github.io/MapMan/0S01-6SZK-476Z-CV1S-3E6R-79E6-QS87-FQZ5-CT5D-S4NT-ZPR
+QR    .../spiral-qr.png (version 6, ...), reads back: https://danbhala.github.io/MapMan/0S01-...
 ```
 
 To make it harder, put `d` tiles on the outside of the spiral's corners and

@@ -48,6 +48,17 @@ func test_reading_is_forgiving() -> void:
 	assert_eq(LevelCode.clean("0MM3-U"), "", "U is never in a code")
 
 
+func test_a_link_reads_like_a_code() -> void:
+	var code := LevelCode.encode(["bcdcw", "  p  "])
+	var link := LevelCode.link(code)
+	assert_eq(link, "https://danbhala.github.io/MapMan/" + LevelCode.pretty(code))
+	assert_eq(LevelCode.decode(link).get("rows"), ["bcdcw", "  p  "])
+	# Whatever a chat app tacks on, and the page's link into the game.
+	assert_eq(LevelCode.find(link + "/?utm=chat"), LevelCode.pretty(code))
+	assert_eq(LevelCode.find("mapman://level/" + code), LevelCode.pretty(code))
+	assert_eq(LevelCode.find("https://example.com/" + code), "", "only MapMan links")
+
+
 func test_typos_are_caught() -> void:
 	var code := LevelCode.clean(LevelCode.encode(["bcccccccw", "c d d d c", "ccccppccc"]))
 	var original := LevelCode.decode(code)
@@ -89,7 +100,7 @@ func test_tiles_added_later_keep_the_alphabet() -> void:
 	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "ice and spikes")
 
 
-func test_share_text_is_what_copy_code_and_the_qr_hold() -> void:
+func test_the_spiral_shares_as_its_code_and_link() -> void:
 	var spiral := [
 		"bccccccccccpc",
 		"            c",
@@ -102,7 +113,8 @@ func test_share_text_is_what_copy_code_and_the_qr_hold() -> void:
 		"cccccccccpccc",
 	]
 	var code := LevelCode.encode(spiral, {})
-	var want := "MAPMAN 0S01-6SZK-476Z-CV1S-3E6R-79E6-QS87-FQZ5-CT5D-S4NT-ZPR"
-	assert_eq(LevelCode.share_text(code), want)
-	assert_eq(LevelCode.share_text(LevelCode.clean(code)), want, "bare codes come out pretty")
-	assert_eq(LevelCode.decode(want).rows, spiral, "and it reads back")
+	var want := "0S01-6SZK-476Z-CV1S-3E6R-79E6-QS87-FQZ5-CT5D-S4NT-ZPR"
+	assert_eq(LevelCode.pretty(code), want)
+	var link := LevelCode.link(LevelCode.clean(code))
+	assert_eq(link, LevelCode.LINK + want, "bare codes come out pretty")
+	assert_eq(LevelCode.decode(LevelCode.link(code)).rows, spiral, "and it reads back")

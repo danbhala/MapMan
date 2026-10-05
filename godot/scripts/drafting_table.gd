@@ -14,6 +14,8 @@ var back_to := "drafting"
 
 ## main.gd (untyped: it has no class_name).
 var _game
+## The last level link the game was opened with, so it plays once.
+var _link := ""
 
 
 func _init(game) -> void:
@@ -105,6 +107,33 @@ func check_clipboard() -> void:
 	DraftingSheet.build_found(m, code)
 
 
+## A level link opens the game (the phone's camera, a chat): the level plays
+## at once, from wherever the player is, but never in the middle of the main
+## game, which keeps it for the main menu. `link` is for tests.
+func check_link(link := "") -> void:
+	if link == "":
+		link = launch_link()
+	if link == "" or link == _link or LevelCode.find(link) == "":
+		return
+	if _game.intro != null or (_game.game_active and _game.custom == ""):
+		return
+	_link = link
+	if _game.custom != "":
+		_game.menus.close()
+		_game.game_over(false)
+	play_code(link, "main")
+
+
+## The link Android opened the game with (the intent's data), or "".
+static func launch_link() -> String:
+	if not Engine.has_singleton("AndroidRuntime"):
+		return ""
+	var activity = Engine.get_singleton("AndroidRuntime").getActivity()
+	var intent = activity.getIntent() if activity else null
+	var data = intent.getData() if intent else null
+	return str(data.toString()) if data else ""
+
+
 ## The pause sheet's number while playing from the table.
 func pause_number() -> String:
 	if _game.custom == "draft":
@@ -143,7 +172,7 @@ func action(act: String) -> bool:
 			if draft != null and draft.signed:
 				DraftingSheet.build_share(m, draft)
 		"copy code":
-			DisplayServer.clipboard_set(LevelCode.share_text(draft.code()))
+			DisplayServer.clipboard_set(LevelCode.link(draft.code()))
 			DraftingSheet.build_share(m, draft, true)
 		"end custom":
 			m.close()

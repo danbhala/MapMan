@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MapMan level</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --field: #16407a; --ink: #eaf2ff; --faint: #9fb7dc; --gold: #f2c14e; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px;
+    background-color: var(--field); color: var(--ink);
+    background-image:
+      linear-gradient(rgba(234,242,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(234,242,255,.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    font: 16px/1.5 ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  main { width: 100%; max-width: 440px; border: 2px solid var(--ink); padding: 24px; }
+  .number { color: var(--faint); font-size: 12px; letter-spacing: .1em; }
+  h1 { margin: 4px 0 20px; font-size: 22px; letter-spacing: .08em; }
+  .code { font-size: 20px; font-weight: 700; margin: 0 0 20px; }
+  p { color: var(--faint); margin: 0 0 16px; }
+  a, button {
+    display: block; width: 100%; margin: 0 0 12px; padding: 12px; text-align: center;
+    font: inherit; font-weight: 700; letter-spacing: .06em; color: var(--field);
+    background: var(--ink); border: 0; text-decoration: none; cursor: pointer;
+  }
+  a.quiet { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .done { color: var(--gold); min-height: 1.5em; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="number">SHEET R &middot; RECEIVED LEVEL</div>
+  <h1>MAPMAN LEVEL</h1>
+  <div id="level">
+    <p>A friend drew this level for you.</p>
+    <div class="code" id="code"></div>
+    <a id="open" href="#" hidden>OPEN IN MAPMAN</a>
+    <button id="copy" type="button">COPY CODE</button>
+    <p class="done" id="done"></p>
+    <p>Or copy the code, then open MapMan: it finds the code and offers to play it.</p>
+    <p id="tip" hidden>To skip this page next time: Settings, Apps, MapMan, Open by default,
+      Add link, and tick danbhala.github.io.</p>
+  </div>
+  <div id="none" hidden>
+    <p>There's nothing on this page.</p>
+  </div>
+  <a class="quiet" href="https://github.com/danbhala/MapMan/releases/latest">GET MAPMAN</a>
+</main>
+<script>
+  // The level code is the last part of the address: /MapMan/0S01-6SZK-...
+  var m = location.pathname.match(/\/mapman\/([0-9A-Za-z-]{4,})\/?$/i);
+  var android = /Android/i.test(navigator.userAgent);
+  if (!m) {
+    document.getElementById("level").hidden = true;
+    document.getElementById("none").hidden = false;
+  } else {
+    var code = m[1].toUpperCase();
+    // Lines break between groups of four.
+    document.getElementById("code").textContent = "MAPMAN " + code.replace(/-/g, "-\u200b");
+    if (android) {
+      // Opens the game through its mapman://level/ link; without the game,
+      // Chrome goes to the download page instead.
+      var open = document.getElementById("open");
+      open.href = "intent://level/" + code + "#Intent;scheme=mapman;S.browser_fallback_url=" +
+        encodeURIComponent("https://github.com/danbhala/MapMan/releases/latest") + ";end";
+      open.hidden = false;
+      document.getElementById("tip").hidden = false;
+    }
+    document.getElementById("copy").addEventListener("click", function () {
+      var done = document.getElementById("done");
+      navigator.clipboard.writeText("MAPMAN " + code).then(
+        function () { done.textContent = "COPIED. NOW OPEN MAPMAN."; },
+        function () { done.textContent = "COPY DIDN'T WORK: SELECT THE CODE ABOVE."; }
+      );
+    });
+  }
+</script>
+</body>
+</html>

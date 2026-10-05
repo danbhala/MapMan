@@ -90,18 +90,12 @@ func _start_feed() -> bool:
 	var texture := CameraTexture.new()
 	texture.camera_feed_id = _feed.get_id()
 	_view.texture = texture
-	_turn_view()
+	# The picture is shown as the camera gives it: feed_transform describes the
+	# feed for 3D backgrounds, and following it turned the view upside down on
+	# Android (a OnePlus 12).
 	_state = "live"
 	status.emit("looking")
 	return true
-
-
-## Show the picture the right way up: the feed says how its pictures sit.
-func _turn_view() -> void:
-	var t := _feed.feed_transform
-	if absf(t.x.x) >= absf(t.x.y):
-		_view.flip_h = t.x.x < 0.0
-		_view.flip_v = t.y.y < 0.0
 
 
 func _process(delta: float) -> void:

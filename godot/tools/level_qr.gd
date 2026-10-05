@@ -99,10 +99,10 @@ func run() -> void:
 	print(_numbers(rows, route, code))
 	map.queue_free()
 
-	var text := LevelCode.share_text(code)
-	print("\nCODE  " + text)
+	print("\nCODE  " + LevelCode.PREFIX + " " + LevelCode.pretty(code))
+	print("LINK  " + LevelCode.link(code))
 	if args.size() > 1:
-		if not _write_qr(text, args[1]):
+		if not _write_qr(LevelCode.link(code), args[1]):
 			return
 	quit(0)
 
@@ -283,7 +283,8 @@ func _summary(on_route: Dictionary) -> String:
 ## Write the QR of `text` and read it back; false (after failing) if it doesn't.
 func _write_qr(text: String, out: String) -> bool:
 	var qr := QrCode.new(QrCode.ErrorCorrection.MEDIUM)
-	qr.put_alphanumeric(text)
+	# The share sheet's QR: the link, byte by byte (DraftingSheet.qr_image).
+	qr.put_byte(text.to_utf8_buffer())
 	var modules := qr.encode()
 	var img := QrCode.generate_image(modules, QR_SCALE, Color.WHITE, QR_DARK, QR_QUIET)
 	var err := img.save_png(out)
