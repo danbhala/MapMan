@@ -184,6 +184,65 @@ func _tap() -> void:
 	game.menus._unhandled_input(event)
 
 
+func test_level_clear_buttons() -> void:
+	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
+	assert_eq(_press_all(), ["next level", "clear wardrobe", "leave clear"])
+
+
+func test_a_tap_mid_count_finishes_it_and_stays() -> void:
+	Save.reduce_motion = false
+	var m = game.menus
+	m.show_end_level(100, 10, 7, 2, false, 35, 14)
+	var buttons: Array = m._panel.find_children("*", "Button", true, false)
+	for b in buttons:
+		assert_eq(b.mouse_filter, Control.MOUSE_FILTER_IGNORE, "out of reach mid-count")
+	assert_has(_texts(), "100", "the total starts from the score")
+	assert_has(_texts(), "+0", "and each row from nothing")
+	_tap()
+	assert_eq(_actions, [], "the first tap doesn't leave")
+	assert_eq(m.current, "end_level")
+	assert_has(_texts(), "119", "it's all in")
+	assert_has(_texts(), "PASSED")
+	buttons = m._panel.find_children("*", "Button", true, false)
+	for b in buttons:
+		assert_eq(b.mouse_filter, Control.MOUSE_FILTER_STOP, "and the buttons work")
+	_tap()
+	assert_eq(_actions, ["next level"], "the next tap goes on")
+
+
+func test_wardrobe_from_the_level_clear() -> void:
+	game.menus.show_wardrobe(7)
+	var rows: Array = game.menus._panel.find_children("*", "Button", true, false)
+	assert_eq(rows.back().text, "<  RETURN TO SHEET 007")
+	assert_eq(_press_all().back(), "back to clear", "the wardrobe goes back to the level clear")
+	game.menus.show_confirm_quit("back to clear")
+	assert_eq(_press_all(), ["back to clear", "end game"])
+
+
+func test_tapping_mapman_makes_him_jump() -> void:
+	Save.reduce_motion = false
+	var m = game.menus
+	m.show_end_level(100, 10, 7, 2, false, 35, 14)
+	var head: Vector2 = m._hero.global_position + Vector2(0, -60)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = head
+	m._gui_input(press)
+	assert_gt(m._hero._jump, 0.0, "he jumps")
+	m._tap_ready_at = 0.0
+	m._tap_action = "next level"
+	var release := press.duplicate()
+	release.pressed = false
+	m._gui_input(release)
+	assert_eq(_actions, [], "and the tap on him doesn't continue the sheet")
+	press.position = Vector2(60, 340)
+	m._gui_input(press)
+	release.position = press.position
+	m._gui_input(release)
+	assert_eq(_actions, ["next level"], "a tap elsewhere still does")
+
+
 func test_tap_to_continue_sheets() -> void:
 	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
 	_tap()
@@ -332,7 +391,12 @@ func test_release_slips() -> void:
 	assert_does_not_have(_texts(), "NEW IN THE WARDROBE", "no slip without a release")
 	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
 	assert_has(_texts(), "NEW IN THE WARDROBE")
-	assert_has(_texts(), "COWBOY  ·  UNCOMMON")
+	assert_has(_texts(), "COWBOY")
+	assert_has(_texts(), "UNCOMMON")
+	var acts := ["next level", "clear wardrobe", "leave clear", "wear cowboy"]
+	assert_eq(_press_all(), acts, "WEAR IT on the slip")
+	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
+	_actions.clear()
 	_tap()
 	assert_eq(_actions, ["next level"], "the sheet still taps through")
 	m.show_congratulations(2042, true, "mapwoman")

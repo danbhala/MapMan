@@ -188,13 +188,17 @@
   "IN THE WARDROBE FROM THE START": "初始拥有",
   "RELEASED FOR FINISHING THE GAME": "通关后解锁",
   "NEW IN THE WARDROBE": "衣橱新增",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "可在图纸 001 的衣橱中穿戴",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN加入衣橱",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "扮演她：MAPMAN在终点等你",
   "Wardrobe, %d of %d released": "衣橱，已解锁%d/%d",
   "%s, worn": "%s，穿戴中",
   "Locked, released at level %d": "未解锁，第%d关解锁",
   "Locked, released for finishing the game": "未解锁，通关后解锁",
+  "WEAR IT": "穿上",
+  "NEXT LEVEL": "下一关",
+  "<  RETURN TO SHEET %03d": "<  返回图纸 %03d",
+  "NEXT": "下一关",
+  "MENU": "菜单",
   "TAP TO START": "点击开始",
   "SKIP": "跳过"
 }
