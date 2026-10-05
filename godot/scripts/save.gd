@@ -15,6 +15,8 @@ var vibration_on := true
 var reduce_motion := false
 ## The tilt gauge in the corner of the field (TiltDial).
 var tilt_gauge := true
+## Show the level's best run as a ghost beside MapMan.
+var ghost_on := true
 ## Locale code of the chosen language, or "" to follow the phone's.
 var locale := ""
 ## "sitting" or "standing": how far the phone is tilted back when neutral.
@@ -31,6 +33,8 @@ var checkpoints := {}
 var furthest_level := 1
 ## level number -> {"time": best seconds left, "stars": most stars}
 var bests := {}
+## level number -> the best run there (RunRecord.encode()): the most time left.
+var ghosts := {}
 ## The look MapMan wears (a Wardrobe id), and the looks released so far, in
 ## the order they came. Classic is always there and never listed.
 var worn := "classic"
@@ -94,6 +98,7 @@ func load_all(path := PATH) -> void:
 	vibration_on = _cfg.get_value("options", "vibration", true)
 	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
 	tilt_gauge = _cfg.get_value("options", "tilt_gauge", true)
+	ghost_on = _cfg.get_value("options", "ghost", true)
 	locale = _cfg.get_value("options", "locale", "")
 	# A language this build no longer ships falls back to the phone's.
 	if locale != "" and locale != "en" and locale not in TranslationServer.get_loaded_locales():
@@ -122,6 +127,11 @@ func load_all(path := PATH) -> void:
 	for key in saved_bests:
 		var b: Dictionary = saved_bests[key]
 		bests[int(key)] = {"time": int(b.get("time", 0)), "stars": int(b.get("stars", 0))}
+	var saved_ghosts: Dictionary = _cfg.get_value("progress", "ghosts", {})
+	ghosts.clear()
+	for key in saved_ghosts:
+		if saved_ghosts[key] is String:
+			ghosts[int(key)] = saved_ghosts[key]
 	released = _looks(_cfg.get_value("wardrobe", "released", []))
 	seen = _looks(_cfg.get_value("wardrobe", "seen", []))
 	# Saves from before the wardrobe have the progress but not the looks.
@@ -139,6 +149,7 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("options", "vibration", vibration_on)
 	_cfg.set_value("options", "reduce_motion", reduce_motion)
 	_cfg.set_value("options", "tilt_gauge", tilt_gauge)
+	_cfg.set_value("options", "ghost", ghost_on)
 	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)
 	_cfg.set_value("progress", "highscore", highscore)
@@ -148,6 +159,7 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("progress", "checkpoints", checkpoints)
 	_cfg.set_value("progress", "furthest_level", furthest_level)
 	_cfg.set_value("progress", "bests", bests)
+	_cfg.set_value("progress", "ghosts", ghosts)
 	_cfg.set_value("wardrobe", "worn", worn)
 	_cfg.set_value("wardrobe", "released", released)
 	_cfg.set_value("wardrobe", "seen", seen)
@@ -172,6 +184,19 @@ func record_best(level: int, time_left: int, stars: int) -> bool:
 	if time_left <= old.time and stars <= old.stars:
 		return false
 	bests[level] = {"time": maxi(time_left, old.time), "stars": maxi(stars, old.stars)}
+	save_all()
+	return true
+
+
+## Keeps `run` as the level's ghost if it won with more time left than the
+## one kept so far; true if it did.
+func record_ghost(level: int, run: RunRecord) -> bool:
+	if not run.won():
+		return false
+	var old := RunRecord.decode(ghosts.get(level, ""))
+	if old != null and run.time_left <= old.time_left:
+		return false
+	ghosts[level] = run.encode()
 	save_all()
 	return true
 

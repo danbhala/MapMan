@@ -207,6 +207,13 @@
   "<  RETURN TO SHEET %03d": "<  RETOUR À LA PLANCHE %03d",
   "NEXT": "SUIVANT",
   "MENU": "MENU",
+  "WATCH REPLAY": "VOIR LE REPLAY",
+  "REPLAY — LEVEL %d": "REPLAY — NIVEAU %d",
+  "BEST-RUN GHOST": "FANTÔME RECORD",
+  "%d TRY": [
+    "%d ESSAI",
+    "%d ESSAIS"
+  ],
   "TAP TO START": "TOUCHEZ POUR COMMENCER",
   "SKIP": "PASSER"
 }

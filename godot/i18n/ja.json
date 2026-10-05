@@ -201,6 +201,12 @@
   "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る",
   "NEXT": "次へ",
   "MENU": "メニュー",
+  "WATCH REPLAY": "リプレイを見る",
+  "REPLAY — LEVEL %d": "リプレイ — レベル%d",
+  "BEST-RUN GHOST": "ベスト記録の再現",
+  "%d TRY": [
+    "%d回のトライ"
+  ],
   "TAP TO START": "タップしてスタート",
   "SKIP": "スキップ"
 }
