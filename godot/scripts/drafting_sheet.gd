@@ -337,7 +337,7 @@ static func build_share(m: Menus, draft: Draft, copied := false) -> void:
 	if copied:
 		m._note(m.tr(TEXT.copied), 310, Blueprint.GOLD, 11)
 	var qr := TextureRect.new()
-	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.PREFIX + " " + code))
+	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.share_text(code)))
 	qr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	qr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	qr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

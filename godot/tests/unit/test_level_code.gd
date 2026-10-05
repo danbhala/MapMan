@@ -87,3 +87,22 @@ func test_tiles_added_later_keep_the_alphabet() -> void:
 	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "crumble tiles")
 	rows = ["bjj^%cw"]
 	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "ice and spikes")
+
+
+func test_share_text_is_what_copy_code_and_the_qr_hold() -> void:
+	var spiral := [
+		"bccccccccccpc",
+		"            c",
+		"ccccccccpcc c",
+		"m         c c",
+		"c cccccce c c",
+		"c c       c c",
+		"p cccpccccc c",
+		"c           c",
+		"cccccccccpccc",
+	]
+	var code := LevelCode.encode(spiral, {})
+	var want := "MAPMAN 0S01-6SZK-476Z-CV1S-3E6R-79E6-QS87-FQZ5-CT5D-S4NT-ZPR"
+	assert_eq(LevelCode.share_text(code), want)
+	assert_eq(LevelCode.share_text(LevelCode.clean(code)), want, "bare codes come out pretty")
+	assert_eq(LevelCode.decode(want).rows, spiral, "and it reads back")

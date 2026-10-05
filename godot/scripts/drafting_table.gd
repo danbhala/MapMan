@@ -143,7 +143,7 @@ func action(act: String) -> bool:
 			if draft != null and draft.signed:
 				DraftingSheet.build_share(m, draft)
 		"copy code":
-			DisplayServer.clipboard_set(LevelCode.PREFIX + " " + draft.code())
+			DisplayServer.clipboard_set(LevelCode.share_text(draft.code()))
 			DraftingSheet.build_share(m, draft, true)
 		"end custom":
 			m.close()

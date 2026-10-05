@@ -306,6 +306,12 @@ static func pretty(code: String) -> String:
 	return "-".join(groups)
 
 
+## The text a level is shared as: what COPY CODE puts on the clipboard and
+## the QR code holds, "MAPMAN 0MM3-C7P1-…". Reading takes it back (clean()).
+static func share_text(code: String) -> String:
+	return PREFIX + " " + pretty(code)
+
+
 ## How many characters a code takes, not counting dashes.
 static func length(code: String) -> int:
 	return clean(code).length()
