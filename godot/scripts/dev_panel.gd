@@ -162,6 +162,7 @@ func _build_panel(theme: Theme) -> Control:
 	box.add_child(_slider("fast_threshold", "Tilt for full speed (g)", 0.05, 0.8, 0.01))
 	box.add_child(_slider("shake_threshold", "Shake to get unstuck (g)", 0.1, 2.0, 0.05))
 	box.add_child(_slider("guard_hold", "Assisted: rest before a death step (s)", 0.0, 1.0, 0.05))
+	box.add_child(_slider("spike_cycle", "Spikes: seconds per rise and fall", 1.0, 4.0, 0.1))
 	row = HBoxContainer.new()
 	row.add_child(
 		_toggle("Invert left/right", Dev.t("invert_x"), func(on): Dev.set_tuning("invert_x", on))

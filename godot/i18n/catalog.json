@@ -764,28 +764,33 @@
       "max": 170
     },
     {
-      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
+      "id": "Spikes rise and fall on a beat, with a warning first.\nWait for them to drop, then cross before they rise again.",
       "note": "Tutorial lesson 9",
       "max": 170
     },
     {
-      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
+      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
       "note": "Tutorial lesson 10",
       "max": 170
     },
     {
-      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
+      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
       "note": "Tutorial lesson 11",
       "max": 170
     },
     {
-      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
+      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
       "note": "Tutorial lesson 12",
       "max": 170
     },
     {
-      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
       "note": "Tutorial lesson 13",
+      "max": 170
+    },
+    {
+      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "note": "Tutorial lesson 14",
       "max": 170
     },
     {

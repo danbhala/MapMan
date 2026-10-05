@@ -618,22 +618,30 @@ msgstr ""
 "Es gibt kein Zurück, also plane den Weg voraus."
 
 #. Tutorial lesson 9
+msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"Stacheln steigen und sinken im Takt, mit einer Warnung vorher.\n"
+"Warte, bis sie unten sind, und geh hinüber, bevor sie wieder steigen."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Diese Felder schenken dir Zeit oder kosten dich Zeit. Für die Restzeit auf der Uhr gibt es am Ende jedes Levels Bonuspunkte."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Diese Felder lassen andere Felder verschwinden und wieder auftauchen. Versteckte Felder sind weiter begehbar – merk dir also, wo sie sind."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Ab und zu triffst du auf einen Checkpoint. Von jedem erreichten Checkpoint aus kannst du neu starten, statt ganz von vorn zu beginnen."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Tippe während des Spiels auf den Bildschirm, um zu pausieren. Hältst du das Gerät anders? Tippe auf die Eckanzeige, um das als neue Mitte zu setzen."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Alles bereit – geh zum Ausgang, um das Spiel zu starten. Viel Spaß!"
 

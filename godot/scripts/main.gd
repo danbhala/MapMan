@@ -521,6 +521,9 @@ func move(step: Vector2i, seconds: float) -> void:
 
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
+	map.spike_cycle = Dev.t("spike_cycle")
+	if map.update_spikes(delta):
+		Audio.play("spikes")
 	if map.moving:
 		if not _was_moving and map.crumbles.get(map.moving_from(), false):
 			Audio.play("crumble")  # the tile he just left falls away behind him
@@ -574,6 +577,10 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.deaths) and not dead:
 		map.unhide_tile_at(map.position_key)
+		lose_life()
+
+	# Spikes kill while up: stepping onto them, or standing there as they rise.
+	if map.spikes_up_at(map.position_key) and not dead:
 		lose_life()
 
 	if map.on(map.lives):
