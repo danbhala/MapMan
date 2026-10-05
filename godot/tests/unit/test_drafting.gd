@@ -235,6 +235,41 @@ func test_a_scanned_code_plays_and_is_kept() -> void:
 	assert_eq(game.menus.current, "drafting", "back to the table")
 
 
+func test_a_scanned_link_plays_too() -> void:
+	var code := _corridor().code()
+	game.drafting.show()
+	game._on_menu_action("scan code")
+	DraftingSheet._on_scanned(LevelCode.link(code), game.menus)
+	assert_eq(game.custom, "received")
+	assert_eq(Save.received, [LevelCode.pretty(code)])
+
+
+# --- level links ---------------------------------------------------------------
+
+
+func test_a_level_link_plays_once_and_comes_back_to_the_main_menu() -> void:
+	Save.furthest_level = 1
+	var link := LevelCode.link(_corridor().code())
+	game.drafting.check_link(link)
+	assert_eq(game.custom, "received", "plays before the table is open")
+	_loaded()
+	_win()
+	assert_eq(game.menus.current, "main")
+	game.drafting.check_link(link)
+	assert_eq(game.custom, "", "the same link doesn't play again")
+
+
+func test_a_level_link_waits_for_the_end_of_the_main_game() -> void:
+	game.new_game(1)
+	var link := LevelCode.link(_corridor().code())
+	game.drafting.check_link(link)
+	assert_eq(game.custom, "")
+	game.game_over(false)
+	game.show_start_menu()
+	game.drafting.check_link(link)
+	assert_eq(game.custom, "received")
+
+
 func test_a_scanned_qr_that_isnt_a_level_stays_on_the_sheet() -> void:
 	game.drafting.show()
 	game._on_menu_action("scan code")

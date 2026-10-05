@@ -35,7 +35,10 @@ runs:
       run: |
         mkdir -p godot/build
         godot --headless --path godot --import
-        godot --headless --path godot --export-release "$PRESET" build/unsigned.apk
+        # A gradle build (for the level links' manifest entry, addons/level_links):
+        # the template is unpacked into godot/android/ (ignored by git).
+        godot --headless --path godot --install-android-build-template \
+          --export-release "$PRESET" build/unsigned.apk
         test -s godot/build/unsigned.apk
 
     - name: Sign

@@ -54,7 +54,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
   `main.gd` plays drafts and friends' codes with `custom` set ("draft",
   "received"), like practice: no lives, score or saving;
-  `scripts/drafting_table.gd` (`main.drafting`) runs that flow.
+  `scripts/drafting_table.gd` (`main.drafting`) runs that flow, and plays
+  level links Android opens the game with (`addons/level_links/` puts them
+  in the manifest; the Android presets use the gradle build for it).
 - Tries (`scripts/run_record.gd`): `main.gd` records every try at a level
   as tile steps and when each began on its run clock (no tilt: a step is
   always a whole tile at one of two speeds), about two bytes a step. The
