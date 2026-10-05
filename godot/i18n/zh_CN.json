@@ -202,6 +202,12 @@
   "<  RETURN TO SHEET %03d": "<  返回图纸 %03d",
   "NEXT": "下一关",
   "MENU": "菜单",
+  "WATCH REPLAY": "回放",
+  "REPLAY — LEVEL %d": "回放 — 第%d关",
+  "BEST-RUN GHOST": "最佳记录回放",
+  "%d TRY": [
+    "%d次"
+  ],
   "TAP TO START": "点击开始",
   "SKIP": "跳过"
 }

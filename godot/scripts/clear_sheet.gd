@@ -16,6 +16,9 @@ const BUTTON_WS := [112.0, 126.0, 126.0]
 const GAP := 8.0
 const BUTTON_FONT := 14
 const NOTE_Y := 296.0
+## WATCH REPLAY, under MapMan on the far side.
+const REPLAY_POS := Vector2(448, 248)
+const REPLAY_W := 196.0
 
 ## The count-up: each row's figure and the TOTAL climb together in at most
 ## TICKS ticks this far apart, so a big bonus takes no longer than a small
@@ -30,8 +33,9 @@ const TICK_RISE := 0.6
 ## finishes the count; after it, a tap goes on to the next level. `args` are
 ## Menus.show_end_level's: score, level_bonus, time_bonus, stars, checkpoint,
 ## level, seconds_left (the clock at the exit, the time bonus's quantity),
-## last (level 100: the final sheet comes next) and released (the look this
-## first clear released, if any, for a slip with a button to wear it).
+## last (level 100: the final sheet comes next), released (the look this
+## first clear released, if any, for a slip with a button to wear it) and
+## tries (how many tries the replay shows: WATCH REPLAY when there are any).
 static func end_level(m: Menus, args: Array) -> void:
 	var score: int = args[0]
 	var level_bonus: int = args[1]
@@ -42,6 +46,7 @@ static func end_level(m: Menus, args: Array) -> void:
 	var seconds_left: int = args[6]
 	var last: bool = args[7]
 	var released: String = args[8]
+	var tries: int = args[9] if args.size() > 9 else 0
 	# The question before quitting from here numbers itself after this sheet.
 	m._level = level
 	m._tutorial = false
@@ -75,6 +80,8 @@ static func end_level(m: Menus, args: Array) -> void:
 	for i in acts.size():
 		buttons.append(_side_button(m, x, BUTTON_WS[i], texts[i], a11y[i], acts[i]))
 		x += BUTTON_WS[i] + GAP
+	if tries > 0:
+		buttons.append(_replay_button(m, tries))
 	if released != "":
 		WardrobeSheet.release_slip(m, released)
 	else:
@@ -112,6 +119,19 @@ static func _side_button(
 	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	b.accessibility_name = m._sentence(a11y)
 	m._connect(b, act)
+	return b
+
+
+## WATCH REPLAY: every try at the level played back at once (Replay).
+static func _replay_button(m: Menus, tries: int) -> Button:
+	var pos := Vector2(m._mx(REPLAY_POS.x, REPLAY_W), REPLAY_POS.y)
+	var text := m.tr("WATCH REPLAY")
+	var b := Blueprint.item(m._panel, text, pos, Vector2(REPLAY_W, Blueprint.TAP_HEIGHT))
+	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.accessibility_name = (
+		"%s, %s" % [m._sentence(text), m._sentence(m.tr_n("%d TRY", "%d TRIES", tries) % tries)]
+	)
+	m._connect(b, "replay")
 	return b
 
 

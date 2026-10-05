@@ -202,6 +202,12 @@
   "<  RETURN TO SHEET %03d": "<  PAFTA %03d'E DÖN",
   "NEXT": "SONRAKİ",
   "MENU": "MENÜ",
+  "WATCH REPLAY": "TEKRARI İZLE",
+  "REPLAY — LEVEL %d": "TEKRAR — BÖLÜM %d",
+  "BEST-RUN GHOST": "REKOR HAYALETİ",
+  "%d TRY": [
+    "%d DENEME"
+  ],
   "TAP TO START": "BAŞLAMAK İÇİN DOKUN",
   "SKIP": "GEÇ"
 }

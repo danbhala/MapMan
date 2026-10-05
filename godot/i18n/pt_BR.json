@@ -208,6 +208,13 @@
   "<  RETURN TO SHEET %03d": "<  VOLTAR À FOLHA %03d",
   "NEXT": "PRÓXIMO",
   "MENU": "MENU",
+  "WATCH REPLAY": "VER REPLAY",
+  "REPLAY — LEVEL %d": "REPLAY — NÍVEL %d",
+  "BEST-RUN GHOST": "FANTASMA RECORDE",
+  "%d TRY": [
+    "%d TENTATIVA",
+    "%d TENTATIVAS"
+  ],
   "TAP TO START": "TOQUE PARA COMEÇAR",
   "SKIP": "PULAR"
 }

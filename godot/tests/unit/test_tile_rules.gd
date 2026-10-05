@@ -328,6 +328,21 @@ func test_steering_is_ignored_while_sliding() -> void:
 	assert_eq(game.map._move_to, Vector2i(2, 1), "still sliding right")
 
 
+func test_a_slide_is_recorded_for_the_replay() -> void:
+	_start("bjjjcw")
+	game._tries.begin(1)
+	_walk_and_slide(0)
+	var run: RunRecord = game._tries.run
+	assert_eq(run.step_count(), 4, "the step on to the ice and three slide steps")
+	assert_eq(
+		run.end_key(game.map.start_position), game.map.position_key, "replays end where he did"
+	)
+	for i in range(1, 4):
+		assert_almost_eq(
+			run.step_seconds(i), game.SLIDE_TIME, 0.001, "slide steps play at slide speed"
+		)
+
+
 func test_slide_path_and_safe_route_follow_the_ice() -> void:
 	_start("bjjjcw")
 	assert_eq(

@@ -839,6 +839,24 @@ msgstr "Verrouillé, déblocage au niveau %d"
 msgid "Locked, released for finishing the game"
 msgstr "Verrouillé, déblocage en fin de jeu"
 
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "VOIR LE REPLAY"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "REPLAY — NIVEAU %d"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "%d ESSAI"
+msgstr[1] "%d ESSAIS"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "FANTÔME RECORD"
+
 #. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
 msgid "TAP TO START"
 msgstr "TOUCHEZ POUR COMMENCER"
