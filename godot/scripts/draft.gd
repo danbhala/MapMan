@@ -163,6 +163,25 @@ static func from_save(slot_number: int, saved: Variant) -> Draft:
 	return d
 
 
+## A draft of a level in data/levels.json's shape (the dev menu's examples),
+## centred on the grid.
+static func from_level(slot_number: int, level: Dictionary) -> Draft:
+	var d := Draft.new(slot_number)
+	var grid := LevelCode.grid_of(level)
+	var trimmed := LevelCode.trim(grid[0], grid[1])
+	if trimmed.is_empty():
+		return d
+	var rows: Array = trimmed[0]
+	@warning_ignore("integer_division")
+	var at := Vector2i((COLUMNS - String(rows[0]).length()) / 2, (ROWS - rows.size()) / 2)
+	for y in rows.size():
+		for x in String(rows[y]).length():
+			d._put(at + Vector2i(x, y), rows[y][x])
+	for key: Vector2i in trimmed[1]:
+		d.hidden[at + key] = true
+	return d
+
+
 static func _known(line: String) -> bool:
 	for ch in line:
 		if not LevelCode.SYMBOLS.contains(ch):

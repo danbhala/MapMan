@@ -8,7 +8,8 @@ short code. There are no accounts and no server: the code *is* the level.
 - **Unlocks** once you reach level 11 (or have finished the game): sheet 001
   gains a sixth row, DRAFTING TABLE.
 - **Six drafts.** Tap a slot to open the editor: a 17 × 12 grid, a palette of
-  every tile the campaign uses, UNDO (one step per stroke), TEST and SHARE.
+  every tile the campaign uses, UNDO (one step per stroke), CLEAR (which
+  UNDO also takes back), TEST and SHARE.
   Drags paint; one start tile per level (placing another moves it).
 - **Beat it to share it.** TEST plays the draft like practice: no lives, no
   score, no saving. Reaching an exit **signs** it. Any later edit unsigns it.
@@ -21,6 +22,10 @@ short code. There are no accounts and no server: the code *is* the level.
   RECEIVED LEVELS.
 - The CODE meter shows how long the code is; it turns pink past 64
   characters. Longer codes still work, they're just harder to type.
+
+- **Dev builds:** the DEV menu's "Seed drafting table" fills five drafts
+  and five received codes with campaign levels and unlocks the table;
+  "Clear drafting table" empties it.
 
 ## Level codes
 

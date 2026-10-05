@@ -268,5 +268,6 @@
   "Received level %d": "Livello ricevuto %d",
   "Level code": "Codice livello",
   "QR code of the level": "Codice QR del livello",
-  "CRUMBLE TILE": "CASELLA FRIABILE"
+  "CRUMBLE TILE": "CASELLA FRIABILE",
+  "CLEAR": "CANCELLA"
 }

@@ -1059,3 +1059,7 @@ msgstr "레벨 QR 코드"
 #. Editor palette: a tile that falls away once MapMan steps off it
 msgid "CRUMBLE TILE"
 msgstr "무너지는 타일"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "지우기"

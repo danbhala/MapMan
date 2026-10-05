@@ -1059,3 +1059,7 @@ msgstr "關卡QR碼"
 #. Editor palette: a tile that falls away once MapMan steps off it
 msgid "CRUMBLE TILE"
 msgstr "碎裂地磚"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "清空"

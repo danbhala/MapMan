@@ -38,6 +38,7 @@ const TEXT := {
 	"draft_title": "DRAFT %d",
 	"back": "BACK",
 	"undo": "UNDO",
+	"clear": "CLEAR",
 	"test": "TEST",
 	"share": "SHARE",
 	"code_meter": "CODE",
@@ -108,8 +109,8 @@ const STATUS_Y := 44.0
 const GRID_POS := Vector2(24, 62)
 const GRID_CELL := Vector2(29, 29.0 * 23.0 / 32.0)
 const BUTTONS_Y := 326.0
-const BUTTON := Vector2(116, 34)
-const BUTTON_GAP := 10.0
+const BUTTON := Vector2(92, 34)
+const BUTTON_GAP := 8.25
 const PALETTE_POS := Vector2(532, 96)
 const SWATCH := 28.0
 const SWATCH_PITCH := 31.0
@@ -321,6 +322,7 @@ class Editor:
 	var _status: Label
 	var _meter: Label
 	var _undo: Button
+	var _clear: Button
 	var _share: Button
 	var _test: Button
 	var _swatches := {}
@@ -340,16 +342,18 @@ class Editor:
 		grid.size = Vector2(GRID_CELL.x * Draft.COLUMNS, GRID_CELL.y * Draft.ROWS)
 		grid.stroke_ended.connect(_stroke_ended)
 		add_child(grid)
-		var names := ["back", "undo", "test", "share"]
-		var acts := ["drafting table", "", "test draft", "share draft"]
+		var names := ["back", "undo", "clear", "test", "share"]
+		var acts := ["drafting table", "", "", "test draft", "share draft"]
 		var buttons: Array[Button] = []
 		for i in names.size():
 			var x := GRID_POS.x + i * (BUTTON.x + BUTTON_GAP)
 			buttons.append(_button(m.tr(TEXT[names[i]]), x, acts[i]))
 		_undo = buttons[1]
-		_test = buttons[2]
-		_share = buttons[3]
+		_clear = buttons[2]
+		_test = buttons[3]
+		_share = buttons[4]
 		_undo.pressed.connect(_on_undo)
+		_clear.pressed.connect(_on_clear)
 		for i in TOOLS.size():
 			_swatch(i)
 		var head := m._text(
@@ -419,6 +423,14 @@ class Editor:
 			queue_redraw_grid()
 			_refresh()
 
+	## Wipe the grid, as one step UNDO can take back.
+	func _on_clear() -> void:
+		draft.begin_stroke()
+		draft.clear()
+		Save.store_draft(draft)
+		queue_redraw_grid()
+		_refresh()
+
 	func queue_redraw_grid() -> void:
 		for c in get_children():
 			if c is DraftGrid:
@@ -444,6 +456,7 @@ class Editor:
 				picked = i
 		_status.text = m.tr(TEXT.tool_status) % [_tool_name(picked), m.tr(state)]
 		_undo.disabled = not draft.can_undo()
+		_clear.disabled = draft.is_empty()
 		_test.disabled = draft.problem() != ""
 		_share.disabled = not draft.signed
 		var length := LevelCode.length(draft.code())

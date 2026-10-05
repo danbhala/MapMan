@@ -183,3 +183,36 @@ func test_back_steps_out_of_the_drafting_sheets() -> void:
 	assert_eq(game.menus.current, "drafting")
 	game.go_back()
 	assert_eq(game.menus.current, "main")
+
+
+func test_clear_wipes_the_grid_and_undo_brings_it_back() -> void:
+	game.drafting.draft = _corridor()
+	game.drafting.open_draft(0)
+	var found: Array = game.menus._panel.find_children("*", "Control", true, false)
+	var editor: Control = found.filter(func(c): return c.has_method("_on_clear"))[0]
+	editor._on_clear()
+	assert_true(game.drafting.draft.is_empty())
+	assert_true(Save.all_drafts()[0].is_empty(), "saved cleared")
+	editor._on_undo()
+	assert_eq(game.drafting.draft.tile(Vector2i(5, 3)), "e")
+
+
+func test_dev_menu_seeds_and_clears_the_table() -> void:
+	Dev.enabled = true
+	var panel := DevPanel.new(game)
+	add_child_autofree(panel)
+	Save.furthest_level = 1
+	panel._on_seed_drafting()
+	var drafts := Save.all_drafts()
+	assert_true(drafts[0].signed)
+	assert_eq(drafts[2].problem(), "", "a playable draft")
+	assert_true(drafts[Draft.SLOTS - 1].is_empty())
+	assert_eq(Save.received.size(), DevPanel.SEED_RECEIVED.size())
+	assert_true(Save.drafting_open())
+	for code in Save.received:
+		assert_eq(game.drafting.play_code(code), "", code)
+		game.game_over(false)
+	panel._on_clear_drafting()
+	assert_true(Save.all_drafts()[0].is_empty())
+	assert_eq(Save.received, [])
+	Dev.enabled = false

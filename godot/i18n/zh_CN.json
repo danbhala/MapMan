@@ -261,5 +261,6 @@
   "Received level %d": "收到的关卡 %d",
   "Level code": "关卡代码",
   "QR code of the level": "关卡二维码",
-  "CRUMBLE TILE": "碎裂地砖"
+  "CRUMBLE TILE": "碎裂地砖",
+  "CLEAR": "清空"
 }

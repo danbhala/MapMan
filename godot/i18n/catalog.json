@@ -1324,6 +1324,11 @@
       "id": "CRUMBLE TILE",
       "note": "Editor palette: a tile that falls away once MapMan steps off it",
       "max": 30
+    },
+    {
+      "id": "CLEAR",
+      "note": "Editor button: wipe the whole grid (UNDO brings it back)",
+      "max": 10
     }
   ]
 }

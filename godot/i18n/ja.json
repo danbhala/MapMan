@@ -261,5 +261,6 @@
   "Received level %d": "受け取ったレベル %d",
   "Level code": "レベルコード",
   "QR code of the level": "レベルのQRコード",
-  "CRUMBLE TILE": "崩れるタイル"
+  "CRUMBLE TILE": "崩れるタイル",
+  "CLEAR": "全消去"
 }

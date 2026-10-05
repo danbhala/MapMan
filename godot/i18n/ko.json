@@ -261,5 +261,6 @@
   "Received level %d": "받은 레벨 %d",
   "Level code": "레벨 코드",
   "QR code of the level": "레벨 QR 코드",
-  "CRUMBLE TILE": "무너지는 타일"
+  "CRUMBLE TILE": "무너지는 타일",
+  "CLEAR": "지우기"
 }

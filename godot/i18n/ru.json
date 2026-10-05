@@ -275,5 +275,6 @@
   "Received level %d": "Полученный уровень %d",
   "Level code": "Код уровня",
   "QR code of the level": "QR-код уровня",
-  "CRUMBLE TILE": "ОСЫПАЮЩАЯСЯ КЛЕТКА"
+  "CRUMBLE TILE": "ОСЫПАЮЩАЯСЯ КЛЕТКА",
+  "CLEAR": "ОЧИСТИТЬ"
 }

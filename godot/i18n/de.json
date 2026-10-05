@@ -268,5 +268,6 @@
   "Received level %d": "Erhaltenes Level %d",
   "Level code": "Levelcode",
   "QR code of the level": "QR-Code des Levels",
-  "CRUMBLE TILE": "BRÖSELFELD"
+  "CRUMBLE TILE": "BRÖSELFELD",
+  "CLEAR": "LEEREN"
 }

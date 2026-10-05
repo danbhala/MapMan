@@ -1059,3 +1059,7 @@ msgstr "Kode QR level"
 #. Editor palette: a tile that falls away once MapMan steps off it
 msgid "CRUMBLE TILE"
 msgstr "UBIN RUNTUH"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "BERSIHKAN"

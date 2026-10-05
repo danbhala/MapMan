@@ -296,5 +296,6 @@
   "Received level %d": "المستوى المستلم %d",
   "Level code": "رمز المستوى",
   "QR code of the level": "رمز QR للمستوى",
-  "CRUMBLE TILE": "بلاطة متفتتة"
+  "CRUMBLE TILE": "بلاطة متفتتة",
+  "CLEAR": "مسح"
 }

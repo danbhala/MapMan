@@ -1068,3 +1068,7 @@ msgstr "Código QR do nível"
 #. Editor palette: a tile that falls away once MapMan steps off it
 msgid "CRUMBLE TILE"
 msgstr "BLOCO QUE DESMORONA"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "LIMPAR"

@@ -268,5 +268,6 @@
   "Received level %d": "Niveau reçu %d",
   "Level code": "Code de niveau",
   "QR code of the level": "Code QR du niveau",
-  "CRUMBLE TILE": "CASE QUI S'EFFRITE"
+  "CRUMBLE TILE": "CASE QUI S'EFFRITE",
+  "CLEAR": "EFFACER"
 }

@@ -268,5 +268,6 @@
   "Received level %d": "Nivel recibido %d",
   "Level code": "Código de nivel",
   "QR code of the level": "Código QR del nivel",
-  "CRUMBLE TILE": "CASILLA QUE SE DESMORONA"
+  "CRUMBLE TILE": "CASILLA QUE SE DESMORONA",
+  "CLEAR": "BORRAR"
 }
