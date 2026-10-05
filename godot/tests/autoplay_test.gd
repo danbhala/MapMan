@@ -254,6 +254,12 @@ func step_to(target: Vector2i) -> bool:
 			Input.action_release("shake")
 			await frames(2)
 			continue
+		if map.spikes.has(target) and not map.moving and not _spikes_clear(map, target):
+			# Wait for the spikes ahead to drop, unless the ones underfoot are
+			# about to rise: then go while the way is at least not up.
+			Input.action_release(act)
+			await process_frame
+			continue
 		for other in ACTIONS.values():
 			if other != act:
 				Input.action_release(other)
@@ -267,6 +273,16 @@ func step_to(target: Vector2i) -> bool:
 			return false
 	Input.action_release(act)
 	return false
+
+
+## True when it is safe to step onto the spike tile at target now: they have
+## just dropped (time to land and leave), or the tile underfoot is a spike
+## about to rise and the target is at least not up.
+func _spikes_clear(map: LevelMap, target: Vector2i) -> bool:
+	var here := map.position_key
+	if map.spikes.has(here) and map.spike_phase(here) >= 0.4:
+		return map.spike_state(target) != 2
+	return map.spike_phase(target) < 0.25
 
 
 ## Breadth-first search over walkable tiles, never stepping on a death tile
@@ -289,7 +305,7 @@ func find_path(map: LevelMap, start: Vector2i, goals: Array) -> Array[Vector2i]:
 				var tile = map.tiles[nxt]
 				if tile.blank or map.deaths.has(nxt) or map.broken.has(nxt):
 					continue
-				if avoid_time_loss and map.less_times.has(nxt):
+				if avoid_time_loss and (map.less_times.has(nxt) or map.spikes.has(nxt)):
 					continue
 				prev[nxt] = cur
 				queue.append(nxt)

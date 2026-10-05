@@ -567,6 +567,9 @@ func _end_replay() -> void:
 
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
+	map.spike_cycle = Dev.t("spike_cycle")
+	if map.update_spikes(delta):
+		Audio.play("spikes")
 	if map.moving:
 		if not _was_moving and map.crumbles.get(map.moving_from(), false):
 			Audio.play("crumble")  # the tile he just left falls away behind him
@@ -620,6 +623,10 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.deaths) and not dead:
 		map.unhide_tile_at(map.position_key)
+		lose_life()
+
+	# Spikes kill while up: stepping onto them, or standing there as they rise.
+	if map.spikes_up_at(map.position_key) and not dead:
 		lose_life()
 
 	if map.on(map.lives):
@@ -1099,33 +1106,6 @@ func _on_menu_action(act: String) -> void:
 			new_game(1, true)
 		"restart from checkpoint":
 			menus.show_restart(Save.checkpoints.keys())
-		"options":
-			menus.show_options()
-		"music on", "music off":
-			Audio.set_music_enabled(act == "music on")
-			menus.show_options()
-		"fx on", "fx off":
-			Audio.set_fx_enabled(act == "fx on")
-			menus.show_options()
-		"vibration on", "vibration off":
-			Save.vibration_on = act == "vibration on"
-			Save.save_all()
-			Haptics.feel("toggle")
-			menus.show_options()
-		"ghost on", "ghost off":
-			Save.ghost_on = act == "ghost on"
-			Save.save_all()
-			menus.show_options()
-		"reduce motion on", "reduce motion off":
-			Save.reduce_motion = act == "reduce motion on"
-			Save.save_all()
-			menus.show_options()
-		"tilt gauge on", "tilt gauge off":
-			Save.tilt_gauge = act == "tilt gauge on"
-			Save.save_all()
-			menus.show_options()
-		"language":
-			menus.show_language()
 		"wardrobe":
 			menus.show_wardrobe(level if _between else 0)
 		"main menu":
@@ -1197,11 +1177,8 @@ func _on_menu_action(act: String) -> void:
 			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
 			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
 		_:
-			if act.begins_with("language "):
-				# "language system" follows the phone; otherwise a locale code.
-				var code := act.get_slice(" ", 1)
-				Save.set_locale("" if code == "system" else code)
-				menus.show_language()
+			if OptionsActions.handle(act, menus):
+				pass  # the Options sheet, its switches and the language sheet
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):

@@ -615,22 +615,30 @@ msgstr ""
 "沒有回頭路，所以請提前規劃路線。"
 
 #. Tutorial lesson 9
+msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"尖刺會先發出警示，然後有節奏地升降。\n"
+"等它們落下後再通過，趕在再次升起之前。"
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "這些地磚會增加或減少你的時間。每關結束時，剩餘時間會換算成獎勵分。"
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "這些地磚會讓其他地磚消失再重現。地磚隱藏時仍然可以踩，所以要記住它們的位置。"
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "你會不時遇到檢查點。每到達一個檢查點，就可以從那裡重新開始，而不必回到起點。"
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "遊戲中點一下螢幕即可暫停。換了握持姿勢？點一下角落的指示器，即可將目前角度設為新的中心。"
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "一切就緒，前往出口開始遊戲吧。玩得開心！"
 
