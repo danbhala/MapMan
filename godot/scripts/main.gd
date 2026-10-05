@@ -9,6 +9,7 @@ const POINTS_PER_LEVEL := 10
 const INITIAL_LIVES := 3
 const INITIAL_SECONDS := 20.0
 const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
+const SLIDE_TIME := 7.0 / 60.0  # seconds per tile while sliding on ice
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
@@ -80,6 +81,8 @@ var losses := {}
 var _bg: ColorRect
 var _grid: Blueprint.Grid
 var _was_moving := false
+var _sliding := false  # a slide on ice is under way (one sound per slide)
+var _slide_step := Vector2i.ZERO  # the screen direction of the last step, for ice
 var _lose_reason := "death"
 
 var _moves := 0  # moves made in this attempt at the level, for the play log
@@ -539,9 +542,14 @@ func _guarded(actual: Vector2i) -> bool:
 
 
 func move(step: Vector2i, seconds: float) -> void:
-	map.move(-step if reverse else step, seconds)
+	_start_move(-step if reverse else step, seconds)
+
+
+## A move in screen directions, whatever the controls say.
+func _start_move(actual: Vector2i, seconds: float) -> void:
+	map.move(actual, seconds)
 	if map.moving:
-		_tries.step(-step if reverse else step, seconds)
+		_tries.step(actual, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
@@ -575,6 +583,9 @@ func _end_replay() -> void:
 
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
+	map.spike_cycle = Dev.t("spike_cycle")
+	if map.update_spikes(delta):
+		Audio.play("spikes")
 	if map.moving:
 		if not _was_moving and map.crumbles.get(map.moving_from(), false):
 			Audio.play("crumble")  # the tile he just left falls away behind him
@@ -584,6 +595,7 @@ func update_player(delta: float) -> void:
 	if _was_moving:
 		_was_moving = false
 		_landed_at = _now()
+		_slide_step = map.last_step()
 		player.land()
 	if map.at_end():
 		player.cheer()
@@ -630,6 +642,10 @@ func update_player(delta: float) -> void:
 		map.unhide_tile_at(map.position_key)
 		lose_life()
 
+	# Spikes kill while up: stepping onto them, or standing there as they rise.
+	if map.spikes_up_at(map.position_key) and not dead:
+		lose_life()
+
 	if map.on(map.lives):
 		Audio.play("life")
 		map.clear(map.lives)
@@ -655,6 +671,21 @@ func update_player(delta: float) -> void:
 		map.float_text(tr(FLOATS.less_time), Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
+
+	# Ice: he slides on the way he came until a tile that isn't ice, or an
+	# edge, stops him. Steering is ignored on the way (move_player() skips
+	# it while a move is under way). Death and a sticky tile end the slide.
+	if map.on(map.ices) and not dead and not stuck and _slide_step != Vector2i.ZERO:
+		if map.walkable(map.position_key + _slide_step):
+			if not _sliding:
+				Audio.play("slide")
+			_sliding = true
+			_start_move(_slide_step, SLIDE_TIME)
+			player.face_direction(_slide_step, true)
+		else:
+			_sliding = false
+	else:
+		_sliding = false
 
 	set_background()
 	set_controls_message()
@@ -1098,33 +1129,6 @@ func _on_menu_action(act: String) -> void:
 			new_game(1, true)
 		"restart from checkpoint":
 			menus.show_restart(Save.checkpoints.keys())
-		"options":
-			menus.show_options()
-		"music on", "music off":
-			Audio.set_music_enabled(act == "music on")
-			menus.show_options()
-		"fx on", "fx off":
-			Audio.set_fx_enabled(act == "fx on")
-			menus.show_options()
-		"vibration on", "vibration off":
-			Save.vibration_on = act == "vibration on"
-			Save.save_all()
-			Haptics.feel("toggle")
-			menus.show_options()
-		"ghost on", "ghost off":
-			Save.ghost_on = act == "ghost on"
-			Save.save_all()
-			menus.show_options()
-		"reduce motion on", "reduce motion off":
-			Save.reduce_motion = act == "reduce motion on"
-			Save.save_all()
-			menus.show_options()
-		"tilt gauge on", "tilt gauge off":
-			Save.tilt_gauge = act == "tilt gauge on"
-			Save.save_all()
-			menus.show_options()
-		"language":
-			menus.show_language()
 		"wardrobe":
 			menus.show_wardrobe(level if _between else 0)
 		"main menu":
@@ -1196,11 +1200,8 @@ func _on_menu_action(act: String) -> void:
 			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
 			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
 		_:
-			if act.begins_with("language "):
-				# "language system" follows the phone; otherwise a locale code.
-				var code := act.get_slice(" ", 1)
-				Save.set_locale("" if code == "system" else code)
-				menus.show_language()
+			if OptionsActions.handle(act, menus):
+				pass  # the Options sheet, its switches and the language sheet
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):

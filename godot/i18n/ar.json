@@ -168,6 +168,8 @@
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "انتبه أيضًا للأرواح الإضافية،\nلكن احذر، فهي تبعدك عن طريقك\nأكثر من نقاط المكافأة",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "احذر البلاطات السامة، فإن دست عليها خسرت روحًا.",
   "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "تتفتت هذه البلاطات بعد أن تغادرها.\nلا عودة إلى الوراء، فخطط لطريقك مسبقًا.",
+  "Spikes rise and fall on a beat, with a warning first.\nWait for them to drop, then cross before they rise again.": "ترتفع الأشواك وتنخفض على إيقاع، مع تحذير أولًا.\nانتظر حتى تنخفض، ثم اعبر قبل أن ترتفع من جديد.",
+  "Ice sends you sliding until a plain tile or the edge stops you.\nYou can't steer on it, so line up before you set off.": "يجعلك الجليد تنزلق حتى توقفك بلاطة عادية أو الحافة.\nلا يمكنك التوجيه عليه، فاستقم قبل أن تنطلق.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "هذه البلاطات تمنحك وقتًا إضافيًا أو تخسرك وقتًا. ستحصل على نقاط مكافأة مقابل الوقت المتبقي عند إنهاء كل مستوى.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "هذه البلاطات تجعل بلاطات أخرى تختفي وتظهر من جديد. يمكنك الدوس على البلاطات المخفية، فتذكر أماكنها.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "ستصادف نقطة تفتيش بين الحين والآخر. كلما بلغت نقطة تفتيش أمكنك البدء منها بدلًا من العودة إلى البداية.",
@@ -317,5 +319,8 @@
   "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "لا يُسمح لـ MAPMAN باستخدام الكاميرا. اسمح بذلك من إعدادات الهاتف",
   "THAT QR CODE ISN'T A MAPMAN LEVEL": "رمز QR هذا ليس مستوى من MAPMAN",
   "TYPE A CODE INSTEAD": "اكتب الرمز بدلًا من ذلك",
-  "Camera view": "عرض الكاميرا"
+  "Camera view": "عرض الكاميرا",
+  "ICE": "جليد",
+  "SPIKES": "أشواك",
+  "OFF-BEAT SPIKES": "أشواك متأخرة"
 }

@@ -615,22 +615,38 @@ msgstr ""
 "Tidak bisa kembali, jadi rencanakan jalanmu."
 
 #. Tutorial lesson 9
+msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"Duri naik dan turun mengikuti irama, dengan peringatan lebih dulu.\n"
+"Tunggu sampai turun, lalu lewati sebelum naik lagi."
+
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Es membuatmu meluncur sampai ubin biasa atau tepi menghentikanmu.\n"
+"Kamu tidak bisa berbelok di atasnya, jadi luruskan arah dulu."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Ubin-ubin ini memberi waktu ekstra atau mengurangi waktumu. Kamu dapat poin bonus untuk sisa waktu di jam saat menyelesaikan tiap level."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Ubin-ubin ini membuat ubin lain menghilang dan muncul kembali. Saat tersembunyi, ubin tetap bisa diinjak, jadi ingat posisinya."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Sesekali kamu akan menemukan checkpoint. Setiap kali mencapai checkpoint, kamu bisa mulai ulang dari sana, bukan dari awal lagi."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Ketuk layar saat bermain untuk jeda. Memegang perangkat dengan cara lain? Ketuk indikator di sudut untuk menjadikannya titik tengah baru."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Semua siap, menujulah ke pintu keluar untuk memulai permainan. Selamat bersenang-senang!"
 
@@ -1116,3 +1132,15 @@ msgstr "KETIK KODE SAJA"
 #. Screen reader: the live picture from the camera on the scan sheet
 msgid "Camera view"
 msgstr "Tampilan kamera"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "ES"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "DURI"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "DURI SELANG KETUKAN"

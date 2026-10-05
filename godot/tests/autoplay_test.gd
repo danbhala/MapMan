@@ -233,7 +233,8 @@ func play_current_level() -> bool:
 func step_to(target: Vector2i) -> bool:
 	var map: LevelMap = game.map
 	var from := map.position_key
-	var dir := target - from
+	var actual := (target - from).sign()  # one step; a slide on ice carries further
+	var dir := actual
 	if game.reverse:
 		dir = -dir
 	var act: String = ACTIONS[dir]
@@ -254,6 +255,12 @@ func step_to(target: Vector2i) -> bool:
 			Input.action_release("shake")
 			await frames(2)
 			continue
+		if map.spikes.has(target) and not map.moving and not _spikes_clear(map, target):
+			# Wait for the spikes ahead to drop, unless the ones underfoot are
+			# about to rise: then go while the way is at least not up.
+			Input.action_release(act)
+			await process_frame
+			continue
 		for other in ACTIONS.values():
 			if other != act:
 				Input.action_release(other)
@@ -262,11 +269,21 @@ func step_to(target: Vector2i) -> bool:
 		if map.position_key == target and not map.moving:
 			# Keep the key held: a following step the same way continues smoothly.
 			return true
-		if map.moving and map._move_to != target:
+		if map.moving and map._move_to - map._move_from != actual:
 			Input.action_release(act)
 			return false
 	Input.action_release(act)
 	return false
+
+
+## True when it is safe to step onto the spike tile at target now: they have
+## just dropped (time to land and leave), or the tile underfoot is a spike
+## about to rise and the target is at least not up.
+func _spikes_clear(map: LevelMap, target: Vector2i) -> bool:
+	var here := map.position_key
+	if map.spikes.has(here) and map.spike_phase(here) >= 0.4:
+		return map.spike_state(target) != 2
+	return map.spike_phase(target) < 0.25
 
 
 ## Breadth-first search over walkable tiles, never stepping on a death tile
@@ -283,13 +300,22 @@ func find_path(map: LevelMap, start: Vector2i, goals: Array) -> Array[Vector2i]:
 				goal = cur
 				break
 			for d in DIRS:
-				var nxt: Vector2i = cur + d
-				if prev.has(nxt) or not map.tiles.has(nxt):
+				# A move is one step, or a slide across ice to where it stops.
+				var visited: Array[Vector2i] = map.slide_path(cur, d)
+				if (
+					visited.is_empty()
+					or visited.any(func(k: Vector2i) -> bool: return map.deaths.has(k))
+				):
 					continue
-				var tile = map.tiles[nxt]
-				if tile.blank or map.deaths.has(nxt) or map.broken.has(nxt):
+				var nxt: Vector2i = visited.back()
+				if prev.has(nxt):
 					continue
-				if avoid_time_loss and map.less_times.has(nxt):
+				if (
+					avoid_time_loss
+					and visited.any(
+						func(k: Vector2i) -> bool: return map.less_times.has(k) or map.spikes.has(k)
+					)
+				):
 					continue
 				prev[nxt] = cur
 				queue.append(nxt)

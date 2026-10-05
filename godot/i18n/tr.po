@@ -615,22 +615,38 @@ msgstr ""
 "Geri dönüş yok, bu yüzden yolunu önceden planla."
 
 #. Tutorial lesson 9
+msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"Dikenler önce uyarı verip belli bir ritimle inip kalkar.\n"
+"İnmelerini bekle, sonra yeniden kalkmadan geç."
+
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Buzda, düz bir karo ya da kenar seni durdurana dek kayarsın.\n"
+"Üzerinde yön değiştiremezsin, o yüzden çıkmadan önce hizalan."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Bu karolar sana ek süre verir ya da süre kaybettirir. Her bölümü bitirdiğinde saatte kalan süre için bonus puan alırsın."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Bu karolar diğer karoları gizler ve yeniden gösterir. Karolar gizliyken yine de üzerlerine basabilirsin, bu yüzden yerlerini aklında tut."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Ara sıra bir kontrol noktasına rastlarsın. Bir kontrol noktasına her ulaştığında, en başa dönmek yerine oradan yeniden başlayabilirsin."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Duraklatmak için oyun sırasında ekrana dokun. Cihazını farklı mı tutuyorsun? Bunu yeni merkez yapmak için köşedeki göstergeye dokun."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Hazırsın, oyunu başlatmak için çıkışa git. İyi eğlenceler!"
 
@@ -1116,3 +1132,15 @@ msgstr "KODU YAZ"
 #. Screen reader: the live picture from the camera on the scan sheet
 msgid "Camera view"
 msgstr "Kamera görüntüsü"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "BUZ"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "DİKENLER"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "TERS VURUŞ DİKENLERİ"

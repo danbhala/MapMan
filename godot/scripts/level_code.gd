@@ -16,8 +16,8 @@ const TABLE_PATH := "res://data/level_code_v0.json"
 ## Symbol index -> tile. New tile types take spare symbols after these.
 ## Each new one takes a spare symbol, so RESERVED drops by one: the alphabet
 ## (SYMBOLS + RESERVED) never changes size, or every shared code misreads.
-const SYMBOLS := " cbdpyri!tmwensuhlvx@+123456789k"
-const RESERVED := 11
+const SYMBOLS := " cbdpyri!tmwensuhlvx@+123456789kj^%"
+const RESERVED := 8
 const X_HIDES := [25, 12, 50, 100]
 const DELAYS := [0.05, 0.1, 0.2, 0.03]
 const MAX_W := 17

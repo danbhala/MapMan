@@ -275,3 +275,153 @@ func test_crumble_tiles_come_back_after_a_death() -> void:
 	assert_true(tile.sprite.visible, "and back on the sheet")
 	assert_eq(tile.sprite.position, tile.position, "in its place")
 	assert_almost_eq(tile.sprite.modulate.a, LevelMap.TILE_ALPHA, 0.001)
+
+
+## Walk right from column x and let any slide on ice run to its end.
+func _walk_and_slide(x: int) -> void:
+	game.map.position_key = Vector2i(x, game.map.start_position.y)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	for i in 20:
+		if not game.map.moving:
+			break
+		game.map.update_move(1.0)
+		game.update_player(0.0)  # landing: on ice, the next slide step starts
+
+
+func test_ice_slides_on_to_the_next_plain_tile() -> void:
+	_start("bjjjcw")
+	_walk_and_slide(0)
+	assert_eq(game.map.position_key, Vector2i(4, 0), "carried across three ice tiles")
+	assert_false(game.map.moving)
+	assert_false(game._sliding)
+
+
+func test_ice_slides_to_the_edge() -> void:
+	_start("bjjj")
+	_walk_and_slide(0)
+	assert_eq(game.map.position_key, Vector2i(3, 0), "stops on the last ice tile at the edge")
+
+
+func test_a_slide_is_faster_than_a_step() -> void:
+	_start("bjjcw")
+	game.map.position_key = Vector2i(0, 0)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	game.map.update_move(1.0)
+	game.update_player(0.0)  # landed on ice: sliding
+	assert_true(game.map.moving)
+	assert_true(game._sliding)
+	assert_almost_eq(game.map._move_seconds, game.SLIDE_TIME, 0.001)
+
+
+func test_steering_is_ignored_while_sliding() -> void:
+	_start("bjjcw", ["ccccc"])
+	game.map.position_key = Vector2i(0, 1)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	game.map.update_move(1.0)
+	game.update_player(0.0)  # sliding right
+	Input.action_press("move_up")
+	game.move_player(0.0)
+	Input.action_release("move_up")
+	assert_eq(game.map._move_to, Vector2i(2, 1), "still sliding right")
+
+
+func test_a_slide_is_recorded_for_the_replay() -> void:
+	_start("bjjjcw")
+	game._tries.begin(1)
+	_walk_and_slide(0)
+	var run: RunRecord = game._tries.run
+	assert_eq(run.step_count(), 4, "the step on to the ice and three slide steps")
+	assert_eq(
+		run.end_key(game.map.start_position), game.map.position_key, "replays end where he did"
+	)
+	for i in range(1, 4):
+		assert_almost_eq(
+			run.step_seconds(i), game.SLIDE_TIME, 0.001, "slide steps play at slide speed"
+		)
+
+
+func test_slide_path_and_safe_route_follow_the_ice() -> void:
+	_start("bjjjcw")
+	assert_eq(
+		game.map.slide_path(Vector2i(0, 0), Vector2i.RIGHT),
+		[1, 2, 3, 4].map(func(x: int) -> Vector2i: return Vector2i(x, 0))
+	)
+	assert_eq(
+		game.map.slide_path(Vector2i(4, 0), Vector2i.RIGHT), [Vector2i(5, 0)] as Array[Vector2i]
+	)
+	assert_eq(
+		game.map.slide_path(Vector2i(0, 0), Vector2i.LEFT), [] as Array[Vector2i], "nothing there"
+	)
+	assert_eq(
+		game.map.safe_route(), [Vector2i(0, 0), Vector2i(4, 0), Vector2i(5, 0)] as Array[Vector2i]
+	)
+
+
+## Spikes: `^` is down for the first 55% of the beat, warns, then is up from 70%.
+func _spike_time(phase: float) -> void:
+	game.map.spike_time = phase * game.map.spike_cycle
+	game.map.update_spikes(0.0)
+
+
+func test_spikes_are_safe_while_down() -> void:
+	_start("b^cw")
+	_spike_time(0.2)
+	_step_on(1)
+	assert_false(game.dead, "down spikes are a plain tile")
+	assert_eq(game.map.spike_state(Vector2i(1, 0)), 0)
+	_spike_time(0.6)
+	game.update_player(0.0)
+	assert_false(game.dead, "the warning poke doesn't hurt")
+	assert_eq(game.map.spike_state(Vector2i(1, 0)), 1)
+
+
+func test_spikes_kill_while_up() -> void:
+	_start("b^cw")
+	_spike_time(0.8)
+	_step_on(1)
+	assert_true(game.dead, "stepping onto raised spikes kills")
+
+
+func test_spikes_rising_underfoot_kill() -> void:
+	_start("b^cw")
+	_spike_time(0.5)
+	_step_on(1)
+	assert_false(game.dead)
+	game.update_player(0.3 * game.map.spike_cycle)  # the beat moves on to 0.8: up
+	assert_true(game.dead, "standing there as they rise kills")
+
+
+func test_second_phase_spikes_run_half_a_beat_behind() -> void:
+	_start("b%^w")
+	_spike_time(0.3)
+	assert_eq(game.map.spike_state(Vector2i(1, 0)), 2, "% is up when ^ is down")
+	assert_eq(game.map.spike_state(Vector2i(2, 0)), 0)
+	_step_on(2)
+	assert_false(game.dead)
+	_spike_time(0.8)
+	assert_eq(game.map.spike_state(Vector2i(1, 0)), 0, "% is down when ^ is up")
+
+
+func test_spike_tiles_redraw_with_the_beat() -> void:
+	_start("b^cw")
+	var sprite: Sprite2D = game.map.tiles[Vector2i(1, 0)].sprite
+	var down := sprite.texture
+	_spike_time(0.6)
+	var warn := sprite.texture
+	_spike_time(0.9)
+	var up := sprite.texture
+	assert_ne(down, warn, "the warning poke shows")
+	assert_ne(warn, up, "raised spikes show")
+	_spike_time(1.1)
+	assert_eq(sprite.texture, down, "and they drop again next beat")
+
+
+func test_spikes_restart_their_beat_after_a_death() -> void:
+	_start("b^cw")
+	_spike_time(0.9)
+	game.reset_all(false)
+	assert_eq(game.map.spike_time, 0.0)
+	assert_eq(game.map.spike_state(Vector2i(1, 0)), 0, "down at the start of a try")

@@ -85,3 +85,5 @@ func test_tiles_added_later_keep_the_alphabet() -> void:
 	assert_eq(LevelCode.SYMBOLS.length() + LevelCode.RESERVED, 43)
 	var rows := ["bkkcw"]
 	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "crumble tiles")
+	rows = ["bjj^%cw"]
+	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "ice and spikes")

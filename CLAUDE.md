@@ -10,7 +10,7 @@ now ported to Godot 4.5.
   how something behaved, never edit it.
 - `godot/tools/convert_assets.py` – regenerates `godot/assets/` and `godot/data/`
   from `Script/`. Rerunning it overwrites hand edits to `godot/data/levels.json`
-  and `godot/data/tutorial.json` (the crumble lesson is hand-added).
+  and `godot/data/tutorial.json` (the crumble and spikes lessons are hand-added).
 - `android-build` branch – holds only the latest APK for phones. Never commit
   APKs, `.ipa`s or `godot/build/` to master.
 - iPhone builds go through TestFlight (Test builds and Release workflows,

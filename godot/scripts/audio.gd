@@ -10,6 +10,8 @@ const SFX := {
 	"life": "res://assets/sfx/life.wav",
 	"sticky": "res://assets/sfx/sticky.wav",
 	"crumble": "res://assets/sfx/crumble.wav",
+	"slide": "res://assets/sfx/slide.wav",
+	"spikes": "res://assets/sfx/spikes.wav",
 	"end_level": "res://assets/sfx/end_level.wav",
 	"star": "res://assets/sfx/star.wav",
 	"lose_life": "res://assets/sfx/pop.ogg",

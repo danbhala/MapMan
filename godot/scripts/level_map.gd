@@ -13,6 +13,9 @@ const APPEAR_TIME := 0.25
 const FOLD_TIME := 0.25
 const FALL_TIME := 0.35  # a crumble tile dropping away
 const FALL_DROP := 18.0
+## Spikes: the fraction of the beat they are down, then warning, then up.
+const SPIKE_DOWN := 0.55
+const SPIKE_WARN := 0.7
 ## Hiding and unhiding ripple out from the player, this long per tile away.
 const RIPPLE_STEP := 0.02
 
@@ -62,6 +65,14 @@ var unhides := {}
 ## (key -> true) and can't be stepped on until the next try.
 var crumbles := {}
 var broken := {}
+## Ice tiles (key -> true): MapMan slides on across them (main.gd).
+var ices := {}
+## Spike tiles: key -> phase offset (0.0 for `^`, 0.5 for `%`). They rise
+## and fall together on `spike_cycle` seconds of `spike_time`, which main.gd
+## advances while the level is being played (so a pause stops them).
+var spikes := {}
+var spike_time := 0.0
+var spike_cycle := 2.0
 
 # Movement between two tiles.
 var moving := false
@@ -79,6 +90,7 @@ var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
 var _falls := {}  # crumble key -> the Tween of a tile still falling
+var _spike_states := {}  # spike key -> the state its sprite shows
 
 # The assists (main.gd): pencil marks on hidden death tiles, a route sketch.
 var _marks: PencilMarks
@@ -146,6 +158,10 @@ static func texture_file(t: String, x_hides := 25) -> String:
 			return "reverse.png"
 		"k":
 			return "crumble.png"
+		"j":
+			return "ice.png"
+		"^", "%":
+			return "spikes_down.png"
 	return "blank1.png"
 
 
@@ -181,9 +197,13 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		unhides,
 		crumbles,
 		broken,
-		_falls
+		_falls,
+		ices,
+		spikes,
+		_spike_states
 	]:
 		d.clear()
+	spike_time = 0.0
 
 	tiles_hidden = false
 	is_checkpoint = level.get("checkpoint", false)
@@ -323,6 +343,11 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		unhides[key] = true
 	elif t == "k":
 		crumbles[key] = true
+	elif t == "j":
+		ices[key] = true
+	elif t in ["^", "%"]:
+		spikes[key] = 0.5 if t == "%" else 0.0
+		_spike_states[key] = 0
 
 
 func _appear(node: Node2D, wait: float, full := ASSET_SCALE) -> void:
@@ -539,17 +564,43 @@ func safe_route() -> Array[Vector2i]:
 					route.push_front(cur)
 				return route
 			for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
-				var nxt: Vector2i = cur + d
-				if prev.has(nxt) or not tiles.has(nxt):
+				var visited := slide_path(cur, d)
+				if (
+					visited.is_empty()
+					or visited.any(func(k: Vector2i) -> bool: return deaths.has(k))
+				):
 					continue
-				var tile: Tile = tiles[nxt]
-				if tile.blank or deaths.has(nxt) or broken.has(nxt):
+				var nxt: Vector2i = visited.back()
+				if prev.has(nxt):
 					continue
-				if avoid_time_loss and less_times.has(nxt):
+				if (
+					avoid_time_loss
+					and visited.any(func(k: Vector2i) -> bool: return less_times.has(k))
+				):
 					continue
 				prev[nxt] = cur
 				queue.append(nxt)
 	return []
+
+
+## Can MapMan step onto this tile right now (a tile, not empty, not fallen)?
+func walkable(key: Vector2i) -> bool:
+	return tiles.has(key) and not tiles[key].blank and not broken.has(key)
+
+
+## The tiles a step from `from` in direction `step` visits, in order, ending
+## where MapMan comes to rest: one tile, or more when he lands on ice and
+## slides on until a tile that isn't ice or an edge stops him. Empty when
+## the first tile is not walkable. The solvers and the sketch use it.
+func slide_path(from: Vector2i, step: Vector2i) -> Array[Vector2i]:
+	var visited: Array[Vector2i] = []
+	var cur := from
+	while walkable(cur + step):
+		cur += step
+		visited.append(cur)
+		if not ices.has(cur):
+			break
+	return visited
 
 
 ## Dashed outlines over the death tiles that are hidden right now. Which
@@ -637,6 +688,11 @@ func moving_from() -> Vector2i:
 	return _move_from
 
 
+## The screen direction of the latest step (zero before the first).
+func last_step() -> Vector2i:
+	return _move_to - _move_from
+
+
 ## step is in screen directions: (1, 0) right, (0, -1) up.
 func move(step: Vector2i, seconds: float) -> void:
 	var target := position_key + step
@@ -680,10 +736,46 @@ func _fallen(key: Vector2i) -> void:
 		tiles[key].sprite.visible = false
 
 
+## Where a spike tile is in its beat, 0 (just dropped) to 1.
+func spike_phase(key: Vector2i) -> float:
+	return fposmod(spike_time / spike_cycle + spikes[key], 1.0)
+
+
+## 0 down, 1 warning poke, 2 up (deadly).
+func spike_state(key: Vector2i) -> int:
+	var ph := spike_phase(key)
+	if ph < SPIKE_DOWN:
+		return 0
+	return 1 if ph < SPIKE_WARN else 2
+
+
+func spikes_up_at(key: Vector2i) -> bool:
+	return spikes.has(key) and spike_state(key) == 2
+
+
+## Advance the spikes' beat and redraw the tiles that changed state.
+## Returns true when a set of spikes rose this frame (for the sound).
+func update_spikes(delta: float) -> bool:
+	spike_time += delta
+	var rose := false
+	for key: Vector2i in spikes:
+		var state := spike_state(key)
+		if state == _spike_states[key]:
+			continue
+		_spike_states[key] = state
+		rose = rose or state == 2
+		var file: String = ["spikes_down.png", "spikes_warn.png", "spikes_up.png"][state]
+		tiles[key].sprite.texture = _tex(file)
+	return rose
+
+
 ## Restore consumable tiles after losing a life. Points and lives stay collected.
+## The spikes' beat starts again too.
 func reset() -> void:
 	moving = false
 	position_key = start_position
+	spike_time = 0.0
+	update_spikes(0.0)
 	for tw: Tween in _falls.values():
 		tw.kill()
 	_falls.clear()

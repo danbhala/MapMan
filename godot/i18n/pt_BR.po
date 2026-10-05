@@ -622,22 +622,38 @@ msgstr ""
 "Não há volta, então planeje o caminho à frente."
 
 #. Tutorial lesson 9
+msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"Os espinhos sobem e descem no ritmo, com um aviso antes.\n"
+"Espere eles baixarem e atravesse antes que subam de novo."
+
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"No gelo você desliza até um bloco comum ou a borda te parar.\n"
+"Não dá para virar em cima dele, então se alinhe antes de sair."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Estes blocos dão tempo extra ou tiram tempo de você. Ao terminar cada nível, o tempo restante no relógio vira pontos bônus."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Estes blocos fazem outros blocos sumir e reaparecer. Mesmo ocultos, você ainda pode pisar neles, então lembre onde estão."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "De vez em quando você encontra um checkpoint. Ao alcançar um checkpoint, você pode reiniciar dali em vez de voltar ao começo."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Toque na tela durante o jogo para pausar. Mudou a forma de segurar o celular? Toque no indicador do canto para definir isso como o novo centro."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tudo pronto: vá até a saída para começar o jogo. Divirta-se!"
 
@@ -1126,3 +1142,15 @@ msgstr "DIGITAR UM CÓDIGO"
 #. Screen reader: the live picture from the camera on the scan sheet
 msgid "Camera view"
 msgstr "Visão da câmera"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "GELO"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "ESPINHOS"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "ESPINHOS NO CONTRATEMPO"

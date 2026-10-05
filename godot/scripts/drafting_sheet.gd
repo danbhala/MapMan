@@ -95,6 +95,9 @@ const TOOLS := [
 	["y", "STICKY TILE"],
 	["r", "REVERSE TILE"],
 	["k", "CRUMBLE TILE"],
+	["j", "ICE"],
+	["^", "SPIKES"],
+	["%", "OFF-BEAT SPIKES"],
 	["v", ""],
 	["x", ""],
 	["h", "HIDE TILES"],
@@ -121,9 +124,9 @@ const GRID_CELL := Vector2(29, 29.0 * 23.0 / 32.0)
 const BUTTONS_Y := 326.0
 const BUTTON := Vector2(92, 34)
 const BUTTON_GAP := 8.25
-const PALETTE_POS := Vector2(532, 96)
-const SWATCH := 28.0
-const SWATCH_PITCH := 31.0
+const PALETTE_POS := Vector2(532, 88)
+const SWATCH := 26.0
+const SWATCH_PITCH := 28.0
 const PALETTE_COLUMNS := 4
 const METER_Y := 292.0
 const METER_W := 120.0
@@ -594,6 +597,8 @@ class TileSwatch:
 				DraftGrid.dashed_box(self, art.grow(1.0), Blueprint.INK)
 			_:
 				draw_texture_rect(DraftGrid.texture(tile), art, false)
+				if tile == "%":
+					DraftGrid.offbeat_mark(self, Vector2(2, size.y - 2), 9)
 				if tile == "x" or tile == "v":
 					var font := Blueprint.mono(800)
 					var moves := str(LevelMap.vanish_moves(tile, 25))
@@ -624,11 +629,17 @@ class DraftGrid:
 	## For the hide tool: whether this stroke hides tiles or shows them.
 	var _hide_on := true
 
+	## The art of tile `t`; spikes show raised, so they read as spikes.
 	static func texture(t: String) -> Texture2D:
-		var file := LevelMap.texture_file(t)
+		var file := "spikes_up.png" if t in ["^", "%"] else LevelMap.texture_file(t)
 		if not _textures.has(file):
 			_textures[file] = load(LevelMap.TILE_DIR + file)
 		return _textures[file]
+
+	## "½" in gold: spikes half a beat behind the others.
+	static func offbeat_mark(c: CanvasItem, at: Vector2, font_size: int) -> void:
+		var font := Blueprint.mono(800)
+		c.draw_string(font, at, "½", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Blueprint.GOLD)
 
 	## A box in dashes: a tile that starts hidden.
 	static func dashed_box(c: CanvasItem, r: Rect2, color: Color) -> void:
@@ -720,6 +731,8 @@ class DraftGrid:
 				draw_texture_rect(texture(t), r, false, tint)
 				if faded:
 					dashed_box(self, r, Blueprint.INK)
+				if t == "%":
+					offbeat_mark(self, Vector2(r.position.x + 1, r.end.y - 1), 8)
 		if _painting and Draft.on_grid(_last):
 			var at := Rect2(Vector2(_last.x * c.x, _last.y * c.y), c)
 			draw_rect(at, Blueprint.GOLD, false, 2.0)

@@ -148,6 +148,8 @@
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Occhio anche alle vite extra,\nma attenzione, ti porteranno fuori strada\nancora più dei punti bonus.",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Attenzione alle caselle velenose: se le calpesti, perdi una vita.",
   "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Queste caselle si sbriciolano appena le lasci.\nNon si torna indietro, quindi pianifica il percorso.",
+  "Spikes rise and fall on a beat, with a warning first.\nWait for them to drop, then cross before they rise again.": "Le punte salgono e scendono a ritmo, con un avviso prima.\nAspetta che si abbassino, poi attraversa prima che risalgano.",
+  "Ice sends you sliding until a plain tile or the edge stops you.\nYou can't steer on it, so line up before you set off.": "Sul ghiaccio scivoli finché una casella normale o il bordo non ti ferma.\nNon puoi sterzare sopra, quindi allineati prima di partire.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Queste caselle ti danno tempo extra o te lo tolgono. Alla fine di ogni livello, il tempo rimasto sull'orologio vale punti bonus.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Queste caselle fanno sparire e ricomparire altre caselle. Le caselle nascoste si possono ancora calpestare, quindi ricorda dove sono.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "Ogni tanto incontrerai un checkpoint. Ogni volta che ne raggiungi uno potrai ripartire da lì invece di ricominciare dall'inizio.",
@@ -285,5 +287,8 @@
   "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "MAPMAN NON PUÒ USARE LA FOTOCAMERA. CONSENTILO NELLE IMPOSTAZIONI DEL TELEFONO",
   "THAT QR CODE ISN'T A MAPMAN LEVEL": "QUEL CODICE QR NON È UN LIVELLO DI MAPMAN",
   "TYPE A CODE INSTEAD": "SCRIVI UN CODICE",
-  "Camera view": "Vista della fotocamera"
+  "Camera view": "Vista della fotocamera",
+  "ICE": "GHIACCIO",
+  "SPIKES": "SPUNTONI",
+  "OFF-BEAT SPIKES": "SPUNTONI IN CONTROTEMPO"
 }
