@@ -189,11 +189,15 @@
   "IN THE WARDROBE FROM THE START": "最初から所持",
   "RELEASED FOR FINISHING THE GAME": "ゲームクリアで解放",
   "NEW IN THE WARDROBE": "クローゼットに追加",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "図面 001 のクローゼットで着用できます",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMANがクローゼットに登場",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "彼女でプレイ：最後にMAPMANが待っています",
   "Wardrobe, %d of %d released": "クローゼット、%d/%d 解放済み",
   "%s, worn": "%s、着用中",
   "Locked, released at level %d": "未開放、レベル%dで解放",
-  "Locked, released for finishing the game": "未開放、ゲームクリアで解放"
+  "Locked, released for finishing the game": "未開放、ゲームクリアで解放",
+  "WEAR IT": "着る",
+  "NEXT LEVEL": "次のレベル",
+  "<  RETURN TO SHEET %03d": "<  図面 %03d へ戻る",
+  "NEXT": "次へ",
+  "MENU": "メニュー"
 }

@@ -91,6 +91,10 @@ var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 var _practice_page := 0
+## A level of the main game is cleared and its points not yet banked: its
+## level clear is up, or the wardrobe or the question before quitting opened
+## from it, and each of those goes back to it.
+var _between := false
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -814,18 +818,26 @@ func advance_level(check_point: bool) -> void:
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
+	_between = true
 	menus.show_end_level(
 		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
 	)
 
 
 func next_level() -> void:
+	_bank_level()
+	finish_advancing_level()
+
+
+## The cleared level's points join the score (saving a checkpoint on a
+## checkpoint level), and the level after it is next.
+func _bank_level() -> void:
+	_between = false
 	if not tutorial:
 		score += end_of_level_points
 		if map.is_checkpoint:
 			Save.checkpoint_reached(level, score)
 	level += 1
-	finish_advancing_level()
 
 
 func finish_advancing_level() -> void:
@@ -866,6 +878,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	tutorial = is_tutorial
 	completed = false
 	practice = false
+	_between = false
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -920,6 +933,7 @@ func game_over(show_score := true) -> void:
 	_hide_ending()
 	completed = false
 	practice = false
+	_between = false
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -1032,7 +1046,7 @@ func _on_menu_action(act: String) -> void:
 		"language":
 			menus.show_language()
 		"wardrobe":
-			menus.show_wardrobe()
+			menus.show_wardrobe(level if _between else 0)
 		"main menu":
 			if menus.current == "wardrobe":
 				# Looked at: nothing in it is new any more (the marks stay
@@ -1047,6 +1061,12 @@ func _on_menu_action(act: String) -> void:
 			if practice:
 				_end_practice()
 			else:
+				if _between:
+					# Quitting from a level clear: its checkpoint is kept, and
+					# the next level opens in practice.
+					_bank_level()
+					if level <= levels.size():
+						Save.level_reached(level)
 				game_over(false)
 				show_start_menu()
 		"practice":
@@ -1058,6 +1078,16 @@ func _on_menu_action(act: String) -> void:
 		"next level":
 			menus.close()
 			next_level()
+		"clear wardrobe":
+			menus.show_wardrobe(level)
+		"back to clear":
+			if menus.current == "wardrobe":
+				Save.mark_seen()
+			menus.reopen_end_level()
+		"leave clear":
+			# MAIN MENU on the level clear: the same question as quitting
+			# from the pause; the level still counts if the game ends.
+			menus.show_confirm_quit("back to clear")
 		"try again":
 			menus.close()
 			reset_all(false)
@@ -1095,10 +1125,14 @@ func _on_menu_action(act: String) -> void:
 				menus.close()
 				start_practice(int(act.get_slice(" ", 2)))
 			elif act.begins_with("wear "):
-				# Only from the wardrobe, between games: he wears it from now on.
+				# From the wardrobe, or the slip on the level clear that released
+				# it: he wears it from now on.
 				if Save.wear(act.get_slice(" ", 1)):
 					player.outfit = Save.worn
-				menus.show_wardrobe()
+				if menus.current == "end_level":
+					menus.redraw()
+				else:
+					menus.show_wardrobe(level if _between else 0)
 			elif act.begins_with("L") and act.substr(1).is_valid_int():
 				menus.close()
 				new_game(int(act.substr(1)) + 1)
@@ -1155,9 +1189,13 @@ func go_back() -> void:
 		"":
 			if game_active and not dead:
 				show_pause_menu()
-		"pause", "confirm_quit":
+		"pause":
 			_on_menu_action("unpause")
-		"options", "restart", "first_play", "game_over", "congratulations", "practice", "wardrobe":
+		"confirm_quit":
+			_on_menu_action(menus.confirm_back)
+		"wardrobe":
+			_on_menu_action("back to clear" if _between else "main menu")
+		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
 		"language":
 			_on_menu_action("options")

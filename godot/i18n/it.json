@@ -195,11 +195,15 @@
   "IN THE WARDROBE FROM THE START": "NEL GUARDAROBA DALL'INIZIO",
   "RELEASED FOR FINISHING THE GAME": "RILASCIO A GIOCO FINITO",
   "NEW IN THE WARDROBE": "NUOVO NEL GUARDAROBA",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "INDOSSALO DAL GUARDAROBA, TAVOLA 001",
   "MAPWOMAN JOINS THE WARDROBE": "MAPWOMAN ENTRA NEL GUARDAROBA",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "GIOCA CON LEI: MAPMAN TI ASPETTA ALLA FINE",
   "Wardrobe, %d of %d released": "Guardaroba, %d di %d rilasciati",
   "%s, worn": "%s, indossato",
   "Locked, released at level %d": "Bloccato, rilascio al livello %d",
-  "Locked, released for finishing the game": "Bloccato, rilascio a gioco finito"
+  "Locked, released for finishing the game": "Bloccato, rilascio a gioco finito",
+  "WEAR IT": "INDOSSA",
+  "NEXT LEVEL": "AVANTI",
+  "<  RETURN TO SHEET %03d": "<  TORNA ALLA TAVOLA %03d",
+  "NEXT": "AVANTI",
+  "MENU": "MENU"
 }

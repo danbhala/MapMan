@@ -259,6 +259,7 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
+		func(): m.show_wardrobe(36),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),
 		func(): m.show_game_complete(1842, 100, 100),

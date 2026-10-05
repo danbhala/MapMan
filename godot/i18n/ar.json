@@ -219,11 +219,15 @@
   "IN THE WARDROBE FROM THE START": "في الخزانة منذ البداية",
   "RELEASED FOR FINISHING THE GAME": "يتاح عند إنهاء اللعبة",
   "NEW IN THE WARDROBE": "جديد في الخزانة",
-  "WEAR IT FROM THE WARDROBE ON SHEET 001": "ارتده من الخزانة في اللوحة 001",
   "MAPWOMAN JOINS THE WARDROBE": "انضمت MAPWOMAN إلى الخزانة",
   "PLAY AS HER: MAPMAN WAITS FOR YOU AT THE END": "العب بها: ينتظرك MAPMAN في النهاية",
   "Wardrobe, %d of %d released": "الخزانة، %d من أصل %d متاحة",
   "%s, worn": "%s، مرتدى",
   "Locked, released at level %d": "مقفل، يتاح في المستوى %d",
-  "Locked, released for finishing the game": "مقفل، يتاح عند إنهاء اللعبة"
+  "Locked, released for finishing the game": "مقفل، يتاح عند إنهاء اللعبة",
+  "WEAR IT": "ارتدِه",
+  "NEXT LEVEL": "المستوى التالي",
+  "<  RETURN TO SHEET %03d": "<  العودة إلى اللوحة %03d",
+  "NEXT": "التالي",
+  "MENU": "القائمة"
 }
