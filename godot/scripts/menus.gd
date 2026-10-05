@@ -25,12 +25,6 @@ const LIST_W := 380.0
 const TEXT_X := 52.0
 const CHAR_W := 9.6
 const LIST_TOP := 60.0
-## Boxes that flow across the sheet (the language names): text size, the
-## padding either side of it, the gap between boxes, and the row they fill.
-const CHIP_SIZE := 15
-const CHIP_PAD := 10.0
-const CHIP_GAP := 8.0
-const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
 ## The options sheet's rows: eight of them, tighter than TAP_HEIGHT.
 const OPTIONS_TOP := 78.0
@@ -79,6 +73,7 @@ const TEXT := {
 	"main_title": "MAIN MENU",
 	"main_items":
 	["PLAY FROM START", "CONTINUE FROM CHECKPOINT", "PRACTICE A LEVEL", "TUTORIAL", "OPTIONS"],
+	"drafting_item": "DRAFTING TABLE",
 	"best_score": "BEST SCORE %d",
 	"level_count": ["%d LEVEL", "%d LEVELS"],
 	# 000 — first run
@@ -211,6 +206,8 @@ const LANGUAGES := [
 ]
 
 var current := ""
+## The box a level code is typed into, while its sheet is open.
+var code_input: LineEdit
 ## What NO, KEEP PLAYING on the question before quitting reports: back to
 ## the game, or back to the level clear.
 var confirm_back := "unpause"
@@ -377,6 +374,7 @@ func close() -> void:
 	_woman = null
 	_hero_mode = ""
 	_first_button = null
+	code_input = null
 	_tap_action = ""
 	_redraw = Callable()
 	current = ""
@@ -584,9 +582,11 @@ func _connect(b: Button, act: String, enabled := true) -> void:
 
 
 ## A row of the parts list, numbered from 1, that reports `act`.
-func _item(index: int, text: String, act: String, y: float, enabled := true) -> Button:
+func _item(
+	index: int, text: String, act: String, y: float, enabled := true, height := Blueprint.TAP_HEIGHT
+) -> Button:
 	var pos := Vector2(_mx(LIST_X, LIST_W), y)
-	var size := Vector2(LIST_W, Blueprint.TAP_HEIGHT)
+	var size := Vector2(LIST_W, height)
 	var b := Blueprint.item(_panel, "%02d    %s" % [index, text], pos, size, enabled)
 	b.alignment = _align()
 	b.accessibility_name = _sentence(text)
@@ -595,11 +595,11 @@ func _item(index: int, text: String, act: String, y: float, enabled := true) -> 
 	return b
 
 
-## A parts list from `y` at `pitch`; `enabled` (optional) says which are open.
+## A parts list from `y` at `pitch` (rows no taller); `enabled` says which are open.
 func _items(texts: Array, acts: Array, y: float, pitch := 48.0, enabled: Array = []) -> void:
 	for i in texts.size():
 		var on: bool = enabled[i] if i < enabled.size() else true
-		_item(i + 1, texts[i], acts[i], y + i * pitch, on)
+		_item(i + 1, texts[i], acts[i], y + i * pitch, on, minf(pitch, Blueprint.TAP_HEIGHT))
 
 
 ## The way back to the main menu, as the last row of a sheet; from a level
@@ -881,20 +881,30 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool, levels := 0, new_lessons := false) -> void:
+func show_main(
+	highscore: int, has_checkpoint: bool, levels := 0, drafting := false, new_lessons := false
+) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
-	_items(_tl("main_items"), acts, 80, 44, [true, has_checkpoint, true, true, true])
+	var texts := _tl("main_items")
+	var enabled := [true, has_checkpoint, true, true, true]
+	if drafting:  # a sixth row; the rows close up
+		texts.insert(4, _t("drafting_item"))
+		acts.insert(4, "drafting table")
+		enabled.append(true)
+	var top := 76.0 if drafting else 80.0
+	var pitch := 38.0 if drafting else 44.0
+	_items(texts, acts, top, pitch, enabled)
 	if new_lessons:  # a NEW tag on the TUTORIAL row
-		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, 80 + 3 * 44 - 10.0)
+		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, top + 3 * pitch - 10.0)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
 	if levels > 0:
 		parts.append(_tn("level_count", levels))
 	if not parts.is_empty():
-		_note(_t("note") % " · ".join(parts), 308)
+		_note(_t("note") % " · ".join(parts), 312 if drafting else 308)
 	_hero_on("tilt")
 	WardrobeSheet.main_menu_row(self)
 	_focus_first()
@@ -979,63 +989,7 @@ func show_wardrobe(back_level := 0) -> void:
 ## name, as boxes that flow across the sheet, the current one marked. Picking
 ## one reports "language <code>".
 func show_language() -> void:
-	_open("language", TEXT.language_number, _t("language_title"))
-	var choices: Array = [["system", _t("phone_language")]]
-	choices.append_array(LANGUAGES)
-	var x := LIST_X
-	var y := 72.0
-	for choice in choices:
-		var code: String = choice[0]
-		var name: String = choice[1]
-		var chosen := (Save.locale == "" and code == "system") or Save.locale == code
-		var text: String = TEXT.on + " " + name if chosen else name
-		var font := Blueprint.mono(700 if chosen else 400)
-		var text_w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, CHIP_SIZE).x
-		var w := ceilf(text_w) + 2.0 * CHIP_PAD
-		if x + w > LIST_X + CHIP_ROW_W:
-			x = LIST_X
-			y += Blueprint.TAP_HEIGHT + CHIP_GAP
-		_chip(Vector2(x, y), w, text, "language " + code, name, chosen)
-		x += w + CHIP_GAP
-	var back_pos := Vector2(_mx(LIST_X, LIST_W), 318)
-	var back := Blueprint.item(_panel, "<  " + _t("options_title"), back_pos)
-	back.alignment = _align()
-	back.accessibility_name = _sentence(_t("options_title"))
-	_connect(back, "options")
-	_reveal(back)
-	_focus_first()
-
-
-## A box in a flowing row of choices, `w` wide, its text centred; the chosen
-## one is filled and bold. The whole box is a button.
-func _chip(pos: Vector2, w: float, text: String, act: String, a11y: String, chosen: bool) -> Button:
-	var size := Vector2(w, Blueprint.TAP_HEIGHT)
-	var box := Control.new()
-	box.position = Vector2(_mx(pos.x, w), pos.y)
-	box.size = size
-	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(box)
-	if chosen:
-		Blueprint.rect(box, Blueprint.HOVER, Vector2.ONE, size - Vector2(2, 2))
-	var width := 1.2 if chosen else 0.8
-	Blueprint.line(box, Blueprint.box_points(Vector2.ZERO, size), Blueprint.INK, width)
-	var inner := w - 2.0 * CHIP_PAD
-	var l := Blueprint.label(
-		box, text, CHIP_SIZE, Blueprint.INK, Vector2(CHIP_PAD, 0), 700 if chosen else 400, inner
-	)
-	l.autowrap_mode = TextServer.AUTOWRAP_OFF
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	Blueprint.fit(l, Vector2(inner, size.y))
-	var b := Button.new()
-	b.theme = Blueprint.theme()
-	b.size = size
-	b.accessibility_name = a11y
-	_clear_button(b)
-	box.add_child(b)
-	_connect(b, act)
-	_reveal(box, 0.03)
-	return b
+	LanguageSheet.build(self)
 
 
 func _remember_row(row: int) -> void:
@@ -1060,6 +1014,11 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 		_item(2, _t("end_tutorial"), "end tutorial", 138)
 	else:
 		_item(2, _t("end_game"), "confirm quit", 138)
+	_pause_tail()
+
+
+## The pause sheet under its first two rows: the note, MapMan and the stamp.
+func _pause_tail() -> void:
 	_note(_t("pause_note"), 200)
 	_hero_on("tilt")
 	var hold := Vector2(_mx(230, 120.0), 240)

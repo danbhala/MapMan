@@ -45,6 +45,16 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   (`main.gd` `_between`), the wardrobe and the quit question opened from it
   come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
   sheet makes him jump (`Menus._poke()`, `Player.jump()`).
+- The drafting table (`docs/drafting-table.md`): `scripts/draft.gd` is a
+  level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
+  editor, code entry, the share sheet (QR from `addons/kenyoni/qr_code/`)
+  and the scan sheet (`scripts/qr_scanner.gd` camera view,
+  `scripts/qr_reader.gd` QR decoder).
+  `scripts/level_code.gd` turns a level into a short code and back, matching
+  `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
+  `main.gd` plays drafts and friends' codes with `custom` set ("draft",
+  "received"), like practice: no lives, score or saving;
+  `scripts/drafting_table.gd` (`main.drafting`) runs that flow.
 - Tries (`scripts/run_record.gd`): `main.gd` records every try at a level
   as tile steps and when each began on its run clock (no tilt: a step is
   always a whole tile at one of two speeds), about two bytes a step. The

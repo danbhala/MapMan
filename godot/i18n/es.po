@@ -872,3 +872,285 @@ msgstr "TOCA PARA EMPEZAR"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "SALTAR"
+
+#. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
+msgid "DRAFTING TABLE"
+msgstr "MESA DE DIBUJO"
+
+#. Drafting table: heading over the six levels the player is drawing
+msgid "YOUR DRAFTS"
+msgstr "TUS BORRADORES"
+
+#. Drafting table: heading over levels other players sent as codes
+msgid "RECEIVED LEVELS"
+msgstr "NIVELES RECIBIDOS"
+
+#. Drafting table: shown while no level has been received yet
+msgid "LEVELS FRIENDS SEND YOU APPEAR HERE"
+msgstr "AQUÍ APARECEN LOS NIVELES QUE TE ENVÍEN"
+
+#. Drafting table: a draft slot with nothing drawn in it (small cell)
+msgid "EMPTY"
+msgstr "VACÍO"
+
+#. Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)
+msgid "DRAFT"
+msgstr "BORRADOR"
+
+#. Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)
+msgid "SIGNED"
+msgstr "FIRMADO"
+
+#. Drafting table item: type or paste a code a friend sent, to play their level
+msgid "ENTER A LEVEL CODE"
+msgstr "INTRODUCIR UN CÓDIGO"
+
+#. Drafting table note: the three steps of making a level
+msgid "DRAW A LEVEL · BEAT IT · SHARE ITS CODE"
+msgstr "DIBUJA UN NIVEL · SUPÉRALO · COMPARTE SU CÓDIGO"
+
+#. Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)
+msgid "LEVEL CLEARED WITH %ds LEFT"
+msgstr "NIVEL SUPERADO CON %ds DE SOBRA"
+
+#. Sheet title: the screen for typing or pasting a level code
+msgid "LEVEL CODE"
+msgstr "CÓDIGO DE NIVEL"
+
+#. Level code sheet: instruction above the text box
+msgid "TYPE OR PASTE A LEVEL CODE"
+msgstr "ESCRIBE O PEGA UN CÓDIGO DE NIVEL"
+
+#. Level code sheet button: paste the clipboard into the text box
+msgid "PASTE"
+msgstr "PEGAR"
+
+#. Level code sheet item: play the level the code describes
+msgid "PLAY THIS LEVEL"
+msgstr "JUGAR ESTE NIVEL"
+
+#. Level code sheet: the code has a typo or isn't a level code
+msgid "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN"
+msgstr "ESE CÓDIGO NO SE LEE. REVÍSALO Y VUELVE A PROBAR"
+
+#. Level code sheet: the code was made by a later version of the game. Keep MAPMAN.
+msgid "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN"
+msgstr "ESTE NIVEL NECESITA UNA VERSIÓN MÁS NUEVA DE MAPMAN"
+
+#. Sheet title shown when the game opens with a copied level code: offer to play it
+msgid "A LEVEL CODE IS ON THE CLIPBOARD"
+msgstr "HAY UN CÓDIGO DE NIVEL COPIADO"
+
+#. Item: play the level from the copied code
+msgid "PLAY IT"
+msgstr "JUGARLO"
+
+#. Item: ignore the copied code
+msgid "NOT NOW"
+msgstr "AHORA NO"
+
+#. Editor title: which of the six drafts is open (%d is 1 to 6)
+msgid "DRAFT %d"
+msgstr "BORRADOR %d"
+
+#. Editor button: leave the editor (the draft is kept)
+msgid "BACK"
+msgstr "VOLVER"
+
+#. Editor button: take back the last stroke
+msgid "UNDO"
+msgstr "DESHACER"
+
+#. Editor button: play the draft; reaching an exit signs it
+msgid "TEST"
+msgstr "PROBAR"
+
+#. Editor button: show the draft's code and QR code (only once it is signed)
+msgid "SHARE"
+msgstr "COMPARTIR"
+
+#. Editor: small label over the meter showing how long the draft's code is
+msgid "CODE"
+msgstr "CÓDIGO"
+
+#. Editor status: the draft has no start tile yet
+msgid "PLACE ONE START TILE"
+msgstr "PON UNA CASILLA DE INICIO"
+
+#. Editor status: the draft has no exit yet
+msgid "PLACE AT LEAST ONE EXIT"
+msgstr "PON AL MENOS UNA SALIDA"
+
+#. Editor status: the draft can be played; beating it signs it so it can be shared
+msgid "TEST IT AND REACH AN EXIT TO SIGN IT"
+msgstr "PRUÉBALO Y LLEGA A UNA SALIDA PARA FIRMARLO"
+
+#. Editor status: the draft has been beaten and can be shared
+msgid "SIGNED · READY TO SHARE"
+msgstr "FIRMADO · LISTO PARA COMPARTIR"
+
+#. Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it
+msgid "VANISH · %d MOVE"
+msgid_plural "VANISH · %d MOVES"
+msgstr[0] "DESAPARECE · %d MOVIMIENTO"
+msgstr[1] "DESAPARECE · %d MOVIMIENTOS"
+
+#. Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code
+msgid "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE"
+msgstr "ESCANEA EL QR CON LA CÁMARA O ENVÍA EL CÓDIGO"
+
+#. Share sheet item: copy the level code to the clipboard
+msgid "COPY CODE"
+msgstr "COPIAR CÓDIGO"
+
+#. Share sheet: confirms the code is on the clipboard
+msgid "CODE COPIED"
+msgstr "CÓDIGO COPIADO"
+
+#. Share sheet item: return to the editor
+msgid "BACK TO THE DRAFT"
+msgstr "VOLVER AL BORRADOR"
+
+#. Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · DRAFT %d"
+msgstr "TRABAJO SUSPENDIDO · BORRADOR %d"
+
+#. Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · RECEIVED LEVEL"
+msgstr "TRABAJO SUSPENDIDO · NIVEL RECIBIDO"
+
+#. Editor palette: clears tiles
+msgid "ERASER"
+msgstr "GOMA"
+
+#. Editor palette: a plain tile MapMan can walk on
+msgid "PATH"
+msgstr "CAMINO"
+
+#. Editor palette: where MapMan starts (one per level)
+msgid "START TILE"
+msgstr "CASILLA DE INICIO"
+
+#. Editor palette: a level exit (one for each direction)
+msgid "EXIT"
+msgstr "SALIDA"
+
+#. Editor palette: a tile that costs a life
+msgid "DEATH TILE"
+msgstr "CASILLA MORTAL"
+
+#. Editor palette: a star to collect
+msgid "STAR"
+msgstr "ESTRELLA"
+
+#. Editor palette: a tile that holds MapMan until the player shakes or taps
+msgid "STICKY TILE"
+msgstr "CASILLA PEGAJOSA"
+
+#. Editor palette: a tile that reverses the controls
+msgid "REVERSE TILE"
+msgstr "CASILLA INVERSORA"
+
+#. Editor palette: a tile that hides the hideable tiles when stepped on
+msgid "HIDE TILES"
+msgstr "OCULTAR CASILLAS"
+
+#. Editor palette: a tile that shows the hidden tiles again
+msgid "UNHIDE TILES"
+msgstr "MOSTRAR CASILLAS"
+
+#. Editor palette: a path tile that is never drawn
+msgid "INVISIBLE PATH"
+msgstr "CAMINO INVISIBLE"
+
+#. Editor palette: a star that disappears while tiles are hidden
+msgid "HIDEABLE STAR"
+msgstr "ESTRELLA OCULTABLE"
+
+#. Editor palette: a death tile that disappears while tiles are hidden
+msgid "HIDEABLE DEATH TILE"
+msgstr "CASILLA MORTAL OCULTABLE"
+
+#. Editor palette: an extra life that disappears while tiles are hidden
+msgid "HIDEABLE EXTRA LIFE"
+msgstr "VIDA EXTRA OCULTABLE"
+
+#. Editor palette: marks tiles that are hidden when the level begins
+msgid "STARTS HIDDEN"
+msgstr "EMPIEZA OCULTA"
+
+#. Screen reader: a draft slot with nothing in it (%d is 1 to 6)
+msgid "Draft %d, empty"
+msgstr "Borrador %d, vacío"
+
+#. Screen reader: a draft slot with a level not yet beaten
+msgid "Draft %d"
+msgstr "Borrador %d"
+
+#. Screen reader: a draft its maker has beaten, ready to share
+msgid "Draft %d, signed"
+msgstr "Borrador %d, firmado"
+
+#. Screen reader: a level a friend sent (%d counts them)
+msgid "Received level %d"
+msgstr "Nivel recibido %d"
+
+#. Screen reader: the text box for a level code
+msgid "Level code"
+msgstr "Código de nivel"
+
+#. Screen reader: the QR code picture on the share sheet
+msgid "QR code of the level"
+msgstr "Código QR del nivel"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "CASILLA QUE SE DESMORONA"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "BORRAR"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "ESCANEAR UN CÓDIGO QR"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "APUNTA LA CÁMARA AL CÓDIGO QR DE LA HOJA PARA COMPARTIR DE UN AMIGO"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "BUSCANDO UN CÓDIGO QR…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "NO SE ENCONTRÓ NINGUNA CÁMARA"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN NO TIENE PERMISO PARA USAR LA CÁMARA. PERMÍTELO EN LOS AJUSTES DEL TELÉFONO"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "ESE CÓDIGO QR NO ES UN NIVEL DE MAPMAN"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "ESCRIBIR UN CÓDIGO"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "Vista de la cámara"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "HIELO"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "PINCHOS"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "PINCHOS A CONTRATIEMPO"

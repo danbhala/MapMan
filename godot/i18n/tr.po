@@ -863,3 +863,284 @@ msgstr "BAŞLAMAK İÇİN DOKUN"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "GEÇ"
+
+#. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
+msgid "DRAFTING TABLE"
+msgstr "ÇİZİM MASASI"
+
+#. Drafting table: heading over the six levels the player is drawing
+msgid "YOUR DRAFTS"
+msgstr "TASLAKLARIN"
+
+#. Drafting table: heading over levels other players sent as codes
+msgid "RECEIVED LEVELS"
+msgstr "GELEN BÖLÜMLER"
+
+#. Drafting table: shown while no level has been received yet
+msgid "LEVELS FRIENDS SEND YOU APPEAR HERE"
+msgstr "ARKADAŞLARININ GÖNDERDİĞİ BÖLÜMLER BURADA"
+
+#. Drafting table: a draft slot with nothing drawn in it (small cell)
+msgid "EMPTY"
+msgstr "BOŞ"
+
+#. Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)
+msgid "DRAFT"
+msgstr "TASLAK"
+
+#. Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)
+msgid "SIGNED"
+msgstr "İMZALI"
+
+#. Drafting table item: type or paste a code a friend sent, to play their level
+msgid "ENTER A LEVEL CODE"
+msgstr "BÖLÜM KODU GİR"
+
+#. Drafting table note: the three steps of making a level
+msgid "DRAW A LEVEL · BEAT IT · SHARE ITS CODE"
+msgstr "BÖLÜM ÇİZ · GEÇ · KODUNU PAYLAŞ"
+
+#. Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)
+msgid "LEVEL CLEARED WITH %ds LEFT"
+msgstr "BÖLÜM GEÇİLDİ, %dsn KALDI"
+
+#. Sheet title: the screen for typing or pasting a level code
+msgid "LEVEL CODE"
+msgstr "BÖLÜM KODU"
+
+#. Level code sheet: instruction above the text box
+msgid "TYPE OR PASTE A LEVEL CODE"
+msgstr "BÖLÜM KODUNU YAZ YA DA YAPIŞTIR"
+
+#. Level code sheet button: paste the clipboard into the text box
+msgid "PASTE"
+msgstr "YAPIŞTIR"
+
+#. Level code sheet item: play the level the code describes
+msgid "PLAY THIS LEVEL"
+msgstr "BU BÖLÜMÜ OYNA"
+
+#. Level code sheet: the code has a typo or isn't a level code
+msgid "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN"
+msgstr "KOD OKUNAMADI. KONTROL EDİP TEKRAR DENE"
+
+#. Level code sheet: the code was made by a later version of the game. Keep MAPMAN.
+msgid "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN"
+msgstr "BU BÖLÜM İÇİN MAPMAN'İN YENİ SÜRÜMÜ GEREKİR"
+
+#. Sheet title shown when the game opens with a copied level code: offer to play it
+msgid "A LEVEL CODE IS ON THE CLIPBOARD"
+msgstr "PANODA BİR BÖLÜM KODU VAR"
+
+#. Item: play the level from the copied code
+msgid "PLAY IT"
+msgstr "OYNA"
+
+#. Item: ignore the copied code
+msgid "NOT NOW"
+msgstr "ŞİMDİ DEĞİL"
+
+#. Editor title: which of the six drafts is open (%d is 1 to 6)
+msgid "DRAFT %d"
+msgstr "TASLAK %d"
+
+#. Editor button: leave the editor (the draft is kept)
+msgid "BACK"
+msgstr "GERİ"
+
+#. Editor button: take back the last stroke
+msgid "UNDO"
+msgstr "GERİ AL"
+
+#. Editor button: play the draft; reaching an exit signs it
+msgid "TEST"
+msgstr "DENE"
+
+#. Editor button: show the draft's code and QR code (only once it is signed)
+msgid "SHARE"
+msgstr "PAYLAŞ"
+
+#. Editor: small label over the meter showing how long the draft's code is
+msgid "CODE"
+msgstr "KOD"
+
+#. Editor status: the draft has no start tile yet
+msgid "PLACE ONE START TILE"
+msgstr "BİR BAŞLANGIÇ KAROSU KOY"
+
+#. Editor status: the draft has no exit yet
+msgid "PLACE AT LEAST ONE EXIT"
+msgstr "EN AZ BİR ÇIKIŞ KOY"
+
+#. Editor status: the draft can be played; beating it signs it so it can be shared
+msgid "TEST IT AND REACH AN EXIT TO SIGN IT"
+msgstr "İMZALAMAK İÇİN DENE VE BİR ÇIKIŞA ULAŞ"
+
+#. Editor status: the draft has been beaten and can be shared
+msgid "SIGNED · READY TO SHARE"
+msgstr "İMZALI · PAYLAŞIMA HAZIR"
+
+#. Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it
+msgid "VANISH · %d MOVE"
+msgid_plural "VANISH · %d MOVES"
+msgstr[0] "KAYBOLUR · %d HAMLE"
+
+#. Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code
+msgid "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE"
+msgstr "QR'I TELEFON KAMERASIYLA TARA YA DA KODU GÖNDER"
+
+#. Share sheet item: copy the level code to the clipboard
+msgid "COPY CODE"
+msgstr "KODU KOPYALA"
+
+#. Share sheet: confirms the code is on the clipboard
+msgid "CODE COPIED"
+msgstr "KOD KOPYALANDI"
+
+#. Share sheet item: return to the editor
+msgid "BACK TO THE DRAFT"
+msgstr "TASLAĞA DÖN"
+
+#. Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · DRAFT %d"
+msgstr "ÇALIŞMA ASKIYA ALINDI · TASLAK %d"
+
+#. Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · RECEIVED LEVEL"
+msgstr "ÇALIŞMA ASKIYA ALINDI · GELEN BÖLÜM"
+
+#. Editor palette: clears tiles
+msgid "ERASER"
+msgstr "SİLGİ"
+
+#. Editor palette: a plain tile MapMan can walk on
+msgid "PATH"
+msgstr "YOL"
+
+#. Editor palette: where MapMan starts (one per level)
+msgid "START TILE"
+msgstr "BAŞLANGIÇ KAROSU"
+
+#. Editor palette: a level exit (one for each direction)
+msgid "EXIT"
+msgstr "ÇIKIŞ"
+
+#. Editor palette: a tile that costs a life
+msgid "DEATH TILE"
+msgstr "ÖLÜM KAROSU"
+
+#. Editor palette: a star to collect
+msgid "STAR"
+msgstr "YILDIZ"
+
+#. Editor palette: a tile that holds MapMan until the player shakes or taps
+msgid "STICKY TILE"
+msgstr "YAPIŞKAN KARO"
+
+#. Editor palette: a tile that reverses the controls
+msgid "REVERSE TILE"
+msgstr "TERS KARO"
+
+#. Editor palette: a tile that hides the hideable tiles when stepped on
+msgid "HIDE TILES"
+msgstr "KAROLARI GİZLE"
+
+#. Editor palette: a tile that shows the hidden tiles again
+msgid "UNHIDE TILES"
+msgstr "KAROLARI GÖSTER"
+
+#. Editor palette: a path tile that is never drawn
+msgid "INVISIBLE PATH"
+msgstr "GÖRÜNMEZ YOL"
+
+#. Editor palette: a star that disappears while tiles are hidden
+msgid "HIDEABLE STAR"
+msgstr "GİZLENEBİLİR YILDIZ"
+
+#. Editor palette: a death tile that disappears while tiles are hidden
+msgid "HIDEABLE DEATH TILE"
+msgstr "GİZLENEBİLİR ÖLÜM KAROSU"
+
+#. Editor palette: an extra life that disappears while tiles are hidden
+msgid "HIDEABLE EXTRA LIFE"
+msgstr "GİZLENEBİLİR EK CAN"
+
+#. Editor palette: marks tiles that are hidden when the level begins
+msgid "STARTS HIDDEN"
+msgstr "BAŞTA GİZLİ"
+
+#. Screen reader: a draft slot with nothing in it (%d is 1 to 6)
+msgid "Draft %d, empty"
+msgstr "Taslak %d, boş"
+
+#. Screen reader: a draft slot with a level not yet beaten
+msgid "Draft %d"
+msgstr "Taslak %d"
+
+#. Screen reader: a draft its maker has beaten, ready to share
+msgid "Draft %d, signed"
+msgstr "Taslak %d, imzalı"
+
+#. Screen reader: a level a friend sent (%d counts them)
+msgid "Received level %d"
+msgstr "Gelen bölüm %d"
+
+#. Screen reader: the text box for a level code
+msgid "Level code"
+msgstr "Bölüm kodu"
+
+#. Screen reader: the QR code picture on the share sheet
+msgid "QR code of the level"
+msgstr "Bölümün QR kodu"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "UFALANAN KARO"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "TEMİZLE"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "QR KOD TARA"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "KAMERAYI ARKADAŞININ PAYLAŞ SAYFASINDAKİ QR KODA TUT"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "QR KOD ARANIYOR…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "KAMERA BULUNAMADI"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN KAMERAYI KULLANAMIYOR. TELEFON AYARLARINDAN İZİN VER"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "BU QR KOD BİR MAPMAN BÖLÜMÜ DEĞİL"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "KODU YAZ"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "Kamera görüntüsü"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "BUZ"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "DİKENLER"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "TERS VURUŞ DİKENLERİ"

@@ -197,11 +197,11 @@ func test_play_log_records_wins_deaths_and_timeouts() -> void:
 
 
 func test_go_to_level_and_skip_level() -> void:
-	game.dev_go_to_level(2)
+	DevPanel.go_to_level(game, 2)
 	assert_eq(game.level, 2)
 	assert_eq(game.score, 0)
-	game.dev_go_to_level(1)
-	game.dev_skip_level()
+	DevPanel.go_to_level(game, 1)
+	DevPanel.skip_level(game)
 	assert_eq(game.level, 2, "skip moves on without finishing")
 	assert_eq(game.score, 0, "skipping scores nothing")
 
