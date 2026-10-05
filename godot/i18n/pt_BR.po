@@ -385,6 +385,10 @@ msgstr "VIDAS RESTANTES ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "AS 100 FOLHAS HOMOLOGADAS · OBRIGADO POR JOGAR"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NOTA: O TUTORIAL TEM LIÇÕES NOVAS"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "HOMOLOGADO"

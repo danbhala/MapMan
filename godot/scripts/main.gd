@@ -30,7 +30,8 @@ const HIDDEN_COLOR := Blueprint.MINT
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
-var tutorial_levels: Array = []
+var tutorial_levels: Array = []  # the lessons on offer now (see lessons())
+var tutorial_all: Array = []  # every lesson in data/tutorial.json
 var completion_level: Dictionary = {}
 var check_point_levels: Array = []
 
@@ -169,9 +170,10 @@ func _load_data() -> void:
 	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/levels.json"))
 	levels = data["levels"]
 	check_point_levels = data["check_points"]
-	tutorial_levels = (
+	tutorial_all = (
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
 	)
+	tutorial_levels = lessons()
 	completion_level = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/completion.json")
 	)
@@ -852,12 +854,30 @@ func finish_advancing_level() -> void:
 			# Past the last level: the bonus map where MapWoman waits. Finishing
 			# the game releases her into the wardrobe.
 			completed = true
-			Save.has_completed = true
+			_mark_completed()
 			Save.release("mapwoman")
 			Save.save_all()
 			hud.show_stats(false)
 	load_level()
 	reset_all()
+
+
+## The tutorial's lessons for this player: the Revision B ones (new tiles
+## for the second playthrough, `rev_b` in tutorial.json) wait until the
+## game has been finished once.
+func lessons() -> Array:
+	return tutorial_all.filter(
+		func(l: Dictionary) -> bool: return not l.get("rev_b", false) or Save.has_completed
+	)
+
+
+## Finishing the game. The first time, the lessons it adds to the tutorial
+## are news: the completion sheet and the main menu say so until it is played.
+func _mark_completed() -> void:
+	if not Save.has_completed and lessons().size() < tutorial_all.size():
+		Save.new_lessons = true
+	Save.has_completed = true
+	tutorial_levels = lessons()
 
 
 func show_game_complete() -> void:
@@ -867,7 +887,7 @@ func show_game_complete() -> void:
 	var lives_bonus := lives * LIFE_BONUS
 	end_of_level_points = COMPLETION_BONUS + lives_bonus
 	Audio.play_completion()
-	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus)
+	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus, Save.new_lessons)
 
 
 func new_game(start_level := 1, is_tutorial := false) -> void:
@@ -876,6 +896,11 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	if tutorial:
+		tutorial_levels = lessons()
+		if Save.new_lessons:  # the news has been read
+			Save.new_lessons = false
+			Save.save_all()
 	completed = false
 	practice = false
 	_between = false
@@ -998,7 +1023,7 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size())
+	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.new_lessons)
 
 
 func show_pause_menu() -> void:
@@ -1103,7 +1128,7 @@ func _on_menu_action(act: String) -> void:
 		"completion done":
 			score += end_of_level_points
 			var pb := Save.submit_score(score)
-			Save.has_completed = true
+			_mark_completed()
 			Save.save_all()
 			game_active = false
 			hud.show_bar(false)

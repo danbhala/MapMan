@@ -383,6 +383,10 @@ msgstr "SISA NYAWA ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "SEMUA 100 LEMBAR DISETUJUI · TERIMA KASIH SUDAH BERMAIN"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "CATATAN: TUTORIAL PUNYA PELAJARAN BARU"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "DISETUJUI"

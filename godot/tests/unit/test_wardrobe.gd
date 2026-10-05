@@ -22,6 +22,7 @@ func before_each() -> void:
 	Save.furthest_level = 1
 	Save.has_completed = false
 	Save.first_play = false
+	Save.new_lessons = false
 
 
 func after_each() -> void:

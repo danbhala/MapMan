@@ -93,11 +93,13 @@ static func main_menu_row(m: Menus) -> void:
 	m._connect(b, "wardrobe")
 	m._reveal(b)
 	if Save.unseen() > 0:
-		_tag(m, m.tr(TEXT.new))
+		tag(m, m.tr(TEXT.new), TAG_END, TAG_Y)
 
 
-## A small gold tag, a stamp the size of a note, askew on the row's corner.
-static func _tag(m: Menus, text: String) -> void:
+## A small gold tag, a stamp the size of a note, askew on a row's corner:
+## its right end at end_x (mirrored for Arabic), its top at y. The main
+## menu's TUTORIAL row borrows it when the tutorial has new lessons.
+static func tag(m: Menus, text: String, end_x: float, y: float) -> void:
 	var n := Node2D.new()
 	n.rotation = Blueprint.STAMP_ROTATION
 	m._panel.add_child(n)
@@ -105,7 +107,7 @@ static func _tag(m: Menus, text: String) -> void:
 	l.size = l.get_minimum_size()
 	var box := l.size + Vector2(10, 4)
 	Blueprint.line(n, Blueprint.box_points(Vector2(-5, -2), box), Blueprint.GOLD, 1.2)
-	n.position = Vector2(m._mx(TAG_END - box.x, box.x) + 5.0, TAG_Y)
+	n.position = Vector2(m._mx(end_x - box.x, box.x) + 5.0, y)
 	m._reveal(n)
 
 

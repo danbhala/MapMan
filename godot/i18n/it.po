@@ -385,6 +385,10 @@ msgstr "VITE RIMASTE ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "100 TAVOLE APPROVATE · GRAZIE PER AVER GIOCATO"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NOTA: IL TUTORIAL HA NUOVE LEZIONI"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "APPROVATO"

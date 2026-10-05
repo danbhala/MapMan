@@ -383,6 +383,10 @@ msgstr "KALAN CAN ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "TÜM 100 PAFTA ONAYLANDI · OYNADIĞIN İÇİN TEŞEKKÜRLER"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NOT: EĞİTİMDE YENİ DERSLER VAR"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "ONAYLANDI"

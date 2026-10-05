@@ -531,6 +531,11 @@
       "max": 60
     },
     {
+      "id": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+      "note": "Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial",
+      "max": 60
+    },
+    {
       "id": "APPROVED",
       "note": "Rubber stamp on the final sheet",
       "max": 10
