@@ -936,17 +936,19 @@ func show_controls() -> void:
 	ControlsSheet.build(self)
 
 
-## An options row: the parameter on the left, its value in the VALUE column.
-func _value_row(name: String, value: String, y: float) -> Button:
+## An options row: the parameter on the left, its value in the VALUE column;
+## greyed out and untappable when not `enabled`.
+func _value_row(name: String, value: String, y: float, enabled := true) -> Button:
 	var size := Vector2(LIST_W, OPTIONS_PITCH)
-	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size)
+	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size, enabled)
 	b.alignment = _align()
 	# The value column runs from 20 characters in to the row's far margin, at
 	# the mirror image on a right-to-left sheet.
 	var col := TEXT_X - LIST_X + 20 * CHAR_W
 	var w := LIST_W - col - 12.0
 	var pos := Vector2(12.0 if _rtl else col, 0)
-	var l := Blueprint.label(b, value, 16, Blueprint.INK, pos, 500, w)
+	var ink := Blueprint.INK if enabled else Blueprint.DIM
+	var l := Blueprint.label(b, value, 16, ink, pos, 500, w)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

@@ -407,7 +407,7 @@ msgstr "서둘러!"
 msgid "GET READY..."
 msgstr "준비…"
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "기울여서 이동"
 
@@ -874,3 +874,7 @@ msgstr ""
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "플레이 중 화면을 탭하면 일시정지됩니다. 짧게 탭할 때만 일시정지되고, 드래그하면 MapMan이 움직입니다."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "기울기 전용"

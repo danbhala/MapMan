@@ -407,7 +407,7 @@ msgstr "快點！"
 msgid "GET READY..."
 msgstr "準備…"
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "傾斜移動"
 
@@ -874,3 +874,7 @@ msgstr ""
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "遊戲中點一下螢幕即可暫停。只有快速點一下才會暫停：拖曳時MapMan會移動。"
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "僅限傾斜"

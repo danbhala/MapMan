@@ -562,8 +562,8 @@
     },
     {
       "id": "TILT TO MOVE",
-      "note": "HUD note on level 1",
-      "max": 24
+      "note": "Controls row: steer by tilting the device (also a HUD note on level 1)",
+      "max": 18
     },
     {
       "id": "BONUS POINTS",
@@ -1088,6 +1088,11 @@
       "id": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.",
       "note": "Tutorial lesson 11 when steering with the touch stick",
       "max": 170
+    },
+    {
+      "id": "TILT ONLY",
+      "note": "Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt",
+      "max": 17
     }
   ]
 }

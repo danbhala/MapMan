@@ -125,9 +125,16 @@ func test_controls_sheet_rows() -> void:
 		_press_all(),
 		["controls tilt", "controls touch", "sensitivity 2", "tilt gauge off", "options"]
 	)
+	Save.controls = "tilt"  # pressing every row left touch on
 	Save.tilt_sensitivity = 2
 	game.menus.show_controls()
 	assert_has(_press_all(), "sensitivity 0", "HIGH comes round to LOW")
+
+
+func test_tilt_rows_grey_out_while_steering_by_touch() -> void:
+	Save.controls = "touch"
+	game.menus.show_controls()
+	assert_eq(_press_all(), ["controls tilt", "controls touch", "options"])
 
 
 func test_controls_choices_stay_on_the_sheet_and_back_goes_to_options() -> void:

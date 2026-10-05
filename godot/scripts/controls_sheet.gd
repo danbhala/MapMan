@@ -15,6 +15,7 @@ const TEXT := {
 	"sensitivity": "TILT SENSITIVITY",
 	"levels": ["LOW", "NORMAL", "HIGH"],
 	"gauge": "TILT GAUGE",
+	"tilt_only": "TILT ONLY",
 }
 const MODES: Array[String] = ["tilt", "touch"]
 
@@ -25,7 +26,8 @@ static func mode_name() -> String:
 
 
 ## Rows report "controls tilt", "controls touch", "sensitivity <0-2>" (the
-## next level round from the current one) and "tilt gauge on/off".
+## next level round from the current one) and "tilt gauge on/off"; with
+## touch chosen, the two tilt rows are greyed out and report nothing.
 static func build(m: Menus) -> void:
 	m._open("controls", TEXT.number, m.tr(TEXT.title))
 	m._columns(
@@ -35,14 +37,23 @@ static func build(m: Menus) -> void:
 	for i in MODES.size():
 		_toggle(m, m.tr(TEXT.items[i]), Save.controls == MODES[i], "controls " + MODES[i], y)
 		y += Menus.OPTIONS_PITCH
+	# Steering by touch, the tilt rows stay in place, greyed out.
+	var tilt := Save.controls != "touch"
 	var level := clampi(Save.tilt_sensitivity, 0, TEXT.levels.size() - 1)
-	var value: String = m.tr(TEXT.levels[level])
-	var sens := m._value_row(m.tr(TEXT.sensitivity), value, y)
+	var value: String = m.tr(TEXT.levels[level]) if tilt else m.tr(TEXT.tilt_only)
+	var sens := m._value_row(m.tr(TEXT.sensitivity), value, y, tilt)
 	sens.accessibility_name = Menus.TEXT.a11y_toggle % [m._sentence(m.tr(TEXT.sensitivity)), value]
-	m._connect(sens, "sensitivity %d" % ((level + 1) % TEXT.levels.size()))
+	if tilt:
+		m._connect(sens, "sensitivity %d" % ((level + 1) % TEXT.levels.size()))
 	y += Menus.OPTIONS_PITCH
-	var gauge_act := "tilt gauge " + ("off" if Save.tilt_gauge else "on")
-	_toggle(m, m.tr(TEXT.gauge), Save.tilt_gauge, gauge_act, y)
+	if tilt:
+		var gauge_act := "tilt gauge " + ("off" if Save.tilt_gauge else "on")
+		_toggle(m, m.tr(TEXT.gauge), Save.tilt_gauge, gauge_act, y)
+	else:
+		var gauge := m._value_row(m.tr(TEXT.gauge), m.tr(TEXT.tilt_only), y, false)
+		gauge.accessibility_name = (
+			Menus.TEXT.a11y_toggle % [m._sentence(m.tr(TEXT.gauge)), m.tr(TEXT.tilt_only)]
+		)
 	y += Menus.OPTIONS_PITCH
 	var pos := Vector2(m._mx(Menus.LIST_X, Menus.LIST_W), y)
 	var back := Blueprint.item(

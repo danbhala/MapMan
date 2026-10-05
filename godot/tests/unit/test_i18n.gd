@@ -237,6 +237,13 @@ func _wardrobe_sheet(worn: String) -> void:
 	game.menus.show_wardrobe()
 
 
+## Sheet 001-E steering by touch: the tilt rows greyed out, TILT ONLY.
+func _controls_by_touch(m) -> void:
+	Save.controls = "touch"
+	m.show_controls()
+	Save.controls = "tilt"
+
+
 func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
 	# Part way through: the first ten looks, the longest and MapWoman released.
@@ -251,6 +258,8 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_first_play(),
 		func(): m.show_options(),
 		func(): m.show_language(),
+		func(): m.show_controls(),
+		_controls_by_touch.bind(m),
 		func(): m.show_pause(false, 35, 12),
 		func(): m.show_pause(true),
 		func(): m.show_confirm_quit(),

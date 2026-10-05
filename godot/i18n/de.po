@@ -409,7 +409,7 @@ msgstr "BEEILUNG!"
 msgid "GET READY..."
 msgstr "BEREITMACHEN..."
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "ZUM BEWEGEN NEIGEN"
 
@@ -882,3 +882,7 @@ msgstr ""
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "Tippe während des Spiels auf den Bildschirm, um zu pausieren. Nur kurzes Tippen pausiert: Wenn du ziehst, läuft MapMan."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "NUR NEIGEN"

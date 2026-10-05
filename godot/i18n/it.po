@@ -409,9 +409,9 @@ msgstr "SBRIGATI!"
 msgid "GET READY..."
 msgstr "PREPARATI..."
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
-msgstr "INCLINA PER MUOVERTI"
+msgstr "INCLINA E MUOVI"
 
 #. HUD note: a star was collected
 msgid "BONUS POINTS"
@@ -849,7 +849,7 @@ msgstr "TOCCO"
 
 #. Controls row: steer with an on-screen stick that appears where a finger touches and drags
 msgid "DRAG TO MOVE"
-msgstr "TRASCINA PER MUOVERTI"
+msgstr "TRASCINA E MUOVI"
 
 #. Controls row: how little tilt moves MapMan
 msgid "TILT SENSITIVITY"
@@ -882,3 +882,7 @@ msgstr ""
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "Tocca lo schermo durante la partita per la pausa. Solo un tocco rapido mette in pausa: se trascini, MapMan si muove."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "SOLO INCLINAZIONE"
