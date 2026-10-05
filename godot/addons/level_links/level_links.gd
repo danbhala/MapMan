@@ -1,9 +1,11 @@
 @tool
 extends EditorPlugin
-## Adds the level link to the Android manifest at export, so a phone opens
-## https://danbhala.github.io/mapman/<code> in MapMan (DraftingTable.check_link).
-## Needs the presets' gradle build; the site's assetlinks.json names the
-## signing key, so Android opens links without asking.
+## Adds level links to the Android manifest at export (DraftingTable.check_link):
+## mapman://level/<code>, which the link page (site/) opens, and
+## https://danbhala.github.io/MapMan/<code> itself, which opens the game
+## straight away once a player allows it (Settings, Open by default: the
+## domain root isn't ours, so Android can't verify it). Needs the presets'
+## gradle build.
 
 var _export: LinkExport
 
@@ -22,14 +24,18 @@ class LinkExport:
 	extends EditorExportPlugin
 
 	const FILTER := """
-<intent-filter android:autoVerify="true">
+<intent-filter>
 	<action android:name="android.intent.action.VIEW" />
 	<category android:name="android.intent.category.DEFAULT" />
 	<category android:name="android.intent.category.BROWSABLE" />
-	<data android:scheme="https" />
-	<data android:host="danbhala.github.io" />
-	<data android:pathPrefix="/mapman/" />
-	<data android:pathPrefix="/MAPMAN/" />
+	<data android:scheme="mapman" android:host="level" />
+</intent-filter>
+<intent-filter>
+	<action android:name="android.intent.action.VIEW" />
+	<category android:name="android.intent.category.DEFAULT" />
+	<category android:name="android.intent.category.BROWSABLE" />
+	<data android:scheme="https" android:host="danbhala.github.io" />
+	<data android:pathPrefix="/MapMan/" />
 </intent-filter>
 """
 

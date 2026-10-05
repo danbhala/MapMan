@@ -55,6 +55,11 @@ func test_reads_a_code_upside_down_in_perspective() -> void:
 	assert_eq(QrReader.read(_photo(_qr(CODE), 640, 360, corners, 0.05)), CODE)
 
 
+func test_reads_a_shared_level_link() -> void:
+	var link := LevelCode.link(CODE)
+	assert_eq(QrReader.read(_qr(link)), link)
+
+
 func test_reads_a_mirrored_code() -> void:
 	var img := _qr(CODE)
 	img.flip_y()

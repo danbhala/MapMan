@@ -51,11 +51,12 @@ func test_reading_is_forgiving() -> void:
 func test_a_link_reads_like_a_code() -> void:
 	var code := LevelCode.encode(["bcdcw", "  p  "])
 	var link := LevelCode.link(code)
-	assert_eq(link, "https://danbhala.github.io/mapman/" + LevelCode.pretty(code))
+	assert_eq(link, "https://danbhala.github.io/MapMan/" + LevelCode.pretty(code))
 	assert_eq(LevelCode.decode(link).get("rows"), ["bcdcw", "  p  "])
-	# The QR code's capitals, and whatever a chat app tacks on.
-	assert_eq(LevelCode.find(link.to_upper() + "?utm=chat"), LevelCode.pretty(code))
-	assert_eq(LevelCode.find("https://danbhala.github.io/other/" + code), "")
+	# Whatever a chat app tacks on, and the page's link into the game.
+	assert_eq(LevelCode.find(link + "/?utm=chat"), LevelCode.pretty(code))
+	assert_eq(LevelCode.find("mapman://level/" + code), LevelCode.pretty(code))
+	assert_eq(LevelCode.find("https://example.com/" + code), "", "only MapMan links")
 
 
 func test_typos_are_caught() -> void:

@@ -239,7 +239,7 @@ func test_a_scanned_link_plays_too() -> void:
 	var code := _corridor().code()
 	game.drafting.show()
 	game._on_menu_action("scan code")
-	DraftingSheet._on_scanned(LevelCode.link(code).to_upper(), game.menus)
+	DraftingSheet._on_scanned(LevelCode.link(code), game.menus)
 	assert_eq(game.custom, "received")
 	assert_eq(Save.received, [LevelCode.pretty(code)])
 

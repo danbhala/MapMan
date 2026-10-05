@@ -315,7 +315,7 @@ static func scan_status(m: Menus, kind: String) -> void:
 static func _on_scanned(text: String, m: Menus) -> void:
 	# A MAPMAN code from a newer game still goes on, to be told so.
 	var t := text.strip_edges()
-	var ours := t.to_upper().begins_with(LevelCode.PREFIX) or t.to_upper().contains("/MAPMAN/")
+	var ours := t.to_upper().contains(LevelCode.PREFIX)
 	if LevelCode.find(t) == "" and not ours:
 		scan_status(m, "not_a_level")
 	else:
@@ -338,7 +338,7 @@ static func build_share(m: Menus, draft: Draft, copied := false) -> void:
 	if copied:
 		m._note(m.tr(TEXT.copied), 310, Blueprint.GOLD, 11)
 	var qr := TextureRect.new()
-	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.link(code).to_upper()))
+	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.link(code)))
 	qr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	qr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	qr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -364,7 +364,12 @@ static func code_lines(code: String) -> String:
 ## phone cameras read, with the quiet zone the standard asks for.
 static func qr_image(text: String) -> Image:
 	var qr := QrCode.new(QrCode.ErrorCorrection.MEDIUM)
-	qr.put_alphanumeric(text)
+	# A link has small letters, so goes byte by byte; a bare code is smaller
+	# as alphanumeric.
+	if text == text.to_upper():
+		qr.put_alphanumeric(text)
+	else:
+		qr.put_byte(text.to_utf8_buffer())
 	var modules := qr.encode()
 	return QrCode.generate_image(modules, 4, Blueprint.INK, Blueprint.FIELD, 4)
 

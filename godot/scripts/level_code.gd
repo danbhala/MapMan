@@ -26,10 +26,9 @@ const B32 := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 ## What a shared code starts with, so a phone's camera or a chat shows whose
 ## it is; reading a code skips it.
 const PREFIX := "MAPMAN"
-## A shared level as a link: a phone opens it in the game, or, without the
-## game, on a page that shows the code (danbhala.github.io, site/). The QR
-## code writes it in capitals, which take fewer modules.
-const LINK := "https://danbhala.github.io/mapman/"
+## A shared level as a link to the repo's Pages site (`site/`): a page that
+## shows the code and opens it in the game (as `mapman://level/<code>`).
+const LINK := "https://danbhala.github.io/MapMan/"
 const EDGE := -1
 const WEIGHT := 8
 const ADAPT := 8
@@ -286,9 +285,11 @@ static func decode(code: String) -> Dictionary:
 ## "" when it holds anything else.
 static func clean(code: String) -> String:
 	var text := code.to_upper().strip_edges()
-	var path := "/" + PREFIX + "/"
-	if text.contains(path):
-		text = text.get_slice(path, 1).get_slice("?", 0).get_slice("#", 0)
+	# A link ends in the code: https://danbhala.github.io/MapMan/<code>, or
+	# mapman://level/<code> from the page.
+	if text.contains("://") and text.contains(PREFIX):
+		text = text.get_slice("?", 0).get_slice("#", 0).rstrip("/")
+		text = text.substr(text.rfind("/") + 1)
 	elif text.begins_with(PREFIX):
 		text = text.substr(PREFIX.length())
 	var out := ""

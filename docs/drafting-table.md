@@ -14,7 +14,7 @@ short code. There are no accounts and no server: the code *is* the level.
 - **Beat it to share it.** TEST plays the draft like practice: no lives, no
   score, no saving. Reaching an exit **signs** it. Any later edit unsigns it.
 - **Sharing** shows the code in groups of four (`0MM3-C7P1-P7R3-KWTS-4`) and a
-  QR code. Both hold a level link, `https://danbhala.github.io/mapman/<code>`:
+  QR code. Both hold a level link, `https://danbhala.github.io/MapMan/<code>`:
   COPY CODE puts it on the clipboard.
 - **Playing a friend's level:** SCAN A QR CODE points the camera at the QR
   on their share sheet and plays the level as soon as it reads; ENTER A
@@ -22,11 +22,12 @@ short code. There are no accounts and no server: the code *is* the level.
   MapMan: a code on the clipboard is offered once on the main menu (the
   phone's own camera app can put a QR's text there too). The last six codes played are kept under
   RECEIVED LEVELS.
-- **Level links:** on Android, scanning the QR with the phone's camera or
-  tapping the link in a chat opens MapMan straight into the level, whether
-  the game was closed or in the background, and even before level 11. In the
-  middle of the main game it waits for the main menu. Without the game, the
-  link shows a page with the code to copy (see below).
+- **Level links:** scanning the QR with the phone's camera or tapping the
+  link in a chat opens a page with the code. On Android its OPEN IN MAPMAN
+  opens the game straight into the level, whether it was closed or in the
+  background, and even before level 11 (in the middle of the main game the
+  level waits for the main menu). A player can skip the page for good:
+  Settings, Apps, MapMan, Open by default, add danbhala.github.io.
 - The CODE meter shows how long the code is; it turns pink past 64
   characters. Longer codes still work, they're just harder to type.
 
@@ -66,27 +67,9 @@ version".
 ## QR codes
 
 `godot/addons/kenyoni/qr_code/` (MIT) draws the QR on the share sheet,
-offline. The link goes in capitals (`HTTPS://DANBHALA.GITHUB.IO/MAPMAN/<code>`)
-so the QR can use alphanumeric mode, which fits it with a 64-character code
-in a version-4 or 5 symbol. Codes read back from a link, `MAPMAN <code>` or the
-bare code alike (`LevelCode.clean`).
-
-## Level links
-
-- **The page:** the GitHub Pages site in the `danbhala/danbhala.github.io`
-  repo. Its `404.html` serves every `/mapman/<code>` address and shows the
-  code to copy; `.well-known/assetlinks.json` names both apps
-  (`com.danbhala.mapman` and `.dev`) and the SHA-256 of the key the APKs are
-  signed with (uber-apk-signer's debug key, `build-apk`). Change it if the
-  signing key ever changes, or Android stops opening links in the game.
-- **The game:** `addons/level_links/` is an editor plugin that adds the link's
-  `intent-filter` to the Android manifest at export, which needs the presets'
-  gradle build (CI installs the build template into the ignored
-  `godot/android/`). `DraftingTable.check_link()` reads the link Android
-  opened the game with (the `AndroidRuntime` singleton) as the intro ends,
-  on returning to the game and on the main menu, and plays each link once.
-- **iPhone:** not yet. It needs Universal Links (an associated-domains
-  entitlement and an `apple-app-site-association` file on the site).
+offline. A link has small letters, so it goes in byte mode (a version-6 or 7
+symbol); a bare code goes in alphanumeric mode. Codes read back from a link,
+`MAPMAN <code>` or the bare code alike (`LevelCode.clean`).
 
 The scan sheet (001-G) reads them back in the game: `scripts/qr_scanner.gd`
 shows the back camera (`CameraServer`; Android asks for the camera
@@ -98,3 +81,20 @@ phone held at an angle still reads), and repairs damaged modules with the
 code's Reed-Solomon check words. `tests/unit/test_qr_reader.gd` reads
 turned, tilted, mirrored, noisy and damaged codes. The camera itself can
 only be tried on a phone.
+
+## Level links
+
+- **The page:** `site/`, published to the repo's GitHub Pages by
+  `.github/workflows/pages.yml` on every master push that changes it. Its
+  `404.html` serves every `/MapMan/<code>` address: the code to copy, and on
+  Android an `intent://` link to `mapman://level/<code>` (or the download
+  page without the game). Android can't verify the https link itself (that
+  needs a file at the domain root, which only a `danbhala.github.io` repo
+  could publish), so it opens the page unless the player allows the link.
+- **The game:** `addons/level_links/` is an editor plugin that adds the
+  `mapman://level/` and https `intent-filter`s to the Android manifest at
+  export, which needs the presets' gradle build (CI installs the build
+  template into the ignored `godot/android/`). `DraftingTable.check_link()` reads the link Android
+  opened the game with (the `AndroidRuntime` singleton) as the intro ends,
+  on returning to the game and on the main menu, and plays each link once.
+- **iPhone:** not yet: the page shows the code to copy.
