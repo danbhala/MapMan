@@ -64,9 +64,10 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
 
 ## Workflow
 
-- Skills: `/verify`, `/new-level`, `/new-tile`, `/new-look`, `/build-apk`, `/commit`
-  (every commit), `/open-pr` (every PR: title, body, labels), `/release`
-  (merging and shipping).
+- Skills: `/verify`, `/new-level`, `/custom-level` (a level from a description
+  as a code and QR, for playing, not the campaign), `/new-tile`, `/new-look`,
+  `/build-apk`, `/commit` (every commit), `/open-pr` (every PR: title, body,
+  labels), `/release` (merging and shipping).
 - Agents: `level-analyst` for difficulty, `playtester` to review a recorded run,
   `reviewer` for a fresh-eyes check of a multi-file change before it's done.
 - Issues come from templates (bug, level, feature) with conventional titles;
