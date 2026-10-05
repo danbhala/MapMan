@@ -51,7 +51,8 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `scripts/level_code.gd` turns a level into a short code and back, matching
   `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
   `main.gd` plays drafts and friends' codes with `custom` set ("draft",
-  "received"), like practice: no lives, score or saving.
+  "received"), like practice: no lives, score or saving;
+  `scripts/drafting_table.gd` (`main.drafting`) runs that flow.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
