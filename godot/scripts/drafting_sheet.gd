@@ -588,7 +588,10 @@ class DraftGrid:
 
 	func _draw() -> void:
 		var c := _cell_size()
-		var line := Color(Blueprint.INK, 0.18)
+		# A clean board over the sheet, so its own grid lines don't show
+		# through the cells (they don't line up with them).
+		draw_rect(Rect2(Vector2.ZERO, size), Blueprint.FIELD)
+		var line := Blueprint.GRID
 		for x in Draft.COLUMNS + 1:
 			draw_line(Vector2(x * c.x, 0), Vector2(x * c.x, size.y), line, 1.0)
 		for y in Draft.ROWS + 1:
