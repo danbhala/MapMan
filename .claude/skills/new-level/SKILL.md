@@ -26,7 +26,7 @@ MapMan, default 25), `checkpoint` (bool; also list it in `check_points`),
 | `p` / `@` | bonus star (`@` hideable) | `l` / `+` | extra life (`+` hideable) |
 | `d` / `!` | death (`!` hideable) | `y` | sticky, shake to escape |
 | `r` | reverse controls | `v` / `x` / `1`-`9` | vanish for 5 / x_hides / N moves |
-| `m` / `t` | +5 s / -5 s on the 20 s clock | | |
+| `m` / `t` | +5 s / -5 s on the 20 s clock | `k` | crumbles once stepped off; back after a lost life |
 
 ## Steps
 

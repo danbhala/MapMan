@@ -11,6 +11,8 @@ const ASSET_SCALE := 1.0 / 3.0  # the imported art is the original @3x set
 const TILE_ALPHA := 0.8
 const APPEAR_TIME := 0.25
 const FOLD_TIME := 0.25
+const FALL_TIME := 0.35  # a crumble tile dropping away
+const FALL_DROP := 18.0
 ## Hiding and unhiding ripple out from the player, this long per tile away.
 const RIPPLE_STEP := 0.02
 
@@ -56,6 +58,10 @@ var less_times := {}
 var points := {}
 var hides := {}
 var unhides := {}
+## Crumble tiles: whole while true. A tile that has fallen away is in `broken`
+## (key -> true) and can't be stepped on until the next try.
+var crumbles := {}
+var broken := {}
 
 # Movement between two tiles.
 var moving := false
@@ -72,6 +78,7 @@ var _min_y := 0.0
 var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
+var _falls := {}  # crumble key -> the Tween of a tile still falling
 
 # The assists (main.gd): pencil marks on hidden death tiles, a route sketch.
 var _marks: PencilMarks
@@ -129,6 +136,8 @@ func _texture_for(t: String, random_blank := true) -> Texture2D:
 			return _tex("sticky.png")
 		"r":
 			return _tex("reverse.png")
+		"k":
+			return _tex("crumble.png")
 	if random_blank:
 		return _tex("blank%d.png" % randi_range(1, 4))
 	return _tex("blank1.png")
@@ -163,7 +172,10 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		less_times,
 		points,
 		hides,
-		unhides
+		unhides,
+		crumbles,
+		broken,
+		_falls
 	]:
 		d.clear()
 
@@ -303,6 +315,8 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		hides[key] = true
 	elif t == "u":
 		unhides[key] = true
+	elif t == "k":
+		crumbles[key] = true
 
 
 func _appear(node: Node2D, wait: float, full := ASSET_SCALE) -> void:
@@ -384,7 +398,7 @@ func _hide_tile(tile: Tile, animate := false) -> void:
 
 
 func _unhide_tile(tile: Tile, animate := false) -> void:
-	if tile.sprite:
+	if tile.sprite and not broken.has(tile.key):
 		if animate and not tile.sprite.visible and Blueprint.motion():
 			_unfold(tile)
 		tile.sprite.visible = true
@@ -523,7 +537,7 @@ func safe_route() -> Array[Vector2i]:
 				if prev.has(nxt) or not tiles.has(nxt):
 					continue
 				var tile: Tile = tiles[nxt]
-				if tile.blank or deaths.has(nxt):
+				if tile.blank or deaths.has(nxt) or broken.has(nxt):
 					continue
 				if avoid_time_loss and less_times.has(nxt):
 					continue
@@ -612,10 +626,15 @@ func update_move(delta: float) -> void:
 		position_key = _move_to
 
 
+## The tile the current move started from (position_key while moving).
+func moving_from() -> Vector2i:
+	return _move_from
+
+
 ## step is in screen directions: (1, 0) right, (0, -1) up.
 func move(step: Vector2i, seconds: float) -> void:
 	var target := position_key + step
-	if tiles.has(target) and not tiles[target].blank:
+	if tiles.has(target) and not tiles[target].blank and not broken.has(target):
 		moving = true
 		_move_from = position_key
 		_move_to = target
@@ -625,11 +644,52 @@ func move(step: Vector2i, seconds: float) -> void:
 		moving = false
 
 
+## The crumble tile at key falls away: it drops and fades, then is gone until
+## reset(). Nothing happens if it has already fallen.
+func crumble(key: Vector2i) -> void:
+	if not crumbles.get(key, false):
+		return
+	crumbles[key] = false
+	broken[key] = true
+	var tile: Tile = tiles[key]
+	var sprite := tile.sprite
+	if Blueprint.motion() and sprite.visible:
+		var tw := create_tween().set_parallel(true)
+		tw.tween_property(sprite, "position:y", tile.position.y + FALL_DROP, FALL_TIME)
+		(
+			tw
+			. tween_property(sprite, "modulate:a", 0.0, FALL_TIME)
+			. set_trans(Tween.TRANS_QUAD)
+			. set_ease(Tween.EASE_IN)
+		)
+		tw.chain().tween_callback(func() -> void: _fallen(key))
+		_falls[key] = tw
+	else:
+		_fallen(key)
+
+
+func _fallen(key: Vector2i) -> void:
+	_falls.erase(key)
+	if broken.has(key):
+		tiles[key].sprite.visible = false
+
+
 ## Restore consumable tiles after losing a life. Points and lives stay collected.
 func reset() -> void:
 	moving = false
 	position_key = start_position
-	for d in [unhides, hides, reverses, vanishes, stickies, deaths, more_times, less_times]:
+	for tw: Tween in _falls.values():
+		tw.kill()
+	_falls.clear()
+	for key in broken:
+		var tile: Tile = tiles[key]
+		tile.sprite.position = tile.position
+		tile.sprite.modulate.a = TILE_ALPHA
+		tile.sprite.visible = true
+	broken.clear()
+	for d in [
+		unhides, hides, reverses, vanishes, stickies, deaths, more_times, less_times, crumbles
+	]:
 		for key in d:
 			d[key] = true
 			var tile: Tile = tiles[key]

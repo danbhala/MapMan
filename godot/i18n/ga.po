@@ -631,22 +631,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Seachain na tíleanna nimhe: má sheasann tú orthu, caillfidh tú beatha."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Titeann na tíleanna seo as a chéile nuair a fhágann tú iad.\n"
+"Níl aon dul siar, mar sin pleanáil an bealach romhat."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Tabharfaidh na tíleanna seo am breise duit nó bainfidh siad am díot. Gheobhaidh tú pointí bónais as an am a bheidh fágtha ar an gclog ag deireadh gach leibhéil."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Cuireann na tíleanna seo tíleanna eile as radharc agus ar ais arís. Is féidir seasamh fós ar na tíleanna atá i bhfolach, mar sin cuimhnigh cá bhfuil siad."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Anois is arís tiocfaidh tú ar sheicphointe. Gach uair a shroicheann tú seicphointe is féidir leat atosú as sin in áit dul ar ais go dtí an tús."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ag coinneáil do ghléis ar bhealach nua? Tapáil an tomhas sa chúinne chun lár nua a shocrú."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tá tú réidh anois, déan ar an mbealach amach chun an cluiche a thosú. Bain sult as!"
 

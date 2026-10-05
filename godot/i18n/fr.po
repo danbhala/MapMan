@@ -610,22 +610,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Attention aux cases empoisonnées : si vous marchez dessus, vous perdez une vie."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Ces cases s'effritent dès que vous les quittez.\n"
+"Pas de retour possible : prévoyez votre chemin."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Ces cases vous donnent du temps ou vous en font perdre. À la fin de chaque niveau, le temps restant au chrono rapporte des points bonus."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Ces cases font disparaître et réapparaître d'autres cases. Les cases cachées restent praticables : souvenez-vous de leur position."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "De temps en temps, vous croiserez un point de contrôle. Une fois atteint, vous pourrez reprendre à cet endroit au lieu de repartir du début."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Touchez l'écran pendant la partie pour faire une pause. Vous tenez l'appareil autrement ? Touchez le cadran du coin pour en faire le nouveau centre."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tout est prêt : rejoignez la sortie pour commencer la partie. Amusez-vous bien !"
 
