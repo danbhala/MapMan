@@ -35,6 +35,8 @@ static func draw(pen: OutfitPen, id: String) -> void:
 			_bubble(pen)
 		"wizard":
 			_wizard_hat(pen)
+		"racing_green":
+			_race_helmet(pen)
 
 
 ## A striped cone with a pom-pom, a little askew.
@@ -290,3 +292,41 @@ static func _wizard_hat(pen: OutfitPen) -> void:
 	# A crescent moon: a gold disc with a purple one over most of it.
 	pen.hat_dot(Vector2(-1.4, -16.8), 2.6, GOLD)
 	pen.hat_dot(Vector2(-0.4, -17.6), 2.3, purple)
+
+
+## A racing driver's helmet: a white shell down to his cheeks, a green
+## stripe over the top, and the dark visor flipped up so his eyes show.
+static func _race_helmet(pen: OutfitPen) -> void:
+	var shell := Color("#f4f6f8")
+	var edge := Color("#56606b")
+	var green := Color("#1f7a4f")
+	var r := 17.0
+	var pts := PackedVector2Array()
+	# Round over the top, then straight down the sides to the cheeks.
+	pts.append(Vector2(-r + 0.6, 9.0))
+	for i in 19:
+		var a := lerpf(PI, TAU, i / 18.0)
+		pts.append(Vector2(cos(a) * r, -1.0 + sin(a) * (r + 0.5)))
+	pts.append(Vector2(r - 0.6, 9.0))
+	if pen.front():  # the opening for his face
+		pts.append(Vector2(r - 3.2, 9.6))
+		pts.append(Vector2(r - 3.6, 0.0))
+		pts.append(Vector2(-r + 3.6, 0.0))
+		pts.append(Vector2(-r + 3.2, 9.6))
+	else:
+		pts.append(Vector2(0, 11.0))
+	pen.hat_poly(pts, shell)
+	# The stripe, front to back over the crown.
+	pen.hat_poly(
+		PackedVector2Array(
+			[Vector2(-3.4, -18.2), Vector2(3.4, -18.2), Vector2(3.0, -6.2), Vector2(-3.0, -6.2)]
+		),
+		green
+	)
+	pen.hat_outline(pts, edge, 0.9)
+	if not pen.front():
+		return
+	# The visor, up on his forehead, with a shine.
+	var visor := OutfitPen.rrect(Vector2(pen.look.x * 1.5, -4.0), Vector2(12.6, 3.0), 2.4)
+	pen.hat_poly(visor, Color("#20242b"))
+	pen.hat_line(Vector2(-8.5, -5.4), Vector2(-3.0, -5.6), Color(1, 1, 1, 0.5), 1.0)

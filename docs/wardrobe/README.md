@@ -51,7 +51,7 @@ Rarity is how late a look comes and how much there is to it:
 
 | Tier | Levels | What a look in it is | On the sheets |
 | --- | --- | --- | --- |
-| Common | 5–25 | a colour or a small hat: one part, nothing moving | white |
+| Common | 5–25 | a colour or a small hat: one part, nothing moving (Racing green's helmet and the Shades sax are Dan's picks, two parts each) | white |
 | Uncommon | 30–50 | a bigger hat with a matching piece, or a special finish | mint |
 | Rare | 55–75 | a whole outfit: head, body and legs | lilac |
 | Epic | 80–95 | outfits that move or change shape: a cape, sparkles, a glass helmet, a box head | pink |
@@ -64,8 +64,8 @@ Rarity is how late a look comes and how much there is to it:
 | 5 | Party hat | Common | striped cone, pom-pom | first release, minutes in: a party for finding the wardrobe |
 | 10 | Signal red | Common | red body and legs | first checkpoint |
 | 15 | Bobble hat | Common | knitted hat, cuff, pom-pom | |
-| 20 | Racing green | Common | green with two white stripes | checkpoint |
-| 25 | Shades | Common | sunglasses | just after the first wall of death tiles (24–26) |
+| 20 | Racing green | Common | green with two white stripes and a white F1 helmet with a dark visor | checkpoint |
+| 25 | Shades | Common | sunglasses and a gold saxophone on a strap | just after the first wall of death tiles (24–26) |
 | 30 | Blueprint | Uncommon | white linework with centre lines: he becomes the drawing | checkpoint |
 | 35 | Cowboy | Uncommon | hat and red bandana | level 35 has one of the tightest clocks |
 | 40 | Hard hat | Uncommon | hard hat and hi-vis vest, the site engineer | checkpoint |
