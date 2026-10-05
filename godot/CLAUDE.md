@@ -79,8 +79,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   (`Save.tilt_sensitivity`, `TiltInput.SENSITIVITY` divides the tilt, so
   the thresholds and the gauge's rings stay put) and the tilt gauge. DRAG TO
   MOVE steers with `scripts/touch_stick.gd`, a floating stick drawn like the
-  gauge that appears where a finger lands; `main.gd` `_stick_input()` feeds
-  it through `TiltInput`, and a quick tap that never drags still pauses.
+  gauge that appears where a finger lands; `scripts/steering.gd` feeds it
+  the touch through `TiltInput` for `main.gd`, and a quick tap that never
+  drags still pauses.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
 - Languages: every player-facing string is an English msgid passed to `tr()`
   (plurals through `tr_n()`), listed with a note and a width budget in

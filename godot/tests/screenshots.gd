@@ -314,7 +314,7 @@ func run() -> void:
 	await shot("27_touch_stick")
 	game.tilt.stick_release()
 	save.controls = "tilt"
-	game.apply_controls()
+	game.steering.apply()
 	save.set_locale("")
 
 	if failures.is_empty():

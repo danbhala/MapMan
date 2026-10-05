@@ -133,6 +133,23 @@
    "number": 9,
    "rows": [
     "",
+    " N",
+    " c",
+    " ^",
+    " c",
+    " c^c%cb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "Spikes rise and fall on a beat, with a warning first.\nWait for them to drop, then cross before they rise again.",
+   "rev_b": true
+  },
+  {
+   "number": 10,
+   "rows": [
+    "",
     "Wcccc",
     "    cccccm",
     "    c",
@@ -147,7 +164,7 @@
    "description": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
   },
   {
-   "number": 10,
+   "number": 11,
    "rows": [
     "",
     "Wccci",
@@ -164,7 +181,7 @@
    "description": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
   },
   {
-   "number": 11,
+   "number": 12,
    "rows": [
     "  cccc",
     "  c  c",
@@ -177,7 +194,7 @@
    "description": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
   },
   {
-   "number": 12,
+   "number": 13,
    "rows": [
     "  c   n",
     "  c   c",
@@ -196,7 +213,7 @@
    "description_touch": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
   },
   {
-   "number": 13,
+   "number": 14,
    "rows": [
     "",
     "Wczczccb"

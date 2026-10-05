@@ -44,8 +44,8 @@ var dev_panel: DevPanel
 var gauge: TiltGauge
 ## The intro and title screen at launch; null once the main menu is up.
 var intro: Intro
-## The floating touch stick (Options "CONTROLS": DRAG TO MOVE).
-var touch_stick: TouchStick
+## The CONTROLS sheet's choices and the touch stick.
+var steering: Steering
 ## Show the tilt gauge without an accelerometer (screenshots, desktop tests).
 var show_gauge_anyway := false
 
@@ -152,8 +152,7 @@ func _ready() -> void:
 	add_child(hud_layer)
 	hud = Hud.new()
 	hud_layer.add_child(hud)
-	touch_stick = TouchStick.new()
-	hud_layer.add_child(touch_stick)
+	steering = Steering.new(self, hud_layer)
 	gauge = TiltGauge.new()
 	gauge.visible = false
 	hud_layer.add_child(gauge)
@@ -168,7 +167,7 @@ func _ready() -> void:
 
 	get_viewport().size_changed.connect(_layout)
 	_layout()
-	apply_controls()
+	steering.apply()
 	if Dev.enabled:
 		dev_panel = DevPanel.new(self)
 		add_child(dev_panel)
@@ -269,7 +268,7 @@ func started() -> bool:
 
 func _process(delta: float) -> void:
 	_update_gauge(delta)
-	_update_stick()
+	steering.update()
 	if _tries.replay or menus.visible or not game_active:
 		return
 
@@ -320,27 +319,6 @@ func _update_gauge(delta: float) -> void:
 	gauge.steer = tilt.get_vector()
 	gauge.pace = pace(gauge.steer)
 	gauge.near_player(player.position, delta)
-
-
-## The touch stick shows under the finger while playing; a menu lets it go.
-func _update_stick() -> void:
-	if tilt.stick_held() and (not game_active or menus.visible):
-		tilt.stick_release()
-	touch_stick.held = tilt.stick_held()
-	if not touch_stick.held:
-		return
-	touch_stick.origin = tilt.stick_origin()
-	touch_stick.knob = tilt.stick_offset()
-	touch_stick.pace = pace(tilt.stick_vector())
-
-
-## The player's control options (Save.controls, Save.tilt_sensitivity).
-func apply_controls() -> void:
-	tilt.stick = Save.controls == "touch"
-	tilt.sensitivity = Save.tilt_sensitivity
-	tilt.stick_release()
-	tilt.touch(false, Vector2.ZERO)
-	_held_step = Vector2i.ZERO
 
 
 ## Tapping the gauge: the way the phone is held now becomes level.
@@ -595,6 +573,9 @@ func _end_replay() -> void:
 
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
+	map.spike_cycle = Dev.t("spike_cycle")
+	if map.update_spikes(delta):
+		Audio.play("spikes")
 	if map.moving:
 		if not _was_moving and map.crumbles.get(map.moving_from(), false):
 			Audio.play("crumble")  # the tile he just left falls away behind him
@@ -648,6 +629,10 @@ func update_player(delta: float) -> void:
 
 	if map.on(map.deaths) and not dead:
 		map.unhide_tile_at(map.position_key)
+		lose_life()
+
+	# Spikes kill while up: stepping onto them, or standing there as they rise.
+	if map.spikes_up_at(map.position_key) and not dead:
 		lose_life()
 
 	if map.on(map.lives):
@@ -1132,35 +1117,6 @@ func _on_menu_action(act: String) -> void:
 			new_game(1, true)
 		"restart from checkpoint":
 			menus.show_restart(Save.checkpoints.keys())
-		"options":
-			menus.show_options()
-		"music on", "music off":
-			Audio.set_music_enabled(act == "music on")
-			menus.show_options()
-		"fx on", "fx off":
-			Audio.set_fx_enabled(act == "fx on")
-			menus.show_options()
-		"vibration on", "vibration off":
-			Save.vibration_on = act == "vibration on"
-			Save.save_all()
-			Haptics.feel("toggle")
-			menus.show_options()
-		"ghost on", "ghost off":
-			Save.ghost_on = act == "ghost on"
-			Save.save_all()
-			menus.show_options()
-		"reduce motion on", "reduce motion off":
-			Save.reduce_motion = act == "reduce motion on"
-			Save.save_all()
-			menus.show_options()
-		"controls":
-			menus.show_controls()
-		"controls tilt", "controls touch", "tilt gauge on", "tilt gauge off":
-			ControlsSheet.choose(act)
-			apply_controls()
-			menus.show_controls()
-		"language":
-			menus.show_language()
 		"wardrobe":
 			menus.show_wardrobe(level if _between else 0)
 		"main menu":
@@ -1232,15 +1188,8 @@ func _on_menu_action(act: String) -> void:
 			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
 			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
 		_:
-			if act.begins_with("language "):
-				# "language system" follows the phone; otherwise a locale code.
-				var code := act.get_slice(" ", 1)
-				Save.set_locale("" if code == "system" else code)
-				menus.show_language()
-			elif act.begins_with("sensitivity "):
-				ControlsSheet.choose(act)
-				apply_controls()
-				menus.show_controls()
+			if steering.handle(act) or OptionsActions.handle(act, menus):
+				pass  # the Options, CONTROLS and language sheets
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):
@@ -1283,7 +1232,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not game_active or menus.visible:
 			return
 		if tilt.stick:
-			_stick_input(event.pressed, event.position)
+			steering.touch(event.pressed, event.position)
 		elif tilt.touch_steering_enabled():
 			# No accelerometer: hold towards an edge to steer (the original's
 			# tilt simulator). A fresh tap also frees MapMan from a sticky tile.
@@ -1297,17 +1246,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			tilt.stick_drag(event.position)
 		elif tilt.touch_steering_enabled():
 			tilt.touch(true, event.position)
-
-
-## The touch stick: a finger landing puts it under the finger, lifting lets
-## go, and a tap that never dragged pauses. Without an accelerometer to
-## shake, a fresh touch also frees MapMan from a sticky tile.
-func _stick_input(pressed: bool, pos: Vector2) -> void:
-	if pressed:
-		tilt.stick_press(pos)
-		stuck = stuck and TiltInput.has_accelerometer()
-	elif tilt.stick_release() and _can_pause():
-		show_pause_menu()
 
 
 func _notification(what: int) -> void:

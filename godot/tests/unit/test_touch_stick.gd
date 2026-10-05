@@ -50,9 +50,9 @@ func _drag(pos: Vector2) -> void:
 
 func test_appears_where_the_finger_lands() -> void:
 	_touch(true, Vector2(150, 200))
-	game._update_stick()
-	assert_true(game.touch_stick.held)
-	assert_eq(game.touch_stick.origin, Vector2(150, 200))
+	game.steering.update()
+	assert_true(game.steering.stick.held)
+	assert_eq(game.steering.stick.origin, Vector2(150, 200))
 	assert_eq(game.tilt.get_vector(), Vector2.ZERO, "a finger that hasn't moved steers nowhere")
 
 
@@ -69,8 +69,8 @@ func test_drag_walks_then_runs() -> void:
 	var v: Vector2 = game.tilt.get_vector()
 	assert_almost_eq(v.y, fast * 1.5, 0.001, "the knob stops at the rim")
 	assert_eq(game.pace(v), 2, "past the solid ring he runs")
-	game._update_stick()
-	assert_eq(game.touch_stick.pace, 2)
+	game.steering.update()
+	assert_eq(game.steering.stick.pace, 2)
 
 
 func test_quick_tap_pauses() -> void:
@@ -93,16 +93,16 @@ func test_a_menu_lets_go_of_the_stick() -> void:
 	_touch(true, Vector2(300, 200))
 	_drag(Vector2(330, 200))
 	game.show_pause_menu()
-	game._update_stick()
+	game.steering.update()
 	assert_false(game.tilt.stick_held())
-	assert_false(game.touch_stick.held)
+	assert_false(game.steering.stick.held)
 
 
 func test_no_gauge_while_steering_by_touch() -> void:
 	game._update_gauge(0.0)
 	assert_false(game.gauge.visible)
 	Save.controls = "tilt"
-	game.apply_controls()
+	game.steering.apply()
 	game._update_gauge(0.0)
 	assert_true(game.gauge.visible)
 
@@ -124,7 +124,7 @@ func test_sensitivity_reads_the_same_tilt_differently() -> void:
 
 func test_sensitivity_leaves_the_stick_alone() -> void:
 	Save.tilt_sensitivity = 2
-	game.apply_controls()
+	game.steering.apply()
 	_touch(true, Vector2(150, 200))
 	_drag(Vector2(150 + TouchStick.RADIUS, 200))
 	assert_almost_eq(game.tilt.get_vector().x, Dev.t("fast_threshold") * 1.5, 0.001)
