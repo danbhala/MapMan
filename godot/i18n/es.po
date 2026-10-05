@@ -618,22 +618,30 @@ msgstr ""
 "No hay vuelta atrás, así que planea el camino."
 
 #. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"El hielo te hace deslizarte hasta que una casilla normal o el borde te frena.\n"
+"No puedes girar sobre él, así que alinéate antes de salir."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Estas casillas te dan tiempo extra o te lo quitan. Al terminar cada nivel, el tiempo que quede en el reloj se convierte en puntos extra."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Estas casillas hacen que otras desaparezcan y reaparezcan. Mientras están ocultas puedes seguir pisándolas, así que recuerda dónde están."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "De vez en cuando encontrarás un punto de control. Cada vez que llegues a uno podrás reiniciar desde ahí en lugar de volver al principio."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Toca la pantalla durante la partida para pausar. ¿Sujetas el dispositivo de otra forma? Toca el indicador de la esquina para fijarlo como nuevo centro."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Todo listo: ve hacia la salida para empezar el juego. ¡Diviértete!"
 

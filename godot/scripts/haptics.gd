@@ -16,6 +16,7 @@ const PATTERNS := {
 	"end_level": [50, 0.7],
 	"sticky": [80, 0.8],
 	"crumble": [60, 0.7],  # the tile behind MapMan falling away
+	"slide": [20, 0.3],  # setting off across ice
 	"checkpoint": [120, 0.8],
 	"love": [150, 0.4],
 	"lose_life": [250, 1.0],

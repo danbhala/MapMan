@@ -229,7 +229,8 @@ func play_current_level() -> bool:
 func step_to(target: Vector2i) -> bool:
 	var map: LevelMap = game.map
 	var from := map.position_key
-	var dir := target - from
+	var actual := (target - from).sign()  # one step; a slide on ice carries further
+	var dir := actual
 	if game.reverse:
 		dir = -dir
 	var act: String = ACTIONS[dir]
@@ -258,7 +259,7 @@ func step_to(target: Vector2i) -> bool:
 		if map.position_key == target and not map.moving:
 			# Keep the key held: a following step the same way continues smoothly.
 			return true
-		if map.moving and map._move_to != target:
+		if map.moving and map._move_to - map._move_from != actual:
 			Input.action_release(act)
 			return false
 	Input.action_release(act)
@@ -279,13 +280,20 @@ func find_path(map: LevelMap, start: Vector2i, goals: Array) -> Array[Vector2i]:
 				goal = cur
 				break
 			for d in DIRS:
-				var nxt: Vector2i = cur + d
-				if prev.has(nxt) or not map.tiles.has(nxt):
+				# A move is one step, or a slide across ice to where it stops.
+				var visited: Array[Vector2i] = map.slide_path(cur, d)
+				if (
+					visited.is_empty()
+					or visited.any(func(k: Vector2i) -> bool: return map.deaths.has(k))
+				):
 					continue
-				var tile = map.tiles[nxt]
-				if tile.blank or map.deaths.has(nxt) or map.broken.has(nxt):
+				var nxt: Vector2i = visited.back()
+				if prev.has(nxt):
 					continue
-				if avoid_time_loss and map.less_times.has(nxt):
+				if (
+					avoid_time_loss
+					and visited.any(func(k: Vector2i) -> bool: return map.less_times.has(k))
+				):
 					continue
 				prev[nxt] = cur
 				queue.append(nxt)

@@ -275,3 +275,71 @@ func test_crumble_tiles_come_back_after_a_death() -> void:
 	assert_true(tile.sprite.visible, "and back on the sheet")
 	assert_eq(tile.sprite.position, tile.position, "in its place")
 	assert_almost_eq(tile.sprite.modulate.a, LevelMap.TILE_ALPHA, 0.001)
+
+
+## Walk right from column x and let any slide on ice run to its end.
+func _walk_and_slide(x: int) -> void:
+	game.map.position_key = Vector2i(x, game.map.start_position.y)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	for i in 20:
+		if not game.map.moving:
+			break
+		game.map.update_move(1.0)
+		game.update_player(0.0)  # landing: on ice, the next slide step starts
+
+
+func test_ice_slides_on_to_the_next_plain_tile() -> void:
+	_start("bjjjcw")
+	_walk_and_slide(0)
+	assert_eq(game.map.position_key, Vector2i(4, 0), "carried across three ice tiles")
+	assert_false(game.map.moving)
+	assert_false(game._sliding)
+
+
+func test_ice_slides_to_the_edge() -> void:
+	_start("bjjj")
+	_walk_and_slide(0)
+	assert_eq(game.map.position_key, Vector2i(3, 0), "stops on the last ice tile at the edge")
+
+
+func test_a_slide_is_faster_than_a_step() -> void:
+	_start("bjjcw")
+	game.map.position_key = Vector2i(0, 0)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	game.map.update_move(1.0)
+	game.update_player(0.0)  # landed on ice: sliding
+	assert_true(game.map.moving)
+	assert_true(game._sliding)
+	assert_almost_eq(game.map._move_seconds, game.SLIDE_TIME, 0.001)
+
+
+func test_steering_is_ignored_while_sliding() -> void:
+	_start("bjjcw", ["ccccc"])
+	game.map.position_key = Vector2i(0, 1)
+	game.move(Vector2i.RIGHT, 0.1)
+	game.update_player(0.0)
+	game.map.update_move(1.0)
+	game.update_player(0.0)  # sliding right
+	Input.action_press("move_up")
+	game.move_player(0.0)
+	Input.action_release("move_up")
+	assert_eq(game.map._move_to, Vector2i(2, 1), "still sliding right")
+
+
+func test_slide_path_and_safe_route_follow_the_ice() -> void:
+	_start("bjjjcw")
+	assert_eq(
+		game.map.slide_path(Vector2i(0, 0), Vector2i.RIGHT),
+		[1, 2, 3, 4].map(func(x: int) -> Vector2i: return Vector2i(x, 0))
+	)
+	assert_eq(
+		game.map.slide_path(Vector2i(4, 0), Vector2i.RIGHT), [Vector2i(5, 0)] as Array[Vector2i]
+	)
+	assert_eq(
+		game.map.slide_path(Vector2i(0, 0), Vector2i.LEFT), [] as Array[Vector2i], "nothing there"
+	)
+	assert_eq(
+		game.map.safe_route(), [Vector2i(0, 0), Vector2i(4, 0), Vector2i(5, 0)] as Array[Vector2i]
+	)

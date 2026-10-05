@@ -625,22 +625,30 @@ msgstr ""
 "Назад пути нет, так что планируйте маршрут заранее."
 
 #. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"На льду вы скользите, пока вас не остановит обычная клетка или край.\n"
+"Повернуть на нём нельзя, так что прицельтесь заранее."
+
+#. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Эти клетки добавляют или отнимают время. За время, оставшееся на часах в конце каждого уровня, вы получите бонусные очки."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Эти клетки прячут и возвращают другие клетки. На скрытые клетки по-прежнему можно наступать, так что запоминайте, где они."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Время от времени вам будет встречаться контрольная точка. Дойдя до неё, вы сможете начинать с неё, а не с самого начала."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Коснитесь экрана во время игры, чтобы поставить паузу. Держите устройство иначе? Коснитесь индикатора в углу, чтобы сделать это новым центром."
 
-#. Tutorial lesson 13
+#. Tutorial lesson 14
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Всё готово — идите к выходу, чтобы начать игру. Приятной игры!"
 
