@@ -32,9 +32,9 @@ const CHIP_PAD := 10.0
 const CHIP_GAP := 8.0
 const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
-## The options sheet's rows: seven of them, a little tighter than TAP_HEIGHT.
+## The options sheet's rows: eight of them, tighter than TAP_HEIGHT.
 const OPTIONS_TOP := 78.0
-const OPTIONS_PITCH := 40.0
+const OPTIONS_PITCH := 35.0
 ## Where MapMan stands, how big he is, and his height in his own units as
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
@@ -89,7 +89,8 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE"],
+	"options":
+	["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -911,9 +912,14 @@ func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
 	var states := [
-		Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.tilt_gauge
+		Save.music_on,
+		Save.fx_on,
+		Save.vibration_on,
+		Save.reduce_motion,
+		Save.tilt_gauge,
+		Save.ghost_on,
 	]
-	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge"]
+	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
@@ -1222,7 +1228,7 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
 ## WARDROBE and MAIN MENU. released: the look this first clear released, if
-## any.
+## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1232,10 +1238,11 @@ func show_end_level(
 	level := 0,
 	seconds_left := -1,
 	last := false,
-	released := ""
+	released := "",
+	tries := 0
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released]
+	_clear_args = args + [last, released, tries]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
 

@@ -18,6 +18,7 @@ func before_each() -> void:
 	Save.reduce_motion = true  # sheets settle at once
 	Save.music_on = true
 	Save.fx_on = false
+	Save.ghost_on = true
 	Save.vibration_on = true
 	Save.new_lessons = false
 	_wardrobe([])
@@ -108,6 +109,7 @@ func test_options_toggle_the_current_state() -> void:
 			"vibration off",
 			"reduce motion off",
 			"tilt gauge off",
+			"ghost off",
 			"language",
 			"main menu"
 		]

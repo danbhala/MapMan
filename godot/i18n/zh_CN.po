@@ -831,6 +831,23 @@ msgstr "未解锁，第%d关解锁"
 msgid "Locked, released for finishing the game"
 msgstr "未解锁，通关后解锁"
 
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "回放"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "回放 — 第%d关"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "%d次"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "最佳记录回放"
+
 #. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
 msgid "TAP TO START"
 msgstr "点击开始"

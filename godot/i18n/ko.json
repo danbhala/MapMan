@@ -202,6 +202,12 @@
   "<  RETURN TO SHEET %03d": "<  도면 %03d로 돌아가기",
   "NEXT": "다음",
   "MENU": "메뉴",
+  "WATCH REPLAY": "리플레이 보기",
+  "REPLAY — LEVEL %d": "리플레이 — 레벨 %d",
+  "BEST-RUN GHOST": "최고 기록 고스트",
+  "%d TRY": [
+    "도전 %d번"
+  ],
   "TAP TO START": "탭하여 시작",
   "SKIP": "건너뛰기"
 }

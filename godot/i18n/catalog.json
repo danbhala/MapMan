@@ -1035,6 +1035,27 @@
       "max": 44
     },
     {
+      "id": "WATCH REPLAY",
+      "note": "Level clear button, under MapMan: plays every try at the level back at once",
+      "max": 16
+    },
+    {
+      "id": "REPLAY — LEVEL %d",
+      "note": "Heading of the replay of every try at a level (%d is the level number)",
+      "max": 28
+    },
+    {
+      "id": "%d TRY",
+      "plural": "%d TRIES",
+      "note": "Under the replay heading: how many tries at the level it shows",
+      "max": 16
+    },
+    {
+      "id": "BEST-RUN GHOST",
+      "note": "Options row: a faint MapMan replays your best run of the level beside you",
+      "max": 18
+    },
+    {
       "id": "TAP TO START",
       "note": "Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.",
       "max": 24

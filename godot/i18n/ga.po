@@ -863,6 +863,27 @@ msgstr "Faoi ghlas, scaoilfear ag leibhéal %d"
 msgid "Locked, released for finishing the game"
 msgstr "Faoi ghlas, scaoilfear ag an deireadh"
 
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "FÉACH ATHIMRT"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "ATHIMRT — LEIBHÉAL %d"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "%d IARRACHT"
+msgstr[1] "%d IARRACHT"
+msgstr[2] "%d IARRACHT"
+msgstr[3] "%d IARRACHT"
+msgstr[4] "%d IARRACHT"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "TAIBHSE IS FEARR"
+
 #. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
 msgid "TAP TO START"
 msgstr "TAPÁIL LE TOSÚ"
