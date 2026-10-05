@@ -65,6 +65,8 @@ var unhides := {}
 ## (key -> true) and can't be stepped on until the next try.
 var crumbles := {}
 var broken := {}
+## Ice tiles (key -> true): MapMan slides on across them (main.gd).
+var ices := {}
 ## Spike tiles: key -> phase offset (0.0 for `^`, 0.5 for `%`). They rise
 ## and fall together on `spike_cycle` seconds of `spike_time`, which main.gd
 ## advances while the level is being played (so a pause stops them).
@@ -148,6 +150,8 @@ func _texture_for(t: String, random_blank := true) -> Texture2D:
 			return _tex("reverse.png")
 		"k":
 			return _tex("crumble.png")
+		"j":
+			return _tex("ice.png")
 		"^", "%":
 			return _tex("spikes_down.png")
 	if random_blank:
@@ -188,6 +192,7 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		crumbles,
 		broken,
 		_falls,
+		ices,
 		spikes,
 		_spike_states
 	]:
@@ -332,6 +337,8 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		unhides[key] = true
 	elif t == "k":
 		crumbles[key] = true
+	elif t == "j":
+		ices[key] = true
 	elif t in ["^", "%"]:
 		spikes[key] = 0.5 if t == "%" else 0.0
 		_spike_states[key] = 0
@@ -551,17 +558,43 @@ func safe_route() -> Array[Vector2i]:
 					route.push_front(cur)
 				return route
 			for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
-				var nxt: Vector2i = cur + d
-				if prev.has(nxt) or not tiles.has(nxt):
+				var visited := slide_path(cur, d)
+				if (
+					visited.is_empty()
+					or visited.any(func(k: Vector2i) -> bool: return deaths.has(k))
+				):
 					continue
-				var tile: Tile = tiles[nxt]
-				if tile.blank or deaths.has(nxt) or broken.has(nxt):
+				var nxt: Vector2i = visited.back()
+				if prev.has(nxt):
 					continue
-				if avoid_time_loss and less_times.has(nxt):
+				if (
+					avoid_time_loss
+					and visited.any(func(k: Vector2i) -> bool: return less_times.has(k))
+				):
 					continue
 				prev[nxt] = cur
 				queue.append(nxt)
 	return []
+
+
+## Can MapMan step onto this tile right now (a tile, not empty, not fallen)?
+func walkable(key: Vector2i) -> bool:
+	return tiles.has(key) and not tiles[key].blank and not broken.has(key)
+
+
+## The tiles a step from `from` in direction `step` visits, in order, ending
+## where MapMan comes to rest: one tile, or more when he lands on ice and
+## slides on until a tile that isn't ice or an edge stops him. Empty when
+## the first tile is not walkable. The solvers and the sketch use it.
+func slide_path(from: Vector2i, step: Vector2i) -> Array[Vector2i]:
+	var visited: Array[Vector2i] = []
+	var cur := from
+	while walkable(cur + step):
+		cur += step
+		visited.append(cur)
+		if not ices.has(cur):
+			break
+	return visited
 
 
 ## Dashed outlines over the death tiles that are hidden right now. Which
@@ -647,6 +680,11 @@ func update_move(delta: float) -> void:
 ## The tile the current move started from (position_key while moving).
 func moving_from() -> Vector2i:
 	return _move_from
+
+
+## The screen direction of the latest step (zero before the first).
+func last_step() -> Vector2i:
+	return _move_to - _move_from
 
 
 ## step is in screen directions: (1, 0) right, (0, -1) up.

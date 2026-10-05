@@ -629,6 +629,14 @@ msgstr ""
 "Stacheln steigen und sinken im Takt, mit einer Warnung vorher.\n"
 "Warte, bis sie unten sind, und geh hinüber, bevor sie wieder steigen."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Auf Eis rutschst du, bis ein normales Feld oder der Rand dich stoppt.\n"
+"Lenken geht dort nicht, also richte dich vorher aus."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Diese Felder schenken dir Zeit oder kosten dich Zeit. Für die Restzeit auf der Uhr gibt es am Ende jedes Levels Bonuspunkte."

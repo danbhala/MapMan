@@ -622,6 +622,14 @@ msgstr ""
 "가시는 경고 뒤에 일정한 박자로 오르내립니다.\n"
 "내려갈 때까지 기다렸다가 다시 오르기 전에 건너세요."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"얼음 위에서는 일반 타일이나 가장자리에 막힐 때까지 미끄러집니다.\n"
+"도중에 방향을 바꿀 수 없으니 출발 전에 방향을 맞추세요."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "이 타일들은 시간을 늘리거나 줄입니다. 각 레벨을 마칠 때 남은 시간만큼 보너스 점수를 받습니다."

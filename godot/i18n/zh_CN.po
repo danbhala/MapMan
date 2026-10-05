@@ -622,6 +622,14 @@ msgstr ""
 "尖刺会先发出警示，然后有节奏地升降。\n"
 "等它们落下后再通过，赶在再次升起之前。"
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"踩上冰面会一直滑行，直到被普通地砖或边缘挡住。\n"
+"滑行时无法转向，所以出发前先对准方向。"
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "这些地砖会增加或减少你的时间。每关结束时，剩余时间会换算成奖励分。"

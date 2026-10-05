@@ -650,6 +650,14 @@ msgstr ""
 "Éiríonn agus titeann na spíce ar bhuille, le rabhadh ar dtús.\n"
 "Fan go dtitfidh siad, ansin trasnaigh sula n-éiríonn siad arís."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Sleamhnaíonn tú ar an oighear go stopann gnáth-thíl nó an ciumhais thú.\n"
+"Ní féidir stiúradh air, mar sin déan réidh sula n-imíonn tú."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Tabharfaidh na tíleanna seo am breise duit nó bainfidh siad am díot. Gheobhaidh tú pointí bónais as an am a bheidh fágtha ar an gclog ag deireadh gach leibhéil."

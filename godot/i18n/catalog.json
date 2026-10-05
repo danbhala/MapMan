@@ -774,6 +774,11 @@
       "max": 170
     },
     {
+      "id": "Ice sends you sliding until a plain tile or the edge stops you.\nYou can't steer on it, so line up before you set off.",
+      "note": "Tutorial lesson 9",
+      "max": 170
+    },
+    {
       "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
       "note": "Tutorial lesson 10",
       "max": 170

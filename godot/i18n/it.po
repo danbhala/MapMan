@@ -629,6 +629,14 @@ msgstr ""
 "Le punte salgono e scendono a ritmo, con un avviso prima.\n"
 "Aspetta che si abbassino, poi attraversa prima che risalgano."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Sul ghiaccio scivoli finché una casella normale o il bordo non ti ferma.\n"
+"Non puoi sterzare sopra, quindi allineati prima di partire."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Queste caselle ti danno tempo extra o te lo tolgono. Alla fine di ogni livello, il tempo rimasto sull'orologio vale punti bonus."

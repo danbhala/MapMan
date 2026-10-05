@@ -629,6 +629,14 @@ msgstr ""
 "Os espinhos sobem e descem no ritmo, com um aviso antes.\n"
 "Espere eles baixarem e atravesse antes que subam de novo."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"No gelo você desliza até um bloco comum ou a borda te parar.\n"
+"Não dá para virar em cima dele, então se alinhe antes de sair."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Estes blocos dão tempo extra ou tiram tempo de você. Ao terminar cada nível, o tempo restante no relógio vira pontos bônus."

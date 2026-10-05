@@ -622,6 +622,14 @@ msgstr ""
 "トゲは合図のあと、一定のリズムで上下します。\n"
 "下がるのを待ち、また上がる前に渡りましょう。"
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"氷の上では、ふつうのタイルか端に止められるまで滑り続けます。\n"
+"途中で曲がれないので、進む前に向きを合わせましょう。"
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "これらのタイルは時間を増やしたり減らしたりします。各レベルをクリアすると残り時間に応じてボーナスポイントが入ります。"

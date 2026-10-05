@@ -657,6 +657,14 @@ msgstr ""
 "ترتفع الأشواك وتنخفض على إيقاع، مع تحذير أولًا.\n"
 "انتظر حتى تنخفض، ثم اعبر قبل أن ترتفع من جديد."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"يجعلك الجليد تنزلق حتى توقفك بلاطة عادية أو الحافة.\n"
+"لا يمكنك التوجيه عليه، فاستقم قبل أن تنطلق."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "هذه البلاطات تمنحك وقتًا إضافيًا أو تخسرك وقتًا. ستحصل على نقاط مكافأة مقابل الوقت المتبقي عند إنهاء كل مستوى."

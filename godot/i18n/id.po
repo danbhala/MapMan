@@ -622,6 +622,14 @@ msgstr ""
 "Duri naik dan turun mengikuti irama, dengan peringatan lebih dulu.\n"
 "Tunggu sampai turun, lalu lewati sebelum naik lagi."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Es membuatmu meluncur sampai ubin biasa atau tepi menghentikanmu.\n"
+"Kamu tidak bisa berbelok di atasnya, jadi luruskan arah dulu."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Ubin-ubin ini memberi waktu ekstra atau mengurangi waktumu. Kamu dapat poin bonus untuk sisa waktu di jam saat menyelesaikan tiap level."

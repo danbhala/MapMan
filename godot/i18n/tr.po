@@ -622,6 +622,14 @@ msgstr ""
 "Dikenler önce uyarı verip belli bir ritimle inip kalkar.\n"
 "İnmelerini bekle, sonra yeniden kalkmadan geç."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"Buzda, düz bir karo ya da kenar seni durdurana dek kayarsın.\n"
+"Üzerinde yön değiştiremezsin, o yüzden çıkmadan önce hizalan."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Bu karolar sana ek süre verir ya da süre kaybettirir. Her bölümü bitirdiğinde saatte kalan süre için bonus puan alırsın."

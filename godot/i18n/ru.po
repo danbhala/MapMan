@@ -636,6 +636,14 @@ msgstr ""
 "Шипы поднимаются и опускаются в ритме, сначала предупреждая.\n"
 "Дождитесь, пока они опустятся, и пройдите, пока они не поднялись снова."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"На льду вы скользите, пока вас не остановит обычная клетка или край.\n"
+"Повернуть на нём нельзя, так что прицельтесь заранее."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Эти клетки добавляют или отнимают время. За время, оставшееся на часах в конце каждого уровня, вы получите бонусные очки."

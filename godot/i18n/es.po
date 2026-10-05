@@ -629,6 +629,14 @@ msgstr ""
 "Los pinchos suben y bajan a ritmo, con un aviso antes.\n"
 "Espera a que bajen y cruza antes de que vuelvan a subir."
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"El hielo te hace deslizarte hasta que una casilla normal o el borde te frena.\n"
+"No puedes girar sobre él, así que alinéate antes de salir."
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Estas casillas te dan tiempo extra o te lo quitan. Al terminar cada nivel, el tiempo que quede en el reloj se convierte en puntos extra."
