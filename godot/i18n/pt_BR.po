@@ -623,6 +623,14 @@ msgstr ""
 
 #. Tutorial lesson 9
 msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"Os espinhos sobem e descem no ritmo, com um aviso antes.\n"
+"Espere eles baixarem e atravesse antes que subam de novo."
+
+#. Tutorial lesson 9
+msgid ""
 "Ice sends you sliding until a plain tile or the edge stops you.\n"
 "You can't steer on it, so line up before you set off."
 msgstr ""

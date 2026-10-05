@@ -13,6 +13,9 @@ const APPEAR_TIME := 0.25
 const FOLD_TIME := 0.25
 const FALL_TIME := 0.35  # a crumble tile dropping away
 const FALL_DROP := 18.0
+## Spikes: the fraction of the beat they are down, then warning, then up.
+const SPIKE_DOWN := 0.55
+const SPIKE_WARN := 0.7
 ## Hiding and unhiding ripple out from the player, this long per tile away.
 const RIPPLE_STEP := 0.02
 
@@ -64,6 +67,12 @@ var crumbles := {}
 var broken := {}
 ## Ice tiles (key -> true): MapMan slides on across them (main.gd).
 var ices := {}
+## Spike tiles: key -> phase offset (0.0 for `^`, 0.5 for `%`). They rise
+## and fall together on `spike_cycle` seconds of `spike_time`, which main.gd
+## advances while the level is being played (so a pause stops them).
+var spikes := {}
+var spike_time := 0.0
+var spike_cycle := 2.0
 
 # Movement between two tiles.
 var moving := false
@@ -81,6 +90,7 @@ var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
 var _falls := {}  # crumble key -> the Tween of a tile still falling
+var _spike_states := {}  # spike key -> the state its sprite shows
 
 # The assists (main.gd): pencil marks on hidden death tiles, a route sketch.
 var _marks: PencilMarks
@@ -142,6 +152,8 @@ func _texture_for(t: String, random_blank := true) -> Texture2D:
 			return _tex("crumble.png")
 		"j":
 			return _tex("ice.png")
+		"^", "%":
+			return _tex("spikes_down.png")
 	if random_blank:
 		return _tex("blank%d.png" % randi_range(1, 4))
 	return _tex("blank1.png")
@@ -180,9 +192,12 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		crumbles,
 		broken,
 		_falls,
-		ices
+		ices,
+		spikes,
+		_spike_states
 	]:
 		d.clear()
+	spike_time = 0.0
 
 	tiles_hidden = false
 	is_checkpoint = level.get("checkpoint", false)
@@ -324,6 +339,9 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		crumbles[key] = true
 	elif t == "j":
 		ices[key] = true
+	elif t in ["^", "%"]:
+		spikes[key] = 0.5 if t == "%" else 0.0
+		_spike_states[key] = 0
 
 
 func _appear(node: Node2D, wait: float, full := ASSET_SCALE) -> void:
@@ -712,10 +730,46 @@ func _fallen(key: Vector2i) -> void:
 		tiles[key].sprite.visible = false
 
 
+## Where a spike tile is in its beat, 0 (just dropped) to 1.
+func spike_phase(key: Vector2i) -> float:
+	return fposmod(spike_time / spike_cycle + spikes[key], 1.0)
+
+
+## 0 down, 1 warning poke, 2 up (deadly).
+func spike_state(key: Vector2i) -> int:
+	var ph := spike_phase(key)
+	if ph < SPIKE_DOWN:
+		return 0
+	return 1 if ph < SPIKE_WARN else 2
+
+
+func spikes_up_at(key: Vector2i) -> bool:
+	return spikes.has(key) and spike_state(key) == 2
+
+
+## Advance the spikes' beat and redraw the tiles that changed state.
+## Returns true when a set of spikes rose this frame (for the sound).
+func update_spikes(delta: float) -> bool:
+	spike_time += delta
+	var rose := false
+	for key: Vector2i in spikes:
+		var state := spike_state(key)
+		if state == _spike_states[key]:
+			continue
+		_spike_states[key] = state
+		rose = rose or state == 2
+		var file: String = ["spikes_down.png", "spikes_warn.png", "spikes_up.png"][state]
+		tiles[key].sprite.texture = _tex(file)
+	return rose
+
+
 ## Restore consumable tiles after losing a life. Points and lives stay collected.
+## The spikes' beat starts again too.
 func reset() -> void:
 	moving = false
 	position_key = start_position
+	spike_time = 0.0
+	update_spikes(0.0)
 	for tw: Tween in _falls.values():
 		tw.kill()
 	_falls.clear()

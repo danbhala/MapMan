@@ -616,6 +616,14 @@ msgstr ""
 
 #. Tutorial lesson 9
 msgid ""
+"Spikes rise and fall on a beat, with a warning first.\n"
+"Wait for them to drop, then cross before they rise again."
+msgstr ""
+"尖刺会先发出警示，然后有节奏地升降。\n"
+"等它们落下后再通过，赶在再次升起之前。"
+
+#. Tutorial lesson 9
+msgid ""
 "Ice sends you sliding until a plain tile or the edge stops you.\n"
 "You can't steer on it, so line up before you set off."
 msgstr ""

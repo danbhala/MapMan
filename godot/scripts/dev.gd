@@ -18,6 +18,7 @@ const DEFAULT_TUNING := {
 	"fast_threshold": 0.2,  # tilt above which moves are twice as fast
 	"shake_threshold": 0.4,  # user acceleration (in g) that frees a sticky tile
 	"guard_hold": 0.25,  # seconds at rest before a death step counts, with the assists on (new)
+	"spike_cycle": 2.0,  # seconds per rise and fall of spike tiles (new)
 	"invert_x": false,
 	"invert_y": false,
 }

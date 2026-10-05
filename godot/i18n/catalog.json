@@ -769,6 +769,11 @@
       "max": 170
     },
     {
+      "id": "Spikes rise and fall on a beat, with a warning first.\nWait for them to drop, then cross before they rise again.",
+      "note": "Tutorial lesson 9",
+      "max": 170
+    },
+    {
       "id": "Ice sends you sliding until a plain tile or the edge stops you.\nYou can't steer on it, so line up before you set off.",
       "note": "Tutorial lesson 9",
       "max": 170
