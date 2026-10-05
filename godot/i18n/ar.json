@@ -100,6 +100,7 @@
   "COMPLETION BONUS": "مكافأة الإكمال",
   "LIVES REMAINING ×50": "الأرواح المتبقية ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "تم اعتماد اللوحات الـ100 جميعها · شكرًا على اللعب",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "ملاحظة: في الدرس التعليمي دروس جديدة",
   "APPROVED": "معتمد",
   "SHEET %03d / %d": "لوحة %03d / %d",
   "TUTORIAL %d / %d": "درس %d / %d",
@@ -230,5 +231,7 @@
   "NEXT LEVEL": "المستوى التالي",
   "<  RETURN TO SHEET %03d": "<  العودة إلى اللوحة %03d",
   "NEXT": "التالي",
-  "MENU": "القائمة"
+  "MENU": "القائمة",
+  "TAP TO START": "انقر للبدء",
+  "SKIP": "تخطي"
 }

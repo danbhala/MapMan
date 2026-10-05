@@ -383,6 +383,10 @@ msgstr "남은 목숨 ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "도면 100장 모두 승인 · 플레이해 주셔서 감사합니다"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "참고: 튜토리얼에 새 레슨이 추가됨"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "승인"
@@ -826,3 +830,11 @@ msgstr "잠김, 레벨 %d에서 해금"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "잠김, 게임 클리어 시 해금"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "탭하여 시작"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "건너뛰기"

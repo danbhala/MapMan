@@ -45,6 +45,11 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   (`main.gd` `_between`), the wardrobe and the quit question opened from it
   come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
   sheet makes him jump (`Menus._poke()`, `Player.jump()`).
+- The tutorial (`data/tutorial.json`) has lessons marked `rev_b`, for the
+  tiles of the second playthrough: `main.gd` `lessons()` leaves them out until
+  `Save.has_completed`. Finishing the game sets `Save.new_lessons`, which puts
+  a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
+  until the tutorial is next started.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
