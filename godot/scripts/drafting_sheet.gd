@@ -83,6 +83,7 @@ const TOOLS := [
 	["t", "TIME LOST"],
 	["y", "STICKY TILE"],
 	["r", "REVERSE TILE"],
+	["k", "CRUMBLE TILE"],
 	["v", ""],
 	["x", ""],
 	["h", "HIDE TILES"],
@@ -284,6 +285,21 @@ static func build_editor(m: Menus, draft: Draft, signed_now := false) -> void:
 		else:
 			Blueprint.stamp(m._panel, m.tr(TEXT.signed), Vector2(m._mx(at.x, 120.0), at.y))
 	m._focus_first()
+
+
+## The pause sheet over a draft ("D1") or a received level ("R"): its number
+## and status, and a way back that ends at the drafting table.
+static func build_pause(m: Menus, number: String) -> void:
+	m._open("pause", number + "-A", m._t("paused_title"))
+	var status: String = m.tr(TEXT.suspended_received)
+	var end: String = m._t("end_game")
+	if number.begins_with("D"):
+		status = m.tr(TEXT.suspended_draft) % int(number.substr(1))
+		end = m.tr(TEXT.back_to_draft)
+	m._note(status, Menus.LIST_TOP, Blueprint.FAINT, 11)
+	m._item(1, m._t("resume"), "unpause", 90)
+	m._item(2, end, "end custom", 138)
+	m._pause_tail()
 
 
 ## A row on the panel, like the parts list's way back, that reports `act`.

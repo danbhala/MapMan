@@ -246,6 +246,18 @@ msgstr "註：繞開毒地磚"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "註：每張圖面 T-0:20 · 走捷徑"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "註：隱藏的毒地磚已標出"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "註：每次開始時勾畫安全路線"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "略過這張圖面"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "重工"
@@ -327,6 +339,18 @@ msgstr "點一下繼續，前往圖面 %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "點一下繼續，前往最終圖面"
 
+#. Level clear: what NEXT does, for screen readers
+msgid "NEXT LEVEL"
+msgstr "下一關"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "下一關"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "選單"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "檢查點已儲存 · 隨時可從此處重新開始"
@@ -334,6 +358,10 @@ msgstr "檢查點已儲存 · 隨時可從此處重新開始"
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "合格"
+
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  返回圖面 %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -575,22 +603,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "小心毒地磚，踩到就會失去一條生命。"
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"離開這些地磚後，它們就會碎裂掉落。\n"
+"沒有回頭路，所以請提前規劃路線。"
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "這些地磚會增加或減少你的時間。每關結束時，剩餘時間會換算成獎勵分。"
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "這些地磚會讓其他地磚消失再重現。地磚隱藏時仍然可以踩，所以要記住它們的位置。"
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "你會不時遇到檢查點。每到達一個檢查點，就可以從那裡重新開始，而不必回到起點。"
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "遊戲中點一下螢幕即可暫停。換了握持姿勢？點一下角落的指示器，即可將目前角度設為新的中心。"
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "一切就緒，前往出口開始遊戲吧。玩得開心！"
 
@@ -755,9 +791,9 @@ msgstr "破關後解鎖"
 msgid "NEW IN THE WARDROBE"
 msgstr "衣櫥新增"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "可在圖面 001 的衣櫥中穿上"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "穿上"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
@@ -782,6 +818,14 @@ msgstr "未解鎖，第%d關解鎖"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "未解鎖，破關後解鎖"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "點一下開始"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "略過"
 
 #. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
 msgid "DRAFTING TABLE"
@@ -1011,3 +1055,7 @@ msgstr "關卡代碼"
 #. Screen reader: the QR code picture on the share sheet
 msgid "QR code of the level"
 msgstr "關卡QR碼"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "碎裂地磚"

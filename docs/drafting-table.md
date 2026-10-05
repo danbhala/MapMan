@@ -43,10 +43,13 @@ against `tests/data/level_codes.json` (all 100 campaign levels).
 shared. To change the model, write `level_code_v1.json` and bump `VERSION`;
 older games answer a newer code with "needs a newer version of MapMan".
 
-**New tile types** take the 12 spare symbols after `SYMBOLS`: append the
-tile's character to `SYMBOLS` in both files (never reorder them), add it to
-`DraftingSheet.TOOLS`, and regenerate the golden codes
-(`python3 godot/tools/level_code.py --fixtures`). Old codes keep reading.
+**New tile types** take the spare symbols after `SYMBOLS` (crumble, `k`, took
+the first; 11 are left): append the tile's character to `SYMBOLS` in both
+files and lower `RESERVED` by one, so the alphabet stays 43 symbols (never
+reorder them). Add it to `DraftingSheet.TOOLS`, and regenerate the golden
+codes (`python3 godot/tools/level_code.py --fixtures`). Old codes keep
+reading; an older game answers a code using the new tile with "needs a newer
+version".
 
 ## QR codes
 

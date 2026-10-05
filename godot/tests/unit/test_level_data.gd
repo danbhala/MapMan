@@ -39,7 +39,7 @@ func test_game_levels() -> void:
 
 func test_tutorial_levels() -> void:
 	var levels := _load("res://data/tutorial.json")
-	assert_eq(levels.size(), 12)
+	assert_eq(levels.size(), 13)
 	_check(levels, "tutorial")
 
 

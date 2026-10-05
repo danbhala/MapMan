@@ -95,7 +95,7 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, DraftingSheet.TEXT]:
+	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, DraftingSheet.TEXT]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]
@@ -310,11 +310,14 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_confirm_quit(),
 		func(): m.show_lose_life(2, 35),
 		func(): m.show_lose_life(15, 35, "timeout"),
+		func(): m.show_lose_life(1, 35, "death", "marks"),
+		func(): m.show_lose_life(1, 35, "timeout", "skip"),
 		func(): m.show_game_over(1842, true, true, 1790),
 		func(): m.show_restart([10, 30]),
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
+		func(): m.show_wardrobe(36),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),
 		func(): m.show_game_complete(1842, 100, 100),
@@ -331,8 +334,8 @@ func _open_every_sheet(check: Callable) -> void:
 		_editor.bind(Draft.new(5)),
 		_editor.bind(_drafts()[1]),
 		_editor.bind(_drafts()[0]),
-		func(): m.show_pause(false, 0, -1, "D6"),
-		func(): m.show_pause(false, 0, -1, "R"),
+		func(): DraftingSheet.build_pause(m, "D6"),
+		func(): DraftingSheet.build_pause(m, "R"),
 	]
 	for open_sheet in sheets:
 		open_sheet.call()

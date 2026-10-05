@@ -40,8 +40,9 @@ FIXTURES = os.path.join(HERE, '..', 'tests', 'data', 'level_codes.json')
 VERSION = 0
 # Symbol index -> tile character. Spare symbols follow for future tiles.
 SYMBOLS = [' ', 'c', 'b', 'd', 'p', 'y', 'r', 'i', '!', 't', 'm', 'w', 'e', 'n', 's',
-           'u', 'h', 'l', 'v', 'x', '@', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-RESERVED = 12
+           'u', 'h', 'l', 'v', 'x', '@', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+           'k']
+RESERVED = 11
 ALPHABET = len(SYMBOLS) + RESERVED
 X_HIDES = [25, 12, 50, 100]
 DELAYS = [0.05, 0.1, 0.2, 0.03]

@@ -11,6 +11,8 @@ const ASSET_SCALE := 1.0 / 3.0  # the imported art is the original @3x set
 const TILE_ALPHA := 0.8
 const APPEAR_TIME := 0.25
 const FOLD_TIME := 0.25
+const FALL_TIME := 0.35  # a crumble tile dropping away
+const FALL_DROP := 18.0
 ## Hiding and unhiding ripple out from the player, this long per tile away.
 const RIPPLE_STEP := 0.02
 
@@ -56,6 +58,10 @@ var less_times := {}
 var points := {}
 var hides := {}
 var unhides := {}
+## Crumble tiles: whole while true. A tile that has fallen away is in `broken`
+## (key -> true) and can't be stepped on until the next try.
+var crumbles := {}
+var broken := {}
 
 # Movement between two tiles.
 var moving := false
@@ -72,6 +78,11 @@ var _min_y := 0.0
 var _screen_h := 375.0
 var _rows_total := 0
 var _textures := {}
+var _falls := {}  # crumble key -> the Tween of a tile still falling
+
+# The assists (main.gd): pencil marks on hidden death tiles, a route sketch.
+var _marks: PencilMarks
+var _route: RouteSketch
 
 # --- texture helpers -----------------------------------------------------
 
@@ -133,6 +144,8 @@ static func texture_file(t: String, x_hides := 25) -> String:
 			return "sticky.png"
 		"r":
 			return "reverse.png"
+		"k":
+			return "crumble.png"
 	return "blank1.png"
 
 
@@ -145,6 +158,8 @@ func unload() -> void:
 	tiles.clear()
 	ends.clear()
 	checkpoint_flag = null
+	_marks = null
+	_route = null
 	moving = false
 
 
@@ -163,7 +178,10 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		less_times,
 		points,
 		hides,
-		unhides
+		unhides,
+		crumbles,
+		broken,
+		_falls
 	]:
 		d.clear()
 
@@ -303,6 +321,8 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 		hides[key] = true
 	elif t == "u":
 		unhides[key] = true
+	elif t == "k":
+		crumbles[key] = true
 
 
 func _appear(node: Node2D, wait: float, full := ASSET_SCALE) -> void:
@@ -384,7 +404,7 @@ func _hide_tile(tile: Tile, animate := false) -> void:
 
 
 func _unhide_tile(tile: Tile, animate := false) -> void:
-	if tile.sprite:
+	if tile.sprite and not broken.has(tile.key):
 		if animate and not tile.sprite.visible and Blueprint.motion():
 			_unfold(tile)
 		tile.sprite.visible = true
@@ -471,6 +491,127 @@ func reset_hide() -> void:
 	tiles_hidden = false
 
 
+# --- assists -------------------------------------------------------------
+
+
+## Draw, or stop drawing, a dashed outline on every death tile that is
+## hidden: the drafting convention for an edge you can't see.
+func set_marks(on: bool) -> void:
+	if on and _marks == null:
+		_marks = PencilMarks.new(self)
+		_marks.z_index = 4
+		add_child(_marks)
+	elif not on and _marks:
+		_marks.queue_free()
+		_marks = null
+
+
+## How many death tiles the pencil marks outline right now.
+func marked() -> int:
+	return _marks.count() if _marks else 0
+
+
+## Sketch the safe route from the start in gold for `seconds`, then let it fade.
+func sketch_route(seconds: float) -> void:
+	if _route:
+		_route.queue_free()
+	var points := PackedVector2Array()
+	for key in safe_route():
+		points.append(tiles[key].position)
+	_route = RouteSketch.new(points, seconds)
+	_route.z_index = 4
+	add_child(_route)
+
+
+## The shortest route from the start to an exit that touches no death tile,
+## keeping off time-loss tiles when another way exists; empty if there is
+## none. The same search the autoplay test walks.
+func safe_route() -> Array[Vector2i]:
+	for avoid_time_loss in [true, false]:
+		var prev := {start_position: start_position}
+		var queue: Array[Vector2i] = [start_position]
+		while not queue.is_empty():
+			var cur: Vector2i = queue.pop_front()
+			if ends.any(func(t: Tile) -> bool: return t.key == cur):
+				var route: Array[Vector2i] = [cur]
+				while cur != start_position:
+					cur = prev[cur]
+					route.push_front(cur)
+				return route
+			for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
+				var nxt: Vector2i = cur + d
+				if prev.has(nxt) or not tiles.has(nxt):
+					continue
+				var tile: Tile = tiles[nxt]
+				if tile.blank or deaths.has(nxt) or broken.has(nxt):
+					continue
+				if avoid_time_loss and less_times.has(nxt):
+					continue
+				prev[nxt] = cur
+				queue.append(nxt)
+	return []
+
+
+## Dashed outlines over the death tiles that are hidden right now. Which
+## tiles those are changes as hide and unhide tiles are stepped on, so it
+## looks again every frame; a sheet has a few dozen tiles at most.
+class PencilMarks:
+	extends Node2D
+	const RX := 13.5
+	const RY := 9.5
+	const DASHES := 12
+	var map: LevelMap
+
+	func _init(on_map: LevelMap) -> void:
+		map = on_map
+
+	func _process(_delta: float) -> void:
+		queue_redraw()
+
+	func count() -> int:
+		var n := 0
+		for key in map.deaths:
+			if _hidden(key):
+				n += 1
+		return n
+
+	func _hidden(key: Vector2i) -> bool:
+		var tile: Tile = map.tiles.get(key)
+		return tile != null and tile.sprite != null and not tile.sprite.visible
+
+	func _draw() -> void:
+		for key in map.deaths:
+			if not _hidden(key):
+				continue
+			var pts := Blueprint.ellipse_points(map.tiles[key].position, RX, RY, DASHES * 2)
+			for i in range(0, pts.size() - 1, 2):
+				draw_line(pts[i], pts[i + 1], Blueprint.PINK, 1.5, true)
+
+
+## The safe route as a dashed gold line through the tiles, for a moment.
+class RouteSketch:
+	extends Node2D
+	const FADE := 0.6
+	var points: PackedVector2Array
+
+	var seconds: float
+
+	func _init(route: PackedVector2Array, for_seconds: float) -> void:
+		points = route
+		seconds = for_seconds
+
+	func _ready() -> void:
+		var tw := create_tween()
+		tw.tween_interval(seconds)
+		if Blueprint.motion():
+			tw.tween_property(self, "modulate:a", 0.0, FADE)
+		tw.tween_callback(queue_free)
+
+	func _draw() -> void:
+		for i in points.size() - 1:
+			draw_dashed_line(points[i], points[i + 1], Blueprint.GOLD, 2.0, 6.0, true, true)
+
+
 # --- movement ------------------------------------------------------------
 
 
@@ -491,10 +632,15 @@ func update_move(delta: float) -> void:
 		position_key = _move_to
 
 
+## The tile the current move started from (position_key while moving).
+func moving_from() -> Vector2i:
+	return _move_from
+
+
 ## step is in screen directions: (1, 0) right, (0, -1) up.
 func move(step: Vector2i, seconds: float) -> void:
 	var target := position_key + step
-	if tiles.has(target) and not tiles[target].blank:
+	if tiles.has(target) and not tiles[target].blank and not broken.has(target):
 		moving = true
 		_move_from = position_key
 		_move_to = target
@@ -504,11 +650,52 @@ func move(step: Vector2i, seconds: float) -> void:
 		moving = false
 
 
+## The crumble tile at key falls away: it drops and fades, then is gone until
+## reset(). Nothing happens if it has already fallen.
+func crumble(key: Vector2i) -> void:
+	if not crumbles.get(key, false):
+		return
+	crumbles[key] = false
+	broken[key] = true
+	var tile: Tile = tiles[key]
+	var sprite := tile.sprite
+	if Blueprint.motion() and sprite.visible:
+		var tw := create_tween().set_parallel(true)
+		tw.tween_property(sprite, "position:y", tile.position.y + FALL_DROP, FALL_TIME)
+		(
+			tw
+			. tween_property(sprite, "modulate:a", 0.0, FALL_TIME)
+			. set_trans(Tween.TRANS_QUAD)
+			. set_ease(Tween.EASE_IN)
+		)
+		tw.chain().tween_callback(func() -> void: _fallen(key))
+		_falls[key] = tw
+	else:
+		_fallen(key)
+
+
+func _fallen(key: Vector2i) -> void:
+	_falls.erase(key)
+	if broken.has(key):
+		tiles[key].sprite.visible = false
+
+
 ## Restore consumable tiles after losing a life. Points and lives stay collected.
 func reset() -> void:
 	moving = false
 	position_key = start_position
-	for d in [unhides, hides, reverses, vanishes, stickies, deaths, more_times, less_times]:
+	for tw: Tween in _falls.values():
+		tw.kill()
+	_falls.clear()
+	for key in broken:
+		var tile: Tile = tiles[key]
+		tile.sprite.position = tile.position
+		tile.sprite.modulate.a = TILE_ALPHA
+		tile.sprite.visible = true
+	broken.clear()
+	for d in [
+		unhides, hides, reverses, vanishes, stickies, deaths, more_times, less_times, crumbles
+	]:
 		for key in d:
 			d[key] = true
 			var tile: Tile = tiles[key]

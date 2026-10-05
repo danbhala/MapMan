@@ -251,6 +251,18 @@ msgstr "ملاحظة: تجنب البلاطات السامة"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "ملاحظة: T-0:20 لكل لوحة · اسلك الطريق الأقصر"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "ملاحظة: البلاطات السامة المخفية صارت معلمة"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "ملاحظة: يرسم الطريق الآمن عند بداية كل محاولة"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "تخطي هذه اللوحة"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "إعادة عمل"
@@ -337,6 +349,18 @@ msgstr "انقر للمتابعة إلى اللوحة %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "انقر للمتابعة إلى اللوحة الأخيرة"
 
+#. Level clear: what NEXT does, for screen readers
+msgid "NEXT LEVEL"
+msgstr "المستوى التالي"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "التالي"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "القائمة"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "تم حفظ نقطة التفتيش · يمكنك البدء من هنا في أي وقت"
@@ -344,6 +368,10 @@ msgstr "تم حفظ نقطة التفتيش · يمكنك البدء من هنا
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "مقبول"
+
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  العودة إلى اللوحة %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -610,22 +638,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "احذر البلاطات السامة، فإن دست عليها خسرت روحًا."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"تتفتت هذه البلاطات بعد أن تغادرها.\n"
+"لا عودة إلى الوراء، فخطط لطريقك مسبقًا."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "هذه البلاطات تمنحك وقتًا إضافيًا أو تخسرك وقتًا. ستحصل على نقاط مكافأة مقابل الوقت المتبقي عند إنهاء كل مستوى."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "هذه البلاطات تجعل بلاطات أخرى تختفي وتظهر من جديد. يمكنك الدوس على البلاطات المخفية، فتذكر أماكنها."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "ستصادف نقطة تفتيش بين الحين والآخر. كلما بلغت نقطة تفتيش أمكنك البدء منها بدلًا من العودة إلى البداية."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "انقر الشاشة أثناء اللعب للإيقاف المؤقت. غيّرت طريقة إمساك جهازك؟ انقر المؤشر في الزاوية لتجعلها المركز الجديد."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "أنت جاهز، توجه إلى الخروج لبدء اللعبة. استمتع!"
 
@@ -795,9 +831,9 @@ msgstr "يتاح عند إنهاء اللعبة"
 msgid "NEW IN THE WARDROBE"
 msgstr "جديد في الخزانة"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "ارتده من الخزانة في اللوحة 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "ارتدِه"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
@@ -822,6 +858,14 @@ msgstr "مقفل، يتاح في المستوى %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "مقفل، يتاح عند إنهاء اللعبة"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "انقر للبدء"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "تخطي"
 
 #. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
 msgid "DRAFTING TABLE"
@@ -1056,3 +1100,7 @@ msgstr "رمز المستوى"
 #. Screen reader: the QR code picture on the share sheet
 msgid "QR code of the level"
 msgstr "رمز QR للمستوى"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "بلاطة متفتتة"

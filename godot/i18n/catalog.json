@@ -360,6 +360,21 @@
       "max": 60
     },
     {
+      "id": "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON",
+      "note": "Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries",
+      "max": 60
+    },
+    {
+      "id": "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS",
+      "note": "Lost-life small print: a dashed line shows the safe route for a moment at the start of every try",
+      "max": 60
+    },
+    {
+      "id": "SKIP THIS SHEET",
+      "note": "Lost-life row, offered after many lives lost on one level: go on to the next level without points",
+      "max": 31
+    },
+    {
       "id": "REWORK",
       "note": "Rubber stamp on the lost-life sheet",
       "max": 10
@@ -461,6 +476,21 @@
       "max": 45
     },
     {
+      "id": "NEXT LEVEL",
+      "note": "Level clear: what NEXT does, for screen readers",
+      "max": 16
+    },
+    {
+      "id": "NEXT",
+      "note": "Level clear button, first of three side by side: on to the next level",
+      "max": 10
+    },
+    {
+      "id": "MENU",
+      "note": "Level clear button, last of three side by side: back to the main menu (asks first)",
+      "max": 12
+    },
+    {
       "id": "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME",
       "note": "Checkpoint level clear small print",
       "max": 60
@@ -469,6 +499,11 @@
       "id": "PASSED",
       "note": "Rubber stamp on a cleared level",
       "max": 10
+    },
+    {
+      "id": "<  RETURN TO SHEET %03d",
+      "note": "Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number",
+      "max": 30
     },
     {
       "id": "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE",
@@ -724,28 +759,33 @@
       "max": 170
     },
     {
-      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
+      "id": "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.",
       "note": "Tutorial lesson 8",
       "max": 170
     },
     {
-      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
+      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
       "note": "Tutorial lesson 9",
       "max": 170
     },
     {
-      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
+      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
       "note": "Tutorial lesson 10",
       "max": 170
     },
     {
-      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
+      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
       "note": "Tutorial lesson 11",
       "max": 170
     },
     {
-      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
       "note": "Tutorial lesson 12",
+      "max": 170
+    },
+    {
+      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "note": "Tutorial lesson 13",
       "max": 170
     },
     {
@@ -950,9 +990,9 @@
       "max": 24
     },
     {
-      "id": "WEAR IT FROM THE WARDROBE ON SHEET 001",
-      "note": "Slip on the level-clear sheet; keep 001, the main menu's sheet number",
-      "max": 40
+      "id": "WEAR IT",
+      "note": "Button on the level-clear slip: wear the look just released, now",
+      "max": 9
     },
     {
       "id": "MAPWOMAN JOINS THE WARDROBE",
@@ -983,6 +1023,16 @@
       "id": "Locked, released for finishing the game",
       "note": "Screen reader: MapWoman before the game is finished",
       "max": 44
+    },
+    {
+      "id": "TAP TO START",
+      "note": "Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.",
+      "max": 24
+    },
+    {
+      "id": "SKIP",
+      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
+      "max": 12
     },
     {
       "id": "DRAFTING TABLE",
@@ -1268,6 +1318,11 @@
     {
       "id": "QR code of the level",
       "note": "Screen reader: the QR code picture on the share sheet",
+      "max": 30
+    },
+    {
+      "id": "CRUMBLE TILE",
+      "note": "Editor palette: a tile that falls away once MapMan steps off it",
       "max": 30
     }
   ]

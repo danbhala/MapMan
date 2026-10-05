@@ -247,6 +247,18 @@ msgstr "NOTA: AGGIRA LE CASELLE MORTALI"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "NOTA: T-0:20 PER TAVOLA · PRENDI LA VIA PIÙ BREVE"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "NOTA: LE CASELLE MORTALI NASCOSTE SONO SEGNATE"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "NOTA: LA VIA SICURA VIENE TRACCIATA A OGNI TENTATIVO"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "SALTA QUESTA TAVOLA"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "DA RIFARE"
@@ -329,6 +341,18 @@ msgstr "TOCCA PER PASSARE ALLA TAVOLA %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "TOCCA PER PASSARE ALLA TAVOLA FINALE"
 
+#. Level clear: what NEXT does, for screen readers
+msgid "NEXT LEVEL"
+msgstr "AVANTI"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "AVANTI"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "MENU"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "CHECKPOINT SALVATO · RIPARTI DA QUI QUANDO VUOI"
@@ -336,6 +360,10 @@ msgstr "CHECKPOINT SALVATO · RIPARTI DA QUI QUANDO VUOI"
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "SUPERATO"
+
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  TORNA ALLA TAVOLA %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -582,22 +610,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Attenzione alle caselle velenose: se le calpesti, perdi una vita."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Queste caselle si sbriciolano appena le lasci.\n"
+"Non si torna indietro, quindi pianifica il percorso."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Queste caselle ti danno tempo extra o te lo tolgono. Alla fine di ogni livello, il tempo rimasto sull'orologio vale punti bonus."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Queste caselle fanno sparire e ricomparire altre caselle. Le caselle nascoste si possono ancora calpestare, quindi ricorda dove sono."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Ogni tanto incontrerai un checkpoint. Ogni volta che ne raggiungi uno potrai ripartire da lì invece di ricominciare dall'inizio."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Tocca lo schermo durante la partita per la pausa. Tieni il dispositivo in un altro modo? Tocca l'indicatore nell'angolo per renderlo il nuovo centro."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Tutto pronto: raggiungi l'uscita per iniziare il gioco. Buon divertimento!"
 
@@ -763,9 +799,9 @@ msgstr "RILASCIO A GIOCO FINITO"
 msgid "NEW IN THE WARDROBE"
 msgstr "NUOVO NEL GUARDAROBA"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "INDOSSALO DAL GUARDAROBA, TAVOLA 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "INDOSSA"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
@@ -790,6 +826,14 @@ msgstr "Bloccato, rilascio al livello %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Bloccato, rilascio a gioco finito"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "TOCCA PER INIZIARE"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "SALTA"
 
 #. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
 msgid "DRAFTING TABLE"
@@ -1020,3 +1064,7 @@ msgstr "Codice livello"
 #. Screen reader: the QR code picture on the share sheet
 msgid "QR code of the level"
 msgstr "Codice QR del livello"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "CASELLA FRIABILE"

@@ -13,6 +13,12 @@ const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
 const MEETING_SECONDS := 1.0  # how long MapMan and MapWoman stand facing
+## Help for a sheet that keeps beating the player, by lives lost on it this
+## session. Each tier keeps the ones before it; clearing the sheet ends them.
+const ASSIST_MARKS := 2  # hidden death tiles are marked, and a death step needs a held tilt
+const ASSIST_ROUTE := 4  # the safe route is sketched as each try starts
+const ASSIST_SKIP := 6  # the lost-life sheet offers to skip the sheet
+const ROUTE_SKETCH_SECONDS := 2.5
 
 ## The frame, grid and notes take an effect's colour while it is on.
 const REVERSE_COLOR := Blueprint.PINK
@@ -35,6 +41,8 @@ var menus: Menus
 var tilt := TiltInput.new()
 var dev_panel: DevPanel
 var gauge: TiltGauge
+## The intro and title screen at launch; null once the main menu is up.
+var intro: Intro
 ## Show the tilt gauge without an accelerometer (screenshots, desktop tests).
 var show_gauge_anyway := false
 
@@ -49,6 +57,8 @@ var practice := false
 ## Playing a level from the drafting table: "draft" (testing one, which a
 ## win signs) or "received" (a friend's code). No lives, score or saving.
 var custom := ""
+## The drafting table's flow: the open draft and the level being played.
+var drafting := DraftingTable.new(self)
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -62,13 +72,11 @@ var stuck := false:
 var reverse := false
 var vanish := 0
 var end_of_level_points := 0
+## Lives lost on each level (level -> count) in the main game this session,
+## for the assists. Not saved: a fresh start is a fresh chance.
+var losses := {}
 
 var _bg: ColorRect
-## The level being played from the drafting table, the draft being edited,
-## and where a received level goes back to: "drafting" or "main".
-var _custom_level: Dictionary = {}
-var _draft: Draft
-var _custom_return := "drafting"
 var _grid: Blueprint.Grid
 var _was_moving := false
 var _lose_reason := "death"
@@ -76,6 +84,9 @@ var _lose_reason := "death"
 var _moves := 0  # moves made in this attempt at the level, for the play log
 ## The direction the player was last steering, so it only needs keep_threshold.
 var _held_step := Vector2i.ZERO
+## When MapMan last came to rest on a tile; with the assists on, a step onto a
+## death tile sooner than guard_hold after it is ignored (a corner overshot).
+var _landed_at := 0.0
 
 # the ending (completion.py): MapWoman, the vortex and the hearts
 var _woman: Player
@@ -87,6 +98,10 @@ var _ending_clock := 0.0
 ## Take the phone's current angle as "level" on the next frame of play.
 var _calibrate_pending := true
 var _practice_page := 0
+## A level of the main game is cleared and its points not yet banked: its
+## level clear is up, or the wardrobe or the question before quitting opened
+## from it, and each of those goes back to it.
+var _between := false
 
 # countdown
 var _time_left := INITIAL_SECONDS
@@ -154,8 +169,20 @@ func _ready() -> void:
 
 	hud.show_bar(false)
 	hud.show_stats(false)
+	# Only a real launch plays the intro: tests and tools build Main themselves.
+	if get_tree().current_scene == self:
+		intro = Intro.new()
+		add_child(intro)
+		intro.finished.connect(_end_intro)
+	else:
+		show_start_menu()
+
+
+func _end_intro() -> void:
+	intro.queue_free()
+	intro = null
 	show_start_menu()
-	_check_clipboard()
+	drafting.check_clipboard()
 
 
 func _load_data() -> void:
@@ -475,17 +502,30 @@ func _try_axis(
 		threshold = minf(threshold, Dev.t("keep_threshold"))
 	if absf(value) <= threshold:
 		return face
+	var actual := -step if reverse else step
+	if can_move and _guarded(actual):
+		return face  # like a wall: the other axis may still move him
 	var seconds := STOP_TIME * (0.5 if absf(value) > Dev.t("fast_threshold") else 1.0)
 	if can_move:
 		move(step, seconds)
 	# Hold the way MapMan actually went, not a way a wall blocked.
 	if map.moving or _held_step == Vector2i.ZERO:
 		_held_step = step
-	var actual := -step if reverse else step
 	if map.moving:
 		player.face_direction(actual, true)
 		return Callable()
 	return func(): player.face_direction(actual, false)
+
+
+## The corner guard (assist tier ASSIST_MARKS): a step onto a death tile is
+## only taken once MapMan has rested on his tile for guard_hold seconds, so
+## the tilt that carried him along a row doesn't carry him off its end.
+func _guarded(actual: Vector2i) -> bool:
+	if not assists_on(ASSIST_MARKS):
+		return false
+	if not map.deaths.get(map.position_key + actual, false):
+		return false
+	return _now() - _landed_at < Dev.t("guard_hold")
 
 
 func move(step: Vector2i, seconds: float) -> void:
@@ -504,10 +544,14 @@ func move(step: Vector2i, seconds: float) -> void:
 func update_player(delta: float) -> void:
 	player.update_at(map.get_player_position(), delta)
 	if map.moving:
+		if not _was_moving and map.crumbles.get(map.moving_from(), false):
+			Audio.play("crumble")  # the tile he just left falls away behind him
+			map.crumble(map.moving_from())
 		_was_moving = true
 		return
 	if _was_moving:
 		_was_moving = false
+		_landed_at = _now()
 		player.land()
 	if map.at_end():
 		player.cheer()
@@ -653,7 +697,7 @@ func _update_ending(delta: float) -> void:
 
 func _current_level_data() -> Dictionary:
 	if custom != "":
-		return _custom_level
+		return drafting.level
 	if completed:
 		return completion_level
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
@@ -708,6 +752,58 @@ func reset_all(reset_stars := true) -> void:
 	_update_stats()
 	tilt.touch(false, Vector2.ZERO)
 	_calibrate_pending = true
+	_landed_at = _now()
+	_apply_assists()
+
+
+# --- assists -----------------------------------------------------------------
+
+
+## Lives lost on this level in the main game; the tutorial, practice and the
+## ending never count, so they never get help.
+func losses_here() -> int:
+	if tutorial or practice or completed:
+		return 0
+	return losses.get(level, 0)
+
+
+func assists_on(tier: int) -> bool:
+	return losses_here() >= tier
+
+
+## The help the next try gets, for the lost-life sheet: "", "marks", "route"
+## or "skip".
+func assist_name() -> String:
+	if assists_on(ASSIST_SKIP):
+		return "skip"
+	if assists_on(ASSIST_ROUTE):
+		return "route"
+	if assists_on(ASSIST_MARKS):
+		return "marks"
+	return ""
+
+
+## At the start of a try: mark the hidden death tiles and sketch the route,
+## as far as the sheet's losses have earned.
+func _apply_assists() -> void:
+	map.set_marks(assists_on(ASSIST_MARKS))
+	if assists_on(ASSIST_ROUTE):
+		map.sketch_route(ROUTE_SKETCH_SECONDS)
+
+
+## Give up on a sheet the assists offered to skip: on to the next one with no
+## points, no best and no checkpoint, as if walked around.
+func skip_level() -> void:
+	if not assists_on(ASSIST_SKIP):
+		return
+	Dev.record(level, "skip", _time_left, _moves)
+	menus.close()
+	losses.erase(level)
+	level += 1
+	finish_advancing_level()
+	# The next level is reached, so any look its number releases comes too.
+	Save.sync_wardrobe()
+	Save.save_all()
 
 
 func advance_level(check_point: bool) -> void:
@@ -720,8 +816,10 @@ func advance_level(check_point: bool) -> void:
 		return
 	if custom != "":
 		Audio.play("end_level")
-		_end_custom(true)
+		drafting.end(true)
 		return
+	if not tutorial and not practice:
+		losses.erase(level)
 	if not tutorial:
 		var new_best := false
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
@@ -748,18 +846,26 @@ func advance_level(check_point: bool) -> void:
 	end_of_level_points = POINTS_PER_LEVEL + time_bonus + stars
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
+	_between = true
 	menus.show_end_level(
 		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
 	)
 
 
 func next_level() -> void:
+	_bank_level()
+	finish_advancing_level()
+
+
+## The cleared level's points join the score (saving a checkpoint on a
+## checkpoint level), and the level after it is next.
+func _bank_level() -> void:
+	_between = false
 	if not tutorial:
 		score += end_of_level_points
 		if map.is_checkpoint:
 			Save.checkpoint_reached(level, score)
 	level += 1
-	finish_advancing_level()
 
 
 func finish_advancing_level() -> void:
@@ -800,6 +906,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	tutorial = is_tutorial
 	completed = false
 	practice = false
+	_between = false
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -819,6 +926,8 @@ func lose_life(reason := "death") -> void:
 	_timer_stop()
 	if not tutorial and not practice and custom == "":
 		Dev.record(level, reason, _time_left, _moves)
+		if not completed:
+			losses[level] = losses.get(level, 0) + 1
 	Audio.play("lose_life")
 	_lose_reason = reason
 	player.show_player()
@@ -839,7 +948,7 @@ func finish_lose_life() -> void:
 	if lives < 1:
 		game_over()
 	elif not tutorial:
-		menus.show_lose_life(lives, level, _lose_reason)
+		menus.show_lose_life(lives, level, _lose_reason, assist_name())
 	else:
 		reset_all()
 
@@ -853,6 +962,7 @@ func game_over(show_score := true) -> void:
 	completed = false
 	practice = false
 	custom = ""
+	_between = false
 	_timer_stop()
 	game_active = false
 	paused = false
@@ -883,7 +993,7 @@ func dev_skip_level() -> void:
 		_end_practice()
 		return
 	if custom != "":
-		_end_custom(false)
+		drafting.end(false)
 		return
 	menus.close()
 	end_of_level_points = 0
@@ -924,107 +1034,20 @@ func show_start_menu() -> void:
 	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.drafting_open())
 
 
-# --- the drafting table (DraftingSheet) ------------------------------------------
-
-
-func show_drafting_table(note := "") -> void:
-	Audio.play_menu()
-	DraftingSheet.build(menus, Save.all_drafts(), Save.received, note)
-
-
-func open_draft(slot: int, signed_now := false) -> void:
-	if _draft == null or _draft.slot != slot:
-		_draft = Save.all_drafts()[slot]
-	DraftingSheet.build_editor(menus, _draft, signed_now)
-
-
-## Play `level_data` from the drafting table: kind "draft" tests the draft
-## being edited, "received" plays a friend's code.
-func start_custom(level_data: Dictionary, kind: String) -> void:
-	# Like practice, this leaves the first-play screen for "play from start".
-	var first_play := Save.first_play
-	custom = kind
-	_custom_level = level_data
-	menus.close()
-	new_game(1)
-	if first_play:
-		Save.first_play = true
-		Save.save_all()
-	hud.show_stats(false)
-	hud.show_level(false)
-
-
-## Back from a draft or a received level; won: an exit was reached.
-func _end_custom(won: bool) -> void:
-	var kind := custom
-	var seconds := _seconds_remaining()
-	game_over(false)
-	if kind == "draft":
-		if won:
-			_draft.signed = true
-			Save.store_draft(_draft)
-		open_draft(_draft.slot, won)
-		return
-	var note := ""
-	if won:
-		note = tr(DraftingSheet.TEXT.cleared) % seconds
-	if _custom_return == "drafting" and Save.drafting_open():
-		show_drafting_table(note)
-	else:
-		show_start_menu()
-
-
-## Play a code; returns why it can't be played ("bad", "newer") or "".
-func play_code(code: String, back_to := "drafting") -> String:
-	var got := LevelCode.decode(code)
-	if got.has("newer"):
-		return "newer"
-	if not got.has("rows") or not _playable(got.rows):
-		return "bad"
-	Save.receive(code)
-	_custom_return = back_to
-	start_custom(LevelCode.to_level(got), "received")
-	return ""
-
-
-## A level needs a start tile and an exit to be played.
-func _playable(rows: Array) -> bool:
-	var text := "".join(rows)
-	if text.count("b") != 1:
-		return false
-	for e in ["n", "e", "s", "w"]:
-		if text.contains(e):
-			return true
-	return false
-
-
-## A level code someone copied (from a chat, or a QR code read by the
-## phone's camera) is offered once, as the game opens on the main menu.
-func _check_clipboard() -> void:
-	if menus.current != "main" or not DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD):
-		return
-	var code := LevelCode.find(DisplayServer.clipboard_get())
-	if code == "" or code == Save.clipboard_seen or code in Save.received:
-		return
-	Save.clipboard_seen = code
-	Save.save_all()
-	DraftingSheet.build_found(menus, code)
-
-
 func show_pause_menu() -> void:
 	_timer_stop()
 	paused = true
 	# The final sheet after level 100 has no number and no clock.
 	var clock := -1 if tutorial or completed else _seconds_remaining()
-	var number := ""
-	if custom == "draft":
-		number = "D%d" % (_draft.slot + 1)
-	elif custom == "received":
-		number = "R"
-	menus.show_pause(tutorial, 0 if completed else level, clock, number)
+	if custom != "":
+		DraftingSheet.build_pause(menus, drafting.pause_number())
+	else:
+		menus.show_pause(tutorial, 0 if completed else level, clock)
 
 
 func _on_menu_action(act: String) -> void:
+	if drafting.action(act):
+		return
 	match act:
 		"play from start", "play", "new game", "play game":
 			if Save.first_play and act == "play from start":
@@ -1061,37 +1084,7 @@ func _on_menu_action(act: String) -> void:
 		"language":
 			menus.show_language()
 		"wardrobe":
-			menus.show_wardrobe()
-		"drafting table":
-			if menus.current == "editor" and _draft != null:
-				Save.store_draft(_draft)
-			show_drafting_table()
-		"enter code":
-			DraftingSheet.build_code_entry(menus, "")
-		"paste code":
-			var pasted := DisplayServer.clipboard_get().strip_edges().left(200)
-			DraftingSheet.build_code_entry(menus, pasted)
-		"play code":
-			var text := menus.code_input.text if menus.code_input else ""
-			var why := play_code(text)
-			if why != "":
-				DraftingSheet.build_code_entry(menus, text, why)
-		"play found code":
-			if play_code(Save.clipboard_seen, "main") != "":
-				show_start_menu()
-		"test draft":
-			if _draft != null and _draft.problem() == "":
-				Save.store_draft(_draft)
-				start_custom(_draft.level(), "draft")
-		"share draft":
-			if _draft != null and _draft.signed:
-				DraftingSheet.build_share(menus, _draft)
-		"copy code":
-			DisplayServer.clipboard_set(LevelCode.PREFIX + " " + _draft.code())
-			DraftingSheet.build_share(menus, _draft, true)
-		"end custom":
-			menus.close()
-			_end_custom(false)
+			menus.show_wardrobe(level if _between else 0)
 		"main menu":
 			if menus.current == "wardrobe":
 				# Looked at: nothing in it is new any more (the marks stay
@@ -1106,6 +1099,12 @@ func _on_menu_action(act: String) -> void:
 			if practice:
 				_end_practice()
 			else:
+				if _between:
+					# Quitting from a level clear: its checkpoint is kept, and
+					# the next level opens in practice.
+					_bank_level()
+					if level <= levels.size():
+						Save.level_reached(level)
 				game_over(false)
 				show_start_menu()
 		"practice":
@@ -1117,9 +1116,21 @@ func _on_menu_action(act: String) -> void:
 		"next level":
 			menus.close()
 			next_level()
+		"clear wardrobe":
+			menus.show_wardrobe(level)
+		"back to clear":
+			if menus.current == "wardrobe":
+				Save.mark_seen()
+			menus.reopen_end_level()
+		"leave clear":
+			# MAIN MENU on the level clear: the same question as quitting
+			# from the pause; the level still counts if the game ends.
+			menus.show_confirm_quit("back to clear")
 		"try again":
 			menus.close()
 			reset_all(false)
+		"skip sheet":
+			skip_level()
 		"unpause":
 			menus.close()
 			paused = false
@@ -1151,17 +1162,15 @@ func _on_menu_action(act: String) -> void:
 			elif act.begins_with("practice level "):
 				menus.close()
 				start_practice(int(act.get_slice(" ", 2)))
-			elif act.begins_with("draft "):
-				open_draft(int(act.get_slice(" ", 1)))
-			elif act.begins_with("received "):
-				var i := int(act.get_slice(" ", 1))
-				if i < Save.received.size():
-					play_code(Save.received[i])
 			elif act.begins_with("wear "):
-				# Only from the wardrobe, between games: he wears it from now on.
+				# From the wardrobe, or the slip on the level clear that released
+				# it: he wears it from now on.
 				if Save.wear(act.get_slice(" ", 1)):
 					player.outfit = Save.worn
-				menus.show_wardrobe()
+				if menus.current == "end_level":
+					menus.redraw()
+				else:
+					menus.show_wardrobe(level if _between else 0)
 			elif act.begins_with("L") and act.substr(1).is_valid_int():
 				menus.close()
 				new_game(int(act.substr(1)) + 1)
@@ -1205,7 +1214,7 @@ func _notification(what: int) -> void:
 		if game_active and not dead and not menus.visible and is_inside_tree():
 			show_pause_menu()
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_inside_tree():
-		_check_clipboard()
+		drafting.check_clipboard()
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
 
@@ -1213,23 +1222,26 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if intro:
+		intro.advance()
+		return
 	if dev_panel and dev_panel.is_open():
 		dev_panel.close()
+		return
+	if drafting.go_back():
 		return
 	match menus.current:
 		"":
 			if game_active and not dead:
 				show_pause_menu()
-		"pause", "confirm_quit":
+		"pause":
 			_on_menu_action("unpause")
-		"options", "restart", "first_play", "game_over", "congratulations", "practice", "wardrobe":
+		"confirm_quit":
+			_on_menu_action(menus.confirm_back)
+		"wardrobe":
+			_on_menu_action("back to clear" if _between else "main menu")
+		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
-		"drafting", "found_code":
-			_on_menu_action("main menu")
-		"editor", "enter_code":
-			_on_menu_action("drafting table")
-		"share":
-			open_draft(_draft.slot)
 		"language":
 			_on_menu_action("options")
 		"main":

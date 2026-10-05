@@ -248,6 +248,18 @@ msgstr "ПРИМЕЧАНИЕ: ОБХОДИТЕ СМЕРТЕЛЬНЫЕ КЛЕТК
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "ПРИМЕЧАНИЕ: T-0:20 НА ЛИСТ · ИДИТЕ КОРОТКИМ ПУТЁМ"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "ПРИМЕЧАНИЕ: СКРЫТЫЕ СМЕРТЕЛЬНЫЕ КЛЕТКИ ТЕПЕРЬ ПОМЕЧЕНЫ"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "ПРИМЕЧАНИЕ: БЕЗОПАСНЫЙ ПУТЬ РИСУЕТСЯ В НАЧАЛЕ ПОПЫТКИ"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "ПРОПУСТИТЬ ЭТОТ ЛИСТ"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "ДОРАБОТКА"
@@ -331,6 +343,18 @@ msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ЛИСТУ %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "КОСНИТЕСЬ ДЛЯ ПЕРЕХОДА К ФИНАЛЬНОМУ ЛИСТУ"
 
+#. Level clear: what NEXT does, for screen readers
+msgid "NEXT LEVEL"
+msgstr "ДАЛЕЕ"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "ДАЛЕЕ"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "МЕНЮ"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "КОНТРОЛЬНАЯ ТОЧКА СОХРАНЕНА · СТАРТ ОТСЮДА В ЛЮБОЕ ВРЕМЯ"
@@ -338,6 +362,10 @@ msgstr "КОНТРОЛЬНАЯ ТОЧКА СОХРАНЕНА · СТАРТ ОТ�
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "ПРИНЯТО"
+
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  НАЗАД К ЛИСТУ %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -589,22 +617,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Опасайтесь ядовитых клеток: наступите на них — потеряете жизнь."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Эти клетки осыпаются, как только вы сойдёте с них.\n"
+"Назад пути нет, так что планируйте маршрут заранее."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Эти клетки добавляют или отнимают время. За время, оставшееся на часах в конце каждого уровня, вы получите бонусные очки."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Эти клетки прячут и возвращают другие клетки. На скрытые клетки по-прежнему можно наступать, так что запоминайте, где они."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Время от времени вам будет встречаться контрольная точка. Дойдя до неё, вы сможете начинать с неё, а не с самого начала."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Коснитесь экрана во время игры, чтобы поставить паузу. Держите устройство иначе? Коснитесь индикатора в углу, чтобы сделать это новым центром."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Всё готово — идите к выходу, чтобы начать игру. Приятной игры!"
 
@@ -771,9 +807,9 @@ msgstr "ВЫПУСК ЗА ПРОХОЖДЕНИЕ ИГРЫ"
 msgid "NEW IN THE WARDROBE"
 msgstr "НОВИНКА В ГАРДЕРОБЕ"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "НАДЕТЬ МОЖНО В ГАРДЕРОБЕ НА ЛИСТЕ 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "НАДЕТЬ"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
@@ -798,6 +834,14 @@ msgstr "Закрыто, выпуск на уровне %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Закрыто, выпуск за прохождение игры"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "КОСНИТЕСЬ, ЧТОБЫ НАЧАТЬ"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "ПРОПУСТИТЬ"
 
 #. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
 msgid "DRAFTING TABLE"
@@ -1029,3 +1073,7 @@ msgstr "Код уровня"
 #. Screen reader: the QR code picture on the share sheet
 msgid "QR code of the level"
 msgstr "QR-код уровня"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "ОСЫПАЮЩАЯСЯ КЛЕТКА"

@@ -78,3 +78,10 @@ func test_trim() -> void:
 	assert_eq(got[0], ["bc", " w"])
 	assert_eq(got[1], {Vector2i(1, 1): true})
 	assert_eq(LevelCode.trim(["   "], {}), [])
+
+
+func test_tiles_added_later_keep_the_alphabet() -> void:
+	# A new tile takes a spare symbol; the alphabet's size never changes.
+	assert_eq(LevelCode.SYMBOLS.length() + LevelCode.RESERVED, 43)
+	var rows := ["bkkcw"]
+	assert_eq(LevelCode.decode(LevelCode.encode(rows, {})).rows, rows, "crumble tiles")

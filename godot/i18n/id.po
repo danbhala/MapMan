@@ -246,6 +246,18 @@ msgstr "CATATAN: HINDARI UBIN MAUT"
 msgid "NOTE: T-0:20 PER SHEET · TAKE THE SHORT WAY"
 msgstr "CATATAN: T-0:20 PER LEMBAR · AMBIL JALAN PINTAS"
 
+#. Lost-life small print once the assists are on: hidden death tiles get a dashed outline on the next tries
+msgid "NOTE: HIDDEN DEATH TILES ARE MARKED FROM NOW ON"
+msgstr "CATATAN: UBIN MAUT TERSEMBUNYI KINI DITANDAI"
+
+#. Lost-life small print: a dashed line shows the safe route for a moment at the start of every try
+msgid "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS"
+msgstr "CATATAN: JALUR AMAN DIGAMBAR DI AWAL TIAP PERCOBAAN"
+
+#. Lost-life row, offered after many lives lost on one level: go on to the next level without points
+msgid "SKIP THIS SHEET"
+msgstr "LEWATI LEMBAR INI"
+
 #. Rubber stamp on the lost-life sheet
 msgid "REWORK"
 msgstr "ULANGI"
@@ -327,6 +339,18 @@ msgstr "KETUK UNTUK LANJUT KE LEMBAR %03d"
 msgid "TAP TO CONTINUE TO THE FINAL SHEET"
 msgstr "KETUK UNTUK LANJUT KE LEMBAR AKHIR"
 
+#. Level clear: what NEXT does, for screen readers
+msgid "NEXT LEVEL"
+msgstr "LEVEL BERIKUT"
+
+#. Level clear button, first of three side by side: on to the next level
+msgid "NEXT"
+msgstr "BERIKUTNYA"
+
+#. Level clear button, last of three side by side: back to the main menu (asks first)
+msgid "MENU"
+msgstr "MENU"
+
 #. Checkpoint level clear small print
 msgid "CHECKPOINT SAVED · RESTART FROM HERE ANY TIME"
 msgstr "CHECKPOINT TERSIMPAN · MULAI ULANG DARI SINI KAPAN SAJA"
@@ -334,6 +358,10 @@ msgstr "CHECKPOINT TERSIMPAN · MULAI ULANG DARI SINI KAPAN SAJA"
 #. Rubber stamp on a cleared level
 msgid "PASSED"
 msgstr "LULUS"
+
+#. Last row of the wardrobe when opened from a level clear: back to it; keep <  and the number
+msgid "<  RETURN TO SHEET %03d"
+msgstr "<  KEMBALI KE LEMBAR %03d"
 
 #. Congratulations small print
 msgid "ALL 100 SHEETS APPROVED · EVERY LEVEL IS OPEN IN PRACTICE"
@@ -575,22 +603,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Hati-hati dengan ubin racun, kalau kamu menginjaknya kamu kehilangan satu nyawa."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Ubin ini runtuh begitu kamu meninggalkannya.\n"
+"Tidak bisa kembali, jadi rencanakan jalanmu."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Ubin-ubin ini memberi waktu ekstra atau mengurangi waktumu. Kamu dapat poin bonus untuk sisa waktu di jam saat menyelesaikan tiap level."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Ubin-ubin ini membuat ubin lain menghilang dan muncul kembali. Saat tersembunyi, ubin tetap bisa diinjak, jadi ingat posisinya."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "Sesekali kamu akan menemukan checkpoint. Setiap kali mencapai checkpoint, kamu bisa mulai ulang dari sana, bukan dari awal lagi."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Ketuk layar saat bermain untuk jeda. Memegang perangkat dengan cara lain? Ketuk indikator di sudut untuk menjadikannya titik tengah baru."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Semua siap, menujulah ke pintu keluar untuk memulai permainan. Selamat bersenang-senang!"
 
@@ -755,9 +791,9 @@ msgstr "DIRILIS SETELAH PERMAINAN TAMAT"
 msgid "NEW IN THE WARDROBE"
 msgstr "BARU DI LEMARI BAJU"
 
-#. Slip on the level-clear sheet; keep 001, the main menu's sheet number
-msgid "WEAR IT FROM THE WARDROBE ON SHEET 001"
-msgstr "PAKAI DARI LEMARI BAJU DI LEMBAR 001"
+#. Button on the level-clear slip: wear the look just released, now
+msgid "WEAR IT"
+msgstr "PAKAI"
 
 #. Slip on the last sheet: MapWoman can now be worn; keep MAPWOMAN
 msgid "MAPWOMAN JOINS THE WARDROBE"
@@ -782,6 +818,14 @@ msgstr "Terkunci, dirilis di level %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Terkunci, dirilis setelah permainan tamat"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "KETUK UNTUK MULAI"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "LEWATI"
 
 #. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
 msgid "DRAFTING TABLE"
@@ -1011,3 +1055,7 @@ msgstr "Kode level"
 #. Screen reader: the QR code picture on the share sheet
 msgid "QR code of the level"
 msgstr "Kode QR level"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "UBIN RUNTUH"

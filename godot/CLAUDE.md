@@ -7,7 +7,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 ## Architecture
 
 - `scripts/main.gd` owns game flow and state. Tile rules live only in
-  `update_player()`; movement in `move_player()` / `_try_axis()`.
+  `update_player()`; movement in `move_player()` / `_try_axis()`. The
+  assists (`ASSIST_*`): lives lost on a level in the main game this session
+  (`losses`) earn, in turn, pencil marks on hidden death tiles plus the
+  corner guard (`_guarded()`, `Dev.t("guard_hold")`), a sketch of the safe
+  route at the start of each try, and a skip row on the lost-life sheet.
+  `LevelMap.set_marks()`, `sketch_route()` and `safe_route()` draw them.
 - `scripts/level_map.gd` owns the tile grid, loading animation and per-tile
   effect state. Grid keys are `Vector2i(column, row)`, row 0 at the top.
 - `scripts/menus.gd` draws every menu as a Blueprint drawing sheet (frame,
@@ -34,6 +39,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
   end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
   for `menus.gd`.
+- The level clear of the main game (`scripts/clear_sheet.gd`, for
+  `menus.gd`) counts its bonuses in (a tap mid-count finishes it), then
+  offers NEXT, WARDROBE and MAIN MENU. Until NEXT banks the level
+  (`main.gd` `_between`), the wardrobe and the quit question opened from it
+  come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
+  sheet makes him jump (`Menus._poke()`, `Player.jump()`).
 - The drafting table (`docs/drafting-table.md`): `scripts/draft.gd` is a
   level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
   editor, code entry and the share sheet (QR from `addons/kenyoni/qr_code/`).

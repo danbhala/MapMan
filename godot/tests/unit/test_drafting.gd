@@ -136,24 +136,24 @@ func test_the_table_opens_after_level_ten() -> void:
 
 
 func test_beating_a_draft_signs_it() -> void:
-	game.show_drafting_table()
+	game.drafting.show()
 	game._on_menu_action("draft 0")
-	game._draft = _corridor()
+	game.drafting.draft = _corridor()
 	game._on_menu_action("test draft")
 	assert_eq(game.custom, "draft")
 	_loaded()
 	_win()
 	assert_eq(game.custom, "", "back from the test")
 	assert_eq(game.menus.current, "editor")
-	assert_true(game._draft.signed)
+	assert_true(game.drafting.draft.signed)
 	assert_true(Save.all_drafts()[0].signed, "saved signed")
 
 
 func test_a_friends_code_plays_without_lives_and_is_kept() -> void:
 	var code := _corridor().code()
 	Save.highscore = 55
-	game.show_drafting_table()
-	assert_eq(game.play_code("mapman " + code.to_lower()), "")
+	game.drafting.show()
+	assert_eq(game.drafting.play_code("mapman " + code.to_lower()), "")
 	assert_eq(game.custom, "received")
 	assert_eq(Save.received, [LevelCode.pretty(code)])
 	_loaded()
@@ -163,7 +163,7 @@ func test_a_friends_code_plays_without_lives_and_is_kept() -> void:
 
 
 func test_a_bad_code_is_turned_away() -> void:
-	game.show_drafting_table()
+	game.drafting.show()
 	game._on_menu_action("enter code")
 	game.menus.code_input.text = "0000-0000-0000-0000"
 	game._on_menu_action("play code")
@@ -173,7 +173,7 @@ func test_a_bad_code_is_turned_away() -> void:
 
 
 func test_back_steps_out_of_the_drafting_sheets() -> void:
-	game.show_drafting_table()
+	game.drafting.show()
 	game._on_menu_action("draft 1")
 	assert_eq(game.menus.current, "editor")
 	game.go_back()

@@ -283,7 +283,7 @@ func find_path(map: LevelMap, start: Vector2i, goals: Array) -> Array[Vector2i]:
 				if prev.has(nxt) or not map.tiles.has(nxt):
 					continue
 				var tile = map.tiles[nxt]
-				if tile.blank or map.deaths.has(nxt):
+				if tile.blank or map.deaths.has(nxt) or map.broken.has(nxt):
 					continue
 				if avoid_time_loss and map.less_times.has(nxt):
 					continue
