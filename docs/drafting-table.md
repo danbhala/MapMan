@@ -64,6 +64,16 @@ codes (`python3 godot/tools/level_code.py --fixtures`). Old codes keep
 reading; an older game answers a code using the new tile with "needs a newer
 version".
 
+## Levels from a description
+
+The `/custom-level` skill has Claude draw a level from a description ("a
+spiral", "a hard heart") and hand back its code and QR.
+`godot/tools/level_qr.gd` does the checking with the game's own code: the
+editor's rules (known tiles, 17 × 12, one start, an exit), a safe route by
+`LevelMap.safe_route()`, a code that reads back, and a QR that `QrReader`
+reads. Its QR holds the level link (`LevelCode.link()`), like the share
+sheet's.
+
 ## QR codes
 
 `godot/addons/kenyoni/qr_code/` (MIT) draws the QR on the share sheet,
