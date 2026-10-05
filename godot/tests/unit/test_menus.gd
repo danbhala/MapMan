@@ -20,6 +20,7 @@ func before_each() -> void:
 	Save.fx_on = false
 	Save.ghost_on = true
 	Save.vibration_on = true
+	Save.new_lessons = false
 	_wardrobe([])
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)

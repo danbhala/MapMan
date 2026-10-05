@@ -385,6 +385,10 @@ msgstr "VIDAS RESTANTES ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "LAS 100 HOJAS APROBADAS · GRACIAS POR JUGAR"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NOTA: EL TUTORIAL TIENE LECCIONES NUEVAS"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "APROBADO"
@@ -610,22 +614,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "Cuidado con las casillas venenosas: si las pisas, pierdes una vida."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"Estas casillas se desmoronan en cuanto las dejas.\n"
+"No hay vuelta atrás, así que planea el camino."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "Estas casillas te dan tiempo extra o te lo quitan. Al terminar cada nivel, el tiempo que quede en el reloj se convierte en puntos extra."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "Estas casillas hacen que otras desaparezcan y reaparezcan. Mientras están ocultas puedes seguir pisándolas, así que recuerda dónde están."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "De vez en cuando encontrarás un punto de control. Cada vez que llegues a uno podrás reiniciar desde ahí en lugar de volver al principio."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "Toca la pantalla durante la partida para pausar. ¿Sujetas el dispositivo de otra forma? Toca el indicador de la esquina para fijarlo como nuevo centro."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "Todo listo: ve hacia la salida para empezar el juego. ¡Diviértete!"
 
@@ -836,3 +848,11 @@ msgstr[1] "%d INTENTOS"
 #. Options row: a faint MapMan replays your best run of the level beside you
 msgid "BEST-RUN GHOST"
 msgstr "FANTASMA RÉCORD"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "TOCA PARA EMPEZAR"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "SALTAR"

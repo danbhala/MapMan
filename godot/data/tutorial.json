@@ -115,6 +115,23 @@
    "number": 8,
    "rows": [
     "",
+    " N",
+    " c",
+    " k",
+    " c",
+    " ckckcb"
+   ],
+   "loading": null,
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "description": "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.",
+   "rev_b": true
+  },
+  {
+   "number": 9,
+   "rows": [
+    "",
     "Wcccc",
     "    cccccm",
     "    c",
@@ -129,7 +146,7 @@
    "description": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
   },
   {
-   "number": 9,
+   "number": 10,
    "rows": [
     "",
     "Wccci",
@@ -146,7 +163,7 @@
    "description": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
   },
   {
-   "number": 10,
+   "number": 11,
    "rows": [
     "  cccc",
     "  c  c",
@@ -159,7 +176,7 @@
    "description": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
   },
   {
-   "number": 11,
+   "number": 12,
    "rows": [
     "  c   n",
     "  c   c",
@@ -177,7 +194,7 @@
    "description": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
   },
   {
-   "number": 12,
+   "number": 13,
    "rows": [
     "",
     "Wczczccb"

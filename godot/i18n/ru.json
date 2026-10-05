@@ -94,6 +94,7 @@
   "COMPLETION BONUS": "БОНУС ЗА ФИНИШ",
   "LIVES REMAINING ×50": "ОСТАЛОСЬ ЖИЗНЕЙ ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "ВСЕ 100 ЛИСТОВ УТВЕРЖДЕНЫ · СПАСИБО ЗА ИГРУ",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "ПРИМЕЧАНИЕ: В ОБУЧЕНИИ НОВЫЕ УРОКИ",
   "APPROVED": "УТВЕРЖДЕНО",
   "SHEET %03d / %d": "ЛИСТ %03d / %d",
   "TUTORIAL %d / %d": "ОБУЧЕНИЕ %d / %d",
@@ -151,6 +152,7 @@
   "Watch out for bonus points,\nalthough you may have to go out of your way to get them.": "Следите за бонусными очками,\nхотя ради них иногда придётся сделать крюк.",
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Ищите и дополнительные жизни,\nно осторожно: ради них придётся\nотклониться от пути ещё сильнее, чем ради очков.",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Опасайтесь ядовитых клеток: наступите на них — потеряете жизнь.",
+  "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Эти клетки осыпаются, как только вы сойдёте с них.\nНазад пути нет, так что планируйте маршрут заранее.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Эти клетки добавляют или отнимают время. За время, оставшееся на часах в конце каждого уровня, вы получите бонусные очки.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Эти клетки прячут и возвращают другие клетки. На скрытые клетки по-прежнему можно наступать, так что запоминайте, где они.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "Время от времени вам будет встречаться контрольная точка. Дойдя до неё, вы сможете начинать с неё, а не с самого начала.",
@@ -218,5 +220,7 @@
     "%d ПОПЫТКА",
     "%d ПОПЫТКИ",
     "%d ПОПЫТОК"
-  ]
+  ],
+  "TAP TO START": "КОСНИТЕСЬ, ЧТОБЫ НАЧАТЬ",
+  "SKIP": "ПРОПУСТИТЬ"
 }

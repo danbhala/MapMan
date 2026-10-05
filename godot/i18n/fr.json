@@ -92,6 +92,7 @@
   "COMPLETION BONUS": "BONUS DE FIN DE JEU",
   "LIVES REMAINING ×50": "VIES RESTANTES ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "100 PLANCHES APPROUVÉES · MERCI D'AVOIR JOUÉ",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "NOTE : LE TUTORIEL A DE NOUVELLES LEÇONS",
   "APPROVED": "APPROUVÉ",
   "SHEET %03d / %d": "PLANCHE %03d / %d",
   "TUTORIAL %d / %d": "TUTORIEL %d / %d",
@@ -146,6 +147,7 @@
   "Watch out for bonus points,\nalthough you may have to go out of your way to get them.": "Guettez les points bonus,\nmême s'il faut parfois faire un détour pour les attraper.",
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Guettez aussi les vies supplémentaires,\nmais attention, elles vous feront dévier\nencore plus que les points bonus.",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Attention aux cases empoisonnées : si vous marchez dessus, vous perdez une vie.",
+  "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Ces cases s'effritent dès que vous les quittez.\nPas de retour possible : prévoyez votre chemin.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Ces cases vous donnent du temps ou vous en font perdre. À la fin de chaque niveau, le temps restant au chrono rapporte des points bonus.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Ces cases font disparaître et réapparaître d'autres cases. Les cases cachées restent praticables : souvenez-vous de leur position.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "De temps en temps, vous croiserez un point de contrôle. Une fois atteint, vous pourrez reprendre à cet endroit au lieu de repartir du début.",
@@ -211,5 +213,7 @@
   "%d TRY": [
     "%d ESSAI",
     "%d ESSAIS"
-  ]
+  ],
+  "TAP TO START": "TOUCHEZ POUR COMMENCER",
+  "SKIP": "PASSER"
 }

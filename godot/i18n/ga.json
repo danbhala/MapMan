@@ -98,6 +98,7 @@
   "COMPLETION BONUS": "BÓNAS CRÍOCHNAITHE",
   "LIVES REMAINING ×50": "BEATHAÍ FÁGTHA ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "AN 100 BILEOG AR FAD FAOFA · GO RAIBH MAITH AGAT AS IMIRT",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "NÓTA: TÁ CEACHTANNA NUA SA TEAGASC",
   "APPROVED": "FAOFA",
   "SHEET %03d / %d": "BILEOG %03d / %d",
   "TUTORIAL %d / %d": "TEAGASCÁN %d / %d",
@@ -161,6 +162,7 @@
   "Watch out for bonus points,\nalthough you may have to go out of your way to get them.": "Bí ag faire amach do phointí bónais,\ncé go mb'fhéidir go gcaithfeá dul as do bhealach lena bhfáil",
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Coinnigh súil amach freisin do bheathaí breise,\nach bí cúramach, tabharfaidh siad\nníos faide fós as do bhealach thú ná na pointí bónais",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Seachain na tíleanna nimhe: má sheasann tú orthu, caillfidh tú beatha.",
+  "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Titeann na tíleanna seo as a chéile nuair a fhágann tú iad.\nNíl aon dul siar, mar sin pleanáil an bealach romhat.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Tabharfaidh na tíleanna seo am breise duit nó bainfidh siad am díot. Gheobhaidh tú pointí bónais as an am a bheidh fágtha ar an gclog ag deireadh gach leibhéil.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Cuireann na tíleanna seo tíleanna eile as radharc agus ar ais arís. Is féidir seasamh fós ar na tíleanna atá i bhfolach, mar sin cuimhnigh cá bhfuil siad.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "Anois is arís tiocfaidh tú ar sheicphointe. Gach uair a shroicheann tú seicphointe is féidir leat atosú as sin in áit dul ar ais go dtí an tús.",
@@ -232,5 +234,7 @@
     "%d IARRACHT",
     "%d IARRACHT",
     "%d IARRACHT"
-  ]
+  ],
+  "TAP TO START": "TAPÁIL LE TOSÚ",
+  "SKIP": "LÉIM"
 }

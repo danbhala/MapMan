@@ -79,8 +79,12 @@ func run() -> void:
 		game.new_game(start_level)
 	else:
 		# --- tutorial straight into the game ---
+		# As a player who has finished once, so the second-playthrough lessons
+		# (rev_b) are walked too; the bot proves every lesson is solvable.
+		save.has_completed = true
 		game._on_menu_action("tutorial")
 		check(game.tutorial and game.game_active, "tutorial starts")
+		check(game.tutorial_levels.size() == game.tutorial_all.size(), "every lesson is on offer")
 		for i in game.tutorial_levels.size():
 			var ok := await play_current_level()
 			check(ok, "tutorial level %d completed" % (i + 1))
@@ -283,7 +287,7 @@ func find_path(map: LevelMap, start: Vector2i, goals: Array) -> Array[Vector2i]:
 				if prev.has(nxt) or not map.tiles.has(nxt):
 					continue
 				var tile = map.tiles[nxt]
-				if tile.blank or map.deaths.has(nxt):
+				if tile.blank or map.deaths.has(nxt) or map.broken.has(nxt):
 					continue
 				if avoid_time_loss and map.less_times.has(nxt):
 					continue

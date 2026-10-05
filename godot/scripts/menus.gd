@@ -175,6 +175,8 @@ const TEXT := {
 	"completion_bonus": "COMPLETION BONUS",
 	"lives_bonus": "LIVES REMAINING ×50",
 	"completion_caption": "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING",
+	"new_lessons": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+	"new": "NEW",
 	"approved": "APPROVED",
 	# for screen readers
 	"a11y_previous": "Previous page",
@@ -879,11 +881,13 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
+func show_main(highscore: int, has_checkpoint: bool, levels := 0, new_lessons := false) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
 	_items(_tl("main_items"), acts, 80, 44, [true, has_checkpoint, true, true, true])
+	if new_lessons:  # a NEW tag on the TUTORIAL row
+		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, 80 + 3 * 44 - 10.0)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
@@ -1266,7 +1270,9 @@ func show_congratulations(score: int, pb: bool, released := "") -> void:
 
 
 ## The final inspection: the completion and lives bonuses join the score.
-func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
+func show_game_complete(
+	score: int, completion_bonus: int, lives_bonus: int, new_lessons := false
+) -> void:
 	_open("completion", TEXT.end_sheet, _t("completion_title"), Blueprint.GOLD)
 	_columns([_t("col_item"), _t("col_value")], [LIST_X], true)
 	var specs := [
@@ -1282,6 +1288,8 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 		y += ROW_H
 	var total := _total(y + 4, str(score))
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
+	if new_lessons:
+		_note(_t("new_lessons"), 282)
 	_pair_on()
 	var approved := Vector2(458, _over_head(84, PAIR_FEET))
 	ClearSheet.count_up(

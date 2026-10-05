@@ -4,7 +4,7 @@ extends Node2D
 ## the level's map, the winning run in full ink drawing its route as it goes,
 ## every lost try a faint MapMan with a faint pencil trail who leaves a pink
 ## cross where he fell (with a count where several fell). Finished when the
-## winner has stood at the exit a moment; `finished` then fires.
+## winner has stood at the exit a moment, or on a tap; `finished` then fires.
 
 signal finished
 
@@ -65,6 +65,15 @@ func _process(delta: float) -> void:
 	_clock_label.text = "T+%.1f" % minf(clock, _winner_time())
 	queue_redraw()
 	if clock >= _length:
+		set_process(false)
+		finished.emit()
+
+
+## A tap, or pause, ends the replay early.
+func _unhandled_input(event: InputEvent) -> void:
+	var tapped: bool = event is InputEventMouseButton and not event.pressed
+	if tapped or event.is_action_pressed("pause") or event.is_action_pressed("ui_accept"):
+		get_viewport().set_input_as_handled()
 		set_process(false)
 		finished.emit()
 

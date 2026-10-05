@@ -531,6 +531,11 @@
       "max": 60
     },
     {
+      "id": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+      "note": "Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial",
+      "max": 60
+    },
+    {
       "id": "APPROVED",
       "note": "Rubber stamp on the final sheet",
       "max": 10
@@ -759,28 +764,33 @@
       "max": 170
     },
     {
-      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
+      "id": "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.",
       "note": "Tutorial lesson 8",
       "max": 170
     },
     {
-      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
+      "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
       "note": "Tutorial lesson 9",
       "max": 170
     },
     {
-      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
+      "id": "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.",
       "note": "Tutorial lesson 10",
       "max": 170
     },
     {
-      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
+      "id": "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.",
       "note": "Tutorial lesson 11",
       "max": 170
     },
     {
-      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "id": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
       "note": "Tutorial lesson 12",
+      "max": 170
+    },
+    {
+      "id": "You're all set, head for the exit to start the game. Have fun!",
+      "note": "Tutorial lesson 13",
       "max": 170
     },
     {
@@ -1039,6 +1049,16 @@
       "id": "BEST-RUN GHOST",
       "note": "Options row: a faint MapMan replays your best run of the level beside you",
       "max": 18
+    },
+    {
+      "id": "TAP TO START",
+      "note": "Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.",
+      "max": 24
+    },
+    {
+      "id": "SKIP",
+      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
+      "max": 12
     }
   ]
 }

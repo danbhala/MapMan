@@ -92,6 +92,7 @@
   "COMPLETION BONUS": "ABSCHLUSSBONUS",
   "LIVES REMAINING ×50": "LEBEN ÜBRIG ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "ALLE 100 BLÄTTER GENEHMIGT · DANKE FÜRS SPIELEN",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "HINWEIS: DAS TUTORIAL HAT NEUE LEKTIONEN",
   "APPROVED": "GENEHMIGT",
   "SHEET %03d / %d": "BLATT %03d / %d",
   "TUTORIAL %d / %d": "TUTORIAL %d / %d",
@@ -146,6 +147,7 @@
   "Watch out for bonus points,\nalthough you may have to go out of your way to get them.": "Halte Ausschau nach Bonuspunkten,\nauch wenn du dafür manchmal einen Umweg machen musst.",
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Achte auch auf Extraleben,\naber Vorsicht: Sie bringen dich\nnoch weiter vom Kurs ab als Bonuspunkte.",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Vorsicht vor den Giftfeldern: Betrittst du eins, verlierst du ein Leben.",
+  "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Diese Felder zerbröseln, sobald du sie verlässt.\nEs gibt kein Zurück, also plane den Weg voraus.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Diese Felder schenken dir Zeit oder kosten dich Zeit. Für die Restzeit auf der Uhr gibt es am Ende jedes Levels Bonuspunkte.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Diese Felder lassen andere Felder verschwinden und wieder auftauchen. Versteckte Felder sind weiter begehbar – merk dir also, wo sie sind.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "Ab und zu triffst du auf einen Checkpoint. Von jedem erreichten Checkpoint aus kannst du neu starten, statt ganz von vorn zu beginnen.",
@@ -211,5 +213,7 @@
   "%d TRY": [
     "%d VERSUCH",
     "%d VERSUCHE"
-  ]
+  ],
+  "TAP TO START": "ZUM STARTEN ANTIPPEN",
+  "SKIP": "ÜBERSPRINGEN"
 }

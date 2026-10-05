@@ -24,6 +24,9 @@ var playing_position := "sitting"
 var highscore := 0
 var first_play := true
 var has_completed := false
+## Finishing the game added lessons to the tutorial it hasn't shown yet:
+## the main menu says NEW on TUTORIAL until then.
+var new_lessons := false
 ## level number -> best score when that checkpoint was reached
 var checkpoints := {}
 ## The furthest level reached in the main game; practice unlocks up to it.
@@ -106,6 +109,7 @@ func load_all(path := PATH) -> void:
 	highscore = _cfg.get_value("progress", "highscore", 0)
 	first_play = _cfg.get_value("progress", "first_play", true)
 	has_completed = _cfg.get_value("progress", "has_completed", false)
+	new_lessons = _cfg.get_value("progress", "new_lessons", false)
 	var cps: Dictionary = _cfg.get_value("progress", "checkpoints", {})
 	checkpoints.clear()
 	for key in cps:
@@ -151,6 +155,7 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("progress", "highscore", highscore)
 	_cfg.set_value("progress", "first_play", first_play)
 	_cfg.set_value("progress", "has_completed", has_completed)
+	_cfg.set_value("progress", "new_lessons", new_lessons)
 	_cfg.set_value("progress", "checkpoints", checkpoints)
 	_cfg.set_value("progress", "furthest_level", furthest_level)
 	_cfg.set_value("progress", "bests", bests)

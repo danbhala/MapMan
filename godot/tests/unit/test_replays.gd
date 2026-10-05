@@ -150,11 +150,11 @@ func test_the_replay_plays_and_comes_back_to_the_level_clear() -> void:
 		_step(Vector2i.RIGHT)
 	game.advance_level(false)
 	game._on_menu_action("replay")
-	assert_not_null(game._replay, "the replay is on")
+	assert_not_null(game._tries.replay, "the replay is on")
 	assert_false(game.menus.visible, "over the level, not the sheet")
-	assert_eq(game._replay.tries.size(), 1)
+	assert_eq(game._tries.replay.tries.size(), 1)
 	game.go_back()
-	assert_null(game._replay, "back ends it")
+	assert_null(game._tries.replay, "back ends it")
 	assert_true(game.menus.visible)
 	assert_eq(game.menus.current, "end_level", "on the same level clear")
 	assert_eq(game.level, 2, "the level isn't banked yet")
@@ -175,10 +175,25 @@ func test_each_try_replays_in_the_look_he_wore_for_it() -> void:
 	game.advance_level(false)
 	assert_eq(game._tries.list[0].outfit, "party_hat")
 	game._on_menu_action("replay")
-	var replay: Replay = game._replay
+	var replay: Replay = game._tries.replay
 	assert_eq(replay._ghosts[0].outfit, "party_hat", "the lost try")
 	assert_eq(replay._ghosts[1].outfit, "classic", "the win")
 	assert_eq(RunRecord.decode(Save.ghosts[2]).outfit, "classic", "the ghost keeps its look")
+
+
+func test_a_tap_ends_the_replay() -> void:
+	game.new_game(2)
+	_start_try()
+	for i in 3:
+		_step(Vector2i.RIGHT)
+	game.advance_level(false)
+	game._on_menu_action("replay")
+	var tap := InputEventMouseButton.new()
+	tap.button_index = MOUSE_BUTTON_LEFT
+	tap.pressed = false
+	game._tries.replay._unhandled_input(tap)
+	assert_null(game._tries.replay, "a tap ends it")
+	assert_eq(game.menus.current, "end_level")
 
 
 func test_the_replay_ends_by_itself() -> void:
@@ -188,11 +203,11 @@ func test_the_replay_ends_by_itself() -> void:
 		_step(Vector2i.RIGHT, 0.1)
 	game.advance_level(false)
 	game._on_menu_action("replay")
-	var replay: Replay = game._replay
+	var replay: Replay = game._tries.replay
 	game.map._load_elapsed = game.map._load_time
 	for i in 40:
 		replay._process(0.1)
-	assert_null(game._replay, "over once the winner has stood at the exit")
+	assert_null(game._tries.replay, "over once the winner has stood at the exit")
 	assert_eq(game.menus.current, "end_level")
 
 
@@ -203,7 +218,7 @@ func test_no_replay_without_a_win_on_this_level() -> void:
 	game.lose_life("death")
 	assert_false(game._tries.replayable(game.level))
 	game._on_menu_action("replay")
-	assert_null(game._replay)
+	assert_null(game._tries.replay)
 
 
 func test_a_win_is_kept_as_the_level_ghost_and_runs_next_time() -> void:
@@ -215,12 +230,12 @@ func test_a_win_is_kept_as_the_level_ghost_and_runs_next_time() -> void:
 	assert_true(Save.ghosts.has(2), "the win is the level's ghost")
 	game.new_game(2)
 	_start_try()
-	assert_not_null(game._ghost.run, "the ghost walks this try")
-	game._ghost.follow(game.map, 0.6, 0.1)
-	assert_true(game._ghost.visible)
-	assert_almost_eq(game._ghost.modulate.a, BestGhost.ALPHA, 0.001)
-	game._ghost.follow(game.map, 60.0, 0.1)
-	assert_false(game._ghost.visible, "gone once his run is over")
+	assert_not_null(game._tries.ghost.run, "the ghost walks this try")
+	game._tries.ghost.follow(game.map, 0.6, 0.1)
+	assert_true(game._tries.ghost.visible)
+	assert_almost_eq(game._tries.ghost.modulate.a, BestGhost.ALPHA, 0.001)
+	game._tries.ghost.follow(game.map, 60.0, 0.1)
+	assert_false(game._tries.ghost.visible, "gone once his run is over")
 
 
 func test_the_ghost_can_be_turned_off() -> void:
@@ -234,7 +249,7 @@ func test_the_ghost_can_be_turned_off() -> void:
 	assert_eq(game.menus.current, "options")
 	game.new_game(2)
 	_start_try()
-	assert_true(game._ghost == null or game._ghost.run == null, "no ghost")
+	assert_true(game._tries.ghost == null or game._tries.ghost.run == null, "no ghost")
 
 
 func test_only_a_better_win_replaces_the_ghost() -> void:

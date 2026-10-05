@@ -383,6 +383,10 @@ msgstr "남은 목숨 ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "도면 100장 모두 승인 · 플레이해 주셔서 감사합니다"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "참고: 튜토리얼에 새 레슨이 추가됨"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "승인"
@@ -603,22 +607,30 @@ msgid "Be careful of the poison tiles: if you step on them you will lose a life.
 msgstr "독 타일을 조심하세요. 밟으면 목숨을 하나 잃습니다."
 
 #. Tutorial lesson 8
+msgid ""
+"These tiles crumble away once you step off them.\n"
+"There is no going back, so plan the way ahead."
+msgstr ""
+"이 타일은 떠나는 순간 무너집니다.\n"
+"되돌아갈 수 없으니 앞길을 미리 계획하세요."
+
+#. Tutorial lesson 9
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "이 타일들은 시간을 늘리거나 줄입니다. 각 레벨을 마칠 때 남은 시간만큼 보너스 점수를 받습니다."
 
-#. Tutorial lesson 9
+#. Tutorial lesson 10
 msgid "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are."
 msgstr "이 타일들은 다른 타일을 사라지게 했다가 다시 나타나게 합니다. 숨겨진 타일도 밟을 수 있으니 위치를 기억해 두세요."
 
-#. Tutorial lesson 10
+#. Tutorial lesson 11
 msgid "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning."
 msgstr "가끔 체크포인트가 나타납니다. 체크포인트에 도달할 때마다 처음으로 돌아가는 대신 거기서 다시 시작할 수 있습니다."
 
-#. Tutorial lesson 11
+#. Tutorial lesson 12
 msgid "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
 msgstr "플레이 중 화면을 탭하면 일시정지됩니다. 기기를 다르게 잡았다면 구석의 게이지를 탭해 그 자세를 새 중심으로 정하세요."
 
-#. Tutorial lesson 12
+#. Tutorial lesson 13
 msgid "You're all set, head for the exit to start the game. Have fun!"
 msgstr "준비 완료! 출구로 가서 게임을 시작하세요. 즐겁게 플레이하세요!"
 
@@ -827,3 +839,11 @@ msgstr[0] "도전 %d번"
 #. Options row: a faint MapMan replays your best run of the level beside you
 msgid "BEST-RUN GHOST"
 msgstr "최고 기록 고스트"
+
+#. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
+msgid "TAP TO START"
+msgstr "탭하여 시작"
+
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+msgid "SKIP"
+msgstr "건너뛰기"

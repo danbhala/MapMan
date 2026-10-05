@@ -90,6 +90,7 @@
   "COMPLETION BONUS": "BİTİRME BONUSU",
   "LIVES REMAINING ×50": "KALAN CAN ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "TÜM 100 PAFTA ONAYLANDI · OYNADIĞIN İÇİN TEŞEKKÜRLER",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "NOT: EĞİTİMDE YENİ DERSLER VAR",
   "APPROVED": "ONAYLANDI",
   "SHEET %03d / %d": "PAFTA %03d / %d",
   "TUTORIAL %d / %d": "EĞİTİM %d / %d",
@@ -141,6 +142,7 @@
   "Watch out for bonus points,\nalthough you may have to go out of your way to get them.": "Bonus puanlara dikkat et,\nancak onları almak için yolundan sapman gerekebilir.",
   "Also keep an eye out for extra lives,\nbut take care as they will take you\neven more off course than bonus points.": "Ek canlara da göz kulak ol,\nama dikkat: seni yolundan\nbonus puanlardan bile daha çok saptırırlar.",
   "Be careful of the poison tiles: if you step on them you will lose a life.": "Zehirli karolara dikkat et, üzerlerine basarsan bir can kaybedersin.",
+  "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.": "Bu karolar üzerlerinden ayrıldığın anda ufalanır.\nGeri dönüş yok, bu yüzden yolunu önceden planla.",
   "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.": "Bu karolar sana ek süre verir ya da süre kaybettirir. Her bölümü bitirdiğinde saatte kalan süre için bonus puan alırsın.",
   "These tiles cause other tiles to disappear and reappear. When the tiles are hidden you can still step on them so remember where they are.": "Bu karolar diğer karoları gizler ve yeniden gösterir. Karolar gizliyken yine de üzerlerine basabilirsin, bu yüzden yerlerini aklında tut.",
   "Every so often you'll come across a checkpoint. Each time you reach a checkpoint you can restart from there instead of going back to the beginning.": "Ara sıra bir kontrol noktasına rastlarsın. Bir kontrol noktasına her ulaştığında, en başa dönmek yerine oradan yeniden başlayabilirsin.",
@@ -204,5 +206,7 @@
   "BEST-RUN GHOST": "REKOR HAYALETİ",
   "%d TRY": [
     "%d DENEME"
-  ]
+  ],
+  "TAP TO START": "BAŞLAMAK İÇİN DOKUN",
+  "SKIP": "GEÇ"
 }
