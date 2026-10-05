@@ -1081,3 +1081,35 @@ msgstr "ОСЫПАЮЩАЯСЯ КЛЕТКА"
 #. Editor button: wipe the whole grid (UNDO brings it back)
 msgid "CLEAR"
 msgstr "ОЧИСТИТЬ"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "СКАНИРОВАТЬ QR-КОД"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "НАВЕДИ КАМЕРУ НА QR-КОД НА ЛИСТЕ «ПОДЕЛИТЬСЯ» У ДРУГА"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "ИЩУ QR-КОД…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "КАМЕРА НЕ НАЙДЕНА"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "У MAPMAN НЕТ ДОСТУПА К КАМЕРЕ. РАЗРЕШИ ЕГО В НАСТРОЙКАХ ТЕЛЕФОНА"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "ЭТОТ QR-КОД — НЕ УРОВЕНЬ MAPMAN"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "ВВЕСТИ КОД ВРУЧНУЮ"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "Изображение с камеры"

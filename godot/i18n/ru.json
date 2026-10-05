@@ -276,5 +276,13 @@
   "Level code": "Код уровня",
   "QR code of the level": "QR-код уровня",
   "CRUMBLE TILE": "ОСЫПАЮЩАЯСЯ КЛЕТКА",
-  "CLEAR": "ОЧИСТИТЬ"
+  "CLEAR": "ОЧИСТИТЬ",
+  "SCAN A QR CODE": "СКАНИРОВАТЬ QR-КОД",
+  "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET": "НАВЕДИ КАМЕРУ НА QR-КОД НА ЛИСТЕ «ПОДЕЛИТЬСЯ» У ДРУГА",
+  "LOOKING FOR A QR CODE…": "ИЩУ QR-КОД…",
+  "NO CAMERA FOUND": "КАМЕРА НЕ НАЙДЕНА",
+  "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "У MAPMAN НЕТ ДОСТУПА К КАМЕРЕ. РАЗРЕШИ ЕГО В НАСТРОЙКАХ ТЕЛЕФОНА",
+  "THAT QR CODE ISN'T A MAPMAN LEVEL": "ЭТОТ QR-КОД — НЕ УРОВЕНЬ MAPMAN",
+  "TYPE A CODE INSTEAD": "ВВЕСТИ КОД ВРУЧНУЮ",
+  "Camera view": "Изображение с камеры"
 }

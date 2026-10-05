@@ -1063,3 +1063,35 @@ msgstr "碎裂地砖"
 #. Editor button: wipe the whole grid (UNDO brings it back)
 msgid "CLEAR"
 msgstr "清空"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "扫描二维码"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "把相机对准朋友分享页上的二维码"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "正在寻找二维码…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "未找到相机"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN 无权使用相机。请在手机设置中允许"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "这个二维码不是 MAPMAN 关卡"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "改为输入代码"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "相机画面"

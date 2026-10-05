@@ -15,10 +15,11 @@ short code. There are no accounts and no server: the code *is* the level.
   score, no saving. Reaching an exit **signs** it. Any later edit unsigns it.
 - **Sharing** shows the code in groups of four (`0MM3-C7P1-P7R3-KWTS-4`) and a
   QR code. COPY CODE puts `MAPMAN <code>` on the clipboard.
-- **Playing a friend's level:** ENTER A LEVEL CODE (type or PASTE), or just
-  copy their message and open MapMan: a code on the clipboard is offered once
-  on the main menu. The phone's own camera reads the QR as text, which lands
-  on the clipboard the same way. The last six codes played are kept under
+- **Playing a friend's level:** SCAN A QR CODE points the camera at the QR
+  on their share sheet and plays the level as soon as it reads; ENTER A
+  LEVEL CODE types or PASTEs one. Or just copy their message and open
+  MapMan: a code on the clipboard is offered once on the main menu (the
+  phone's own camera app can put a QR's text there too). The last six codes played are kept under
   RECEIVED LEVELS.
 - The CODE meter shows how long the code is; it turns pink past 64
   characters. Longer codes still work, they're just harder to type.
@@ -61,3 +62,14 @@ version".
 `godot/addons/kenyoni/qr_code/` (MIT) draws the QR on the share sheet,
 offline. Codes go in alphanumeric mode, which fits `MAPMAN ` plus a 64-character
 code in a version-4 symbol.
+
+The scan sheet (001-G) reads them back in the game: `scripts/qr_scanner.gd`
+shows the back camera (`CameraServer`; Android asks for the camera
+permission on the sheet's first visit, iOS shows the presets' camera usage
+line) and hands a picture five times a second to `scripts/qr_reader.gd`, a
+small QR decoder of our own, on a worker thread. It finds the three corner
+squares, follows the grid to the small square in the fourth corner (so a
+phone held at an angle still reads), and repairs damaged modules with the
+code's Reed-Solomon check words. `tests/unit/test_qr_reader.gd` reads
+turned, tilted, mirrored, noisy and damaged codes. The camera itself can
+only be tried on a phone.

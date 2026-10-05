@@ -32,6 +32,15 @@ const TEXT := {
 	"bad_code": "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN",
 	"newer_code": "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN",
 	"on_clipboard": "A LEVEL CODE IS ON THE CLIPBOARD",
+	# 001-G: scanning a friend's QR code
+	"scan_number": "001-G",
+	"scan": "SCAN A QR CODE",
+	"point_camera": "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET",
+	"looking": "LOOKING FOR A QR CODE…",
+	"no_camera": "NO CAMERA FOUND",
+	"no_permission": "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS",
+	"not_a_level": "THAT QR CODE ISN'T A MAPMAN LEVEL",
+	"type_instead": "TYPE A CODE INSTEAD",
 	"play_it": "PLAY IT",
 	"not_now": "NOT NOW",
 	# Dn: the editor
@@ -65,6 +74,7 @@ const TEXT := {
 	"a11y_received": "Received level %d",
 	"a11y_code": "Level code",
 	"a11y_qr": "QR code of the level",
+	"a11y_camera": "Camera view",
 }
 ## The palette: each tile the editor can place, with its name (a msgid; ""
 ## for the vanish tiles, named by TEXT.vanish with their moves). HIDE_TOOL
@@ -122,6 +132,10 @@ const METER_W := 120.0
 const QR_POS := Vector2(452, 60)
 const QR_SIZE := 180.0
 const GROUPS_PER_LINE := 4
+## The scan sheet's camera view, right of the words and clear of a dev
+## build's DEV button.
+const VIEW_POS := Vector2(436, 84)
+const VIEW_SIZE := Vector2(196, 147)
 
 ## The tile the palette has picked, kept while the editor is closed (a test).
 static var tool := "c"
@@ -160,10 +174,11 @@ static func build(m: Menus, drafts: Array, received: Array, note := "") -> void:
 		var title: String = TEXT.received_cell % (i + 1)
 		var a11y: String = m.tr(TEXT.a11y_received) % (i + 1)
 		m._cell(pos, CELL, true, title, code.left(4), "received %d" % i, a11y)
-	m._item(1, m.tr(TEXT.enter_code), "enter code", 212)
+	m._item(1, m.tr(TEXT.enter_code), "enter code", 204, true, 38)
+	m._item(2, m.tr(TEXT.scan), "scan code", 242, true, 38)
 	var line := note if note != "" else m.tr(TEXT.how)
-	m._note(m.tr(Menus.TEXT.note) % line, 264)
-	m._return_item(282)
+	m._note(m.tr(Menus.TEXT.note) % line, 285)
+	m._return_item(300)
 	m._focus_first()
 
 
@@ -218,6 +233,89 @@ static func build_found(m: Menus, code: String) -> void:
 	m._item(2, m.tr(TEXT.not_now), "main menu", 234)
 	m._hero_on("tilt")
 	m._focus_first()
+
+
+# --- 001-G: scanning a QR code ---------------------------------------------------------
+
+
+## The camera view and what it is doing; a code it reads is played at once
+## (main.gd's "scanned" action), or the status line says why not.
+static func build_scan(m: Menus) -> void:
+	m._open("scan", TEXT.scan_number, m.tr(TEXT.scan))
+	m._note(m.tr(TEXT.point_camera), Menus.LIST_TOP, Blueprint.FAINT, 11)
+	var line := m._note(m.tr(TEXT.looking), 128, Blueprint.GOLD, 11)
+	line.name = "ScanStatus"
+	line.accessibility_live = DisplayServer.LIVE_POLITE
+	m._item(1, m.tr(TEXT.type_instead), "enter code", 188)
+	_back_row(m, "<  " + m.tr(TEXT.title), "drafting table", 282)
+	var at := Vector2(m._mx(VIEW_POS.x, VIEW_SIZE.x), VIEW_POS.y)
+	var back := ColorRect.new()
+	back.color = Blueprint.HOVER
+	back.position = at
+	back.size = VIEW_SIZE
+	m._panel.add_child(back)
+	m._reveal(back)
+	var view := QrScanner.new()
+	view.position = at
+	view.size = VIEW_SIZE
+	view.accessibility_name = m.tr(TEXT.a11y_camera)
+	view.status.connect(func(kind: String): scan_status(m, kind))
+	view.read.connect(_on_scanned.bind(m))
+	m._panel.add_child(view)
+	_viewfinder(m, at)
+	m._focus_first()
+
+
+## The frame round the camera view, with gold corners to aim with.
+static func _viewfinder(m: Menus, at: Vector2) -> void:
+	var r := Rect2(at, VIEW_SIZE)
+	var edge := PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end])
+	edge.append_array([Vector2(r.position.x, r.end.y), r.position])
+	m._reveal(Blueprint.line(m._panel, edge, Blueprint.INK))
+	var inner := r.grow(-14.0)
+	var arm := 16.0
+	for corner in [
+		inner.position,
+		Vector2(inner.end.x, inner.position.y),
+		inner.end,
+		Vector2(inner.position.x, inner.end.y)
+	]:
+		var sx := 1.0 if corner.x < r.get_center().x else -1.0
+		var sy := 1.0 if corner.y < r.get_center().y else -1.0
+		var points := PackedVector2Array(
+			[corner + Vector2(0, sy * arm), corner, corner + Vector2(sx * arm, 0)]
+		)
+		m._reveal(Blueprint.line(m._panel, points, Blueprint.GOLD, 2.0))
+
+
+## Show what the scanner is doing (QrScanner.status), or why a code it read
+## won't play ("not_a_level", "newer").
+static func scan_status(m: Menus, kind: String) -> void:
+	if m._panel == null:
+		return
+	var line := m._panel.find_child("ScanStatus", false, false) as Label
+	if line == null:
+		return
+	var words := {
+		"looking": TEXT.looking,
+		"no_camera": TEXT.no_camera,
+		"no_permission": TEXT.no_permission,
+		"not_a_level": TEXT.not_a_level,
+		"newer": TEXT.newer_code,
+	}
+	line.text = m.tr(words.get(kind, TEXT.not_a_level))
+	line.add_theme_color_override(
+		"font_color", Blueprint.GOLD if kind == "looking" else Blueprint.PINK
+	)
+
+
+static func _on_scanned(text: String, m: Menus) -> void:
+	# A MAPMAN code from a newer game still goes on, to be told so.
+	var t := text.strip_edges()
+	if LevelCode.find(t) == "" and not t.to_upper().begins_with(LevelCode.PREFIX):
+		scan_status(m, "not_a_level")
+	else:
+		m.action.emit("scanned " + t)
 
 
 # --- Dn-S: sharing ----------------------------------------------------------------------

@@ -1063,3 +1063,35 @@ msgstr "무너지는 타일"
 #. Editor button: wipe the whole grid (UNDO brings it back)
 msgid "CLEAR"
 msgstr "지우기"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "QR 코드 스캔"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "친구의 공유 시트에 있는 QR 코드에 카메라를 맞추세요"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "QR 코드를 찾는 중…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "카메라를 찾을 수 없습니다"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN이 카메라를 사용할 수 없습니다. 휴대폰 설정에서 허용하세요"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "그 QR 코드는 MAPMAN 레벨이 아닙니다"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "코드 직접 입력"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "카메라 화면"

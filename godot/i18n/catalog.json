@@ -1329,6 +1329,46 @@
       "id": "CLEAR",
       "note": "Editor button: wipe the whole grid (UNDO brings it back)",
       "max": 10
+    },
+    {
+      "id": "SCAN A QR CODE",
+      "note": "Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it",
+      "max": 30
+    },
+    {
+      "id": "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET",
+      "note": "Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code",
+      "max": 80
+    },
+    {
+      "id": "LOOKING FOR A QR CODE…",
+      "note": "Scan sheet: status while the camera is on and no code has been read yet",
+      "max": 40
+    },
+    {
+      "id": "NO CAMERA FOUND",
+      "note": "Scan sheet: status when the device has no camera the game can use",
+      "max": 40
+    },
+    {
+      "id": "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS",
+      "note": "Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings",
+      "max": 90
+    },
+    {
+      "id": "THAT QR CODE ISN'T A MAPMAN LEVEL",
+      "note": "Scan sheet: status when the camera read a QR code that holds something else",
+      "max": 50
+    },
+    {
+      "id": "TYPE A CODE INSTEAD",
+      "note": "Scan sheet item: go to the screen for typing a level code instead of scanning",
+      "max": 30
+    },
+    {
+      "id": "Camera view",
+      "note": "Screen reader: the live picture from the camera on the scan sheet",
+      "max": 30
     }
   ]
 }

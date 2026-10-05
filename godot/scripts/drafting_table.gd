@@ -130,6 +130,8 @@ func action(act: String) -> bool:
 			var why := play_code(text)
 			if why != "":
 				DraftingSheet.build_code_entry(m, text, why)
+		"scan code":
+			DraftingSheet.build_scan(m)
 		"play found code":
 			if play_code(Save.clipboard_seen, "main") != "":
 				_game.show_start_menu()
@@ -153,6 +155,10 @@ func action(act: String) -> bool:
 				var i := int(act.get_slice(" ", 1))
 				if i < Save.received.size():
 					play_code(Save.received[i])
+			elif act.begins_with("scanned "):
+				var why := play_code(act.substr(8))
+				if why != "":
+					DraftingSheet.scan_status(m, "newer" if why == "newer" else "not_a_level")
 			else:
 				return false
 	return true
@@ -163,7 +169,7 @@ func go_back() -> bool:
 	match _game.menus.current:
 		"drafting", "found_code":
 			_game._on_menu_action("main menu")
-		"editor", "enter_code":
+		"editor", "enter_code", "scan":
 			action("drafting table")
 		"share":
 			open_draft(draft.slot)

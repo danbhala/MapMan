@@ -297,5 +297,13 @@
   "Level code": "رمز المستوى",
   "QR code of the level": "رمز QR للمستوى",
   "CRUMBLE TILE": "بلاطة متفتتة",
-  "CLEAR": "مسح"
+  "CLEAR": "مسح",
+  "SCAN A QR CODE": "مسح رمز QR",
+  "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET": "وجّه الكاميرا إلى رمز QR في ورقة المشاركة لدى صديقك",
+  "LOOKING FOR A QR CODE…": "جارٍ البحث عن رمز QR…",
+  "NO CAMERA FOUND": "لم يُعثر على كاميرا",
+  "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "لا يُسمح لـ MAPMAN باستخدام الكاميرا. اسمح بذلك من إعدادات الهاتف",
+  "THAT QR CODE ISN'T A MAPMAN LEVEL": "رمز QR هذا ليس مستوى من MAPMAN",
+  "TYPE A CODE INSTEAD": "اكتب الرمز بدلًا من ذلك",
+  "Camera view": "عرض الكاميرا"
 }

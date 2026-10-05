@@ -1072,3 +1072,35 @@ msgstr "CASILLA QUE SE DESMORONA"
 #. Editor button: wipe the whole grid (UNDO brings it back)
 msgid "CLEAR"
 msgstr "BORRAR"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "ESCANEAR UN CÓDIGO QR"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "APUNTA LA CÁMARA AL CÓDIGO QR DE LA HOJA PARA COMPARTIR DE UN AMIGO"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "BUSCANDO UN CÓDIGO QR…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "NO SE ENCONTRÓ NINGUNA CÁMARA"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN NO TIENE PERMISO PARA USAR LA CÁMARA. PERMÍTELO EN LOS AJUSTES DEL TELÉFONO"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "ESE CÓDIGO QR NO ES UN NIVEL DE MAPMAN"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "ESCRIBIR UN CÓDIGO"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "Vista de la cámara"

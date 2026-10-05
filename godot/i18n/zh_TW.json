@@ -262,5 +262,13 @@
   "Level code": "關卡代碼",
   "QR code of the level": "關卡QR碼",
   "CRUMBLE TILE": "碎裂地磚",
-  "CLEAR": "清空"
+  "CLEAR": "清空",
+  "SCAN A QR CODE": "掃描QR碼",
+  "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET": "把相機對準朋友分享頁上的QR碼",
+  "LOOKING FOR A QR CODE…": "正在尋找QR碼…",
+  "NO CAMERA FOUND": "找不到相機",
+  "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "MAPMAN 無權使用相機。請在手機設定中允許",
+  "THAT QR CODE ISN'T A MAPMAN LEVEL": "這個QR碼不是 MAPMAN 關卡",
+  "TYPE A CODE INSTEAD": "改為輸入代碼",
+  "Camera view": "相機畫面"
 }

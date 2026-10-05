@@ -47,7 +47,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   sheet makes him jump (`Menus._poke()`, `Player.jump()`).
 - The drafting table (`docs/drafting-table.md`): `scripts/draft.gd` is a
   level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
-  editor, code entry and the share sheet (QR from `addons/kenyoni/qr_code/`).
+  editor, code entry, the share sheet (QR from `addons/kenyoni/qr_code/`)
+  and the scan sheet (`scripts/qr_scanner.gd` camera view,
+  `scripts/qr_reader.gd` QR decoder).
   `scripts/level_code.gd` turns a level into a short code and back, matching
   `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
   `main.gd` plays drafts and friends' codes with `custom` set ("draft",

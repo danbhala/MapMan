@@ -216,3 +216,40 @@ func test_dev_menu_seeds_and_clears_the_table() -> void:
 	assert_true(Save.all_drafts()[0].is_empty())
 	assert_eq(Save.received, [])
 	Dev.enabled = false
+
+
+# --- scanning ------------------------------------------------------------------
+
+
+func test_a_scanned_code_plays_and_is_kept() -> void:
+	var code := _corridor().code()
+	game.drafting.show()
+	game._on_menu_action("scan code")
+	assert_eq(game.menus.current, "scan")
+	assert_true(_on_sheet("TYPE A CODE INSTEAD"))
+	DraftingSheet._on_scanned(LevelCode.PREFIX + " " + code, game.menus)
+	assert_eq(game.custom, "received")
+	assert_eq(Save.received, [LevelCode.pretty(code)])
+	_loaded()
+	_win()
+	assert_eq(game.menus.current, "drafting", "back to the table")
+
+
+func test_a_scanned_qr_that_isnt_a_level_stays_on_the_sheet() -> void:
+	game.drafting.show()
+	game._on_menu_action("scan code")
+	DraftingSheet._on_scanned("https://example.com", game.menus)
+	DraftingSheet._on_scanned("MAPMAN 0000-0000-0000-0000", game.menus)
+	assert_eq(game.menus.current, "scan")
+	assert_eq(game.custom, "")
+	var line := game.menus._panel.find_child("ScanStatus", false, false) as Label
+	assert_eq(line.text, DraftingSheet.TEXT.not_a_level)
+	game.go_back()
+	assert_eq(game.menus.current, "drafting")
+
+
+func test_the_scanner_says_when_there_is_no_camera() -> void:
+	game.drafting.show()
+	game._on_menu_action("scan code")
+	var line := game.menus._panel.find_child("ScanStatus", false, false) as Label
+	assert_eq(line.text, DraftingSheet.TEXT.no_camera, "no camera in a headless run")

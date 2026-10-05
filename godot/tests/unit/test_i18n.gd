@@ -14,6 +14,7 @@ const UNTRANSLATED := [
 	"001-D",
 	"001-E",
 	"001-F",
+	"001-G",
 	"D%d",
 	"R%d",
 	"D%d-S",
@@ -291,6 +292,12 @@ func _editor(draft: Draft) -> void:
 	DraftingSheet.build_editor(game.menus, draft)
 
 
+## The scan sheet saying `kind`.
+func _scan(kind: String) -> void:
+	DraftingSheet.build_scan(game.menus)
+	DraftingSheet.scan_status(game.menus, kind)
+
+
 func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
 	# Part way through: the first ten looks, the longest and MapWoman released.
@@ -330,6 +337,9 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): DraftingSheet.build_code_entry(m, _received()[0], "bad"),
 		func(): DraftingSheet.build_code_entry(m, "", "newer"),
 		func(): DraftingSheet.build_found(m, _received()[0]),
+		_scan.bind("looking"),
+		_scan.bind("no_permission"),
+		_scan.bind("not_a_level"),
 		func(): DraftingSheet.build_share(m, _drafts()[0], true),
 		_editor.bind(Draft.new(5)),
 		_editor.bind(_drafts()[1]),

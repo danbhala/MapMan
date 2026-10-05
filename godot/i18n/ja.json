@@ -262,5 +262,13 @@
   "Level code": "レベルコード",
   "QR code of the level": "レベルのQRコード",
   "CRUMBLE TILE": "崩れるタイル",
-  "CLEAR": "全消去"
+  "CLEAR": "全消去",
+  "SCAN A QR CODE": "QRコードを読み取る",
+  "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET": "友達の共有シートのQRコードにカメラを向けて",
+  "LOOKING FOR A QR CODE…": "QRコードを探しています…",
+  "NO CAMERA FOUND": "カメラが見つかりません",
+  "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "MAPMANはカメラを使えません。スマホの設定で許可してください",
+  "THAT QR CODE ISN'T A MAPMAN LEVEL": "そのQRコードはMAPMANのレベルではありません",
+  "TYPE A CODE INSTEAD": "コードを入力する",
+  "Camera view": "カメラの映像"
 }

@@ -262,5 +262,13 @@
   "Level code": "레벨 코드",
   "QR code of the level": "레벨 QR 코드",
   "CRUMBLE TILE": "무너지는 타일",
-  "CLEAR": "지우기"
+  "CLEAR": "지우기",
+  "SCAN A QR CODE": "QR 코드 스캔",
+  "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET": "친구의 공유 시트에 있는 QR 코드에 카메라를 맞추세요",
+  "LOOKING FOR A QR CODE…": "QR 코드를 찾는 중…",
+  "NO CAMERA FOUND": "카메라를 찾을 수 없습니다",
+  "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS": "MAPMAN이 카메라를 사용할 수 없습니다. 휴대폰 설정에서 허용하세요",
+  "THAT QR CODE ISN'T A MAPMAN LEVEL": "그 QR 코드는 MAPMAN 레벨이 아닙니다",
+  "TYPE A CODE INSTEAD": "코드 직접 입력",
+  "Camera view": "카메라 화면"
 }
