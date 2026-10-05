@@ -45,6 +45,12 @@ var worn := "classic"
 var released: Array[String] = []
 ## Released looks the wardrobe has shown: the main menu says NEW until then.
 var seen: Array[String] = []
+## The drafting table (DraftingSheet): each draft slot as Draft.to_save()
+## made it ({} while empty), the codes of levels friends sent, newest first,
+## and the last code found on the clipboard, so it is offered only once.
+var drafts: Array = []
+var received: Array[String] = []
+var clipboard_seen := ""
 ## Tests turn this off so they never overwrite the player's real progress.
 var persist := true
 
@@ -142,6 +148,15 @@ func load_all(path := PATH) -> void:
 			ghosts[int(key)] = saved_ghosts[key]
 	released = _looks(_cfg.get_value("wardrobe", "released", []))
 	seen = _looks(_cfg.get_value("wardrobe", "seen", []))
+	drafts = []
+	var saved_drafts: Variant = _cfg.get_value("drafting", "drafts", [])
+	if saved_drafts is Array:
+		drafts = saved_drafts.slice(0, Draft.SLOTS)
+	received.clear()
+	for code in _cfg.get_value("drafting", "received", []):
+		if code is String and LevelCode.decode(code).has("rows"):
+			received.append(code)
+	clipboard_seen = str(_cfg.get_value("drafting", "clipboard_seen", ""))
 	# Saves from before the wardrobe have the progress but not the looks.
 	sync_wardrobe()
 	var saved_worn: Variant = _cfg.get_value("wardrobe", "worn", "classic")
@@ -173,6 +188,9 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("wardrobe", "worn", worn)
 	_cfg.set_value("wardrobe", "released", released)
 	_cfg.set_value("wardrobe", "seen", seen)
+	_cfg.set_value("drafting", "drafts", drafts)
+	_cfg.set_value("drafting", "received", received)
+	_cfg.set_value("drafting", "clipboard_seen", clipboard_seen)
 	_cfg.save(path)
 
 
@@ -282,3 +300,37 @@ func _looks(saved: Variant) -> Array[String]:
 			if id is String and id != "classic" and Wardrobe.is_look(id) and id not in out:
 				out.append(id)
 	return out
+
+
+# --- the drafting table -----------------------------------------------------------
+
+
+## The drafting table opens once the first checkpoint (level 10) is cleared.
+func drafting_open() -> bool:
+	return furthest_level > 10 or has_completed
+
+
+## Every draft slot, as a Draft.
+func all_drafts() -> Array[Draft]:
+	var out: Array[Draft] = []
+	for i in Draft.SLOTS:
+		out.append(Draft.from_save(i, drafts[i] if i < drafts.size() else {}))
+	return out
+
+
+func store_draft(draft: Draft) -> void:
+	while drafts.size() < Draft.SLOTS:
+		drafts.append({})
+	drafts[draft.slot] = {} if draft.is_empty() else draft.to_save()
+	save_all()
+
+
+## Keeps a code a friend sent at the front of the list (once), dropping the
+## oldest past what the drafting table shows.
+func receive(code: String) -> void:
+	var tidy := LevelCode.pretty(code)
+	received.erase(tidy)
+	received.push_front(tidy)
+	if received.size() > Draft.RECEIVED_KEPT:
+		received.resize(Draft.RECEIVED_KEPT)
+	save_all()

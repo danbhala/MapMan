@@ -1,6 +1,6 @@
 class_name ControlsSheet
 extends RefCounted
-## Sheet 001-E, opened from the CONTROLS row of the options: steer by tilting
+## Sheet 001-H, opened from the CONTROLS row of the options: steer by tilting
 ## the phone or with the floating touch stick (TouchStick), how little tilt
 ## moves MapMan (TiltInput.SENSITIVITY) and the tilt gauge. Static functions
 ## that build onto the Menus sheet they are given, like WardrobeSheet; this
@@ -8,7 +8,7 @@ extends RefCounted
 
 ## Every word the sheet adds: English msgids (i18n/).
 const TEXT := {
-	"number": "001-E",
+	"number": "001-H",
 	"title": "CONTROLS",
 	"modes": ["TILT", "TOUCH"],
 	"items": ["TILT TO MOVE", "DRAG TO MOVE"],

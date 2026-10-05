@@ -622,6 +622,14 @@ msgstr ""
 "尖刺會先發出警示，然後有節奏地升降。\n"
 "等它們落下後再通過，趕在再次升起之前。"
 
+#. Tutorial lesson 9
+msgid ""
+"Ice sends you sliding until a plain tile or the edge stops you.\n"
+"You can't steer on it, so line up before you set off."
+msgstr ""
+"踩上冰面會一直滑行，直到被普通地磚或邊緣擋住。\n"
+"滑行時無法轉向，所以出發前先對準方向。"
+
 #. Tutorial lesson 10
 msgid "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level."
 msgstr "這些地磚會增加或減少你的時間。每關結束時，剩餘時間會換算成獎勵分。"
@@ -855,6 +863,287 @@ msgstr "點一下開始"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "略過"
+
+#. Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.
+msgid "DRAFTING TABLE"
+msgstr "繪圖桌"
+
+#. Drafting table: heading over the six levels the player is drawing
+msgid "YOUR DRAFTS"
+msgstr "你的草稿"
+
+#. Drafting table: heading over levels other players sent as codes
+msgid "RECEIVED LEVELS"
+msgstr "收到的關卡"
+
+#. Drafting table: shown while no level has been received yet
+msgid "LEVELS FRIENDS SEND YOU APPEAR HERE"
+msgstr "朋友傳來的關卡會顯示在這裡"
+
+#. Drafting table: a draft slot with nothing drawn in it (small cell)
+msgid "EMPTY"
+msgstr "空"
+
+#. Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)
+msgid "DRAFT"
+msgstr "草稿"
+
+#. Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)
+msgid "SIGNED"
+msgstr "已簽名"
+
+#. Drafting table item: type or paste a code a friend sent, to play their level
+msgid "ENTER A LEVEL CODE"
+msgstr "輸入關卡代碼"
+
+#. Drafting table note: the three steps of making a level
+msgid "DRAW A LEVEL · BEAT IT · SHARE ITS CODE"
+msgstr "畫關卡 · 過關 · 分享代碼"
+
+#. Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)
+msgid "LEVEL CLEARED WITH %ds LEFT"
+msgstr "過關：剩餘%d秒"
+
+#. Sheet title: the screen for typing or pasting a level code
+msgid "LEVEL CODE"
+msgstr "關卡代碼"
+
+#. Level code sheet: instruction above the text box
+msgid "TYPE OR PASTE A LEVEL CODE"
+msgstr "輸入或貼上關卡代碼"
+
+#. Level code sheet button: paste the clipboard into the text box
+msgid "PASTE"
+msgstr "貼上"
+
+#. Level code sheet item: play the level the code describes
+msgid "PLAY THIS LEVEL"
+msgstr "玩這一關"
+
+#. Level code sheet: the code has a typo or isn't a level code
+msgid "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN"
+msgstr "無法讀取代碼。請檢查後再試"
+
+#. Level code sheet: the code was made by a later version of the game. Keep MAPMAN.
+msgid "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN"
+msgstr "此關卡需要較新版本的MAPMAN"
+
+#. Sheet title shown when the game opens with a copied level code: offer to play it
+msgid "A LEVEL CODE IS ON THE CLIPBOARD"
+msgstr "剪貼簿上有關卡代碼"
+
+#. Item: play the level from the copied code
+msgid "PLAY IT"
+msgstr "開始玩"
+
+#. Item: ignore the copied code
+msgid "NOT NOW"
+msgstr "暫不"
+
+#. Editor title: which of the six drafts is open (%d is 1 to 6)
+msgid "DRAFT %d"
+msgstr "草稿 %d"
+
+#. Editor button: leave the editor (the draft is kept)
+msgid "BACK"
+msgstr "返回"
+
+#. Editor button: take back the last stroke
+msgid "UNDO"
+msgstr "復原"
+
+#. Editor button: play the draft; reaching an exit signs it
+msgid "TEST"
+msgstr "試玩"
+
+#. Editor button: show the draft's code and QR code (only once it is signed)
+msgid "SHARE"
+msgstr "分享"
+
+#. Editor: small label over the meter showing how long the draft's code is
+msgid "CODE"
+msgstr "代碼"
+
+#. Editor status: the draft has no start tile yet
+msgid "PLACE ONE START TILE"
+msgstr "放置一塊起點地磚"
+
+#. Editor status: the draft has no exit yet
+msgid "PLACE AT LEAST ONE EXIT"
+msgstr "至少放置一個出口"
+
+#. Editor status: the draft can be played; beating it signs it so it can be shared
+msgid "TEST IT AND REACH AN EXIT TO SIGN IT"
+msgstr "試玩並抵達出口即可簽名"
+
+#. Editor status: the draft has been beaten and can be shared
+msgid "SIGNED · READY TO SHARE"
+msgstr "已簽名 · 可以分享"
+
+#. Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it
+msgid "VANISH · %d MOVE"
+msgid_plural "VANISH · %d MOVES"
+msgstr[0] "消失 · %d步"
+
+#. Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code
+msgid "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE"
+msgstr "用手機相機掃描QR碼，或傳送代碼"
+
+#. Share sheet item: copy the level code to the clipboard
+msgid "COPY CODE"
+msgstr "複製代碼"
+
+#. Share sheet: confirms the code is on the clipboard
+msgid "CODE COPIED"
+msgstr "已複製代碼"
+
+#. Share sheet item: return to the editor
+msgid "BACK TO THE DRAFT"
+msgstr "返回草稿"
+
+#. Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · DRAFT %d"
+msgstr "停工中 · 草稿 %d"
+
+#. Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.
+msgid "WORK SUSPENDED · RECEIVED LEVEL"
+msgstr "停工中 · 收到的關卡"
+
+#. Editor palette: clears tiles
+msgid "ERASER"
+msgstr "橡皮擦"
+
+#. Editor palette: a plain tile MapMan can walk on
+msgid "PATH"
+msgstr "通路"
+
+#. Editor palette: where MapMan starts (one per level)
+msgid "START TILE"
+msgstr "起點地磚"
+
+#. Editor palette: a level exit (one for each direction)
+msgid "EXIT"
+msgstr "出口"
+
+#. Editor palette: a tile that costs a life
+msgid "DEATH TILE"
+msgstr "毒地磚"
+
+#. Editor palette: a star to collect
+msgid "STAR"
+msgstr "星星"
+
+#. Editor palette: a tile that holds MapMan until the player shakes or taps
+msgid "STICKY TILE"
+msgstr "黏性地磚"
+
+#. Editor palette: a tile that reverses the controls
+msgid "REVERSE TILE"
+msgstr "反轉地磚"
+
+#. Editor palette: a tile that hides the hideable tiles when stepped on
+msgid "HIDE TILES"
+msgstr "隱藏地磚"
+
+#. Editor palette: a tile that shows the hidden tiles again
+msgid "UNHIDE TILES"
+msgstr "顯示地磚"
+
+#. Editor palette: a path tile that is never drawn
+msgid "INVISIBLE PATH"
+msgstr "隱形通路"
+
+#. Editor palette: a star that disappears while tiles are hidden
+msgid "HIDEABLE STAR"
+msgstr "可隱藏星星"
+
+#. Editor palette: a death tile that disappears while tiles are hidden
+msgid "HIDEABLE DEATH TILE"
+msgstr "可隱藏毒地磚"
+
+#. Editor palette: an extra life that disappears while tiles are hidden
+msgid "HIDEABLE EXTRA LIFE"
+msgstr "可隱藏額外生命"
+
+#. Editor palette: marks tiles that are hidden when the level begins
+msgid "STARTS HIDDEN"
+msgstr "初始隱藏"
+
+#. Screen reader: a draft slot with nothing in it (%d is 1 to 6)
+msgid "Draft %d, empty"
+msgstr "草稿 %d，空"
+
+#. Screen reader: a draft slot with a level not yet beaten
+msgid "Draft %d"
+msgstr "草稿 %d"
+
+#. Screen reader: a draft its maker has beaten, ready to share
+msgid "Draft %d, signed"
+msgstr "草稿 %d，已簽名"
+
+#. Screen reader: a level a friend sent (%d counts them)
+msgid "Received level %d"
+msgstr "收到的關卡 %d"
+
+#. Screen reader: the text box for a level code
+msgid "Level code"
+msgstr "關卡代碼"
+
+#. Screen reader: the QR code picture on the share sheet
+msgid "QR code of the level"
+msgstr "關卡QR碼"
+
+#. Editor palette: a tile that falls away once MapMan steps off it
+msgid "CRUMBLE TILE"
+msgstr "碎裂地磚"
+
+#. Editor button: wipe the whole grid (UNDO brings it back)
+msgid "CLEAR"
+msgstr "清空"
+
+#. Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it
+msgid "SCAN A QR CODE"
+msgstr "掃描QR碼"
+
+#. Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code
+msgid "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET"
+msgstr "把相機對準朋友分享頁上的QR碼"
+
+#. Scan sheet: status while the camera is on and no code has been read yet
+msgid "LOOKING FOR A QR CODE…"
+msgstr "正在尋找QR碼…"
+
+#. Scan sheet: status when the device has no camera the game can use
+msgid "NO CAMERA FOUND"
+msgstr "找不到相機"
+
+#. Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings
+msgid "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS"
+msgstr "MAPMAN 無權使用相機。請在手機設定中允許"
+
+#. Scan sheet: status when the camera read a QR code that holds something else
+msgid "THAT QR CODE ISN'T A MAPMAN LEVEL"
+msgstr "這個QR碼不是 MAPMAN 關卡"
+
+#. Scan sheet item: go to the screen for typing a level code instead of scanning
+msgid "TYPE A CODE INSTEAD"
+msgstr "改為輸入代碼"
+
+#. Screen reader: the live picture from the camera on the scan sheet
+msgid "Camera view"
+msgstr "相機畫面"
+
+#. Editor palette: an ice tile; MapMan slides across it until something stops him
+msgid "ICE"
+msgstr "冰面"
+
+#. Editor palette: spikes that rise and fall on a beat; touching them while up costs a life
+msgid "SPIKES"
+msgstr "尖刺"
+
+#. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
+msgid "OFF-BEAT SPIKES"
+msgstr "反拍尖刺"
 
 #. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
 msgid "CONTROLS"

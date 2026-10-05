@@ -48,12 +48,31 @@ def shortest(cells, start, avoid):
                 path.append(cur)
                 cur = prev[cur]
             return path[::-1]
-        x, y = cur
-        for nxt in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
-            if nxt in cells and nxt not in prev and cells[nxt] not in avoid:
+        for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            visited = slide(cells, cur, d)
+            if not visited or any(cells[v] in avoid for v in visited):
+                continue
+            nxt = visited[-1]
+            if nxt not in prev:
                 prev[nxt] = cur
                 queue.append(nxt)
     return None
+
+
+def slide(cells, cur, d):
+    """The tiles a step from cur in direction d visits: one, or more across
+    ice ('j'), where MapMan slides on until a tile that isn't ice stops him."""
+    visited = []
+    x, y = cur
+    while True:
+        nxt = (x + d[0], y + d[1])
+        if nxt not in cells or cells[nxt] in ' -':
+            break
+        visited.append(nxt)
+        x, y = nxt
+        if cells[nxt] != 'j':
+            break
+    return visited
 
 
 def analyse(level):

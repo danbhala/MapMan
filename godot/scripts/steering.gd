@@ -52,10 +52,35 @@ func handle(act: String) -> bool:
 	return true
 
 
+## A touch on the field while playing: the stick when steering by touch,
+## else the original's edge zones on a phone without an accelerometer, else a
+## tap pauses.
+func input(event: InputEvent) -> void:
+	var tilt: TiltInput = _game.tilt
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if not _game.game_active or _game.menus.visible:
+			return
+		if tilt.stick:
+			_stick_touch(event.pressed, event.position)
+		elif tilt.touch_steering_enabled():
+			# No accelerometer: hold towards an edge to steer (the original's
+			# tilt simulator). A fresh tap also frees MapMan from a sticky tile.
+			tilt.touch(event.pressed, event.position)
+			if event.pressed and _game.stuck:
+				_game.stuck = false
+		elif not event.pressed and _game._can_pause():
+			_game.show_pause_menu()
+	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+		if tilt.stick:
+			tilt.stick_drag(event.position)
+		elif tilt.touch_steering_enabled():
+			tilt.touch(true, event.position)
+
+
 ## A finger lands on the field (the stick appears under it) or lifts; a tap
 ## that never dragged pauses. Without an accelerometer to shake, a fresh
 ## touch also frees MapMan from a sticky tile.
-func touch(pressed: bool, pos: Vector2) -> void:
+func _stick_touch(pressed: bool, pos: Vector2) -> void:
 	var tilt: TiltInput = _game.tilt
 	if pressed:
 		tilt.stick_press(pos)

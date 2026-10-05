@@ -6,6 +6,10 @@ extends CanvasLayer
 
 const PANEL_BG := Color(0.07, 0.07, 0.07, 0.92)
 const FONT_SIZE := 13
+## Campaign levels the dev menu puts on the drafting table: as drafts (one
+## per slot), and as received codes.
+const SEED_DRAFTS := [1, 7, 23, 41, 66]
+const SEED_RECEIVED := [12, 35, 58, 80, 99]
 
 var game  # main.gd
 var _button: Button
@@ -154,6 +158,10 @@ func _build_panel(theme: Theme) -> Control:
 	row.add_child(_button_for("Release every look", _on_release_looks))
 	row.add_child(_button_for("Empty the wardrobe", _on_empty_wardrobe))
 	box.add_child(row)
+	row = HBoxContainer.new()
+	row.add_child(_button_for("Seed drafting table", _on_seed_drafting))
+	row.add_child(_button_for("Clear drafting table", _on_clear_drafting))
+	box.add_child(row)
 
 	# Tilt tuning
 	box.add_child(_heading("Tilt tuning (saved on this phone, applies to this app)"))
@@ -192,12 +200,35 @@ func _build_panel(theme: Theme) -> Control:
 
 func _on_play_from_here() -> void:
 	close()
-	game.dev_go_to_level(int(_level_box.value))
+	go_to_level(game, int(_level_box.value))
 
 
 func _on_skip_level() -> void:
 	close()
-	game.dev_skip_level()
+	skip_level(game)
+
+
+## Start a normal game at any level.
+static func go_to_level(main, n: int) -> void:
+	main.menus.close()
+	main.custom = ""
+	main.new_game(clampi(n, 1, main.levels.size()))
+
+
+## Move on to the next level without finishing this one.
+static func skip_level(main) -> void:
+	if not main.game_active:
+		return
+	if main.practice:
+		# Skipping never saves checkpoints or unlocks levels from practice.
+		main._end_practice()
+		return
+	if main.custom != "":
+		main.drafting.end(false)
+		return
+	main.menus.close()
+	main.end_of_level_points = 0
+	main.next_level()
 
 
 ## Every look in the wardrobe, to try them on (dev builds only).
@@ -222,6 +253,39 @@ func _on_empty_wardrobe() -> void:
 	game.player.outfit = "classic"
 	_refresh_main_menu()
 	_toast_text("Wardrobe emptied")
+
+
+## Example drafts (campaign levels, the first two signed) and received
+## codes, with the table unlocked, to try the drafting table at once.
+func _on_seed_drafting() -> void:
+	if not Dev.enabled:
+		return
+	for slot in SEED_DRAFTS.size():
+		var d := Draft.from_level(slot, game.levels[SEED_DRAFTS[slot] - 1])
+		d.signed = slot < 2
+		Save.store_draft(d)
+	Save.received.clear()
+	for n in SEED_RECEIVED:
+		var grid := LevelCode.grid_of(game.levels[n - 1])
+		var trimmed := LevelCode.trim(grid[0], grid[1])
+		Save.receive(LevelCode.encode(trimmed[0], trimmed[1]))
+	Save.furthest_level = maxi(Save.furthest_level, 11)
+	Save.save_all()
+	game.drafting.draft = null
+	_refresh_main_menu()
+	_toast_text("Drafting table seeded")
+
+
+## No drafts and no received levels.
+func _on_clear_drafting() -> void:
+	if not Dev.enabled:
+		return
+	Save.drafts.clear()
+	Save.received.clear()
+	Save.save_all()
+	game.drafting.draft = null
+	_refresh_main_menu()
+	_toast_text("Drafting table cleared")
 
 
 ## The main menu shows the wardrobe's count and the worn look: redraw it

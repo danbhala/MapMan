@@ -774,6 +774,11 @@
       "max": 170
     },
     {
+      "id": "Ice sends you sliding until a plain tile or the edge stops you.\nYou can't steer on it, so line up before you set off.",
+      "note": "Tutorial lesson 9",
+      "max": 170
+    },
+    {
       "id": "These tiles will give you extra time or cost you time. You will get bonus points for time left on the clock when you finish each level.",
       "note": "Tutorial lesson 10",
       "max": 170
@@ -1064,6 +1069,357 @@
       "id": "SKIP",
       "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
       "max": 12
+    },
+    {
+      "id": "DRAFTING TABLE",
+      "note": "Main menu item and sheet title: where players draw their own levels, beat them and share them as a code. A drafting table is an architect's drawing desk.",
+      "max": 24
+    },
+    {
+      "id": "YOUR DRAFTS",
+      "note": "Drafting table: heading over the six levels the player is drawing",
+      "max": 24
+    },
+    {
+      "id": "RECEIVED LEVELS",
+      "note": "Drafting table: heading over levels other players sent as codes",
+      "max": 30
+    },
+    {
+      "id": "LEVELS FRIENDS SEND YOU APPEAR HERE",
+      "note": "Drafting table: shown while no level has been received yet",
+      "max": 60
+    },
+    {
+      "id": "EMPTY",
+      "note": "Drafting table: a draft slot with nothing drawn in it (small cell)",
+      "max": 10
+    },
+    {
+      "id": "DRAFT",
+      "note": "Drafting table: a draft slot with a level in it that its maker hasn't beaten yet (small cell)",
+      "max": 10
+    },
+    {
+      "id": "SIGNED",
+      "note": "Drafting table: a draft its maker has beaten, so it can be shared, like an approved drawing (small cell, also a stamp)",
+      "max": 10
+    },
+    {
+      "id": "ENTER A LEVEL CODE",
+      "note": "Drafting table item: type or paste a code a friend sent, to play their level",
+      "max": 30
+    },
+    {
+      "id": "DRAW A LEVEL · BEAT IT · SHARE ITS CODE",
+      "note": "Drafting table note: the three steps of making a level",
+      "max": 60
+    },
+    {
+      "id": "LEVEL CLEARED WITH %ds LEFT",
+      "note": "Drafting table note after beating a level a friend sent: the seconds left on the clock (%d)",
+      "max": 60
+    },
+    {
+      "id": "LEVEL CODE",
+      "note": "Sheet title: the screen for typing or pasting a level code",
+      "max": 24
+    },
+    {
+      "id": "TYPE OR PASTE A LEVEL CODE",
+      "note": "Level code sheet: instruction above the text box",
+      "max": 40
+    },
+    {
+      "id": "PASTE",
+      "note": "Level code sheet button: paste the clipboard into the text box",
+      "max": 12
+    },
+    {
+      "id": "PLAY THIS LEVEL",
+      "note": "Level code sheet item: play the level the code describes",
+      "max": 30
+    },
+    {
+      "id": "THAT CODE DOESN'T READ. CHECK IT AND TRY AGAIN",
+      "note": "Level code sheet: the code has a typo or isn't a level code",
+      "max": 60
+    },
+    {
+      "id": "THIS LEVEL NEEDS A NEWER VERSION OF MAPMAN",
+      "note": "Level code sheet: the code was made by a later version of the game. Keep MAPMAN.",
+      "max": 60
+    },
+    {
+      "id": "A LEVEL CODE IS ON THE CLIPBOARD",
+      "note": "Sheet title shown when the game opens with a copied level code: offer to play it",
+      "max": 40
+    },
+    {
+      "id": "PLAY IT",
+      "note": "Item: play the level from the copied code",
+      "max": 24
+    },
+    {
+      "id": "NOT NOW",
+      "note": "Item: ignore the copied code",
+      "max": 24
+    },
+    {
+      "id": "DRAFT %d",
+      "note": "Editor title: which of the six drafts is open (%d is 1 to 6)",
+      "max": 20
+    },
+    {
+      "id": "BACK",
+      "note": "Editor button: leave the editor (the draft is kept)",
+      "max": 12
+    },
+    {
+      "id": "UNDO",
+      "note": "Editor button: take back the last stroke",
+      "max": 12
+    },
+    {
+      "id": "TEST",
+      "note": "Editor button: play the draft; reaching an exit signs it",
+      "max": 12
+    },
+    {
+      "id": "SHARE",
+      "note": "Editor button: show the draft's code and QR code (only once it is signed)",
+      "max": 12
+    },
+    {
+      "id": "CODE",
+      "note": "Editor: small label over the meter showing how long the draft's code is",
+      "max": 8
+    },
+    {
+      "id": "PLACE ONE START TILE",
+      "note": "Editor status: the draft has no start tile yet",
+      "max": 40
+    },
+    {
+      "id": "PLACE AT LEAST ONE EXIT",
+      "note": "Editor status: the draft has no exit yet",
+      "max": 40
+    },
+    {
+      "id": "TEST IT AND REACH AN EXIT TO SIGN IT",
+      "note": "Editor status: the draft can be played; beating it signs it so it can be shared",
+      "max": 60
+    },
+    {
+      "id": "SIGNED · READY TO SHARE",
+      "note": "Editor status: the draft has been beaten and can be shared",
+      "max": 40
+    },
+    {
+      "id": "VANISH · %d MOVE",
+      "plural": "VANISH · %d MOVES",
+      "note": "Editor: name of a vanishing tile, which disappears for %d moves after MapMan steps off it",
+      "max": 30
+    },
+    {
+      "id": "SCAN THE QR WITH A PHONE CAMERA, OR SEND THE CODE",
+      "note": "Share sheet: how a friend gets the level, with no accounts or internet: scan the QR code or send the text code",
+      "max": 60
+    },
+    {
+      "id": "COPY CODE",
+      "note": "Share sheet item: copy the level code to the clipboard",
+      "max": 24
+    },
+    {
+      "id": "CODE COPIED",
+      "note": "Share sheet: confirms the code is on the clipboard",
+      "max": 24
+    },
+    {
+      "id": "BACK TO THE DRAFT",
+      "note": "Share sheet item: return to the editor",
+      "max": 24
+    },
+    {
+      "id": "WORK SUSPENDED · DRAFT %d",
+      "note": "Pause sheet while testing a draft (%d is 1 to 6). Same wording as WORK SUSPENDED · TUTORIAL.",
+      "max": 40
+    },
+    {
+      "id": "WORK SUSPENDED · RECEIVED LEVEL",
+      "note": "Pause sheet while playing a level from a code. Same wording as WORK SUSPENDED · TUTORIAL.",
+      "max": 40
+    },
+    {
+      "id": "ERASER",
+      "note": "Editor palette: clears tiles",
+      "max": 30
+    },
+    {
+      "id": "PATH",
+      "note": "Editor palette: a plain tile MapMan can walk on",
+      "max": 30
+    },
+    {
+      "id": "START TILE",
+      "note": "Editor palette: where MapMan starts (one per level)",
+      "max": 30
+    },
+    {
+      "id": "EXIT",
+      "note": "Editor palette: a level exit (one for each direction)",
+      "max": 30
+    },
+    {
+      "id": "DEATH TILE",
+      "note": "Editor palette: a tile that costs a life",
+      "max": 30
+    },
+    {
+      "id": "STAR",
+      "note": "Editor palette: a star to collect",
+      "max": 30
+    },
+    {
+      "id": "STICKY TILE",
+      "note": "Editor palette: a tile that holds MapMan until the player shakes or taps",
+      "max": 30
+    },
+    {
+      "id": "REVERSE TILE",
+      "note": "Editor palette: a tile that reverses the controls",
+      "max": 30
+    },
+    {
+      "id": "HIDE TILES",
+      "note": "Editor palette: a tile that hides the hideable tiles when stepped on",
+      "max": 30
+    },
+    {
+      "id": "UNHIDE TILES",
+      "note": "Editor palette: a tile that shows the hidden tiles again",
+      "max": 30
+    },
+    {
+      "id": "INVISIBLE PATH",
+      "note": "Editor palette: a path tile that is never drawn",
+      "max": 30
+    },
+    {
+      "id": "HIDEABLE STAR",
+      "note": "Editor palette: a star that disappears while tiles are hidden",
+      "max": 30
+    },
+    {
+      "id": "HIDEABLE DEATH TILE",
+      "note": "Editor palette: a death tile that disappears while tiles are hidden",
+      "max": 32
+    },
+    {
+      "id": "HIDEABLE EXTRA LIFE",
+      "note": "Editor palette: an extra life that disappears while tiles are hidden",
+      "max": 32
+    },
+    {
+      "id": "STARTS HIDDEN",
+      "note": "Editor palette: marks tiles that are hidden when the level begins",
+      "max": 30
+    },
+    {
+      "id": "Draft %d, empty",
+      "note": "Screen reader: a draft slot with nothing in it (%d is 1 to 6)",
+      "max": 30
+    },
+    {
+      "id": "Draft %d",
+      "note": "Screen reader: a draft slot with a level not yet beaten",
+      "max": 30
+    },
+    {
+      "id": "Draft %d, signed",
+      "note": "Screen reader: a draft its maker has beaten, ready to share",
+      "max": 30
+    },
+    {
+      "id": "Received level %d",
+      "note": "Screen reader: a level a friend sent (%d counts them)",
+      "max": 30
+    },
+    {
+      "id": "Level code",
+      "note": "Screen reader: the text box for a level code",
+      "max": 30
+    },
+    {
+      "id": "QR code of the level",
+      "note": "Screen reader: the QR code picture on the share sheet",
+      "max": 30
+    },
+    {
+      "id": "CRUMBLE TILE",
+      "note": "Editor palette: a tile that falls away once MapMan steps off it",
+      "max": 30
+    },
+    {
+      "id": "CLEAR",
+      "note": "Editor button: wipe the whole grid (UNDO brings it back)",
+      "max": 10
+    },
+    {
+      "id": "SCAN A QR CODE",
+      "note": "Drafting table item and sheet title: point the phone's camera at a friend's level QR code to play it",
+      "max": 30
+    },
+    {
+      "id": "POINT THE CAMERA AT THE QR CODE ON A FRIEND'S SHARE SHEET",
+      "note": "Scan sheet: instruction at the top. The share sheet is the screen in a friend's game that shows their level's QR code",
+      "max": 80
+    },
+    {
+      "id": "LOOKING FOR A QR CODE…",
+      "note": "Scan sheet: status while the camera is on and no code has been read yet",
+      "max": 40
+    },
+    {
+      "id": "NO CAMERA FOUND",
+      "note": "Scan sheet: status when the device has no camera the game can use",
+      "max": 40
+    },
+    {
+      "id": "MAPMAN ISN'T ALLOWED TO USE THE CAMERA. ALLOW IT IN THE PHONE'S SETTINGS",
+      "note": "Scan sheet: status when the player refused the camera permission; they can allow it in the phone's settings",
+      "max": 90
+    },
+    {
+      "id": "THAT QR CODE ISN'T A MAPMAN LEVEL",
+      "note": "Scan sheet: status when the camera read a QR code that holds something else",
+      "max": 50
+    },
+    {
+      "id": "TYPE A CODE INSTEAD",
+      "note": "Scan sheet item: go to the screen for typing a level code instead of scanning",
+      "max": 30
+    },
+    {
+      "id": "Camera view",
+      "note": "Screen reader: the live picture from the camera on the scan sheet",
+      "max": 30
+    },
+    {
+      "id": "ICE",
+      "note": "Editor palette: an ice tile; MapMan slides across it until something stops him",
+      "max": 30
+    },
+    {
+      "id": "SPIKES",
+      "note": "Editor palette: spikes that rise and fall on a beat; touching them while up costs a life",
+      "max": 30
+    },
+    {
+      "id": "OFF-BEAT SPIKES",
+      "note": "Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave",
+      "max": 30
     },
     {
       "id": "CONTROLS",

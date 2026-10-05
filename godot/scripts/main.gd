@@ -9,6 +9,7 @@ const POINTS_PER_LEVEL := 10
 const INITIAL_LIVES := 3
 const INITIAL_SECONDS := 20.0
 const STOP_TIME := 14.0 / 60.0  # seconds to cross one tile on a gentle tilt
+const SLIDE_TIME := 7.0 / 60.0  # seconds per tile while sliding on ice
 const FLASH_SECONDS := 2.0  # how long "Bonus Points" etc. stay in the bar
 const COMPLETION_BONUS := 100
 const LIFE_BONUS := 50
@@ -57,6 +58,11 @@ var tutorial := false
 var completed := false
 ## Practising one level from the practice menu: no lives, score or checkpoints.
 var practice := false
+## Playing a level from the drafting table: "draft" (testing one, which a
+## win signs) or "received" (a friend's code). No lives, score or saving.
+var custom := ""
+## The drafting table's flow: the open draft and the level being played.
+var drafting := DraftingTable.new(self)
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -77,6 +83,8 @@ var losses := {}
 var _bg: ColorRect
 var _grid: Blueprint.Grid
 var _was_moving := false
+var _sliding := false  # a slide on ice is under way (one sound per slide)
+var _slide_step := Vector2i.ZERO  # the screen direction of the last step, for ice
 var _lose_reason := "death"
 
 var _moves := 0  # moves made in this attempt at the level, for the play log
@@ -187,6 +195,7 @@ func _end_intro() -> void:
 	intro.queue_free()
 	intro = null
 	show_start_menu()
+	drafting.check_clipboard()
 
 
 func _load_data() -> void:
@@ -357,6 +366,8 @@ func set_time_message(time_left: int) -> void:
 		hud.set_time_message(tr("GO!"))
 	elif _low_time:
 		hud.set_time_message(tr("HURRY UP!"))
+	elif custom != "":
+		hud.set_time_message("")
 	elif time_left > 15 and started() and String(levels[level - 1].get("message", "")) != "":
 		# Level messages are lowercase in the data; the sheets use capitals.
 		hud.set_time_message(tr(String(levels[level - 1]["message"]).to_upper()))
@@ -537,9 +548,14 @@ func _guarded(actual: Vector2i) -> bool:
 
 
 func move(step: Vector2i, seconds: float) -> void:
-	map.move(-step if reverse else step, seconds)
+	_start_move(-step if reverse else step, seconds)
+
+
+## A move in screen directions, whatever the controls say.
+func _start_move(actual: Vector2i, seconds: float) -> void:
+	map.move(actual, seconds)
 	if map.moving:
-		_tries.step(-step if reverse else step, seconds)
+		_tries.step(actual, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
@@ -585,6 +601,7 @@ func update_player(delta: float) -> void:
 	if _was_moving:
 		_was_moving = false
 		_landed_at = _now()
+		_slide_step = map.last_step()
 		player.land()
 	if map.at_end():
 		player.cheer()
@@ -661,6 +678,21 @@ func update_player(delta: float) -> void:
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
 
+	# Ice: he slides on the way he came until a tile that isn't ice, or an
+	# edge, stops him. Steering is ignored on the way (move_player() skips
+	# it while a move is under way). Death and a sticky tile end the slide.
+	if map.on(map.ices) and not dead and not stuck and _slide_step != Vector2i.ZERO:
+		if map.walkable(map.position_key + _slide_step):
+			if not _sliding:
+				Audio.play("slide")
+			_sliding = true
+			_start_move(_slide_step, SLIDE_TIME)
+			player.face_direction(_slide_step, true)
+		else:
+			_sliding = false
+	else:
+		_sliding = false
+
 	set_background()
 	set_controls_message()
 
@@ -733,6 +765,8 @@ func _update_ending(delta: float) -> void:
 
 
 func _current_level_data() -> Dictionary:
+	if custom != "":
+		return drafting.level
 	if completed:
 		return completion_level
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
@@ -751,11 +785,8 @@ func load_level() -> void:
 		hud.set_time_message("")
 		_start_ending()
 	elif tutorial:
-		# Lessons about tilting have a version for the touch stick.
-		var key := (
-			"description_touch" if tilt.stick and data.has("description_touch") else "description"
-		)
-		hud.set_tutorial_text(tr(data.get(key, "")))
+		var touch := tilt.stick and data.has("description_touch")  # tilting lessons
+		hud.set_tutorial_text(tr(data.get("description_touch" if touch else "description", "")))
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
 	else:
@@ -763,7 +794,7 @@ func load_level() -> void:
 		hud.set_timer(0, -1.0, true)
 		hud.blank_timer()
 		hud.set_time_message(tr("GET READY..."))
-		if not practice:
+		if not practice and custom == "":
 			Save.level_reached(level)
 	_update_stats()
 
@@ -853,6 +884,10 @@ func advance_level(check_point: bool) -> void:
 		Audio.play("end_level")
 		_hide_ending()
 		show_game_complete()
+		return
+	if custom != "":
+		Audio.play("end_level")
+		drafting.end(true)
 		return
 	if not tutorial and not practice:
 		losses.erase(level)
@@ -990,7 +1025,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 func lose_life(reason := "death") -> void:
 	_timer_stop()
 	_tries.end(reason, _time_left)
-	if not tutorial and not practice:
+	if not tutorial and not practice and custom == "":
 		Dev.record(level, reason, _time_left, _moves)
 		if not completed:
 			losses[level] = losses.get(level, 0) + 1
@@ -1003,7 +1038,7 @@ func lose_life(reason := "death") -> void:
 
 
 func finish_lose_life() -> void:
-	if practice:
+	if practice or custom != "":
 		# No lives in practice: straight back to the start of the level.
 		load_level()
 		reset_all()
@@ -1028,6 +1063,7 @@ func game_over(show_score := true) -> void:
 	_tries.end("", _time_left)
 	completed = false
 	practice = false
+	custom = ""
 	_between = false
 	_timer_stop()
 	game_active = false
@@ -1039,30 +1075,6 @@ func game_over(show_score := true) -> void:
 		var pb := Save.submit_score(score)
 		menus.show_game_over(score, pb, Save.has_any_checkpoint(), previous_best)
 
-
-# --- dev menu ----------------------------------------------------------------
-
-
-## Start a normal game at any level (dev menu).
-func dev_go_to_level(n: int) -> void:
-	menus.close()
-	new_game(clampi(n, 1, levels.size()))
-
-
-## Move on to the next level without finishing this one (dev menu).
-func dev_skip_level() -> void:
-	if not game_active:
-		return
-	if practice:
-		# Skipping never saves checkpoints or unlocks levels from practice.
-		_end_practice()
-		return
-	menus.close()
-	end_of_level_points = 0
-	next_level()
-
-
-# --- menus -----------------------------------------------------------------
 
 # --- practice --------------------------------------------------------------
 
@@ -1093,7 +1105,10 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.new_lessons)
+	var drafting := Save.drafting_open()
+	menus.show_main(
+		Save.highscore, Save.has_any_checkpoint(), levels.size(), drafting, Save.new_lessons
+	)
 
 
 func show_pause_menu() -> void:
@@ -1101,10 +1116,15 @@ func show_pause_menu() -> void:
 	paused = true
 	# The final sheet after level 100 has no number and no clock.
 	var clock := -1 if tutorial or completed else _seconds_remaining()
-	menus.show_pause(tutorial, 0 if completed else level, clock)
+	if custom != "":
+		DraftingSheet.build_pause(menus, drafting.pause_number())
+	else:
+		menus.show_pause(tutorial, 0 if completed else level, clock)
 
 
 func _on_menu_action(act: String) -> void:
+	if drafting.action(act):
+		return
 	match act:
 		"play from start", "play", "new game", "play game":
 			if Save.first_play and act == "play from start":
@@ -1228,30 +1248,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
 		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if not game_active or menus.visible:
-			return
-		if tilt.stick:
-			steering.touch(event.pressed, event.position)
-		elif tilt.touch_steering_enabled():
-			# No accelerometer: hold towards an edge to steer (the original's
-			# tilt simulator). A fresh tap also frees MapMan from a sticky tile.
-			tilt.touch(event.pressed, event.position)
-			if event.pressed and stuck:
-				stuck = false
-		elif not event.pressed and _can_pause():
-			show_pause_menu()
-	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-		if tilt.stick:
-			tilt.stick_drag(event.position)
-		elif tilt.touch_steering_enabled():
-			tilt.touch(true, event.position)
+	steering.input(event)
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		if game_active and not dead and not menus.visible and is_inside_tree():
 			show_pause_menu()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_inside_tree():
+		drafting.check_clipboard()
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
 
@@ -1267,6 +1272,8 @@ func go_back() -> void:
 		return
 	if dev_panel and dev_panel.is_open():
 		dev_panel.close()
+		return
+	if drafting.go_back():
 		return
 	match menus.current:
 		"":
