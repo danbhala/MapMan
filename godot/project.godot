@@ -8,6 +8,13 @@
 
 config_version=5
 
+[admob]
+
+# MapMan's AdMob app (scripts/ads.gd has its ad units). The plugin's other
+# settings keep their defaults; addons/admob/MAPMAN.md has the two lines
+# changed in it.
+general/android/app_id="ca-app-pub-4967250367903621~8364718860"
+
 [application]
 
 config/name="MapMan"
@@ -32,6 +39,7 @@ locale/include_text_server_data=true
 Save="*res://scripts/save.gd"
 Audio="*res://scripts/audio.gd"
 Dev="*res://scripts/dev.gd"
+Ads="*res://scripts/ads.gd"
 
 [display]
 
@@ -45,7 +53,7 @@ window/handheld/orientation=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/level_links/plugin.cfg")
+enabled=PackedStringArray("res://addons/admob/plugin.cfg", "res://addons/level_links/plugin.cfg")
 
 [input]
 

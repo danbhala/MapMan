@@ -326,5 +326,14 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NÓTA: TARRAING LE BOGADH · TAPÁIL AN BHILEOG LE SOS A GHLACADH",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Tadhaill agus tarraing áit ar bith le bogadh agus déan ar an tíl amach.\nThar an bhfáinne briste siúl, thar an bhfáinne iomlán rith.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ní ghlacann ach tapáil ghasta sos: má tharraingíonn tú, bogann MapMan.",
-  "TILT ONLY": "CLAONADH AMHÁIN"
+  "TILT ONLY": "CLAONADH AMHÁIN",
+  "KEEP GOING: WATCH AN AD": "LEAN ORT: FÉACH AR FHÓGRA",
+  "END THE GAME": "CRÍOCHNAIGH AN CLUICHE",
+  "NOTE: ONE MORE LIFE, ONCE PER GAME": "NÓTA: BEATHA AMHÁIN EILE, UAIR AMHÁIN SA CHLUICHE",
+  "AD PRIVACY": "PRÍOBHÁIDEACHT",
+  "AD BONUS": "BÓNAS FÓGRA",
+  "DOUBLE THE POINTS": "DÚBAIL NA POINTÍ",
+  "WATCH A SHORT AD": "FÉACH AR FHÓGRA GEARR",
+  "DOUBLE IT": "DÚBAIL",
+  "POINTS DOUBLED": "POINTÍ DÚBAILTE"
 }

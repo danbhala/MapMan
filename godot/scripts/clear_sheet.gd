@@ -27,6 +27,17 @@ const TICKS := 16
 const TICK := 0.05
 const TICK_RISE := 0.6
 
+## The DOUBLE IT slip's words (msgids, i18n/catalog.json).
+## DOUBLE IT, on the slip WEAR IT uses: a little wider for its longer word.
+const DOUBLE_W := 124.0
+const TEXT := {
+	"ad_bonus": "AD BONUS",
+	"double_points": "DOUBLE THE POINTS",
+	"watch_ad": "WATCH A SHORT AD",
+	"double_it": "DOUBLE IT",
+	"points_doubled": "POINTS DOUBLED",
+}
+
 
 ## Level clear: the bonuses are added into the score one row at a time, then
 ## NEXT, WARDROBE and MAIN MENU come up under the total. A tap before then
@@ -35,7 +46,8 @@ const TICK_RISE := 0.6
 ## level, seconds_left (the clock at the exit, the time bonus's quantity),
 ## last (level 100: the final sheet comes next), released (the look this
 ## first clear released, if any, for a slip with a button to wear it) and
-## tries (how many tries the replay shows: WATCH REPLAY when there are any).
+## more: "tries" (how many tries the replay shows: WATCH REPLAY when there
+## are any) and "double" (the DOUBLE IT slip, ad_slip()).
 static func end_level(m: Menus, args: Array) -> void:
 	var score: int = args[0]
 	var level_bonus: int = args[1]
@@ -46,7 +58,9 @@ static func end_level(m: Menus, args: Array) -> void:
 	var seconds_left: int = args[6]
 	var last: bool = args[7]
 	var released: String = args[8]
-	var tries: int = args[9] if args.size() > 9 else 0
+	var more: Dictionary = args[9] if args.size() > 9 else {}
+	var tries: int = more.get("tries", 0)
+	var double: int = more.get("double", 0)
 	# The question before quitting from here numbers itself after this sheet.
 	m._level = level
 	m._tutorial = false
@@ -84,6 +98,10 @@ static func end_level(m: Menus, args: Array) -> void:
 		buttons.append(_replay_button(m, tries))
 	if released != "":
 		WardrobeSheet.release_slip(m, released)
+	elif double != 0:
+		var offer := ad_slip(m, double)
+		if offer:
+			buttons.append(offer)
 	else:
 		m._note(m._t("tap_final") if last else m._t("tap_next") % (level + 1), NOTE_Y)
 	m._hero_on("tilt")
@@ -106,6 +124,38 @@ static func end_level(m: Menus, args: Array) -> void:
 		m._first_button = buttons[0]
 		m._focus_first()
 	count_up(m, total, score, rows, all_in)
+
+
+## The DOUBLE IT slip where a release slip would go: a rewarded ad doubles
+## the sheet's points (double -1: on offer, returning its button), or says it
+## did (the points it added). Words in TEXT.
+static func ad_slip(m: Menus, double: int) -> Button:
+	var slip := WardrobeSheet._slip(m, WardrobeSheet.SLIP_Y, WardrobeSheet.SLIP_H)
+	var times := Blueprint.label(slip, "×2", 26, Blueprint.GOLD, Vector2.ZERO, 800, 64.0)
+	times.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	times.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	Blueprint.fit(times, Vector2(64, slip.size.y))
+	times.position.x = WardrobeSheet._flip(m, 4, 64, slip.size.x)
+	var room := DOUBLE_W + 8.0
+	var done := double > 0
+	var lines := (
+		[m.tr(TEXT.points_doubled), Menus.TEXT.plus % double]
+		if done
+		else [m.tr(TEXT.double_points), m.tr(TEXT.watch_ad)]
+	)
+	WardrobeSheet._slip_text(m, slip, m.tr(TEXT.ad_bonus), 10, Blueprint.GOLD, 78, 6, 800, room)
+	WardrobeSheet._slip_text(m, slip, lines[0], 15, Blueprint.INK, 78, 20, 800, room)
+	WardrobeSheet._slip_text(m, slip, lines[1], 10, Blueprint.FAINT, 78, 42, 500, room)
+	var w := DOUBLE_W
+	var at := Vector2(WardrobeSheet._flip(m, slip.size.x - 8.0 - w, w, slip.size.x), 9)
+	var b: Button = null
+	if not done:
+		b = Blueprint.item(slip, m.tr(TEXT.double_it), at, Vector2(w, Blueprint.TAP_HEIGHT))
+		b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.accessibility_name = "%s, %s" % [m._sentence(m.tr(TEXT.double_it)), m.tr(TEXT.watch_ad)]
+		m._connect(b, "double it")
+	m._reveal(slip)
+	return b
 
 
 ## One of the level clear's buttons, side by side under the TOTAL, `w` wide

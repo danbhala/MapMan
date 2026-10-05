@@ -302,5 +302,14 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NOTE : GLISSEZ POUR BOUGER · TOUCHEZ LA PLANCHE : PAUSE",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Touchez et glissez n'importe où pour vous déplacer et rejoignez la case de sortie.\nDépassez le cercle pointillé pour marcher, le cercle plein pour courir.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Touchez l'écran pendant la partie pour faire une pause. Seul un toucher rapide met en pause : si vous glissez, MapMan bouge.",
-  "TILT ONLY": "INCLINAISON SEULE"
+  "TILT ONLY": "INCLINAISON SEULE",
+  "KEEP GOING: WATCH AN AD": "CONTINUER : VOIR UNE PUB",
+  "END THE GAME": "TERMINER LA PARTIE",
+  "NOTE: ONE MORE LIFE, ONCE PER GAME": "NOTE : UNE VIE DE PLUS, UNE FOIS PAR PARTIE",
+  "AD PRIVACY": "CONFIDENTIALITÉ",
+  "AD BONUS": "BONUS PUB",
+  "DOUBLE THE POINTS": "DOUBLEZ LES POINTS",
+  "WATCH A SHORT AD": "REGARDEZ UNE COURTE PUB",
+  "DOUBLE IT": "DOUBLER",
+  "POINTS DOUBLED": "POINTS DOUBLÉS"
 }

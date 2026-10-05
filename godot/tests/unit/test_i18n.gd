@@ -51,6 +51,7 @@ func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
 	Dev.enabled = false
+	Ads.fake = true  # Options shows AD PRIVACY, as on a phone in the EU
 	# The phone's screen, not the 64 px square headless Godot starts with:
 	# the sheets are laid out in it.
 	get_tree().root.size = Vector2i(1334, 750)
@@ -59,6 +60,10 @@ func before_all() -> void:
 		msgids[entry.id] = entry
 		if entry.has("plural"):
 			plurals[entry.plural] = entry
+
+
+func after_all() -> void:
+	Ads.fake = false
 
 
 func before_each() -> void:
@@ -98,7 +103,13 @@ func _has_letters(text: String) -> bool:
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 	for table in [
-		Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, DraftingSheet.TEXT, ControlsSheet.TEXT
+		Menus.TEXT,
+		Hud.TEXT,
+		WardrobeSheet.TEXT,
+		Intro.TEXT,
+		DraftingSheet.TEXT,
+		ControlsSheet.TEXT,
+		ClearSheet.TEXT
 	]:
 		for key in table:
 			var value = table[key]
@@ -335,11 +346,14 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_lose_life(15, 35, "timeout"),
 		func(): m.show_lose_life(1, 35, "death", "marks"),
 		func(): m.show_lose_life(1, 35, "timeout", "skip"),
+		func(): m.show_lose_life(0, 35, "death", "", true),
 		func(): m.show_game_over(1842, true, true, 1790),
 		func(): m.show_restart([10, 30]),
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
+		func(): m.show_end_level(1842, 10, 7, 2, false, 35, 14, false, "", {"double": -1}),
+		func(): m.show_end_level(1842, 10, 7, 2, false, 35, 14, false, "", {"double": 42}),
 		func(): m.show_wardrobe(36),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),

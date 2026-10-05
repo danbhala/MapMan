@@ -63,6 +63,7 @@ var practice := false
 var custom := ""
 ## The drafting table's flow: the open draft and the level being played.
 var drafting := DraftingTable.new(self)
+var ad_offers := AdOffers.new(self)  # KEEP GOING, DOUBLE IT, NEXT's full-screen ad
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -921,9 +922,9 @@ func advance_level(check_point: bool) -> void:
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	_between = true
-	var tries := _tries.list.size() if _tries.replayable(level) else 0
+	var more := ad_offers.on_clear(level, released)
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, tries
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, more
 	)
 
 
@@ -997,6 +998,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	ad_offers.kept_going = false
 	if tutorial:
 		tutorial_levels = lessons()
 		if Save.new_lessons:  # the news has been read
@@ -1047,7 +1049,7 @@ func finish_lose_life() -> void:
 		lives -= 1
 	_update_stats()
 	if lives < 1:
-		game_over()
+		ad_offers.last_life_lost()
 	elif not tutorial:
 		menus.show_lose_life(lives, level, _lose_reason, assist_name())
 	else:
@@ -1125,7 +1127,7 @@ func show_pause_menu() -> void:
 
 
 func _on_menu_action(act: String) -> void:
-	if drafting.action(act):
+	if drafting.action(act) or ad_offers.action(act):
 		return
 	match act:
 		"play from start", "play", "new game", "play game":
@@ -1169,7 +1171,7 @@ func _on_menu_action(act: String) -> void:
 			show_practice_menu(
 				clampi((Save.furthest_level - 1) / Menus.PRACTICE_PAGE, 0, last_page)
 			)
-		"next level":
+		"next level now":  # NEXT, after any full-screen ad (AdOffers)
 			menus.close()
 			next_level()
 		"replay":

@@ -126,6 +126,7 @@ func sheets(locale: String) -> void:
 	await shot(locale, "01_main")
 	m.show_first_play()
 	await shot(locale, "02_first_run")
+	root.get_node("Ads").fake = true
 	m.show_options()
 	await shot(locale, "03_options")
 	m.show_language()
@@ -166,6 +167,14 @@ func sheets(locale: String) -> void:
 	# the longest name worn, then MapWoman and Classic and their details.
 	m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest)
 	await shot(locale, "25_level_clear_release")
+	# The ads: KEEP GOING, and DOUBLE IT before and after (Ads.fake: every ad
+	# is ready, and Options shows AD PRIVACY as in the EU).
+	m.show_lose_life(0, 35, "death", "", true)
+	await shot(locale, "40_keep_going")
+	m.show_end_level(1842, 10, 7, 2, false, 35, 14, false, "", {"double": -1})
+	await shot(locale, "41_double_it")
+	m.show_end_level(1842, 10, 7, 2, false, 35, 14, false, "", {"double": 42})
+	await shot(locale, "42_doubled")
 	m.show_congratulations(2042, true, "mapwoman")
 	await shot(locale, "26_congratulations_mapwoman")
 	var wearing := {

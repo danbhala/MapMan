@@ -294,5 +294,14 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "주: 드래그해서 이동 · 도면을 탭하면 일시정지",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "아무 곳이나 터치하고 드래그해 이동하고 출구 타일로 가세요.\n점선 원을 넘으면 걷기, 실선 원을 넘으면 달리기.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "플레이 중 화면을 탭하면 일시정지됩니다. 짧게 탭할 때만 일시정지되고, 드래그하면 MapMan이 움직입니다.",
-  "TILT ONLY": "기울기 전용"
+  "TILT ONLY": "기울기 전용",
+  "KEEP GOING: WATCH AN AD": "광고 보고 계속하기",
+  "END THE GAME": "게임 종료",
+  "NOTE: ONE MORE LIFE, ONCE PER GAME": "주: 목숨 +1, 게임당 한 번",
+  "AD PRIVACY": "광고 설정",
+  "AD BONUS": "광고 보너스",
+  "DOUBLE THE POINTS": "점수 2배",
+  "WATCH A SHORT AD": "짧은 광고 보기",
+  "DOUBLE IT": "2배 받기",
+  "POINTS DOUBLED": "점수 2배!"
 }

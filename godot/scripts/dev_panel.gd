@@ -163,6 +163,16 @@ func _build_panel(theme: Theme) -> Control:
 	row.add_child(_button_for("Clear drafting table", _on_clear_drafting))
 	box.add_child(row)
 
+	# Ads (scripts/ads.gd): dev builds show Google's test ads.
+	box.add_child(_heading("Ads (test ads in dev builds)"))
+	row = HBoxContainer.new()
+	row.add_child(_toggle("No ads", Ads.off, func(on): Ads.set_off(on)))
+	row.add_child(
+		_toggle("Full-screen ad every clear", Ads.every_clear, func(on): Ads.every_clear = on)
+	)
+	row.add_child(_button_for("Ask for ad consent again", Ads.reset_consent))
+	box.add_child(row)
+
 	# Tilt tuning
 	box.add_child(_heading("Tilt tuning (saved on this phone, applies to this app)"))
 	box.add_child(_slider("tilt_threshold", "Tilt to start moving (g)", 0.02, 0.4, 0.01))
