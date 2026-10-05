@@ -94,6 +94,7 @@
   "COMPLETION BONUS": "БОНУС ЗА ФИНИШ",
   "LIVES REMAINING ×50": "ОСТАЛОСЬ ЖИЗНЕЙ ×50",
   "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING": "ВСЕ 100 ЛИСТОВ УТВЕРЖДЕНЫ · СПАСИБО ЗА ИГРУ",
+  "NOTE: THE TUTORIAL HAS NEW LESSONS": "ПРИМЕЧАНИЕ: В ОБУЧЕНИИ НОВЫЕ УРОКИ",
   "APPROVED": "УТВЕРЖДЕНО",
   "SHEET %03d / %d": "ЛИСТ %03d / %d",
   "TUTORIAL %d / %d": "ОБУЧЕНИЕ %d / %d",
@@ -212,6 +213,14 @@
   "<  RETURN TO SHEET %03d": "<  НАЗАД К ЛИСТУ %03d",
   "NEXT": "ДАЛЕЕ",
   "MENU": "МЕНЮ",
+  "WATCH REPLAY": "ПОВТОР",
+  "REPLAY — LEVEL %d": "ПОВТОР — УРОВЕНЬ %d",
+  "BEST-RUN GHOST": "ПРИЗРАК РЕКОРДА",
+  "%d TRY": [
+    "%d ПОПЫТКА",
+    "%d ПОПЫТКИ",
+    "%d ПОПЫТОК"
+  ],
   "TAP TO START": "КОСНИТЕСЬ, ЧТОБЫ НАЧАТЬ",
   "SKIP": "ПРОПУСТИТЬ",
   "DRAFTING TABLE": "ЧЕРТЁЖНЫЙ СТОЛ",

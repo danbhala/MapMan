@@ -186,7 +186,7 @@ func test_dev_skip_level_ends_practice() -> void:
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 1")
 	_loaded()
-	game.dev_skip_level()
+	DevPanel.skip_level(game)
 	Dev.enabled = false
 	assert_eq(game.menus.current, "practice")
 	assert_true(Save.checkpoints.is_empty(), "no checkpoint saved")

@@ -270,7 +270,7 @@ func test_countdown_reads_as_a_dimension() -> void:
 
 
 func test_tutorial_fills_the_header_and_bar() -> void:
-	game.tutorial_levels = [{"rows": ["brw"], "description": "Tilt to move.\nThen go."}]
+	game.tutorial_all = [{"rows": ["brw"], "description": "Tilt to move.\nThen go."}]
 	game.new_game(1, true)
 	game._update_stats()
 	assert_true(game.hud.level_label.visible)

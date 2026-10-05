@@ -25,16 +25,10 @@ const LIST_W := 380.0
 const TEXT_X := 52.0
 const CHAR_W := 9.6
 const LIST_TOP := 60.0
-## Boxes that flow across the sheet (the language names): text size, the
-## padding either side of it, the gap between boxes, and the row they fill.
-const CHIP_SIZE := 15
-const CHIP_PAD := 10.0
-const CHIP_GAP := 8.0
-const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
-## The options sheet's rows: seven of them, a little tighter than TAP_HEIGHT.
+## The options sheet's rows: eight of them, tighter than TAP_HEIGHT.
 const OPTIONS_TOP := 78.0
-const OPTIONS_PITCH := 40.0
+const OPTIONS_PITCH := 35.0
 ## Where MapMan stands, how big he is, and his height in his own units as
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
@@ -90,7 +84,8 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE"],
+	"options":
+	["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -175,6 +170,8 @@ const TEXT := {
 	"completion_bonus": "COMPLETION BONUS",
 	"lives_bonus": "LIVES REMAINING ×50",
 	"completion_caption": "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING",
+	"new_lessons": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+	"new": "NEW",
 	"approved": "APPROVED",
 	# for screen readers
 	"a11y_previous": "Previous page",
@@ -884,7 +881,9 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool, levels := 0, drafting := false) -> void:
+func show_main(
+	highscore: int, has_checkpoint: bool, levels := 0, drafting := false, new_lessons := false
+) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
@@ -894,7 +893,11 @@ func show_main(highscore: int, has_checkpoint: bool, levels := 0, drafting := fa
 		texts.insert(4, _t("drafting_item"))
 		acts.insert(4, "drafting table")
 		enabled.append(true)
-	_items(texts, acts, 76 if drafting else 80, 38 if drafting else 44, enabled)
+	var top := 76.0 if drafting else 80.0
+	var pitch := 38.0 if drafting else 44.0
+	_items(texts, acts, top, pitch, enabled)
+	if new_lessons:  # a NEW tag on the TUTORIAL row
+		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, top + 3 * pitch - 10.0)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
@@ -919,9 +922,14 @@ func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
 	var states := [
-		Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.tilt_gauge
+		Save.music_on,
+		Save.fx_on,
+		Save.vibration_on,
+		Save.reduce_motion,
+		Save.tilt_gauge,
+		Save.ghost_on,
 	]
-	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge"]
+	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
@@ -981,63 +989,7 @@ func show_wardrobe(back_level := 0) -> void:
 ## name, as boxes that flow across the sheet, the current one marked. Picking
 ## one reports "language <code>".
 func show_language() -> void:
-	_open("language", TEXT.language_number, _t("language_title"))
-	var choices: Array = [["system", _t("phone_language")]]
-	choices.append_array(LANGUAGES)
-	var x := LIST_X
-	var y := 72.0
-	for choice in choices:
-		var code: String = choice[0]
-		var name: String = choice[1]
-		var chosen := (Save.locale == "" and code == "system") or Save.locale == code
-		var text: String = TEXT.on + " " + name if chosen else name
-		var font := Blueprint.mono(700 if chosen else 400)
-		var text_w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, CHIP_SIZE).x
-		var w := ceilf(text_w) + 2.0 * CHIP_PAD
-		if x + w > LIST_X + CHIP_ROW_W:
-			x = LIST_X
-			y += Blueprint.TAP_HEIGHT + CHIP_GAP
-		_chip(Vector2(x, y), w, text, "language " + code, name, chosen)
-		x += w + CHIP_GAP
-	var back_pos := Vector2(_mx(LIST_X, LIST_W), 318)
-	var back := Blueprint.item(_panel, "<  " + _t("options_title"), back_pos)
-	back.alignment = _align()
-	back.accessibility_name = _sentence(_t("options_title"))
-	_connect(back, "options")
-	_reveal(back)
-	_focus_first()
-
-
-## A box in a flowing row of choices, `w` wide, its text centred; the chosen
-## one is filled and bold. The whole box is a button.
-func _chip(pos: Vector2, w: float, text: String, act: String, a11y: String, chosen: bool) -> Button:
-	var size := Vector2(w, Blueprint.TAP_HEIGHT)
-	var box := Control.new()
-	box.position = Vector2(_mx(pos.x, w), pos.y)
-	box.size = size
-	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_panel.add_child(box)
-	if chosen:
-		Blueprint.rect(box, Blueprint.HOVER, Vector2.ONE, size - Vector2(2, 2))
-	var width := 1.2 if chosen else 0.8
-	Blueprint.line(box, Blueprint.box_points(Vector2.ZERO, size), Blueprint.INK, width)
-	var inner := w - 2.0 * CHIP_PAD
-	var l := Blueprint.label(
-		box, text, CHIP_SIZE, Blueprint.INK, Vector2(CHIP_PAD, 0), 700 if chosen else 400, inner
-	)
-	l.autowrap_mode = TextServer.AUTOWRAP_OFF
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	Blueprint.fit(l, Vector2(inner, size.y))
-	var b := Button.new()
-	b.theme = Blueprint.theme()
-	b.size = size
-	b.accessibility_name = a11y
-	_clear_button(b)
-	box.add_child(b)
-	_connect(b, act)
-	_reveal(box, 0.03)
-	return b
+	LanguageSheet.build(self)
 
 
 func _remember_row(row: int) -> void:
@@ -1235,7 +1187,7 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
 ## WARDROBE and MAIN MENU. released: the look this first clear released, if
-## any.
+## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1245,10 +1197,11 @@ func show_end_level(
 	level := 0,
 	seconds_left := -1,
 	last := false,
-	released := ""
+	released := "",
+	tries := 0
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released]
+	_clear_args = args + [last, released, tries]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
 
@@ -1276,7 +1229,9 @@ func show_congratulations(score: int, pb: bool, released := "") -> void:
 
 
 ## The final inspection: the completion and lives bonuses join the score.
-func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
+func show_game_complete(
+	score: int, completion_bonus: int, lives_bonus: int, new_lessons := false
+) -> void:
 	_open("completion", TEXT.end_sheet, _t("completion_title"), Blueprint.GOLD)
 	_columns([_t("col_item"), _t("col_value")], [LIST_X], true)
 	var specs := [
@@ -1292,6 +1247,8 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 		y += ROW_H
 	var total := _total(y + 4, str(score))
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
+	if new_lessons:
+		_note(_t("new_lessons"), 282)
 	_pair_on()
 	var approved := Vector2(458, _over_head(84, PAIR_FEET))
 	ClearSheet.count_up(

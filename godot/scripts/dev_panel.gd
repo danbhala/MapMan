@@ -199,12 +199,35 @@ func _build_panel(theme: Theme) -> Control:
 
 func _on_play_from_here() -> void:
 	close()
-	game.dev_go_to_level(int(_level_box.value))
+	go_to_level(game, int(_level_box.value))
 
 
 func _on_skip_level() -> void:
 	close()
-	game.dev_skip_level()
+	skip_level(game)
+
+
+## Start a normal game at any level.
+static func go_to_level(main, n: int) -> void:
+	main.menus.close()
+	main.custom = ""
+	main.new_game(clampi(n, 1, main.levels.size()))
+
+
+## Move on to the next level without finishing this one.
+static func skip_level(main) -> void:
+	if not main.game_active:
+		return
+	if main.practice:
+		# Skipping never saves checkpoints or unlocks levels from practice.
+		main._end_practice()
+		return
+	if main.custom != "":
+		main.drafting.end(false)
+		return
+	main.menus.close()
+	main.end_of_level_points = 0
+	main.next_level()
 
 
 ## Every look in the wardrobe, to try them on (dev builds only).

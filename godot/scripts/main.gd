@@ -30,7 +30,8 @@ const HIDDEN_COLOR := Blueprint.MINT
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
-var tutorial_levels: Array = []
+var tutorial_levels: Array = []  # the lessons on offer now (see lessons())
+var tutorial_all: Array = []  # every lesson in data/tutorial.json
 var completion_level: Dictionary = {}
 var check_point_levels: Array = []
 
@@ -103,6 +104,10 @@ var _practice_page := 0
 ## from it, and each of those goes back to it.
 var _between := false
 
+# every try at this level (for the replay), the best run beside the player
+# (made when first needed: a Player draws on the random numbers), the replay
+var _tries := Tries.new()
+
 # countdown
 var _time_left := INITIAL_SECONDS
 var _timer_running := false
@@ -118,6 +123,7 @@ var _last_hide := -1.0
 
 func _ready() -> void:
 	_load_data()
+	add_child(_tries)
 
 	var bg_layer := CanvasLayer.new()
 	bg_layer.layer = -10
@@ -189,9 +195,10 @@ func _load_data() -> void:
 	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/levels.json"))
 	levels = data["levels"]
 	check_point_levels = data["check_points"]
-	tutorial_levels = (
+	tutorial_all = (
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
 	)
+	tutorial_levels = lessons()
 	completion_level = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/completion.json")
 	)
@@ -263,7 +270,7 @@ func started() -> bool:
 
 func _process(delta: float) -> void:
 	_update_gauge(delta)
-	if menus.visible or not game_active:
+	if _tries.replay or menus.visible or not game_active:
 		return
 
 	_update_timer(delta)
@@ -275,6 +282,7 @@ func _process(delta: float) -> void:
 		if player.death_finished():
 			finish_lose_life()
 	elif started():
+		_tries.tick(map, delta)
 		move_player(delta)
 		update_player(delta)
 		_update_stats()
@@ -292,6 +300,8 @@ func loaded() -> void:
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
 	if not tutorial:
+		if not completed:
+			_tries.begin(level, player.outfit)
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
@@ -531,11 +541,33 @@ func _guarded(actual: Vector2i) -> bool:
 func move(step: Vector2i, seconds: float) -> void:
 	map.move(-step if reverse else step, seconds)
 	if map.moving:
+		_tries.step(-step if reverse else step, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
 		if vanish > 0:
 			vanish -= 1
+
+
+# --- tries, the replay and the best-run ghost ----------------------------------
+
+
+## WATCH REPLAY: the level again, every try on it at once. The level clear
+## waits, hidden, and comes back when the replay ends or is tapped away.
+func _start_replay() -> void:
+	if _tries.replay or not _tries.replayable(level):
+		return
+	menus.visible = false
+	hud.visible = false
+	player.vanish()
+	map.load_level(_current_level_data(), _screen_size())
+	_tries.play(map).finished.connect(_end_replay)
+
+
+func _end_replay() -> void:
+	if _tries.stop_replay():
+		hud.visible = true
+		menus.redraw()
 
 
 # --- tile rules (update_player) --------------------------------------------
@@ -822,8 +854,11 @@ func advance_level(check_point: bool) -> void:
 		losses.erase(level)
 	if not tutorial:
 		var new_best := false
+		var run := _tries.end("win", _time_left)
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
+			if run:
+				Save.record_ghost(level, run)
 		if practice:
 			Audio.play("end_level")
 			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
@@ -847,8 +882,9 @@ func advance_level(check_point: bool) -> void:
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	_between = true
+	var tries := _tries.list.size() if _tries.replayable(level) else 0
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, tries
 	)
 
 
@@ -880,12 +916,30 @@ func finish_advancing_level() -> void:
 			# Past the last level: the bonus map where MapWoman waits. Finishing
 			# the game releases her into the wardrobe.
 			completed = true
-			Save.has_completed = true
+			_mark_completed()
 			Save.release("mapwoman")
 			Save.save_all()
 			hud.show_stats(false)
 	load_level()
 	reset_all()
+
+
+## The tutorial's lessons for this player: the Revision B ones (new tiles
+## for the second playthrough, `rev_b` in tutorial.json) wait until the
+## game has been finished once.
+func lessons() -> Array:
+	return tutorial_all.filter(
+		func(l: Dictionary) -> bool: return not l.get("rev_b", false) or Save.has_completed
+	)
+
+
+## Finishing the game. The first time, the lessons it adds to the tutorial
+## are news: the completion sheet and the main menu say so until it is played.
+func _mark_completed() -> void:
+	if not Save.has_completed and lessons().size() < tutorial_all.size():
+		Save.new_lessons = true
+	Save.has_completed = true
+	tutorial_levels = lessons()
 
 
 func show_game_complete() -> void:
@@ -895,7 +949,7 @@ func show_game_complete() -> void:
 	var lives_bonus := lives * LIFE_BONUS
 	end_of_level_points = COMPLETION_BONUS + lives_bonus
 	Audio.play_completion()
-	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus)
+	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus, Save.new_lessons)
 
 
 func new_game(start_level := 1, is_tutorial := false) -> void:
@@ -904,9 +958,16 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	if tutorial:
+		tutorial_levels = lessons()
+		if Save.new_lessons:  # the news has been read
+			Save.new_lessons = false
+			Save.save_all()
 	completed = false
 	practice = false
 	_between = false
+	_tries.clear()
+	_tries.end("", _time_left)
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -924,6 +985,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
+	_tries.end(reason, _time_left)
 	if not tutorial and not practice and custom == "":
 		Dev.record(level, reason, _time_left, _moves)
 		if not completed:
@@ -959,6 +1021,7 @@ func game_over(show_score := true) -> void:
 	map.unload()
 	player.vanish()
 	_hide_ending()
+	_tries.end("", _time_left)
 	completed = false
 	practice = false
 	custom = ""
@@ -973,34 +1036,6 @@ func game_over(show_score := true) -> void:
 		var pb := Save.submit_score(score)
 		menus.show_game_over(score, pb, Save.has_any_checkpoint(), previous_best)
 
-
-# --- dev menu ----------------------------------------------------------------
-
-
-## Start a normal game at any level (dev menu).
-func dev_go_to_level(n: int) -> void:
-	menus.close()
-	custom = ""
-	new_game(clampi(n, 1, levels.size()))
-
-
-## Move on to the next level without finishing this one (dev menu).
-func dev_skip_level() -> void:
-	if not game_active:
-		return
-	if practice:
-		# Skipping never saves checkpoints or unlocks levels from practice.
-		_end_practice()
-		return
-	if custom != "":
-		drafting.end(false)
-		return
-	menus.close()
-	end_of_level_points = 0
-	next_level()
-
-
-# --- menus -----------------------------------------------------------------
 
 # --- practice --------------------------------------------------------------
 
@@ -1031,7 +1066,10 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.drafting_open())
+	var drafting := Save.drafting_open()
+	menus.show_main(
+		Save.highscore, Save.has_any_checkpoint(), levels.size(), drafting, Save.new_lessons
+	)
 
 
 func show_pause_menu() -> void:
@@ -1072,6 +1110,10 @@ func _on_menu_action(act: String) -> void:
 			Save.vibration_on = act == "vibration on"
 			Save.save_all()
 			Haptics.feel("toggle")
+			menus.show_options()
+		"ghost on", "ghost off":
+			Save.ghost_on = act == "ghost on"
+			Save.save_all()
 			menus.show_options()
 		"reduce motion on", "reduce motion off":
 			Save.reduce_motion = act == "reduce motion on"
@@ -1116,6 +1158,8 @@ func _on_menu_action(act: String) -> void:
 		"next level":
 			menus.close()
 			next_level()
+		"replay":
+			_start_replay()
 		"clear wardrobe":
 			menus.show_wardrobe(level)
 		"back to clear":
@@ -1141,7 +1185,7 @@ func _on_menu_action(act: String) -> void:
 		"completion done":
 			score += end_of_level_points
 			var pb := Save.submit_score(score)
-			Save.has_completed = true
+			_mark_completed()
 			Save.save_all()
 			game_active = false
 			hud.show_bar(false)
@@ -1189,6 +1233,8 @@ func _can_pause() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _tries.replay:
+		return  # the replay takes its own taps
 	if event.is_action_pressed("pause") and _can_pause():
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
@@ -1222,6 +1268,9 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if _tries.replay:
+		_end_replay()
+		return
 	if intro:
 		intro.advance()
 		return

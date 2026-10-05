@@ -309,6 +309,7 @@ func _open_every_sheet(check: Callable) -> void:
 	_pin_wardrobe(longest, released)
 	var sheets := [
 		func(): m.show_main(1842, true, 100),
+		func(): m.show_main(1842, true, 100, true),
 		func(): m.show_first_play(),
 		func(): m.show_options(),
 		func(): m.show_language(),
@@ -328,6 +329,7 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),
 		func(): m.show_game_complete(1842, 100, 100),
+		func(): m.show_game_complete(1842, 100, 100, true),
 		_wardrobe_sheet.bind(longest),
 		_wardrobe_sheet.bind("mapwoman"),
 		_wardrobe_sheet.bind("classic"),
