@@ -1109,6 +1109,8 @@ func show_start_menu() -> void:
 	menus.show_main(
 		Save.highscore, Save.has_any_checkpoint(), levels.size(), drafting, Save.new_lessons
 	)
+	# A level link that came in during the main game.
+	self.drafting.check_link()
 
 
 func show_pause_menu() -> void:
@@ -1257,6 +1259,7 @@ func _notification(what: int) -> void:
 			show_pause_menu()
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_inside_tree():
 		drafting.check_clipboard()
+		drafting.check_link()
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
 

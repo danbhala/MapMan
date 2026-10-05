@@ -25,7 +25,7 @@ runs:
           ~/godot
           ~/.local/share/godot/export_templates
           ~/Library/Application Support/Godot/export_templates
-        key: godot-${{ inputs.version }}-${{ runner.os }}-android-${{ inputs.android }}-ios-${{ inputs.ios }}
+        key: godot-${{ inputs.version }}-${{ runner.os }}-android-${{ inputs.android }}-gradle-ios-${{ inputs.ios }}
 
     - name: Download Godot
       if: steps.cache.outputs.cache-hit != 'true'
@@ -50,7 +50,7 @@ runs:
         fi
         rm /tmp/godot.zip
         wanted=()
-        [ "$ANDROID" = "true" ] && wanted+=(templates/android_release.apk)
+        [ "$ANDROID" = "true" ] && wanted+=(templates/android_release.apk templates/android_source.zip)
         [ "$IOS" = "true" ] && wanted+=(templates/ios.zip)
         if [ ${#wanted[@]} -gt 0 ]; then
           mkdir -p "$templates"

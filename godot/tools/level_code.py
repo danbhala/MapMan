@@ -307,7 +307,9 @@ def encode(rows, hidden, x_hides=25, delay=0.05, table=None):
 
 def clean(code):
     code = code.upper().strip()
-    if code.startswith('MAPMAN'):
+    if '/MAPMAN/' in code:
+        code = code.split('/MAPMAN/', 1)[1].split('?')[0].split('#')[0]
+    elif code.startswith('MAPMAN'):
         code = code[6:]
     out = ''
     for ch in code:

@@ -48,6 +48,16 @@ func test_reading_is_forgiving() -> void:
 	assert_eq(LevelCode.clean("0MM3-U"), "", "U is never in a code")
 
 
+func test_a_link_reads_like_a_code() -> void:
+	var code := LevelCode.encode(["bcdcw", "  p  "])
+	var link := LevelCode.link(code)
+	assert_eq(link, "https://danbhala.github.io/mapman/" + LevelCode.pretty(code))
+	assert_eq(LevelCode.decode(link).get("rows"), ["bcdcw", "  p  "])
+	# The QR code's capitals, and whatever a chat app tacks on.
+	assert_eq(LevelCode.find(link.to_upper() + "?utm=chat"), LevelCode.pretty(code))
+	assert_eq(LevelCode.find("https://danbhala.github.io/other/" + code), "")
+
+
 func test_typos_are_caught() -> void:
 	var code := LevelCode.clean(LevelCode.encode(["bcccccccw", "c d d d c", "ccccppccc"]))
 	var original := LevelCode.decode(code)

@@ -26,6 +26,10 @@ const B32 := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 ## What a shared code starts with, so a phone's camera or a chat shows whose
 ## it is; reading a code skips it.
 const PREFIX := "MAPMAN"
+## A shared level as a link: a phone opens it in the game, or, without the
+## game, on a page that shows the code (danbhala.github.io, site/). The QR
+## code writes it in capitals, which take fewer modules.
+const LINK := "https://danbhala.github.io/mapman/"
 const EDGE := -1
 const WEIGHT := 8
 const ADAPT := 8
@@ -277,12 +281,15 @@ static func decode(code: String) -> Dictionary:
 	}
 
 
-## A code reduced to its characters: upper case, without the MAPMAN prefix,
-## dashes or spaces, with O read as 0 and I or L as 1. "" when it holds
-## anything else.
+## A code reduced to its characters: upper case, without the MAPMAN prefix
+## or the link before it, dashes or spaces, with O read as 0 and I or L as 1.
+## "" when it holds anything else.
 static func clean(code: String) -> String:
 	var text := code.to_upper().strip_edges()
-	if text.begins_with(PREFIX):
+	var path := "/" + PREFIX + "/"
+	if text.contains(path):
+		text = text.get_slice(path, 1).get_slice("?", 0).get_slice("#", 0)
+	elif text.begins_with(PREFIX):
 		text = text.substr(PREFIX.length())
 	var out := ""
 	for ch in text:
@@ -304,6 +311,11 @@ static func pretty(code: String) -> String:
 	for i in range(0, text.length(), 4):
 		groups.append(text.substr(i, 4))
 	return "-".join(groups)
+
+
+## The link a level is shared as.
+static func link(code: String) -> String:
+	return LINK + pretty(code)
 
 
 ## How many characters a code takes, not counting dashes.

@@ -315,7 +315,8 @@ static func scan_status(m: Menus, kind: String) -> void:
 static func _on_scanned(text: String, m: Menus) -> void:
 	# A MAPMAN code from a newer game still goes on, to be told so.
 	var t := text.strip_edges()
-	if LevelCode.find(t) == "" and not t.to_upper().begins_with(LevelCode.PREFIX):
+	var ours := t.to_upper().begins_with(LevelCode.PREFIX) or t.to_upper().contains("/MAPMAN/")
+	if LevelCode.find(t) == "" and not ours:
 		scan_status(m, "not_a_level")
 	else:
 		m.action.emit("scanned " + t)
@@ -337,7 +338,7 @@ static func build_share(m: Menus, draft: Draft, copied := false) -> void:
 	if copied:
 		m._note(m.tr(TEXT.copied), 310, Blueprint.GOLD, 11)
 	var qr := TextureRect.new()
-	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.PREFIX + " " + code))
+	qr.texture = ImageTexture.create_from_image(qr_image(LevelCode.link(code).to_upper()))
 	qr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	qr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	qr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
