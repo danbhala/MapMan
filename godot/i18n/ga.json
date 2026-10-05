@@ -314,5 +314,17 @@
   "Camera view": "Radharc an cheamara",
   "ICE": "OIGHEAR",
   "SPIKES": "SPÍCEANNA",
-  "OFF-BEAT SPIKES": "SPÍCEANNA AR CHÚLBHUILLE"
+  "OFF-BEAT SPIKES": "SPÍCEANNA AR CHÚLBHUILLE",
+  "CONTROLS": "RIALUITHE",
+  "TILT": "CLAONADH",
+  "TOUCH": "TADHALL",
+  "DRAG TO MOVE": "TARRAING LE BOGADH",
+  "TILT SENSITIVITY": "ÍOGAIRE",
+  "LOW": "ÍSEAL",
+  "NORMAL": "GNÁTH",
+  "HIGH": "ARD",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NÓTA: TARRAING LE BOGADH · TAPÁIL AN BHILEOG LE SOS A GHLACADH",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Tadhaill agus tarraing áit ar bith le bogadh agus déan ar an tíl amach.\nThar an bhfáinne briste siúl, thar an bhfáinne iomlán rith.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ní ghlacann ach tapáil ghasta sos: má tharraingíonn tú, bogann MapMan.",
+  "TILT ONLY": "CLAONADH AMHÁIN"
 }

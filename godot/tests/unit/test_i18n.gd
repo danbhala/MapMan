@@ -15,6 +15,7 @@ const UNTRANSLATED := [
 	"001-E",
 	"001-F",
 	"001-G",
+	"001-H",
 	"D%d",
 	"R%d",
 	"D%d-S",
@@ -96,7 +97,9 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, DraftingSheet.TEXT]:
+	for table in [
+		Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, DraftingSheet.TEXT, ControlsSheet.TEXT
+	]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]
@@ -138,6 +141,9 @@ func test_data_text_is_in_the_catalog() -> void:
 	)
 	for level in tutorial.levels:
 		assert_true(msgids.has(level.description), "tutorial lesson: " + level.description)
+		var touch: String = level.get("description_touch", "")
+		if touch != "":
+			assert_true(msgids.has(touch), "tutorial lesson, touch: " + touch)
 	var levels: Dictionary = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/levels.json")
 	)
@@ -246,6 +252,13 @@ func _wardrobe_sheet(worn: String) -> void:
 	game.menus.show_wardrobe()
 
 
+## Sheet 001-H steering by touch: the tilt rows greyed out, TILT ONLY.
+func _controls_by_touch(m) -> void:
+	Save.controls = "touch"
+	m.show_controls()
+	Save.controls = "tilt"
+
+
 ## The drafting table's slots: a signed level, one still a draft (with an
 ## exit, so the status asks for a test) and empty ones.
 func _drafts() -> Array:
@@ -313,6 +326,8 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_first_play(),
 		func(): m.show_options(),
 		func(): m.show_language(),
+		func(): m.show_controls(),
+		_controls_by_touch.bind(m),
 		func(): m.show_pause(false, 35, 12),
 		func(): m.show_pause(true),
 		func(): m.show_confirm_quit(),

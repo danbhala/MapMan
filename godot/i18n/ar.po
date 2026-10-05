@@ -421,7 +421,7 @@ msgstr "أسرع!"
 msgid "GET READY..."
 msgstr "استعد..."
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "أمِل الهاتف للتحرك"
 
@@ -1194,3 +1194,55 @@ msgstr "أشواك"
 #. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
 msgid "OFF-BEAT SPIKES"
 msgstr "أشواك متأخرة"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "التحكم"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "الإمالة"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "اللمس"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "اسحب للتحرك"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "حساسية الميل"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "منخفضة"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "عادية"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "عالية"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "ملاحظة: اسحب للتحرك · انقر اللوحة للإيقاف المؤقت"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"المس واسحب في أي مكان لتتحرك في الخريطة وتوجه إلى بلاطة الخروج.\n"
+"تجاوز الحلقة المتقطعة للمشي، والمتصلة للركض."
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "انقر الشاشة أثناء اللعب للإيقاف المؤقت. النقرة السريعة وحدها توقف اللعب: إذا سحبت يتحرك MapMan."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "للإمالة فقط"

@@ -411,7 +411,7 @@ msgstr "急げ！"
 msgid "GET READY..."
 msgstr "よーい…"
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "傾けて移動"
 
@@ -1144,3 +1144,55 @@ msgstr "トゲ"
 #. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
 msgid "OFF-BEAT SPIKES"
 msgstr "裏拍のトゲ"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "操作"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "傾き"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "タッチ"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "ドラッグで移動"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "傾きの感度"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "低"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "標準"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "高"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "注記：ドラッグで移動 · 図面をタップで一時停止"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"どこでもタッチしてドラッグすると移動し、出口のタイルへ向かいます。\n"
+"点線の円を越えると歩き、実線の円を越えると走ります。"
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "プレイ中に画面をタップすると一時停止します。一時停止は短いタップだけ：ドラッグするとMapManが動きます。"
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "傾き操作のみ"

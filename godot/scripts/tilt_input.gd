@@ -1,6 +1,7 @@
 class_name TiltInput
 extends RefCounted
-## Turns device tilt, keys/gamepad, or a held touch into a steering vector.
+## Turns device tilt, keys/gamepad, the touch stick (TouchStick) or a held
+## touch into a steering vector.
 ## Port of shake.py plus the SimulatedTilt class from map_man.py.
 ##
 ## The vector is in screen terms: x > 0 means "go right", y > 0 means "go down".
@@ -18,6 +19,19 @@ const CALIBRATE_SECONDS := 0.25
 ## lean, not hand tremor: they end the averaging instead of joining it. Capped
 ## at the start threshold so a lean that moves MapMan is never averaged in.
 const CALIBRATE_SPREAD := 0.08
+## Options "TILT SENSITIVITY": how much tilt each level needs to walk and run,
+## as a multiple of the tuned thresholds (LOW, NORMAL, HIGH). The tilt is
+## divided by it, so the thresholds, and the gauge's rings, stay put.
+const SENSITIVITY: Array[float] = [1.5, 1.0, 0.7]
+## A touch on the stick that moves further than this is steering, not a tap,
+## and so is one held longer than STICK_TAP seconds.
+const STICK_SLOP := 8.0
+const STICK_TAP := 0.3
+
+## Steer with the touch stick instead of the phone (Options "CONTROLS").
+var stick := false
+## Index into SENSITIVITY (Save.tilt_sensitivity).
+var sensitivity := 1
 
 var screen_size := Vector2(667, 375)
 var _neutral := Vector3.ZERO
@@ -27,6 +41,12 @@ var _calibrate_left := 0.0
 var _touch_active := false
 var _touch_pos := Vector2.ZERO
 var _shake_key_latch := false
+## The touch stick: held, where the finger landed, and where it is now.
+var _stick_held := false
+var _stick_origin := Vector2.ZERO
+var _stick_at := Vector2.ZERO
+var _stick_down_at := 0
+var _stick_dragged := false
 
 
 static func has_accelerometer() -> bool:
@@ -75,13 +95,59 @@ func touch(pressed: bool, pos: Vector2) -> void:
 
 
 func touch_steering_enabled() -> bool:
-	return not has_accelerometer()
+	return not stick and not has_accelerometer()
+
+
+## A finger landed (the stick appears under it), moved, or lifted.
+func stick_press(pos: Vector2) -> void:
+	_stick_held = true
+	_stick_origin = pos
+	_stick_at = pos
+	_stick_down_at = Time.get_ticks_msec()
+	_stick_dragged = false
+
+
+func stick_drag(pos: Vector2) -> void:
+	if _stick_held:
+		_stick_at = pos
+		_stick_dragged = _stick_dragged or pos.distance_to(_stick_origin) > STICK_SLOP
+
+
+## Lets go; true when the touch was a tap (quick, and never dragged).
+func stick_release() -> bool:
+	var quick := Time.get_ticks_msec() - _stick_down_at < STICK_TAP * 1000.0
+	var tap := _stick_held and not _stick_dragged and quick
+	_stick_held = false
+	return tap
+
+
+func stick_held() -> bool:
+	return _stick_held
+
+
+func stick_origin() -> Vector2:
+	return _stick_origin
+
+
+## The knob's offset from the stick's centre, kept inside the rim.
+func stick_offset() -> Vector2:
+	return (_stick_at - _stick_origin).limit_length(TouchStick.RADIUS)
+
+
+## The stick in tilt units, drawn like the gauge: its rim is 1.5 × the
+## full-speed tilt, so its dashed and solid rings are where he walks and runs.
+func stick_vector() -> Vector2:
+	if not _stick_held:
+		return Vector2.ZERO
+	return stick_offset() / TouchStick.RADIUS * Dev.t("fast_threshold") * 1.5
 
 
 func get_vector() -> Vector2:
 	var keys := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if keys.length() > 0.0:
 		return keys.normalized() * KEY_TILT
+	if stick:
+		return stick_vector()
 	if has_accelerometer():
 		return _tilt_vector()
 	if _touch_active:
@@ -97,7 +163,13 @@ func _tilt_vector() -> Vector2:
 		v.x = -v.x
 	if Dev.t("invert_y"):
 		v.y = -v.y
-	return v
+	return sensitive(v)
+
+
+## A tilt as the chosen sensitivity reads it: on HIGH the same tilt counts for
+## more, so MapMan walks and runs with less of it.
+func sensitive(tilt: Vector2) -> Vector2:
+	return tilt / SENSITIVITY[clampi(sensitivity, 0, SENSITIVITY.size() - 1)]
 
 
 ## How far the device is tipped from `neutral`, as a steering vector.

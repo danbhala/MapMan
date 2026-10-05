@@ -413,9 +413,9 @@ msgstr "¡RÁPIDO!"
 msgid "GET READY..."
 msgstr "PREPÁRATE..."
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
-msgstr "INCLINA PARA MOVERTE"
+msgstr "INCLINA PARA IR"
 
 #. HUD note: a star was collected
 msgid "BONUS POINTS"
@@ -1154,3 +1154,55 @@ msgstr "PINCHOS"
 #. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
 msgid "OFF-BEAT SPIKES"
 msgstr "PINCHOS A CONTRATIEMPO"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "CONTROLES"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "INCLINAR"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "TÁCTIL"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "ARRASTRA PARA IR"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "SENSIBILIDAD"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "BAJA"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "NORMAL"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "ALTA"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NOTA: ARRASTRA PARA MOVERTE · TOCA LA HOJA PARA PAUSAR"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"Toca y arrastra en cualquier parte para moverte y ve hacia la casilla de salida.\n"
+"Pasa el aro punteado para andar, el aro sólido para correr."
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "Toca la pantalla durante la partida para pausar. Solo pausa un toque rápido: si arrastras, MapMan se mueve."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "SOLO INCLINAR"

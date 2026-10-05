@@ -45,6 +45,8 @@ var dev_panel: DevPanel
 var gauge: TiltGauge
 ## The intro and title screen at launch; null once the main menu is up.
 var intro: Intro
+## The CONTROLS sheet's choices and the touch stick.
+var steering: Steering
 ## Show the tilt gauge without an accelerometer (screenshots, desktop tests).
 var show_gauge_anyway := false
 
@@ -158,6 +160,7 @@ func _ready() -> void:
 	add_child(hud_layer)
 	hud = Hud.new()
 	hud_layer.add_child(hud)
+	steering = Steering.new(self, hud_layer)
 	gauge = TiltGauge.new()
 	gauge.visible = false
 	hud_layer.add_child(gauge)
@@ -172,6 +175,7 @@ func _ready() -> void:
 
 	get_viewport().size_changed.connect(_layout)
 	_layout()
+	steering.apply()
 	if Dev.enabled:
 		dev_panel = DevPanel.new(self)
 		add_child(dev_panel)
@@ -273,6 +277,7 @@ func started() -> bool:
 
 func _process(delta: float) -> void:
 	_update_gauge(delta)
+	steering.update()
 	if _tries.replay or menus.visible or not game_active:
 		return
 
@@ -315,6 +320,7 @@ func _update_gauge(delta: float) -> void:
 		game_active
 		and not menus.visible
 		and Save.tilt_gauge
+		and not tilt.stick
 		and (TiltInput.has_accelerometer() or show_gauge_anyway)
 	)
 	if not gauge.visible:
@@ -392,7 +398,7 @@ func set_background() -> void:
 
 ## The notes are English msgids that tr() translates (see i18n/catalog.json).
 func set_controls_message() -> void:
-	var shake := TiltInput.has_accelerometer() or not tilt.touch_steering_enabled()
+	var shake := TiltInput.has_accelerometer()
 	if _last_points >= 0.0:
 		hud.show_effect("points")
 		hud.set_controls_message(tr("BONUS POINTS"))
@@ -779,7 +785,8 @@ func load_level() -> void:
 		hud.set_time_message("")
 		_start_ending()
 	elif tutorial:
-		hud.set_tutorial_text(tr(data.get("description", "")))
+		var touch := tilt.stick and data.has("description_touch")  # tilting lessons
+		hud.set_tutorial_text(tr(data.get("description_touch" if touch else "description", "")))
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
 	else:
@@ -814,6 +821,7 @@ func reset_all(reset_stars := true) -> void:
 	set_background()
 	_update_stats()
 	tilt.touch(false, Vector2.ZERO)
+	tilt.stick_release()
 	_calibrate_pending = true
 	_landed_at = _now()
 	_apply_assists()
@@ -1200,8 +1208,8 @@ func _on_menu_action(act: String) -> void:
 			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
 			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
 		_:
-			if OptionsActions.handle(act, menus):
-				pass  # the Options sheet, its switches and the language sheet
+			if steering.handle(act) or OptionsActions.handle(act, menus):
+				pass  # the Options, CONTROLS and language sheets
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):
@@ -1240,20 +1248,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
 		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if not game_active or menus.visible:
-			return
-		if tilt.touch_steering_enabled():
-			# No accelerometer: hold towards an edge to steer (the original's
-			# tilt simulator). A fresh tap also frees MapMan from a sticky tile.
-			tilt.touch(event.pressed, event.position)
-			if event.pressed and stuck:
-				stuck = false
-		elif not event.pressed and _can_pause():
-			show_pause_menu()
-	elif event is InputEventMouseMotion and tilt.touch_steering_enabled():
-		if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-			tilt.touch(true, event.position)
+	steering.input(event)
 
 
 func _notification(what: int) -> void:
@@ -1292,7 +1287,7 @@ func go_back() -> void:
 			_on_menu_action("back to clear" if _between else "main menu")
 		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
-		"language":
+		"language", "controls":
 			_on_menu_action("options")
 		"main":
 			get_tree().quit()

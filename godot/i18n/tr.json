@@ -282,5 +282,17 @@
   "Camera view": "Kamera görüntüsü",
   "ICE": "BUZ",
   "SPIKES": "DİKENLER",
-  "OFF-BEAT SPIKES": "TERS VURUŞ DİKENLERİ"
+  "OFF-BEAT SPIKES": "TERS VURUŞ DİKENLERİ",
+  "CONTROLS": "KONTROLLER",
+  "TILT": "EĞME",
+  "TOUCH": "DOKUNMA",
+  "DRAG TO MOVE": "HAREKET İÇİN SÜRÜKLE",
+  "TILT SENSITIVITY": "HASSASİYET",
+  "LOW": "DÜŞÜK",
+  "NORMAL": "NORMAL",
+  "HIGH": "YÜKSEK",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NOT: HAREKET İÇİN SÜRÜKLE · DURAKLATMAK İÇİN PAFTAYA DOKUN",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Hareket etmek için herhangi bir yere dokunup sürükle ve çıkış karosuna git.\nKesikli halkayı geçince yürür, düz halkayı geçince koşarsın.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Duraklatmak için oyun sırasında ekrana dokun. Yalnızca kısa bir dokunuş duraklatır: sürüklersen MapMan hareket eder.",
+  "TILT ONLY": "YALNIZCA EĞME"
 }

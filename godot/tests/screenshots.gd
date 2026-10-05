@@ -103,6 +103,8 @@ func run() -> void:
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	save.tilt_gauge = true
+	save.controls = "tilt"
+	save.tilt_sensitivity = 1
 
 	game = load("res://scenes/main.tscn").instantiate()
 	# The tilt gauge only shows on phones; draw it here so the shots match them.
@@ -293,6 +295,26 @@ func run() -> void:
 	game._on_menu_action("wardrobe")
 	await frames(100)  # 22 cells cascade in, then WORN lands
 	await shot("25_wardrobe")
+
+	game._on_menu_action("main menu")
+	game._on_menu_action("options")
+	game._on_menu_action("controls")
+	await frames(70)
+	await shot("26_controls")
+
+	# Steering with the touch stick: the thumb held left, past the solid ring.
+	game._on_menu_action("controls touch")
+	game._on_menu_action("main menu")
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.tilt.stick_press(Vector2(150, 230))
+	game.tilt.stick_drag(Vector2(110, 236))
+	await frames(20)
+	await shot("27_touch_stick")
+	game.tilt.stick_release()
+	save.controls = "tilt"
+	game.steering.apply()
 	save.set_locale("")
 
 	if failures.is_empty():

@@ -31,6 +31,9 @@ func before_each() -> void:
 
 func after_each() -> void:
 	Save.reduce_motion = false
+	Save.controls = "tilt"
+	Save.tilt_sensitivity = 1
+	Save.tilt_gauge = true
 	Save.fx_on = true
 	Save.set_locale("")  # pressing every language button leaves the last one on
 	_wardrobe([])
@@ -108,12 +111,49 @@ func test_options_toggle_the_current_state() -> void:
 			"fx on",
 			"vibration off",
 			"reduce motion off",
-			"tilt gauge off",
 			"ghost off",
+			"controls",
 			"language",
 			"main menu"
 		]
 	)
+
+
+func test_controls_sheet_rows() -> void:
+	Save.controls = "tilt"
+	Save.tilt_sensitivity = 1
+	Save.tilt_gauge = true
+	game.menus.show_controls()
+	assert_eq(
+		_press_all(),
+		["controls tilt", "controls touch", "sensitivity 2", "tilt gauge off", "options"]
+	)
+	Save.controls = "tilt"  # pressing every row left touch on
+	Save.tilt_sensitivity = 2
+	game.menus.show_controls()
+	assert_has(_press_all(), "sensitivity 0", "HIGH comes round to LOW")
+
+
+func test_tilt_rows_grey_out_while_steering_by_touch() -> void:
+	Save.controls = "touch"
+	game.menus.show_controls()
+	assert_eq(_press_all(), ["controls tilt", "controls touch", "options"])
+
+
+func test_controls_choices_stay_on_the_sheet_and_back_goes_to_options() -> void:
+	game.menus.show_controls()
+	game._on_menu_action("controls touch")
+	assert_eq(Save.controls, "touch")
+	assert_true(game.tilt.stick, "the stick steers now")
+	assert_eq(game.menus.current, "controls")
+	game._on_menu_action("sensitivity 0")
+	assert_eq(Save.tilt_sensitivity, 0)
+	assert_eq(game.tilt.sensitivity, 0)
+	game._on_menu_action("controls tilt")
+	assert_false(game.tilt.stick)
+	game.go_back()
+	assert_eq(game.menus.current, "options")
+	Save.tilt_sensitivity = 1
 
 
 func test_language_sheet_lists_every_language() -> void:

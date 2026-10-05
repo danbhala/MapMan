@@ -2,7 +2,8 @@ class_name OptionsActions
 extends RefCounted
 ## The Options sheet's actions, for main.gd's menu actions: opening it, its
 ## switches ("<name> on" or "<name> off" sets the matching setting) and the
-## language sheet. Loads only with the game scene, so it may name Save.
+## language sheet (the CONTROLS sheet's are ControlsSheet's). Loads only with
+## the game scene, so it may name Save.
 
 
 ## Handles `act` if it is one of the Options sheet's; false if it isn't.
@@ -40,9 +41,6 @@ static func _switch(act: String) -> bool:
 			Save.save_all()
 		"reduce motion":
 			Save.reduce_motion = on
-			Save.save_all()
-		"tilt gauge":
-			Save.tilt_gauge = on
 			Save.save_all()
 		_:
 			return false

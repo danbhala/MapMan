@@ -15,6 +15,10 @@ var vibration_on := true
 var reduce_motion := false
 ## The tilt gauge in the corner of the field (TiltDial).
 var tilt_gauge := true
+## How MapMan is steered: "tilt" (the phone) or "touch" (the floating stick).
+var controls := "tilt"
+## How little tilt moves MapMan: 0 low, 1 normal, 2 high (TiltInput.SENSITIVITY).
+var tilt_sensitivity := 1
 ## Show the level's best run as a ghost beside MapMan.
 var ghost_on := true
 ## Locale code of the chosen language, or "" to follow the phone's.
@@ -104,6 +108,10 @@ func load_all(path := PATH) -> void:
 	vibration_on = _cfg.get_value("options", "vibration", true)
 	reduce_motion = _cfg.get_value("options", "reduce_motion", false)
 	tilt_gauge = _cfg.get_value("options", "tilt_gauge", true)
+	controls = _cfg.get_value("options", "controls", "tilt")
+	if controls not in ["tilt", "touch"]:
+		controls = "tilt"
+	tilt_sensitivity = clampi(_cfg.get_value("options", "tilt_sensitivity", 1), 0, 2)
 	ghost_on = _cfg.get_value("options", "ghost", true)
 	locale = _cfg.get_value("options", "locale", "")
 	# A language this build no longer ships falls back to the phone's.
@@ -164,6 +172,8 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("options", "vibration", vibration_on)
 	_cfg.set_value("options", "reduce_motion", reduce_motion)
 	_cfg.set_value("options", "tilt_gauge", tilt_gauge)
+	_cfg.set_value("options", "controls", controls)
+	_cfg.set_value("options", "tilt_sensitivity", tilt_sensitivity)
 	_cfg.set_value("options", "ghost", ghost_on)
 	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)

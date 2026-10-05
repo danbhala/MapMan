@@ -84,8 +84,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options":
-	["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE", "BEST-RUN GHOST"],
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -103,6 +102,7 @@ const TEXT := {
 	"end_game": "END GAME",
 	"end_tutorial": "END TUTORIAL",
 	"pause_note": "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE",
+	"pause_note_touch": "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE",
 	"on_hold": "ON HOLD",
 	"confirm_title": "CONFIRM",
 	"confirm_question": "END THIS GAME?\nPROGRESS SINCE THE LAST CHECKPOINT IS LOST",
@@ -921,15 +921,8 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [
-		Save.music_on,
-		Save.fx_on,
-		Save.vibration_on,
-		Save.reduce_motion,
-		Save.tilt_gauge,
-		Save.ghost_on,
-	]
-	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge", "ghost"]
+	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.ghost_on]
+	var acts := ["music", "fx", "vibration", "reduce motion", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
@@ -942,26 +935,34 @@ func show_options() -> void:
 		b.pressed.connect(_remember_row.bind(i))
 		if i == refocus:
 			_first_button = b
-	var lang := _value_row(
-		_t("language_title"), _language_name(Save.locale), OPTIONS_TOP + acts.size() * OPTIONS_PITCH
-	)
+	var y := OPTIONS_TOP + acts.size() * OPTIONS_PITCH
+	var steer := _value_row(tr(ControlsSheet.TEXT.title), ControlsSheet.mode_name(), y)
+	_connect(steer, "controls")
+	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
-	_return_item(OPTIONS_TOP + (acts.size() + 1) * OPTIONS_PITCH, OPTIONS_PITCH)
+	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
 	_hero_on("tilt")
 	_focus_first()
 
 
-## An options row: the parameter on the left, its value in the VALUE column.
-func _value_row(name: String, value: String, y: float) -> Button:
+## 001-H, from the options: how MapMan is steered (ControlsSheet).
+func show_controls() -> void:
+	ControlsSheet.build(self)
+
+
+## An options row: the parameter on the left, its value in the VALUE column;
+## greyed out and untappable when not `enabled`.
+func _value_row(name: String, value: String, y: float, enabled := true) -> Button:
 	var size := Vector2(LIST_W, OPTIONS_PITCH)
-	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size)
+	var b := Blueprint.item(_panel, name, Vector2(_mx(LIST_X, LIST_W), y), size, enabled)
 	b.alignment = _align()
 	# The value column runs from 20 characters in to the row's far margin, at
 	# the mirror image on a right-to-left sheet.
 	var col := TEXT_X - LIST_X + 20 * CHAR_W
 	var w := LIST_W - col - 12.0
 	var pos := Vector2(12.0 if _rtl else col, 0)
-	var l := Blueprint.label(b, value, 16, Blueprint.INK, pos, 500, w)
+	var ink := Blueprint.INK if enabled else Blueprint.DIM
+	var l := Blueprint.label(b, value, 16, ink, pos, 500, w)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if _rtl else HORIZONTAL_ALIGNMENT_LEFT
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -1019,7 +1020,7 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 
 ## The pause sheet under its first two rows: the note, MapMan and the stamp.
 func _pause_tail() -> void:
-	_note(_t("pause_note"), 200)
+	_note(_t("pause_note_touch" if Save.controls == "touch" else "pause_note"), 200)
 	_hero_on("tilt")
 	var hold := Vector2(_mx(230, 120.0), 240)
 	_reveal(Blueprint.stamp(_panel, _t("on_hold"), hold, Blueprint.GOLD))

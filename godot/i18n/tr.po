@@ -411,7 +411,7 @@ msgstr "ACELE ET!"
 msgid "GET READY..."
 msgstr "HAZIR OL..."
 
-#. HUD note on level 1
+#. Controls row: steer by tilting the device (also a HUD note on level 1)
 msgid "TILT TO MOVE"
 msgstr "HAREKET İÇİN EĞ"
 
@@ -1144,3 +1144,55 @@ msgstr "DİKENLER"
 #. Editor palette: spikes that rise and fall half a beat after the others, so rows of them make a wave
 msgid "OFF-BEAT SPIKES"
 msgstr "TERS VURUŞ DİKENLERİ"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "KONTROLLER"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "EĞME"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "DOKUNMA"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "HAREKET İÇİN SÜRÜKLE"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "HASSASİYET"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "DÜŞÜK"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "NORMAL"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "YÜKSEK"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NOT: HAREKET İÇİN SÜRÜKLE · DURAKLATMAK İÇİN PAFTAYA DOKUN"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"Hareket etmek için herhangi bir yere dokunup sürükle ve çıkış karosuna git.\n"
+"Kesikli halkayı geçince yürür, düz halkayı geçince koşarsın."
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "Duraklatmak için oyun sırasında ekrana dokun. Yalnızca kısa bir dokunuş duraklatır: sürüklersen MapMan hareket eder."
+
+#. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
+msgid "TILT ONLY"
+msgstr "YALNIZCA EĞME"

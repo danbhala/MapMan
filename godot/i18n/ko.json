@@ -282,5 +282,17 @@
   "Camera view": "카메라 화면",
   "ICE": "얼음",
   "SPIKES": "가시",
-  "OFF-BEAT SPIKES": "엇박 가시"
+  "OFF-BEAT SPIKES": "엇박 가시",
+  "CONTROLS": "조작",
+  "TILT": "기울기",
+  "TOUCH": "터치",
+  "DRAG TO MOVE": "드래그해서 이동",
+  "TILT SENSITIVITY": "기울기 감도",
+  "LOW": "낮음",
+  "NORMAL": "보통",
+  "HIGH": "높음",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "주: 드래그해서 이동 · 도면을 탭하면 일시정지",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "아무 곳이나 터치하고 드래그해 이동하고 출구 타일로 가세요.\n점선 원을 넘으면 걷기, 실선 원을 넘으면 달리기.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "플레이 중 화면을 탭하면 일시정지됩니다. 짧게 탭할 때만 일시정지되고, 드래그하면 MapMan이 움직입니다.",
+  "TILT ONLY": "기울기 전용"
 }
