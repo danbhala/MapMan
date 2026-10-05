@@ -207,5 +207,16 @@
   "NEXT": "SUIVANT",
   "MENU": "MENU",
   "TAP TO START": "TOUCHEZ POUR COMMENCER",
-  "SKIP": "PASSER"
+  "SKIP": "PASSER",
+  "CONTROLS": "COMMANDES",
+  "TILT": "INCLINAISON",
+  "TOUCH": "TACTILE",
+  "DRAG TO MOVE": "GLISSEZ POUR BOUGER",
+  "TILT SENSITIVITY": "SENSIBILITÉ",
+  "LOW": "FAIBLE",
+  "NORMAL": "NORMALE",
+  "HIGH": "ÉLEVÉE",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NOTE : GLISSEZ POUR BOUGER · TOUCHEZ LA PLANCHE : PAUSE",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Touchez et glissez n'importe où pour vous déplacer et rejoignez la case de sortie.\nDépassez le cercle pointillé pour marcher, le cercle plein pour courir.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Touchez l'écran pendant la partie pour faire une pause. Seul un toucher rapide met en pause : si vous glissez, MapMan bouge."
 }

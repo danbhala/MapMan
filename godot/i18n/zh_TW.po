@@ -826,3 +826,51 @@ msgstr "點一下開始"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "略過"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "操作"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "傾斜"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "觸控"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "拖曳移動"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "傾斜靈敏度"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "低"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "標準"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "高"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "註：拖曳移動 · 點一下圖面暫停"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"在任何位置按住並拖曳即可移動，前往出口地磚。\n"
+"超過虛線圈走路，超過實線圈奔跑。"
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "遊戲中點一下螢幕即可暫停。只有快速點一下才會暫停：拖曳時MapMan會移動。"

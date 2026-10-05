@@ -834,3 +834,51 @@ msgstr "TOQUE PARA COMEÇAR"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "PULAR"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "CONTROLES"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "INCLINAR"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "TOQUE"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "ARRASTE PARA MOVER"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "SENSIBILIDADE"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "BAIXA"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "NORMAL"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "ALTA"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NOTA: ARRASTE PARA MOVER · TOQUE NA FOLHA PARA PAUSAR"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"Toque e arraste em qualquer lugar para se mover e vá até o bloco de saída.\n"
+"Passe do anel tracejado para andar, do anel cheio para correr."
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "Toque na tela durante o jogo para pausar. Só um toque rápido pausa: se você arrastar, o MapMan se move."

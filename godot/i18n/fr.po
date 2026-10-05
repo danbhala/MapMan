@@ -834,3 +834,51 @@ msgstr "TOUCHEZ POUR COMMENCER"
 #. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
 msgid "SKIP"
 msgstr "PASSER"
+
+#. Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)
+msgid "CONTROLS"
+msgstr "COMMANDES"
+
+#. Options value: MapMan is steered by tilting the device
+msgid "TILT"
+msgstr "INCLINAISON"
+
+#. Options value: MapMan is steered with the on-screen touch stick
+msgid "TOUCH"
+msgstr "TACTILE"
+
+#. Controls row: steer with an on-screen stick that appears where a finger touches and drags
+msgid "DRAG TO MOVE"
+msgstr "GLISSEZ POUR BOUGER"
+
+#. Controls row: how little tilt moves MapMan
+msgid "TILT SENSITIVITY"
+msgstr "SENSIBILITÉ"
+
+#. Tilt sensitivity value: needs more tilt
+msgid "LOW"
+msgstr "FAIBLE"
+
+#. Tilt sensitivity value: the default
+msgid "NORMAL"
+msgstr "NORMALE"
+
+#. Tilt sensitivity value: needs less tilt
+msgid "HIGH"
+msgstr "ÉLEVÉE"
+
+#. Pause sheet small print when steering with the touch stick
+msgid "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE"
+msgstr "NOTE : GLISSEZ POUR BOUGER · TOUCHEZ LA PLANCHE : PAUSE"
+
+#. Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)
+msgid ""
+"Touch and drag anywhere to move around the map and head for the exit tile.\n"
+"Drag past the dashed ring to walk, past the solid ring to run."
+msgstr ""
+"Touchez et glissez n'importe où pour vous déplacer et rejoignez la case de sortie.\n"
+"Dépassez le cercle pointillé pour marcher, le cercle plein pour courir."
+
+#. Tutorial lesson 11 when steering with the touch stick
+msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+msgstr "Touchez l'écran pendant la partie pour faire une pause. Seul un toucher rapide met en pause : si vous glissez, MapMan bouge."

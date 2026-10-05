@@ -207,5 +207,16 @@
   "NEXT": "WEITER",
   "MENU": "MENÜ",
   "TAP TO START": "ZUM STARTEN ANTIPPEN",
-  "SKIP": "ÜBERSPRINGEN"
+  "SKIP": "ÜBERSPRINGEN",
+  "CONTROLS": "STEUERUNG",
+  "TILT": "NEIGEN",
+  "TOUCH": "TOUCH",
+  "DRAG TO MOVE": "ZUM BEWEGEN ZIEHEN",
+  "TILT SENSITIVITY": "EMPFINDLICHKEIT",
+  "LOW": "NIEDRIG",
+  "NORMAL": "NORMAL",
+  "HIGH": "HOCH",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "HINWEIS: ZUM BEWEGEN ZIEHEN · ZUM PAUSIEREN BLATT ANTIPPEN",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Tippe irgendwo und ziehe, um dich zu bewegen, und steuere das Ausgangsfeld an.\nÜber den gestrichelten Ring hinaus gehen, über den vollen Ring rennen.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Tippe während des Spiels auf den Bildschirm, um zu pausieren. Nur kurzes Tippen pausiert: Wenn du ziehst, läuft MapMan."
 }

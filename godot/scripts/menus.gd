@@ -89,7 +89,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "TILT GAUGE"],
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -107,6 +107,7 @@ const TEXT := {
 	"end_game": "END GAME",
 	"end_tutorial": "END TUTORIAL",
 	"pause_note": "NOTE: TILT TO MOVE · TAP THE SHEET TO PAUSE",
+	"pause_note_touch": "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE",
 	"on_hold": "ON HOLD",
 	"confirm_title": "CONFIRM",
 	"confirm_question": "END THIS GAME?\nPROGRESS SINCE THE LAST CHECKPOINT IS LOST",
@@ -906,10 +907,8 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [
-		Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.tilt_gauge
-	]
-	var acts := ["music", "fx", "vibration", "reduce motion", "tilt gauge"]
+	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
+	var acts := ["music", "fx", "vibration", "reduce motion"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
@@ -922,13 +921,19 @@ func show_options() -> void:
 		b.pressed.connect(_remember_row.bind(i))
 		if i == refocus:
 			_first_button = b
-	var lang := _value_row(
-		_t("language_title"), _language_name(Save.locale), OPTIONS_TOP + acts.size() * OPTIONS_PITCH
-	)
+	var y := OPTIONS_TOP + acts.size() * OPTIONS_PITCH
+	var steer := _value_row(tr(ControlsSheet.TEXT.title), ControlsSheet.mode_name(), y)
+	_connect(steer, "controls")
+	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
-	_return_item(OPTIONS_TOP + (acts.size() + 1) * OPTIONS_PITCH, OPTIONS_PITCH)
+	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
 	_hero_on("tilt")
 	_focus_first()
+
+
+## 001-E, from the options: how MapMan is steered (ControlsSheet).
+func show_controls() -> void:
+	ControlsSheet.build(self)
 
 
 ## An options row: the parameter on the left, its value in the VALUE column.
@@ -1050,7 +1055,7 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 		_item(2, _t("end_tutorial"), "end tutorial", 138)
 	else:
 		_item(2, _t("end_game"), "confirm quit", 138)
-	_note(_t("pause_note"), 200)
+	_note(_t("pause_note_touch" if Save.controls == "touch" else "pause_note"), 200)
 	_hero_on("tilt")
 	var hold := Vector2(_mx(230, 120.0), 240)
 	_reveal(Blueprint.stamp(_panel, _t("on_hold"), hold, Blueprint.GOLD))

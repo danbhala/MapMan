@@ -12,6 +12,7 @@ const UNTRANSLATED := [
 	"001-B",
 	"001-C",
 	"001-D",
+	"001-E",
 	"%d/%d",
 	"END",
 	"CP",
@@ -88,7 +89,7 @@ func _has_letters(text: String) -> bool:
 
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
-	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT]:
+	for table in [Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, ControlsSheet.TEXT]:
 		for key in table:
 			var value = table[key]
 			var texts: Array = value if value is Array else [value]
@@ -125,6 +126,9 @@ func test_data_text_is_in_the_catalog() -> void:
 	)
 	for level in tutorial.levels:
 		assert_true(msgids.has(level.description), "tutorial lesson: " + level.description)
+		var touch: String = level.get("description_touch", "")
+		if touch != "":
+			assert_true(msgids.has(touch), "tutorial lesson, touch: " + touch)
 	var levels: Dictionary = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/levels.json")
 	)

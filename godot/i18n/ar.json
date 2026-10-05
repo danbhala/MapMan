@@ -231,5 +231,16 @@
   "NEXT": "التالي",
   "MENU": "القائمة",
   "TAP TO START": "انقر للبدء",
-  "SKIP": "تخطي"
+  "SKIP": "تخطي",
+  "CONTROLS": "التحكم",
+  "TILT": "الإمالة",
+  "TOUCH": "اللمس",
+  "DRAG TO MOVE": "اسحب للتحرك",
+  "TILT SENSITIVITY": "حساسية الميل",
+  "LOW": "منخفضة",
+  "NORMAL": "عادية",
+  "HIGH": "عالية",
+  "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "ملاحظة: اسحب للتحرك · انقر اللوحة للإيقاف المؤقت",
+  "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "المس واسحب في أي مكان لتتحرك في الخريطة وتوجه إلى بلاطة الخروج.\nتجاوز الحلقة المتقطعة للمشي، والمتصلة للركض.",
+  "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "انقر الشاشة أثناء اللعب للإيقاف المؤقت. النقرة السريعة وحدها توقف اللعب: إذا سحبت يتحرك MapMan."
 }

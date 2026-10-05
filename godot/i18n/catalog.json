@@ -1033,6 +1033,61 @@
       "id": "SKIP",
       "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
       "max": 12
+    },
+    {
+      "id": "CONTROLS",
+      "note": "Options row and sheet title: how MapMan is steered (tilting the device or the on-screen touch stick)",
+      "max": 18
+    },
+    {
+      "id": "TILT",
+      "note": "Options value: MapMan is steered by tilting the device",
+      "max": 14
+    },
+    {
+      "id": "TOUCH",
+      "note": "Options value: MapMan is steered with the on-screen touch stick",
+      "max": 14
+    },
+    {
+      "id": "DRAG TO MOVE",
+      "note": "Controls row: steer with an on-screen stick that appears where a finger touches and drags",
+      "max": 18
+    },
+    {
+      "id": "TILT SENSITIVITY",
+      "note": "Controls row: how little tilt moves MapMan",
+      "max": 18
+    },
+    {
+      "id": "LOW",
+      "note": "Tilt sensitivity value: needs more tilt",
+      "max": 14
+    },
+    {
+      "id": "NORMAL",
+      "note": "Tilt sensitivity value: the default",
+      "max": 14
+    },
+    {
+      "id": "HIGH",
+      "note": "Tilt sensitivity value: needs less tilt",
+      "max": 14
+    },
+    {
+      "id": "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE",
+      "note": "Pause sheet small print when steering with the touch stick",
+      "max": 60
+    },
+    {
+      "id": "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.",
+      "note": "Tutorial lesson 1 when steering with the touch stick (two lines, up to about 85 characters a line)",
+      "max": 170
+    },
+    {
+      "id": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.",
+      "note": "Tutorial lesson 11 when steering with the touch stick",
+      "max": 170
     }
   ]
 }

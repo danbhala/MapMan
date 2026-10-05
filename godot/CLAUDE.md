@@ -55,10 +55,17 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `scripts/dev_panel.gd` is the DEV button, dev menu and tilt readout. Never
   let a cheat work when `Dev.enabled` is false.
 - `scripts/tilt_gauge.gd` is the players' tilt gauge in the field's
-  bottom-right corner (Options "TILT GAUGE", `Save.tilt_gauge`); tapping it
+  bottom-right corner (CONTROLS sheet "TILT GAUGE", `Save.tilt_gauge`); tapping it
   recentres (`main.gd` `recentre()`) and never reaches the field, so it never
   pauses. It only shows on phones with an accelerometer; tests and
   screenshots set `show_gauge_anyway`.
+- Options' CONTROLS row opens sheet 001-E (`scripts/controls_sheet.gd`):
+  TILT TO MOVE or DRAG TO MOVE (`Save.controls`), TILT SENSITIVITY
+  (`Save.tilt_sensitivity`, `TiltInput.SENSITIVITY` divides the tilt, so
+  the thresholds and the gauge's rings stay put) and the tilt gauge. DRAG TO
+  MOVE steers with `scripts/touch_stick.gd`, a floating stick drawn like the
+  gauge that appears where a finger lands; `main.gd` `_stick_input()` feeds
+  it through `TiltInput`, and a quick tap that never drags still pauses.
 - Everything is built in code; `scenes/main.tscn` is just the root node.
 - Languages: every player-facing string is an English msgid passed to `tr()`
   (plurals through `tr_n()`), listed with a note and a width budget in

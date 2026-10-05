@@ -14,7 +14,8 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Tilt your device to move around the map and head for the exit tile.\nThe gauge in the corner shows your tilt: dashed ring to walk, solid ring to run."
+   "description": "Tilt your device to move around the map and head for the exit tile.\nThe gauge in the corner shows your tilt: dashed ring to walk, solid ring to run.",
+   "description_touch": "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run."
   },
   {
    "number": 2,
@@ -190,7 +191,8 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre."
+   "description": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
+   "description_touch": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
   },
   {
    "number": 13,
