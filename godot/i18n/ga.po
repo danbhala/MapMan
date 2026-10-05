@@ -391,6 +391,10 @@ msgstr "BEATHAÍ FÁGTHA ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "AN 100 BILEOG AR FAD FAOFA · GO RAIBH MAITH AGAT AS IMIRT"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NÓTA: TÁ CEACHTANNA NUA SA TEAGASC"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "FAOFA"

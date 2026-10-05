@@ -383,6 +383,10 @@ msgstr "남은 목숨 ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "도면 100장 모두 승인 · 플레이해 주셔서 감사합니다"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "참고: 튜토리얼에 새 레슨이 추가됨"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "승인"

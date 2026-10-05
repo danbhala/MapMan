@@ -385,6 +385,10 @@ msgstr "LEBEN ÜBRIG ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "ALLE 100 BLÄTTER GENEHMIGT · DANKE FÜRS SPIELEN"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "HINWEIS: DAS TUTORIAL HAT NEUE LEKTIONEN"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "GENEHMIGT"

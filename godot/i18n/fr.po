@@ -385,6 +385,10 @@ msgstr "VIES RESTANTES ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "100 PLANCHES APPROUVÉES · MERCI D'AVOIR JOUÉ"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "NOTE : LE TUTORIEL A DE NOUVELLES LEÇONS"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "APPROUVÉ"

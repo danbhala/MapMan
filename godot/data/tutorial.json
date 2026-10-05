@@ -125,7 +125,8 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead."
+   "description": "These tiles crumble away once you step off them.\nThere is no going back, so plan the way ahead.",
+   "rev_b": true
   },
   {
    "number": 9,

@@ -243,6 +243,7 @@ func run() -> void:
 	# Other languages: a mirrored Arabic sheet, Japanese and Russian text, and
 	# the HUD's notes in Arabic during play.
 	save.set_locale("ar")
+	save.new_lessons = true  # the NEW tag on TUTORIAL, mirrored (set by the ending above)
 	game._on_menu_action("main menu")
 	await frames(70)
 	await shot("21_main_menu_ar")

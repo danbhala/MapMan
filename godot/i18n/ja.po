@@ -383,6 +383,10 @@ msgstr "残機 ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "全100図面承認済 · 遊んでくれてありがとう"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "注記：チュートリアルに新しいレッスンが追加"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "承認"
