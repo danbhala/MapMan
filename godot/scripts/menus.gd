@@ -32,9 +32,9 @@ const CHIP_PAD := 10.0
 const CHIP_GAP := 8.0
 const CHIP_ROW_W := SHEET.x - 2 * LIST_X
 const ROW_H := 34.0
-## The options sheet's rows: seven of them, a little tighter than TAP_HEIGHT.
+## The options sheet's rows: eight of them, tighter than TAP_HEIGHT.
 const OPTIONS_TOP := 78.0
-const OPTIONS_PITCH := 40.0
+const OPTIONS_PITCH := 35.0
 ## Where MapMan stands, how big he is, and his height in his own units as
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
@@ -89,7 +89,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
-	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION"],
+	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
 	# 001-C — language
@@ -175,6 +175,8 @@ const TEXT := {
 	"completion_bonus": "COMPLETION BONUS",
 	"lives_bonus": "LIVES REMAINING ×50",
 	"completion_caption": "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING",
+	"new_lessons": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+	"new": "NEW",
 	"approved": "APPROVED",
 	# for screen readers
 	"a11y_previous": "Previous page",
@@ -879,11 +881,13 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
-func show_main(highscore: int, has_checkpoint: bool, levels := 0) -> void:
+func show_main(highscore: int, has_checkpoint: bool, levels := 0, new_lessons := false) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
 	_items(_tl("main_items"), acts, 80, 44, [true, has_checkpoint, true, true, true])
+	if new_lessons:  # a NEW tag on the TUTORIAL row
+		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, 80 + 3 * 44 - 10.0)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
@@ -907,8 +911,8 @@ func show_first_play() -> void:
 func show_options() -> void:
 	_open("options", TEXT.options_number, _t("options_title"))
 	_columns([_t("col_parameter"), _t("col_value")], [TEXT_X, TEXT_X + 20 * CHAR_W])
-	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion]
-	var acts := ["music", "fx", "vibration", "reduce motion"]
+	var states := [Save.music_on, Save.fx_on, Save.vibration_on, Save.reduce_motion, Save.ghost_on]
+	var acts := ["music", "fx", "vibration", "reduce motion", "ghost"]
 	var refocus := _refocus_row if not _animate else -1
 	_refocus_row = -1
 	var names := _tl("options")
@@ -1225,7 +1229,7 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
 ## WARDROBE and MAIN MENU. released: the look this first clear released, if
-## any.
+## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1235,10 +1239,11 @@ func show_end_level(
 	level := 0,
 	seconds_left := -1,
 	last := false,
-	released := ""
+	released := "",
+	tries := 0
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released]
+	_clear_args = args + [last, released, tries]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
 
@@ -1266,7 +1271,9 @@ func show_congratulations(score: int, pb: bool, released := "") -> void:
 
 
 ## The final inspection: the completion and lives bonuses join the score.
-func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> void:
+func show_game_complete(
+	score: int, completion_bonus: int, lives_bonus: int, new_lessons := false
+) -> void:
 	_open("completion", TEXT.end_sheet, _t("completion_title"), Blueprint.GOLD)
 	_columns([_t("col_item"), _t("col_value")], [LIST_X], true)
 	var specs := [
@@ -1282,6 +1289,8 @@ func show_game_complete(score: int, completion_bonus: int, lives_bonus: int) -> 
 		y += ROW_H
 	var total := _total(y + 4, str(score))
 	_note(_t("completion_caption"), 260, Blueprint.GOLD, 11)
+	if new_lessons:
+		_note(_t("new_lessons"), 282)
 	_pair_on()
 	var approved := Vector2(458, _over_head(84, PAIR_FEET))
 	ClearSheet.count_up(

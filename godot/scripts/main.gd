@@ -19,10 +19,6 @@ const ASSIST_MARKS := 2  # hidden death tiles are marked, and a death step needs
 const ASSIST_ROUTE := 4  # the safe route is sketched as each try starts
 const ASSIST_SKIP := 6  # the lost-life sheet offers to skip the sheet
 const ROUTE_SKETCH_SECONDS := 2.5
-## A touch that moves further than this is steering the stick, not a tap.
-const STICK_SLOP := 8.0
-## A touch held longer than this isn't a tap either (seconds).
-const STICK_TAP := 0.3
 
 ## The frame, grid and notes take an effect's colour while it is on.
 const REVERSE_COLOR := Blueprint.PINK
@@ -34,7 +30,8 @@ const HIDDEN_COLOR := Blueprint.MINT
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
 var levels: Array = []
-var tutorial_levels: Array = []
+var tutorial_levels: Array = []  # the lessons on offer now (see lessons())
+var tutorial_all: Array = []  # every lesson in data/tutorial.json
 var completion_level: Dictionary = {}
 var check_point_levels: Array = []
 
@@ -83,10 +80,6 @@ var _was_moving := false
 var _lose_reason := "death"
 
 var _moves := 0  # moves made in this attempt at the level, for the play log
-## When the finger now on the touch stick landed, and whether it has dragged:
-## a quick tap that never dragged pauses, as it does with tilt.
-var _stick_down_at := 0.0
-var _stick_dragged := false
 ## The direction the player was last steering, so it only needs keep_threshold.
 var _held_step := Vector2i.ZERO
 ## When MapMan last came to rest on a tile; with the assists on, a step onto a
@@ -108,6 +101,10 @@ var _practice_page := 0
 ## from it, and each of those goes back to it.
 var _between := false
 
+# every try at this level (for the replay), the best run beside the player
+# (made when first needed: a Player draws on the random numbers), the replay
+var _tries := Tries.new()
+
 # countdown
 var _time_left := INITIAL_SECONDS
 var _timer_running := false
@@ -123,6 +120,7 @@ var _last_hide := -1.0
 
 func _ready() -> void:
 	_load_data()
+	add_child(_tries)
 
 	var bg_layer := CanvasLayer.new()
 	bg_layer.layer = -10
@@ -196,9 +194,10 @@ func _load_data() -> void:
 	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/levels.json"))
 	levels = data["levels"]
 	check_point_levels = data["check_points"]
-	tutorial_levels = (
+	tutorial_all = (
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/tutorial.json"))["levels"]
 	)
+	tutorial_levels = lessons()
 	completion_level = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/completion.json")
 	)
@@ -271,7 +270,7 @@ func started() -> bool:
 func _process(delta: float) -> void:
 	_update_gauge(delta)
 	_update_stick()
-	if menus.visible or not game_active:
+	if _tries.replay or menus.visible or not game_active:
 		return
 
 	_update_timer(delta)
@@ -283,6 +282,7 @@ func _process(delta: float) -> void:
 		if player.death_finished():
 			finish_lose_life()
 	elif started():
+		_tries.tick(map, delta)
 		move_player(delta)
 		update_player(delta)
 		_update_stats()
@@ -300,6 +300,8 @@ func loaded() -> void:
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
 	if not tutorial:
+		if not completed:
+			_tries.begin(level, player.outfit)
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
@@ -559,11 +561,33 @@ func _guarded(actual: Vector2i) -> bool:
 func move(step: Vector2i, seconds: float) -> void:
 	map.move(-step if reverse else step, seconds)
 	if map.moving:
+		_tries.step(-step if reverse else step, seconds)
 		map.update_move(0.0)
 		Audio.play_step()
 		_moves += 1
 		if vanish > 0:
 			vanish -= 1
+
+
+# --- tries, the replay and the best-run ghost ----------------------------------
+
+
+## WATCH REPLAY: the level again, every try on it at once. The level clear
+## waits, hidden, and comes back when the replay ends or is tapped away.
+func _start_replay() -> void:
+	if _tries.replay or not _tries.replayable(level):
+		return
+	menus.visible = false
+	hud.visible = false
+	player.vanish()
+	map.load_level(_current_level_data(), _screen_size())
+	_tries.play(map).finished.connect(_end_replay)
+
+
+func _end_replay() -> void:
+	if _tries.stop_replay():
+		hud.visible = true
+		menus.redraw()
 
 
 # --- tile rules (update_player) --------------------------------------------
@@ -849,8 +873,11 @@ func advance_level(check_point: bool) -> void:
 		losses.erase(level)
 	if not tutorial:
 		var new_best := false
+		var run := _tries.end("win", _time_left)
 		if not (Dev.enabled and Dev.unlimited_time):  # a frozen clock isn't a best
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
+			if run:
+				Save.record_ghost(level, run)
 		if practice:
 			Audio.play("end_level")
 			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
@@ -874,8 +901,9 @@ func advance_level(check_point: bool) -> void:
 	var clock := _seconds_remaining()
 	var last := level >= levels.size()
 	_between = true
+	var tries := _tries.list.size() if _tries.replayable(level) else 0
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released
+		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, tries
 	)
 
 
@@ -907,12 +935,30 @@ func finish_advancing_level() -> void:
 			# Past the last level: the bonus map where MapWoman waits. Finishing
 			# the game releases her into the wardrobe.
 			completed = true
-			Save.has_completed = true
+			_mark_completed()
 			Save.release("mapwoman")
 			Save.save_all()
 			hud.show_stats(false)
 	load_level()
 	reset_all()
+
+
+## The tutorial's lessons for this player: the Revision B ones (new tiles
+## for the second playthrough, `rev_b` in tutorial.json) wait until the
+## game has been finished once.
+func lessons() -> Array:
+	return tutorial_all.filter(
+		func(l: Dictionary) -> bool: return not l.get("rev_b", false) or Save.has_completed
+	)
+
+
+## Finishing the game. The first time, the lessons it adds to the tutorial
+## are news: the completion sheet and the main menu say so until it is played.
+func _mark_completed() -> void:
+	if not Save.has_completed and lessons().size() < tutorial_all.size():
+		Save.new_lessons = true
+	Save.has_completed = true
+	tutorial_levels = lessons()
 
 
 func show_game_complete() -> void:
@@ -922,7 +968,7 @@ func show_game_complete() -> void:
 	var lives_bonus := lives * LIFE_BONUS
 	end_of_level_points = COMPLETION_BONUS + lives_bonus
 	Audio.play_completion()
-	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus)
+	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus, Save.new_lessons)
 
 
 func new_game(start_level := 1, is_tutorial := false) -> void:
@@ -931,9 +977,16 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 		Save.save_all()
 	Audio.play_game()
 	tutorial = is_tutorial
+	if tutorial:
+		tutorial_levels = lessons()
+		if Save.new_lessons:  # the news has been read
+			Save.new_lessons = false
+			Save.save_all()
 	completed = false
 	practice = false
 	_between = false
+	_tries.clear()
+	_tries.end("", _time_left)
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -951,6 +1004,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
+	_tries.end(reason, _time_left)
 	if not tutorial and not practice:
 		Dev.record(level, reason, _time_left, _moves)
 		if not completed:
@@ -986,6 +1040,7 @@ func game_over(show_score := true) -> void:
 	map.unload()
 	player.vanish()
 	_hide_ending()
+	_tries.end("", _time_left)
 	completed = false
 	practice = false
 	_between = false
@@ -1053,7 +1108,7 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
-	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size())
+	menus.show_main(Save.highscore, Save.has_any_checkpoint(), levels.size(), Save.new_lessons)
 
 
 func show_pause_menu() -> void:
@@ -1090,20 +1145,19 @@ func _on_menu_action(act: String) -> void:
 			Save.save_all()
 			Haptics.feel("toggle")
 			menus.show_options()
+		"ghost on", "ghost off":
+			Save.ghost_on = act == "ghost on"
+			Save.save_all()
+			menus.show_options()
 		"reduce motion on", "reduce motion off":
 			Save.reduce_motion = act == "reduce motion on"
 			Save.save_all()
 			menus.show_options()
 		"controls":
 			menus.show_controls()
-		"controls tilt", "controls touch":
-			Save.controls = act.get_slice(" ", 1)
-			Save.save_all()
+		"controls tilt", "controls touch", "tilt gauge on", "tilt gauge off":
+			ControlsSheet.choose(act)
 			apply_controls()
-			menus.show_controls()
-		"tilt gauge on", "tilt gauge off":
-			Save.tilt_gauge = act == "tilt gauge on"
-			Save.save_all()
 			menus.show_controls()
 		"language":
 			menus.show_language()
@@ -1140,6 +1194,8 @@ func _on_menu_action(act: String) -> void:
 		"next level":
 			menus.close()
 			next_level()
+		"replay":
+			_start_replay()
 		"clear wardrobe":
 			menus.show_wardrobe(level)
 		"back to clear":
@@ -1165,7 +1221,7 @@ func _on_menu_action(act: String) -> void:
 		"completion done":
 			score += end_of_level_points
 			var pb := Save.submit_score(score)
-			Save.has_completed = true
+			_mark_completed()
 			Save.save_all()
 			game_active = false
 			hud.show_bar(false)
@@ -1182,8 +1238,7 @@ func _on_menu_action(act: String) -> void:
 				Save.set_locale("" if code == "system" else code)
 				menus.show_language()
 			elif act.begins_with("sensitivity "):
-				Save.tilt_sensitivity = clampi(int(act.get_slice(" ", 1)), 0, 2)
-				Save.save_all()
+				ControlsSheet.choose(act)
 				apply_controls()
 				menus.show_controls()
 			elif act.begins_with("practice page "):
@@ -1218,6 +1273,8 @@ func _can_pause() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _tries.replay:
+		return  # the replay takes its own taps
 	if event.is_action_pressed("pause") and _can_pause():
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
@@ -1236,28 +1293,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif not event.pressed and _can_pause():
 			show_pause_menu()
 	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-		if tilt.stick and tilt.stick_held():
+		if tilt.stick:
 			tilt.stick_drag(event.position)
-			if event.position.distance_to(tilt.stick_origin()) > STICK_SLOP:
-				_stick_dragged = true
 		elif tilt.touch_steering_enabled():
 			tilt.touch(true, event.position)
 
 
-## The touch stick: a finger landing puts the stick under it; lifting it lets
-## go. A quick tap that never dragged pauses, as a tap does with tilt, and
-## on a phone that can't be shaken it also frees MapMan from a sticky tile.
+## The touch stick: a finger landing puts it under the finger, lifting lets
+## go, and a tap that never dragged pauses. Without an accelerometer to
+## shake, a fresh touch also frees MapMan from a sticky tile.
 func _stick_input(pressed: bool, pos: Vector2) -> void:
 	if pressed:
 		tilt.stick_press(pos)
-		_stick_down_at = _now()
-		_stick_dragged = false
-		if stuck and not TiltInput.has_accelerometer():
-			stuck = false
-		return
-	var tap := tilt.stick_held() and not _stick_dragged and _now() - _stick_down_at < STICK_TAP
-	tilt.stick_release()
-	if tap and _can_pause():
+		stuck = stuck and TiltInput.has_accelerometer()
+	elif tilt.stick_release() and _can_pause():
 		show_pause_menu()
 
 
@@ -1272,6 +1321,9 @@ func _notification(what: int) -> void:
 ## Android's back button or gesture: steps out one level, like other apps.
 ## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
+	if _tries.replay:
+		_end_replay()
+		return
 	if intro:
 		intro.advance()
 		return

@@ -25,6 +25,18 @@ static func mode_name() -> String:
 	return TranslationServer.translate(TEXT.modes[1 if Save.controls == "touch" else 0])
 
 
+## Saves the choice a row reported: "controls tilt|touch", "sensitivity <n>"
+## or "tilt gauge on|off".
+static func choose(act: String) -> void:
+	if act.begins_with("controls "):
+		Save.controls = act.get_slice(" ", 1)
+	elif act.begins_with("sensitivity "):
+		Save.tilt_sensitivity = clampi(int(act.get_slice(" ", 1)), 0, TEXT.levels.size() - 1)
+	else:
+		Save.tilt_gauge = act == "tilt gauge on"
+	Save.save_all()
+
+
 ## Rows report "controls tilt", "controls touch", "sensitivity <0-2>" (the
 ## next level round from the current one) and "tilt gauge on/off"; with
 ## touch chosen, the two tilt rows are greyed out and report nothing.

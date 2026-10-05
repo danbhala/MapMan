@@ -23,6 +23,10 @@ const CALIBRATE_SPREAD := 0.08
 ## as a multiple of the tuned thresholds (LOW, NORMAL, HIGH). The tilt is
 ## divided by it, so the thresholds, and the gauge's rings, stay put.
 const SENSITIVITY: Array[float] = [1.5, 1.0, 0.7]
+## A touch on the stick that moves further than this is steering, not a tap,
+## and so is one held longer than STICK_TAP seconds.
+const STICK_SLOP := 8.0
+const STICK_TAP := 0.3
 
 ## Steer with the touch stick instead of the phone (Options "CONTROLS").
 var stick := false
@@ -41,6 +45,8 @@ var _shake_key_latch := false
 var _stick_held := false
 var _stick_origin := Vector2.ZERO
 var _stick_at := Vector2.ZERO
+var _stick_down_at := 0
+var _stick_dragged := false
 
 
 static func has_accelerometer() -> bool:
@@ -97,15 +103,22 @@ func stick_press(pos: Vector2) -> void:
 	_stick_held = true
 	_stick_origin = pos
 	_stick_at = pos
+	_stick_down_at = Time.get_ticks_msec()
+	_stick_dragged = false
 
 
 func stick_drag(pos: Vector2) -> void:
 	if _stick_held:
 		_stick_at = pos
+		_stick_dragged = _stick_dragged or pos.distance_to(_stick_origin) > STICK_SLOP
 
 
-func stick_release() -> void:
+## Lets go; true when the touch was a tap (quick, and never dragged).
+func stick_release() -> bool:
+	var quick := Time.get_ticks_msec() - _stick_down_at < STICK_TAP * 1000.0
+	var tap := _stick_held and not _stick_dragged and quick
 	_stick_held = false
+	return tap
 
 
 func stick_held() -> bool:

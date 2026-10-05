@@ -393,6 +393,10 @@ msgstr "الأرواح المتبقية ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "تم اعتماد اللوحات الـ100 جميعها · شكرًا على اللعب"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "ملاحظة: في الدرس التعليمي دروس جديدة"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "معتمد"
@@ -858,6 +862,28 @@ msgstr "مقفل، يتاح في المستوى %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "مقفل، يتاح عند إنهاء اللعبة"
+
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "شاهد الإعادة"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "إعادة — المستوى %d"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "%d محاولات"
+msgstr[1] "%d محاولة"
+msgstr[2] "%d محاولتان"
+msgstr[3] "%d محاولات"
+msgstr[4] "%d محاولة"
+msgstr[5] "%d محاولة"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "شبح أفضل محاولة"
 
 #. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
 msgid "TAP TO START"

@@ -383,6 +383,10 @@ msgstr "남은 목숨 ×50"
 msgid "ALL 100 SHEETS APPROVED · THANK YOU FOR PLAYING"
 msgstr "도면 100장 모두 승인 · 플레이해 주셔서 감사합니다"
 
+#. Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial
+msgid "NOTE: THE TUTORIAL HAS NEW LESSONS"
+msgstr "참고: 튜토리얼에 새 레슨이 추가됨"
+
 #. Rubber stamp on the final sheet
 msgid "APPROVED"
 msgstr "승인"
@@ -818,6 +822,23 @@ msgstr "잠김, 레벨 %d에서 해금"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "잠김, 게임 클리어 시 해금"
+
+#. Level clear button, under MapMan: plays every try at the level back at once
+msgid "WATCH REPLAY"
+msgstr "리플레이 보기"
+
+#. Heading of the replay of every try at a level (%d is the level number)
+msgid "REPLAY — LEVEL %d"
+msgstr "리플레이 — 레벨 %d"
+
+#. Under the replay heading: how many tries at the level it shows
+msgid "%d TRY"
+msgid_plural "%d TRIES"
+msgstr[0] "도전 %d번"
+
+#. Options row: a faint MapMan replays your best run of the level beside you
+msgid "BEST-RUN GHOST"
+msgstr "최고 기록 고스트"
 
 #. Title screen at launch, under the big MAPMAN title: tap anywhere to go on to the main menu. The phone version of an arcade PRESS START.
 msgid "TAP TO START"

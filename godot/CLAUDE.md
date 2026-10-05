@@ -45,6 +45,21 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   (`main.gd` `_between`), the wardrobe and the quit question opened from it
   come back to it (`Menus.reopen_end_level()`). A tap on MapMan on any
   sheet makes him jump (`Menus._poke()`, `Player.jump()`).
+- Tries (`scripts/run_record.gd`): `main.gd` records every try at a level
+  as tile steps and when each began on its run clock (no tilt: a step is
+  always a whole tile at one of two speeds), about two bytes a step. The
+  level clear's WATCH REPLAY plays every try of the level at once
+  (`scripts/replay.gd`), and the best win of each level (most time left) is
+  saved in `Save.ghosts` and walks beside MapMan as a faint ghost
+  (`scripts/best_ghost.gd`) when `Save.ghost_on` (Options: BEST-RUN GHOST).
+  `scripts/tries.gd` keeps the level's tries, its ghost and the replay
+  for `main.gd`. The ghost is only made when a level has one: a Player
+  draws on the random numbers.
+- The tutorial (`data/tutorial.json`) has lessons marked `rev_b`, for the
+  tiles of the second playthrough: `main.gd` `lessons()` leaves them out until
+  `Save.has_completed`. Finishing the game sets `Save.new_lessons`, which puts
+  a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
+  until the tutorial is next started.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

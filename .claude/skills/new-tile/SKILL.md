@@ -32,6 +32,9 @@ any step either won't load, won't draw, or won't be tested.
    the solver in `godot/tests/autoplay_test.gd` and `godot/tools/level_report.py`.
 7. **Tutorial:** consider a level in `godot/data/tutorial.json` with a one-line
    `description`, as the original did for each tile; the description is a
-   msgid too, so catalog and translate it as in step 4.
+   msgid too, so catalog and translate it as in step 4. A tile for the
+   second playthrough (Revision B) gets `"rev_b": true`: the lesson only
+   shows once the game has been finished, and finishing then says the
+   tutorial has new lessons.
 8. Run the `/verify` skill. If the bottom bar or tiles look different, check the
    screenshots and update the baseline only for intended changes.

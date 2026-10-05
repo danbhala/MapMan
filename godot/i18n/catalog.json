@@ -531,6 +531,11 @@
       "max": 60
     },
     {
+      "id": "NOTE: THE TUTORIAL HAS NEW LESSONS",
+      "note": "Second note on the game-complete sheet, when finishing added Revision B lessons to the tutorial",
+      "max": 60
+    },
+    {
       "id": "APPROVED",
       "note": "Rubber stamp on the final sheet",
       "max": 10
@@ -1023,6 +1028,27 @@
       "id": "Locked, released for finishing the game",
       "note": "Screen reader: MapWoman before the game is finished",
       "max": 44
+    },
+    {
+      "id": "WATCH REPLAY",
+      "note": "Level clear button, under MapMan: plays every try at the level back at once",
+      "max": 16
+    },
+    {
+      "id": "REPLAY — LEVEL %d",
+      "note": "Heading of the replay of every try at a level (%d is the level number)",
+      "max": 28
+    },
+    {
+      "id": "%d TRY",
+      "plural": "%d TRIES",
+      "note": "Under the replay heading: how many tries at the level it shows",
+      "max": 16
+    },
+    {
+      "id": "BEST-RUN GHOST",
+      "note": "Options row: a faint MapMan replays your best run of the level beside you",
+      "max": 18
     },
     {
       "id": "TAP TO START",

@@ -96,6 +96,10 @@ func run() -> void:
 	save.worn = "classic"
 	save.released.clear()
 	save.seen.clear()
+	# No best-run ghosts: a level cleared for one screen would walk beside
+	# MapMan in the next (and draw on the random numbers).
+	save.ghosts.clear()
+	save.ghost_on = false
 	save.set_locale("en")  # the baselines are English, whatever the machine's
 
 	save.tilt_gauge = true
@@ -245,6 +249,7 @@ func run() -> void:
 	# Other languages: a mirrored Arabic sheet, Japanese and Russian text, and
 	# the HUD's notes in Arabic during play.
 	save.set_locale("ar")
+	save.new_lessons = true  # the NEW tag on TUTORIAL, mirrored (set by the ending above)
 	game._on_menu_action("main menu")
 	await frames(70)
 	await shot("21_main_menu_ar")
