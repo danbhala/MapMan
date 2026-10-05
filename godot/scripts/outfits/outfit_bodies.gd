@@ -89,6 +89,9 @@ static func _body(pen: OutfitPen, id: String) -> void:
 static func _neck(pen: OutfitPen, id: String) -> void:
 	var s := pen.look.x * 2.0  # under his chin, which turns with his face
 	match id:
+		"shades":
+			if pen.front():
+				_sax(pen, s)
 		"cowboy":
 			if pen.front():
 				_bandana(pen, RED, s)
@@ -310,3 +313,50 @@ static func _compass(pen: OutfitPen) -> void:
 	pen.dot(c, 2.8, CREAM)
 	pen.line(c + Vector2(0.8, -2.0), c, RED, 1.1)
 	pen.line(c, c + Vector2(-0.8, 2.0), DARK, 1.1)
+
+
+## A gold saxophone on a strap: crook under his chin, body down his front,
+## the bell turning up by his hip. As he dies it slips off the strap and
+## topples to the ground beside him, fading with the neck pieces, so it never
+## sits over the body that swallows him.
+static func _sax(pen: OutfitPen, s: float) -> void:
+	var brass := Color("#e0a82e")
+	var shade := Color("#9c6b12")
+	var spine: Array[Vector2] = [
+		Vector2(s - 2.0, -47.5),
+		Vector2(s + 3.0, -46.0),
+		Vector2(s + 5.0, -42.0),
+		Vector2(s + 6.0, -35.0),
+		Vector2(s + 7.0, -30.0),
+		Vector2(s + 10.0, -27.6),
+		Vector2(s + 13.6, -29.4),
+		Vector2(s + 14.6, -34.0),
+	]
+	var widths: Array[float] = [0.8, 1.0, 1.4, 1.9, 2.4, 2.7, 3.0, 3.4]
+	var fall := clampf(pen.dead / 0.5, 0.0, 1.0)
+	fall = fall * fall * (3.0 - 2.0 * fall)
+	var pivot := Vector2(s + 10.0, -27.6)
+	var tube := _fallen(pen, OutfitPen.tapered(spine, widths), pivot, fall)
+	pen.poly(tube, brass)
+	pen.outline(tube, shade, 0.7)
+	var bell := _fallen(
+		pen, OutfitPen.ellipse(Vector2(s + 14.8, -35.0), 4.6, 1.6, 16, -0.12), pivot, fall
+	)
+	pen.poly(bell, Color("#f2c75c"))
+	pen.outline(bell, shade, 0.7)
+	for y: float in [-40.0, -37.0, -34.0, -31.5]:
+		var key := _fallen(pen, [Vector2(s + 3.4 + (y + 46.0) * 0.17, y)], pivot, fall)
+		pen.dot(key[0], 0.9, Color("#fff1c4"))
+
+
+## Rest points of something slipping off him as he dies (`fall` 0 to 1):
+## tipped over about `pivot` as it slides from his front to the ground by
+## his right foot, where it lies clear of the body that swallows him.
+static func _fallen(pen: OutfitPen, pts: Array, pivot: Vector2, fall: float) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var ground := pen.feet[1] + Vector2(20.0, -1.5)
+	for v: Vector2 in pts:
+		var r := (v - pivot).rotated(-1.35 * fall)
+		var on_him := pen.b(pivot.x + r.x, pivot.y + r.y)
+		out.append(on_him.lerp(ground + r, fall))
+	return out
