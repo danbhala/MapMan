@@ -860,7 +860,7 @@ msgstr "ベスト記録の再現"
 msgid "TAP TO START"
 msgstr "タップしてスタート"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "スキップ"
 
@@ -1196,3 +1196,19 @@ msgstr "プレイ中に画面をタップすると一時停止します。一時
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "傾き操作のみ"
+
+#. First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)
+msgid "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS"
+msgstr "操作方法を選んでください。設定でいつでも変更できます"
+
+#. First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player
+msgid "HOW IS THE STEERING GOING?"
+msgstr "操作はいかがですか？"
+
+#. First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "KEEP %s"
+msgstr "%sのまま"
+
+#. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "TRY %s"
+msgstr "%sを試す"

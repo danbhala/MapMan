@@ -71,7 +71,12 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tiles of the second playthrough: `main.gd` `lessons()` leaves them out until
   `Save.has_completed`. Finishing the game sets `Save.new_lessons`, which puts
   a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
-  until the tutorial is next started.
+  until the tutorial is next started. A first-time player
+  (`scripts/first_run.gd`, `FirstRun.applies()`: nothing played yet, no
+  level link) picks TILT or DRAG TO MOVE (phones that can tilt), then goes
+  straight into the tutorial, with SKIP in the header's corner back to the
+  main menu; after two lessons, or three lost tries on one, it asks once
+  whether to keep that steering or try the other.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

@@ -302,5 +302,9 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "NOTA: ARRASTRA PARA MOVERTE · TOCA LA HOJA PARA PAUSAR",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Toca y arrastra en cualquier parte para moverte y ve hacia la casilla de salida.\nPasa el aro punteado para andar, el aro sólido para correr.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Toca la pantalla durante la partida para pausar. Solo pausa un toque rápido: si arrastras, MapMan se mueve.",
-  "TILT ONLY": "SOLO INCLINAR"
+  "TILT ONLY": "SOLO INCLINAR",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "¿CÓMO QUIERES MOVERTE? PUEDES CAMBIARLO EN OPCIONES",
+  "HOW IS THE STEERING GOING?": "¿QUÉ TAL LOS CONTROLES?",
+  "KEEP %s": "SEGUIR: %s",
+  "TRY %s": "PROBAR: %s"
 }
