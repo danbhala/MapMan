@@ -43,6 +43,7 @@ var menus: Menus
 var tilt := TiltInput.new()
 var dev_panel: DevPanel
 var gauge: TiltGauge
+var deck: PortraitDeck  # the portrait prototype's thumb deck (Portrait)
 ## The intro and title screen at launch; null once the main menu is up.
 var intro: Intro
 ## The CONTROLS sheet's choices and the touch stick.
@@ -164,6 +165,7 @@ func _ready() -> void:
 	gauge = TiltGauge.new()
 	gauge.visible = false
 	hud_layer.add_child(gauge)
+	deck = PortraitDeck.attach(self, hud_layer)
 	gauge.recentre.connect(recentre)
 
 	var menu_layer := CanvasLayer.new()
@@ -487,10 +489,10 @@ func move_player(delta: float) -> void:
 			move(Vector2i.RIGHT, STOP_TIME)
 			player.face_direction(Vector2i.RIGHT, true)
 		return
-	steer(tilt.get_vector(), started() and not stuck)
+	steer(Portrait.grid_vector(tilt.get_vector()), started() and not stuck)
 
 
-## Moves or turns MapMan for a steering vector (see TiltInput.get_vector).
+## Moves or turns MapMan for a steering vector, in the map's directions.
 func steer(v: Vector2, can_move: bool) -> void:
 	var held := _held_step
 	_held_step = Vector2i.ZERO
@@ -533,9 +535,9 @@ func _try_axis(
 	if map.moving or _held_step == Vector2i.ZERO:
 		_held_step = step
 	if map.moving:
-		player.face_direction(actual, true)
+		player.face_direction(Portrait.screen_dir(actual), true)
 		return Callable()
-	return func(): player.face_direction(actual, false)
+	return func(): player.face_direction(Portrait.screen_dir(actual), false)
 
 
 ## The corner guard (assist tier ASSIST_MARKS): a step onto a death tile is
@@ -689,7 +691,7 @@ func update_player(delta: float) -> void:
 				Audio.play("slide")
 			_sliding = true
 			_start_move(_slide_step, SLIDE_TIME)
-			player.face_direction(_slide_step, true)
+			player.face_direction(Portrait.screen_dir(_slide_step), true)
 		else:
 			_sliding = false
 	else:

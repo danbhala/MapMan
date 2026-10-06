@@ -33,6 +33,16 @@ var steer := Vector2.ZERO
 ## What that tilt does: 0 MapMan stays put, 1 walks, 2 runs.
 var pace := 0
 
+## Drawn this many times bigger (the portrait deck's big gauge). The gauge
+## draws itself at that size, never through `scale`, so it stays sharp.
+var zoom := 1.0:
+	set(z):
+		zoom = z
+		size = Vector2.ONE * (RADIUS + PAD) * 2.0 * z
+		queue_redraw()
+## The portrait prototype's control deck, when there is one (Portrait).
+var deck: PortraitDeck
+
 var _ripple := -1.0
 var _fade := 1.0
 
@@ -45,6 +55,9 @@ func _init() -> void:
 
 ## Sits in the field's bottom-right corner, above the bottom bar.
 func place(screen: Vector2) -> void:
+	if deck != null:  # portrait prototype: big, in the control deck
+		deck.place_gauge(self)
+		return
 	var inner := Blueprint.INSET + 1.0
 	position = Vector2(
 		screen.x - inner - MARGIN - size.x + PAD,
@@ -58,6 +71,8 @@ func centre() -> Vector2:
 
 ## Fade while MapMan's feet (`feet`, in the same screen space) are close.
 func near_player(feet: Vector2, delta: float) -> void:
+	if deck != null:
+		return  # under the field, never in MapMan's way
 	var d := feet - centre()
 	var near := (
 		absf(d.x) < RADIUS + FADE_SIDE and d.y > -RADIUS - FADE_ABOVE and d.y < RADIUS + FADE_BELOW
@@ -89,36 +104,41 @@ func _gui_input(event: InputEvent) -> void:
 
 func _has_point(point: Vector2) -> bool:
 	# A round target, a little bigger than the rim for fingers.
-	return point.distance_to(size / 2.0) <= RADIUS + PAD
+	return point.distance_to(size / 2.0) <= (RADIUS + PAD) * zoom
 
 
 func _draw() -> void:
 	var c := size / 2.0
+	var radius := RADIUS * zoom
+	var pad := PAD * zoom
+	var dot := DOT * zoom
+	var w := sqrt(zoom)  # strokes thicken a little with the size, not in step
+	var arcs := int(48 * zoom)
 	var fast: float = Dev.t("fast_threshold")
-	var scale := RADIUS / maxf(fast * 1.5, 0.01)
+	var scale := radius / maxf(fast * 1.5, 0.01)
 	var ink := Blueprint.INK
-	draw_circle(c, RADIUS, Blueprint.STRIP)
+	draw_circle(c, radius, Blueprint.STRIP)
 	# The centre mark: broken lines through the middle, ticking out past the rim.
 	var mark := Color(ink, 0.3)
 	for i in 4:
 		var dir := Vector2.RIGHT.rotated(i * PI / 2.0)
-		draw_line(c + dir * 2.0, c + dir * RADIUS * 0.35, mark, 1.0, true)
-		draw_line(c + dir * RADIUS * 0.55, c + dir * (RADIUS + PAD - 1.0), mark, 1.0, true)
-	draw_arc(c, RADIUS, 0, TAU, 48, Color(ink, 0.66), 1.2, true)
+		draw_line(c + dir * 2.0 * zoom, c + dir * radius * 0.35, mark, 1.0 * w, true)
+		draw_line(c + dir * radius * 0.55, c + dir * (radius + pad - 1.0), mark, 1.0 * w, true)
+	draw_arc(c, radius, 0, TAU, arcs, Color(ink, 0.66), 1.2 * w, true)
 	# Dashed: where he starts walking. Solid: where he runs.
 	var start: float = Dev.t("tilt_threshold") * scale
 	for i in DASHES:
 		var a := TAU * i / DASHES
-		draw_arc(c, start, a, a + TAU / DASHES * 0.55, 4, Color(ink, 0.75), 1.0, true)
-	draw_arc(c, fast * scale, 0, TAU, 40, Color(ink, 0.8), 1.1, true)
+		draw_arc(c, start, a, a + TAU / DASHES * 0.55, 8, Color(ink, 0.75), 1.0 * w, true)
+	draw_arc(c, fast * scale, 0, TAU, arcs, Color(ink, 0.8), 1.1 * w, true)
 	if _ripple >= 0.0:
-		var r := lerpf(DOT, RADIUS + PAD, _ripple) if Blueprint.motion() else RADIUS
-		draw_arc(c, r, 0, TAU, 40, Color(ink, 0.9 * (1.0 - _ripple)), 1.5, true)
+		var r := lerpf(dot, radius + pad, _ripple) if Blueprint.motion() else radius
+		draw_arc(c, r, 0, TAU, arcs, Color(ink, 0.9 * (1.0 - _ripple)), 1.5 * w, true)
 	var p := steer * scale
-	p = p.limit_length(RADIUS - DOT)
+	p = p.limit_length(radius - dot)
 	var color := Blueprint.GOLD if pace == 2 else ink
 	if pace == 0:
-		draw_arc(c + p, DOT, 0, TAU, 16, Color(ink, 0.66), 1.2, true)
+		draw_arc(c + p, dot, 0, TAU, 24, Color(ink, 0.66), 1.2 * w, true)
 		return
-	draw_line(c, c + p, color, 1.2, true)
-	draw_circle(c + p, DOT, color)
+	draw_line(c, c + p, color, 1.2 * w, true)
+	draw_circle(c + p, dot, color)

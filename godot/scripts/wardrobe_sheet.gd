@@ -78,12 +78,16 @@ static func main_menu_row(m: Menus) -> void:
 	var count := _released_count()
 	var total := Wardrobe.LOOKS.size()
 	var pos := Vector2(m._mx(ROW_POS.x, ROW_SIZE.x), ROW_POS.y)
-	var b := Blueprint.item(m._panel, m.tr(TEXT.title), pos, ROW_SIZE)
+	var row_size := ROW_SIZE
+	if Portrait.on():  # prototype: the last row of the list
+		pos = Vector2(Menus.LIST_X, 300)
+		row_size = Vector2(Menus.LIST_W, ROW_SIZE.y)
+	var b := Blueprint.item(m._panel, m.tr(TEXT.title), pos, row_size)
 	b.alignment = m._align()
 	b.accessibility_name = m.tr(TEXT.a11y_row) % [count, total]
 	# The count is figures at the row's far end (inside its 12 px margin);
 	# figures read left to right in every language (Blueprint.label).
-	var x := 12.0 if m._rtl else ROW_SIZE.x - 12.0 - COUNT_W
+	var x := 12.0 if m._rtl else row_size.x - 12.0 - COUNT_W
 	var figures: String = TEXT.count % [count, total]
 	var l := Blueprint.label(b, figures, 16, Blueprint.INK, Vector2(x, 0), 500, COUNT_W)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -92,7 +96,7 @@ static func main_menu_row(m: Menus) -> void:
 	Blueprint.fit(l, Vector2(COUNT_W, ROW_SIZE.y))
 	m._connect(b, "wardrobe")
 	m._reveal(b)
-	if Save.unseen() > 0:
+	if Save.unseen() > 0 and not Portrait.on():
 		tag(m, m.tr(TEXT.new), TAG_END, TAG_Y)
 
 

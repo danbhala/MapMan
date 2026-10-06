@@ -35,13 +35,13 @@ Dev="*res://scripts/dev.gd"
 
 [display]
 
-window/size/viewport_width=667
-window/size/viewport_height=375
-window/size/window_width_override=1334
-window/size/window_height_override=750
+window/size/viewport_width=375
+window/size/viewport_height=667
+window/size/window_width_override=750
+window/size/window_height_override=1334
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=0
+window/handheld/orientation=1
 
 [editor_plugins]
 

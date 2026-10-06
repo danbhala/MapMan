@@ -87,6 +87,9 @@ var _load_elapsed := 0.0
 var _min_x := 0.0
 var _min_y := 0.0
 var _screen_h := 375.0
+var _turned := false  # portrait prototype: see Portrait
+var _turned_centre := Vector2.ZERO
+var _turned_size := Vector2i.ZERO  # columns, rows
 var _rows_total := 0
 var _textures := {}
 var _falls := {}  # crumble key -> the Tween of a tile still falling
@@ -223,6 +226,10 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	# so the middle row lands on CENTRE_Y with this _min_y.
 	_min_y = screen_size.y - CENTRE_Y - (rows.size() - 3) * TILE_H / 2.0
 	_min_x = screen_size.x * 0.5 - (max_columns * 0.5) * TILE_W + 0.5 * TILE_W
+	# Portrait (prototype): the map turned a quarter turn, centred in the field.
+	_turned = Portrait.on()
+	_turned_centre = Portrait.field_rect(screen_size).get_center() + Vector2(0, Portrait.MAP_DROP)
+	_turned_size = Vector2i(max_columns, rows.size())
 
 	var loadings := {}  # loading char -> Array[Tile]
 	var order: Array[Tile] = []
@@ -287,6 +294,15 @@ func _add_row(
 
 
 func _screen_pos(key: Vector2i, rows_total: int) -> Vector2:
+	if _turned:
+		# Columns run up the screen, rows across it, left to right.
+		return (
+			_turned_centre
+			+ Vector2(
+				(key.y - (_turned_size.y - 1) / 2.0) * TILE_W,
+				((_turned_size.x - 1) / 2.0 - key.x) * TILE_H
+			)
+		)
 	var y_up := rows_total - 1 - key.y  # original row index counted from the bottom
 	var ox := _min_x + key.x * TILE_W
 	var oy := _min_y + (y_up - 1) * TILE_H
