@@ -10,7 +10,9 @@ const MAX := 60
 
 var list: Array[RunRecord] = []
 ## The level the tries are at; a try at another level starts the list afresh.
+## A drafting table level is level 0, told apart by its code (`key`).
 var level := 0
+var key := ""
 ## The try going now, or null between tries.
 var run: RunRecord
 var clock := 0.0
@@ -23,17 +25,20 @@ var replay: Replay
 
 ## A try at `at_level` begins in `look` (a Wardrobe id), its clock at zero,
 ## with the level's best run beside it when the ghost is on. Level 0 is one
-## from the drafting table, which has no ghost.
-func begin(at_level: int, look := "classic") -> void:
-	if at_level != level:
+## from the drafting table, `code` its level code: its ghost is its own.
+func begin(at_level: int, look := "classic", code := "") -> void:
+	if at_level != level or code != key:
 		list.clear()
 		level = at_level
+		key = code
 	run = RunRecord.new()
 	run.outfit = look
 	clock = 0.0
 	var best: RunRecord = null
 	if Save.ghost_on and level > 0 and Save.ghosts.has(level):
 		best = RunRecord.decode(Save.ghosts[level])
+	elif Save.ghost_on and level == 0 and key != "":
+		best = RunRecord.decode(Save.level_stat(key).ghost)
 	if best and ghost == null:
 		ghost = BestGhost.new()
 		add_child(ghost)
@@ -77,19 +82,22 @@ func clear() -> void:
 
 ## Whether the level clear of `at_level` can offer a replay: the latest try
 ## won it, on foot (a level can't be won without a step, but tests skip them).
-func replayable(at_level: int) -> bool:
-	if list.is_empty() or level != at_level:
+func replayable(at_level: int, code := "") -> bool:
+	if list.is_empty() or level != at_level or key != code:
 		return false
 	return list[-1].won() and list[-1].step_count() > 0
 
 
 ## Plays every try on `map` (the level loaded or loading); `finished` fires
 ## when it is over or tapped away.
-func play(map: LevelMap) -> Replay:
+## title: the replay's heading, for a drafting table level.
+func play(map: LevelMap, title := "") -> Replay:
 	replay = Replay.new()
 	add_child(replay)
 	var n := list.size()
-	replay.setup(map, list, tr("REPLAY — LEVEL %d") % level, tr_n("%d TRY", "%d TRIES", n) % n)
+	if title == "":
+		title = tr("REPLAY — LEVEL %d") % level
+	replay.setup(map, list, title, tr_n("%d TRY", "%d TRIES", n) % n)
 	return replay
 
 

@@ -49,7 +49,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
   editor, code entry, the share sheet (QR from `addons/kenyoni/qr_code/`)
   and the scan sheet (`scripts/qr_scanner.gd` camera view,
-  `scripts/qr_reader.gd` QR decoder).
+  `scripts/qr_reader.gd` QR decoder); `scripts/level_card.gd` draws a
+  level's card (preview, name, record, actions) and its rename and delete
+  sheets. Names stay on the phone: codes never carry them.
   `scripts/level_code.gd` turns a level into a short code and back, matching
   `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
   `main.gd` plays drafts and friends' codes with `custom` set ("draft",

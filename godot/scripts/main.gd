@@ -309,9 +309,8 @@ func loaded() -> void:
 	player.show_player()
 	if not tutorial:
 		if not completed:
-			# A drafting table level plays as level 1 but is its own map: 0 keeps
-			# level 1's ghost and tries off it.
-			_tries.begin(0 if custom != "" else level, player.outfit)
+			# A drafting table level plays as level 1, but as level 0 here, by its code.
+			_tries.begin(0 if custom != "" else level, player.outfit, drafting.begin_try())
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
@@ -583,7 +582,8 @@ func _start_replay() -> void:
 func _end_replay() -> void:
 	if _tries.stop_replay():
 		hud.visible = true
-		menus.redraw()
+		if not drafting.replay_ended():
+			menus.redraw()
 
 
 # --- tile rules (update_player) --------------------------------------------

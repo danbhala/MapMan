@@ -281,7 +281,7 @@ func test_a_drafting_table_level_has_no_ghost_and_keeps_its_tries_apart() -> voi
 	d.paint(Vector2i(2, 3), "b")
 	d.paint(Vector2i(3, 3), "c")
 	d.paint(Vector2i(4, 3), "e")
-	game.drafting.start(LevelCode.to_level(LevelCode.decode(d.code())), "received")
+	game.drafting.start(LevelCode.to_level(LevelCode.decode(d.code())), "received", d.code())
 	assert_eq(game.custom, "received")
 	_start_try()
 	assert_true(game._tries.ghost == null or game._tries.ghost.run == null, "no ghost of level 1")
