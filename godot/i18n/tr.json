@@ -318,5 +318,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "6 TASLAĞIN HEPSİ DOLU: BİRİNİ SİL",
   "CLEARED WITH %ds LEFT · NEW BEST": "%ds KALA GEÇİLDİ · YENİ REKOR",
   "Level name": "Seviye adı",
-  "The level's map": "Seviyenin haritası"
+  "The level's map": "Seviyenin haritası",
+  "LEVEL %d": "BÖLÜM %d",
+  "STARS": "YILDIZ",
+  "WATCH BEST RUN": "REKORU İZLE",
+  "BEST RUN — LEVEL %d": "REKOR — BÖLÜM %d",
+  "PRACTICE": "ANTRENMAN",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR"
 }

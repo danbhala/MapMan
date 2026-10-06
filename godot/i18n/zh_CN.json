@@ -318,5 +318,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "6 个草稿都已占用：请删除一个",
   "CLEARED WITH %ds LEFT · NEW BEST": "剩余%d秒通关 · 新纪录",
   "Level name": "关卡名称",
-  "The level's map": "关卡地图"
+  "The level's map": "关卡地图",
+  "LEVEL %d": "第%d关",
+  "STARS": "星星",
+  "WATCH BEST RUN": "观看最佳记录",
+  "BEST RUN — LEVEL %d": "最佳记录 — 第%d关",
+  "PRACTICE": "练习",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "通关后才能看到隐藏的格子"
 }

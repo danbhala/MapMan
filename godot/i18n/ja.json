@@ -318,5 +318,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "下書き6つがすべて使用中：1つ削除してください",
   "CLEARED WITH %ds LEFT · NEW BEST": "残り%d秒でクリア · 新記録",
   "Level name": "レベル名",
-  "The level's map": "レベルのマップ"
+  "The level's map": "レベルのマップ",
+  "LEVEL %d": "レベル%d",
+  "STARS": "星",
+  "WATCH BEST RUN": "ベスト記録を見る",
+  "BEST RUN — LEVEL %d": "ベスト記録 — レベル%d",
+  "PRACTICE": "練習",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "クリアすると隠れたタイルが見えます"
 }

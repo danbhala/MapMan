@@ -1302,3 +1302,27 @@ msgstr "Nome del livello"
 #. Screen reader: the picture of the level on its card
 msgid "The level's map"
 msgstr "Mappa del livello"
+
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "LIVELLO %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "STELLE"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "GUARDA IL RECORD"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "RECORD — LIVELLO %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "ALLENAMENTO"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "SUPERALO PER VEDERE LE CASELLE NASCOSTE"

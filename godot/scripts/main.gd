@@ -1102,7 +1102,8 @@ func start_practice(n: int) -> void:
 
 func _end_practice(note := "") -> void:
 	game_over(false)
-	show_practice_menu(-1, note)
+	if not drafting.practice_ended(note):
+		show_practice_menu(-1, note)
 
 
 func show_start_menu() -> void:
@@ -1217,8 +1218,7 @@ func _on_menu_action(act: String) -> void:
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):
-				menus.close()
-				start_practice(int(act.get_slice(" ", 2)))
+				drafting.open_cell("practice", int(act.get_slice(" ", 2)))
 			elif act.begins_with("wear "):
 				# From the wardrobe, or the slip on the level clear that released
 				# it: he wears it from now on.

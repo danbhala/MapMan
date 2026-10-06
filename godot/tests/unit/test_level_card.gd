@@ -260,3 +260,63 @@ func test_names_and_records_survive_the_save() -> void:
 	assert_eq(Save.received_name(code), "SKULL")
 	assert_eq(Save.level_stat(code).played, 1)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+# --- practice ------------------------------------------------------------------
+
+
+func test_a_practice_level_opens_its_card_and_plays_from_it() -> void:
+	Save.bests.erase(3)
+	Save.plays.erase(3)
+	game.show_practice_menu(0)
+	game._on_menu_action("practice level 3")
+	assert_eq(game.menus.current, "card")
+	assert_true(_on_sheet("PLAY"))
+	assert_false(_on_sheet("DELETE") or _on_sheet("RENAME"), "a main game level stays as it is")
+	game._on_menu_action("card play")
+	assert_true(game.practice)
+	_loaded()
+	assert_eq(Save.campaign_stat(3).played, 1, "the try counts")
+	game._on_menu_action("end game")
+	assert_eq(game.menus.current, "card", "back to its card")
+	game.go_back()
+	assert_eq(game.menus.current, "practice")
+
+
+func test_a_practice_card_plays_the_best_run() -> void:
+	var run := RunRecord.new()
+	run.add_step(0.2, Vector2i.RIGHT, 0.3)
+	run.finish(1.0, "win", 20.0)
+	Save.ghosts[2] = run.encode()
+	Save.bests[2] = {"time": 20, "stars": 0}
+	game.show_practice_menu(0)
+	game._on_menu_action("practice level 2")
+	assert_true(_on_sheet("WATCH BEST RUN"))
+	game._on_menu_action("card replay")
+	assert_not_null(game._tries.replay, "the best run plays")
+	assert_eq(game._tries.replay.tries.size(), 1, "just the best run")
+	game._end_replay()
+	assert_eq(game.menus.current, "card")
+	Save.ghosts.erase(2)
+	Save.bests.erase(2)
+
+
+func test_a_level_not_cleared_keeps_its_hidden_tiles_secret() -> void:
+	var n := 0
+	for i in game.levels.size():
+		var grid := LevelCode.grid_of(game.levels[i])
+		if not grid[1].is_empty():
+			n = i + 1
+			break
+	assert_gt(n, 0, "a level with hidden tiles")
+	Save.furthest_level = n
+	Save.bests.erase(n)
+	game.drafting.open_cell("practice", n)
+	var c: LevelCard.Card = game.drafting.card()
+	assert_true(c.draft.hidden.is_empty(), "hidden tiles left off")
+	assert_eq(c.source, LevelCard.TEXT.hidden_later)
+	Save.bests[n] = {"time": 5, "stars": 0}
+	c = game.drafting.card()
+	assert_false(c.draft.hidden.is_empty(), "shown once cleared")
+	assert_eq(c.stats.cleared, 1, "a clear from before counts")
+	Save.bests.erase(n)

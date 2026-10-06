@@ -13,7 +13,8 @@ var level: Dictionary = {}
 var code := ""
 var back_to := "drafting"
 ## The level card open (or to go back to): "draft" with the draft slot
-## `card_slot`, or "received" with the code `card_code`.
+## `card_slot`, "received" with the code `card_code`, or "practice" with the
+## main game's level `card_slot`.
 var card_kind := ""
 var card_slot := 0
 var card_code := ""
@@ -45,7 +46,9 @@ func open_draft(slot: int, signed_now := false) -> void:
 ## A cell of the table was tapped: an empty draft opens in the editor, any
 ## other level shows its card.
 func open_cell(kind: String, index: int) -> void:
-	if kind == "draft":
+	if kind == "practice":
+		card_slot = index
+	elif kind == "draft":
 		var d: Draft = Save.all_drafts()[index]
 		if d.is_empty():
 			open_draft(index)
@@ -63,6 +66,8 @@ func open_cell(kind: String, index: int) -> void:
 ## The open level card, as a Card; null if its level has gone.
 func card() -> LevelCard.Card:
 	var c := LevelCard.Card.new()
+	if card_kind == "practice":
+		return _practice_card(c, card_slot)
 	if card_kind == "draft":
 		if draft == null or draft.slot != card_slot:
 			draft = Save.all_drafts()[card_slot]
@@ -97,6 +102,49 @@ func card() -> LevelCard.Card:
 			c.source = _game.tr(LevelCard.TEXT.no_slot)
 	c.replay = _game._tries.replayable(0, _card_level_code())
 	return c
+
+
+## The card of main game level `n`, from practice: its map (tiles that start
+## hidden only once it has been cleared), its record and its best run.
+func _practice_card(c: LevelCard.Card, n: int) -> LevelCard.Card:
+	var data: Dictionary = _game.levels[n - 1]
+	var best: Dictionary = Save.bests.get(n, {})
+	c.practice = true
+	c.draft = Draft.from_level(0, data)
+	if best.is_empty():
+		c.source = _hide_secrets(c.draft)
+	c.number = _game.menus._t("part") % n
+	c.title = _game.tr(LevelCard.TEXT.level) % n
+	c.kind_line = _game.tr(LevelCard.TEXT.practice)
+	c.stats = Save.campaign_stat(n)
+	var stars := "".join(c.draft.rows).count("p") + "".join(c.draft.rows).count("@")
+	if stars > 0:
+		c.stars = "★ %d/%d" % [best.get("stars", 0), stars]
+	c.replay = Save.ghosts.has(n)
+	c.replay_text = LevelCard.TEXT.watch_best
+	return c
+
+
+## Takes the tiles that start hidden, and the invisible path, off a map not
+## yet cleared; returns a line saying so, or "" if it had none.
+func _hide_secrets(d: Draft) -> String:
+	var found := false
+	for y in Draft.ROWS:
+		for x in Draft.COLUMNS:
+			var key := Vector2i(x, y)
+			if d.hidden.has(key) or d.tile(key) == "i":
+				d.paint(key, " ")
+				found = true
+	return _game.tr(LevelCard.TEXT.hidden_later) if found else ""
+
+
+## Back from practising level `n`: to its card, if it was opened from one.
+## False when it wasn't.
+func practice_ended(note: String) -> bool:
+	if card_kind != "practice":
+		return false
+	show_card(note)
+	return true
 
 
 ## The level card again (after a try, a replay, a rename); the table if its
@@ -296,6 +344,9 @@ func action(act: String) -> bool:
 		"end custom":
 			m.close()
 			end(false)
+		"practice back":
+			card_kind = ""
+			_game.show_practice_menu()
 		_:
 			if act.begins_with("draft "):
 				var slot := int(act.get_slice(" ", 1))
@@ -327,7 +378,10 @@ func card_action(act: String) -> void:
 		"card":
 			show_card()
 		"card play":
-			if card_kind == "draft":
+			if card_kind == "practice":
+				m.close()
+				_game.start_practice(card_slot)
+			elif card_kind == "draft":
 				if draft.problem() == "":
 					back_to = "card"
 					start(draft.level(), "draft", draft.code())
@@ -351,10 +405,19 @@ func card_action(act: String) -> void:
 				var code_now := _card_level_code()
 				_share(code_now, c.number + "-S", "card")
 		"card replay":
+			if card_kind == "practice":
+				var best := RunRecord.decode(Save.ghosts.get(card_slot, ""))
+				if best != null:
+					var heading: String = _game.tr(LevelCard.TEXT.best_run_title) % card_slot
+					var runs: Array[RunRecord] = [best]
+					_replay(_game.levels[card_slot - 1], runs, heading)
+				return
 			var title: String = (
 				_game.tr(LevelCard.TEXT.replay_title) % (c.name if c.name != "" else c.title)
 			)
-			_replay(c.draft.level(), _card_level_code(), title)
+			var tries: Tries = _game._tries
+			if tries.replayable(0, _card_level_code()):
+				_replay(c.draft.level(), tries.list, title)
 		"card rename":
 			LevelCard.build_rename(m, c)
 		"card rename save":
@@ -382,13 +445,10 @@ func card_action(act: String) -> void:
 			show()
 
 
-## A try at the level playing begins: it counts on the level's record.
-## Returns its code, the key to its tries and ghost ("" in the main game).
+## The code of the drafting table level playing, the key to its tries and
+## ghost ("" in the main game).
 func begin_try() -> String:
-	if _game.custom == "":
-		return ""
-	Save.level_tried(code)
-	return code
+	return code if _game.custom != "" else ""
 
 
 ## A replay ended; true if it was a card's (main.gd's _end_replay()), which
@@ -401,16 +461,16 @@ func replay_ended() -> bool:
 	return true
 
 
-## WATCH REPLAY on a card: every try at the level `data` (code `level_code`)
-## since the game opened, over the card, which comes back when it ends.
-func _replay(data: Dictionary, level_code: String, title: String) -> void:
+## WATCH REPLAY on a card: `runs` on the level `data` (every try since the
+## game opened, or the best run), over the card, which comes back when it ends.
+func _replay(data: Dictionary, runs: Array[RunRecord], title: String) -> void:
 	var tries: Tries = _game._tries
-	if tries.replay or not tries.replayable(0, level_code):
+	if tries.replay:
 		return
 	_game.menus.visible = false
 	_game.hud.visible = false
 	_game.map.load_level(data, _game._screen_size())
-	tries.play(_game.map, title).finished.connect(_game._end_replay)
+	tries.play(_game.map, title, runs).finished.connect(_game._end_replay)
 
 
 ## The share sheet of `share_code`, numbered `number`; its way back reports `back_act`.
@@ -433,8 +493,7 @@ func go_back() -> bool:
 		"editor", "enter_code", "scan":
 			action("drafting table")
 		"card":
-			card_kind = ""
-			show()
+			action("practice back" if card_kind == "practice" else "drafting table")
 		"card_delete", "card_rename":
 			show_card()
 		"share":

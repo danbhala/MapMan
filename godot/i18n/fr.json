@@ -326,5 +326,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "LES 6 BROUILLONS SONT PRIS : SUPPRIMEZ-EN UN",
   "CLEARED WITH %ds LEFT · NEW BEST": "RÉUSSI AVEC %ds · NOUVEAU RECORD",
   "Level name": "Nom du niveau",
-  "The level's map": "Carte du niveau"
+  "The level's map": "Carte du niveau",
+  "LEVEL %d": "NIVEAU %d",
+  "STARS": "ÉTOILES",
+  "WATCH BEST RUN": "VOIR LE RECORD",
+  "BEST RUN — LEVEL %d": "RECORD — NIVEAU %d",
+  "PRACTICE": "ENTRAÎNEMENT",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "RÉUSSISSEZ-LE POUR VOIR SES CASES CACHÉES"
 }

@@ -326,5 +326,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "OS 6 RASCUNHOS ESTÃO EM USO: APAGUE UM",
   "CLEARED WITH %ds LEFT · NEW BEST": "VENCIDO COM %ds · NOVO RECORDE",
   "Level name": "Nome do nível",
-  "The level's map": "Mapa do nível"
+  "The level's map": "Mapa do nível",
+  "LEVEL %d": "NÍVEL %d",
+  "STARS": "ESTRELAS",
+  "WATCH BEST RUN": "VER O RECORDE",
+  "BEST RUN — LEVEL %d": "RECORDE — NÍVEL %d",
+  "PRACTICE": "PRÁTICA",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "VENÇA PARA VER AS CASAS OCULTAS"
 }

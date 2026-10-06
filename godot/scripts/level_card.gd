@@ -30,6 +30,12 @@ const TEXT := {
 	"save_name": "SAVE THE NAME",
 	"no_slot": "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX",
 	"new_best": "CLEARED WITH %ds LEFT · NEW BEST",
+	"level": "LEVEL %d",
+	"stars": "STARS",
+	"watch_best": "WATCH BEST RUN",
+	"best_run_title": "BEST RUN — LEVEL %d",
+	"practice": "PRACTICE",
+	"hidden_later": "CLEAR IT TO SEE ITS HIDDEN TILES",
 	"a11y_name": "Level name",
 	"a11y_preview": "The level's map",
 }
@@ -44,6 +50,7 @@ const RENAME_SIZE := Vector2(160, 32)
 const NOTE_Y := 286.0
 const STATS_Y := 304.0
 const STAT_PITCH := 120.0
+const STAT_NARROW := 89.0
 const ACTIONS_X := 428.0
 const ACTIONS_W := 216.0
 const ACTIONS_Y := 54.0
@@ -67,8 +74,13 @@ class Card:
 	var edit := "edit"
 	var can_edit := true
 	var replay := false
+	var replay_text: String = TEXT.watch_replay
 	## A gold line about the last try, in place of the source.
 	var note := ""
+	## A main game level from practice: no name, edit, share or delete, its
+	## stars ("2/3") as a fourth figure, and the way back to practice.
+	var practice := false
+	var stars := ""
 
 
 static func build(m: Menus, c: Card) -> void:
@@ -82,15 +94,16 @@ static func build(m: Menus, c: Card) -> void:
 	var name := m._text(m._panel, shown, 20, Blueprint.INK, Menus.LIST_X, NAME_Y, 216.0, 800)
 	name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	m._reveal(name)
-	var r := Blueprint.item(
-		m._panel,
-		"✎ " + m.tr(TEXT.rename),
-		Vector2(m._mx(RENAME_POS.x, RENAME_SIZE.x), RENAME_POS.y),
-		RENAME_SIZE
-	)
-	r.alignment = m._align()
-	m._connect(r, "card rename")
-	m._reveal(r)
+	if not c.practice:
+		var r := Blueprint.item(
+			m._panel,
+			"✎ " + m.tr(TEXT.rename),
+			Vector2(m._mx(RENAME_POS.x, RENAME_SIZE.x), RENAME_POS.y),
+			RENAME_SIZE
+		)
+		r.alignment = m._align()
+		m._connect(r, "card rename")
+		m._reveal(r)
 	var note := c.note if c.note != "" else c.source
 	m._text(
 		m._panel,
@@ -107,30 +120,33 @@ static func build(m: Menus, c: Card) -> void:
 		[TEXT.cleared, str(c.stats.get("cleared", 0))],
 		[TEXT.best, m.tr(TEXT.left) % best if best >= 0 else TEXT.none],
 	]
+	# Counts take less room than times, so four figures still fit.
+	var widths := [STAT_PITCH, STAT_PITCH, STAT_PITCH]
+	if c.stars != "":
+		figures.append([TEXT.stars, c.stars])
+		widths = [STAT_NARROW, STAT_NARROW, STAT_PITCH, STAT_NARROW]
+	var x := Menus.LIST_X
 	for i in figures.size():
-		var x := Menus.LIST_X + i * STAT_PITCH
+		var w: float = widths[i] - 10.0
 		var row := m._row(STATS_Y, 34)
-		m._text(row, m.tr(figures[i][0]), 10, Blueprint.FAINT, x, 0, STAT_PITCH - 10.0)
-		var v := m._text(row, figures[i][1], 15, Blueprint.INK, x, 13, STAT_PITCH - 10.0, 700)
+		m._text(row, m.tr(figures[i][0]), 10, Blueprint.FAINT, x, 0, w)
+		var v := m._text(row, figures[i][1], 15, Blueprint.INK, x, 13, w, 700)
+		x += widths[i]
 		v.text_direction = (
 			Control.TEXT_DIRECTION_LTR
 			if figures[i][1] == TEXT.none
 			else (Blueprint.direction(figures[i][1]))
 		)
 		m._reveal(row)
-	var acts := [
-		[TEXT.play, "card play", c.can_play, Blueprint.INK],
-		[
-			TEXT.edit if c.edit == "edit" else TEXT.remix,
-			"card " + c.edit,
-			c.can_edit,
-			Blueprint.INK
-		],
-		[DraftingSheet.TEXT.share, "card share", c.can_share, Blueprint.INK],
-	]
+	var acts := [[TEXT.play, "card play", c.can_play, Blueprint.INK]]
+	if not c.practice:
+		var edit: String = TEXT.edit if c.edit == "edit" else TEXT.remix
+		acts.append([edit, "card " + c.edit, c.can_edit, Blueprint.INK])
+		acts.append([DraftingSheet.TEXT.share, "card share", c.can_share, Blueprint.INK])
 	if c.replay:
-		acts.append([TEXT.watch_replay, "card replay", true, Blueprint.INK])
-	acts.append([TEXT.delete, "card delete", true, Blueprint.PINK])
+		acts.append([c.replay_text, "card replay", true, Blueprint.INK])
+	if not c.practice:
+		acts.append([TEXT.delete, "card delete", true, Blueprint.PINK])
 	for i in acts.size():
 		_action(
 			m,
@@ -141,9 +157,9 @@ static func build(m: Menus, c: Card) -> void:
 			acts[i][2],
 			acts[i][3]
 		)
-	DraftingSheet._back_row_at(
-		m, "<  " + m.tr(DraftingSheet.TEXT.title), "drafting table", ACTIONS_X, ACTIONS_W, BACK_Y
-	)
+	var back: String = TEXT.practice if c.practice else DraftingSheet.TEXT.title
+	var back_act := "practice back" if c.practice else "drafting table"
+	DraftingSheet._back_row_at(m, "<  " + m.tr(back), back_act, ACTIONS_X, ACTIONS_W, BACK_Y)
 	m._focus_first()
 
 
