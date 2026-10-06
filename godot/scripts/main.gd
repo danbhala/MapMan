@@ -194,8 +194,9 @@ func _ready() -> void:
 func _end_intro() -> void:
 	intro.queue_free()
 	intro = null
-	show_start_menu()
-	drafting.check_clipboard()
+	if not FirstRun.begin(self):
+		show_start_menu()
+		drafting.check_clipboard()
 
 
 func _load_data() -> void:

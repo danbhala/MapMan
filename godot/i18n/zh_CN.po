@@ -860,7 +860,7 @@ msgstr "最佳记录回放"
 msgid "TAP TO START"
 msgstr "点击开始"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "跳过"
 

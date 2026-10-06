@@ -1067,7 +1067,7 @@
     },
     {
       "id": "SKIP",
-      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
+      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu",
       "max": 12
     },
     {

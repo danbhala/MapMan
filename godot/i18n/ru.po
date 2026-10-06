@@ -878,7 +878,7 @@ msgstr "ПРИЗРАК РЕКОРДА"
 msgid "TAP TO START"
 msgstr "КОСНИТЕСЬ, ЧТОБЫ НАЧАТЬ"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "ПРОПУСТИТЬ"
 
