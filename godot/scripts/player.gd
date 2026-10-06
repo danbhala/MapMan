@@ -176,6 +176,15 @@ var lid_tilt := 0.0
 var smile := Vector2.ZERO
 var lower := 0.0
 var eye_size := Vector2.ONE
+## 0 standing .. 1 lying on his side, asleep; and 0..1 how strongly the Zs
+## of his snoring show.
+var lean := 0.0
+var zzz := 0.0
+## The expression playing (Expressions), "" for none, and how long it has.
+var mood := ""
+var woke_from := 0.0
+var _mood_t := 0.0
+var _mood_hold := -1.0
 
 var _facing := Vector2i.ZERO  # ZERO is the neutral, front-on idle
 var _walk_target := 0.0
@@ -261,6 +270,7 @@ func reset_pose() -> void:
 	happy = 0.0
 	_hop = 0.0
 	_jump = 0.0
+	stop_mood()
 	queue_redraw()
 
 
@@ -409,7 +419,32 @@ func tick(delta: float) -> void:
 			squash = 0.7
 	if _dying:
 		_death_clock += delta
+	if mood != "":
+		_mood_t += delta
+		if _mood_hold < 0.0 and _mood_t >= Expressions.length(mood):
+			mood = ""
+			Expressions.reset(self)
+		else:
+			var t := _mood_t if _mood_hold < 0.0 else minf(_mood_t, _mood_hold)
+			var walking_look := look
+			Expressions.apply(self, mood, t)
+			# Walking, he still looks where he goes.
+			look = look.lerp(walking_look, walking)
 	queue_redraw()
+
+
+## Plays expression `id` (Expressions) from its start; with `hold`, it stops
+## that many seconds in and stays until the next emote() or stop_mood().
+func emote(id: String, hold := -1.0) -> void:
+	woke_from = lean
+	mood = id
+	_mood_t = 0.0
+	_mood_hold = hold
+
+
+func stop_mood() -> void:
+	mood = ""
+	Expressions.reset(self)
 
 
 ## True once the death animation has played through.
@@ -449,7 +484,10 @@ func _paint(measuring: bool) -> Rect2:
 	var pal := {"body": BODY_COLOR, "head": HEAD_COLOR, "eyes": EYE_COLOR}
 	pal.merge(Outfits.palette(outfit), true)
 	var body: Color = pal.body
-	var origin := Vector2(shake_x, -FEET_LIFT)
+	# Lying down, he turns onto his side about his feet, lifted so he lies on
+	# the ground and slid along so he stays over his spot.
+	var tip := -lean * PI / 2.0
+	var origin := Vector2(shake_x + lean * 34.0, -FEET_LIFT - lean * 17.0)
 	var mirror := Vector2(fx if absf(fx) > 0.05 else 0.05, 1.0) * FIGURE_SCALE
 	# Dying, the legs draw up into the body, which settles on the ground, and
 	# the head sinks into it, as the sprite's death frames did; the body is
@@ -506,15 +544,15 @@ func _paint(measuring: bool) -> Rect2:
 	var woman := art == "woman" or outfit == "mapwoman"
 
 	if has_back and (not behind or dead > 0.0):
-		pen.set_frame(origin, 0.0, mirror)
+		pen.set_frame(origin, tip, mirror)
 		pen.alpha = 1.0 - dead
 		Outfits.draw(pen, Outfits.Layer.BACK, outfit)
 		pen.alpha = 1.0
-	pen.set_frame(origin, 0.0, mirror)
+	pen.set_frame(origin, tip, mirror)
 	for i in 2:
 		_draw_leg(i, pal)
 	Outfits.draw(pen, Outfits.Layer.LEGS, outfit)
-	pen.set_frame(origin, 0.0, mirror)
+	pen.set_frame(origin, tip, mirror)
 	if dead > 0.0:
 		_draw_head(pal)  # swallowed whole
 		if woman:
@@ -550,6 +588,9 @@ func _paint(measuring: bool) -> Rect2:
 	Outfits.draw(pen, Outfits.Layer.FRONT, outfit)
 	if web > 0.02 and not measuring:
 		_draw_web(origin)
+	if zzz > 0.01:
+		pen.set_frame(Vector2.ZERO, 0.0, Vector2.ONE)
+		_draw_zzz(origin + (pen.hc * mirror).rotated(tip))
 	pen.set_frame(Vector2.ZERO, 0.0, Vector2.ONE)
 	return pen.bounds
 
@@ -682,6 +723,30 @@ func _draw_hat_flying(head_at: Vector2) -> void:
 	pen.alpha = 1.0
 	pen.hat_xf = Transform2D.IDENTITY
 	pen.hc = keep
+
+
+## The Zs of his snoring, drifting up from his head and fading.
+func _draw_zzz(head: Vector2) -> void:
+	for i in 3:
+		var ph := fposmod(_idle_clock * 0.45 + i / 3.0, 1.0)
+		var at := head + Vector2(6.0 + ph * 16.0 + sin(ph * 5.0) * 2.0, -14.0 - ph * 30.0)
+		var k := 2.6 + ph * 3.2
+		var c := Color(Blueprint.INK, sin(ph * PI) * zzz)
+		(
+			_pen
+			. polyline(
+				PackedVector2Array(
+					[
+						at + Vector2(-k, -k),
+						at + Vector2(k, -k),
+						at + Vector2(-k, k),
+						at + Vector2(k, k),
+					]
+				),
+				c,
+				1.2
+			)
+		)
 
 
 ## Cobweb strands anchored on him; shaken, they fly outwards and fade.

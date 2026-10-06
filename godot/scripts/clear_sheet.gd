@@ -96,6 +96,8 @@ static func end_level(m: Menus, args: Array) -> void:
 			b.focus_mode = Control.FOCUS_NONE
 		m._tap_to(Menus.FINISH, 0.2)
 	var all_in := func():
+		if m.hero_mood != "":
+			m._hero.emote(m.hero_mood, 2.2 if m.hero_mood == "sad" else -1.0)
 		m._stamp(m._t("passed"), passed, Blueprint.GOLD, 0.0)
 		for b in buttons:
 			if b.modulate.a < 1.0:

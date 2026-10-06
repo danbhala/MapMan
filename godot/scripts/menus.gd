@@ -34,6 +34,10 @@ const OPTIONS_PITCH := 35.0
 ## Player.standing_height().
 const HERO_POS := Vector2(520, 230)
 const HERO_SCALE := 1.2
+## Seconds with no touch, key or shake while he stands on a sheet: he dozes
+## off at DOZE_AFTER and lies down asleep at LIE_AFTER.
+const DOZE_AFTER := 15.0
+const LIE_AFTER := 30.0
 const HERO_HEIGHT := 77.0
 ## How far down the sheet the pair at the end stand.
 const PAIR_FEET := 232.0
@@ -257,6 +261,14 @@ var _refocus_row := -1
 ## Right-to-left language (Arabic): the sheet is laid out as a mirror image,
 ## with the parts list on the right and MapMan on the left.
 var _rtl := false
+## How MapMan takes the level clear once its count is in (an expression),
+## set by main.gd; "" for none.
+var hero_mood := ""
+## Seconds with no touch, key or shake (DOZE_AFTER, LIE_AFTER).
+var _idle := 0.0
+## When a touch last woke him, so a sheet that opens on that touch shows
+## him still waking.
+var _woke_at := -10.0
 
 
 func _ready() -> void:
@@ -279,6 +291,7 @@ func _process(delta: float) -> void:
 		"down":
 			_hero.look = Vector2(0.0, 0.6)
 	_hero.tick(delta)
+	_doze(delta)
 	if _woman:
 		_woman.tick(delta)
 
@@ -286,6 +299,8 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_mouse_seen = true
+	elif event.is_pressed() and not event.is_echo():
+		_wake()
 	# The focus ring is for keys and gamepads; a finger or a mouse hides it.
 	if event is InputEventKey or event is InputEventJoypadButton:
 		Blueprint.show_focus(true)
@@ -330,6 +345,35 @@ func _gui_input(event: InputEvent) -> void:
 		_emit_tap()
 
 
+## Left alone on a sheet he nods off, then lies down asleep; a shake of the
+## phone wakes him (as does any touch, _input()).
+func _doze(delta: float) -> void:
+	if _hero_mode != "tilt" or not visible:
+		return
+	_idle += delta
+	var asleep := _hero.mood == "doze" or _hero.mood == "lie"
+	if asleep and TiltInput.has_accelerometer():
+		var shake := ((Input.get_accelerometer() - Input.get_gravity()) / 9.81).length()
+		if shake > Dev.t("shake_threshold"):
+			_wake()
+			return
+	if _idle >= LIE_AFTER and _hero.mood == "doze":
+		_hero.emote("lie")
+	elif _idle >= DOZE_AFTER and not asleep:
+		_hero.emote("doze")
+
+
+func _wake() -> void:
+	_idle = 0.0
+	if _hero != null and (_hero.mood == "doze" or _hero.mood == "lie"):
+		_hero.emote("wake")
+		_woke_at = _clock_now()
+
+
+func _clock_now() -> float:
+	return Time.get_ticks_msec() / 1000.0
+
+
 ## Makes whoever stands at `at` (a global position) jump; false when nobody
 ## does.
 func _poke(at: Vector2) -> bool:
@@ -339,6 +383,7 @@ func _poke(at: Vector2) -> bool:
 		var local: Vector2 = p.get_global_transform().affine_inverse() * at
 		if p.measure().grow(6.0).has_point(local):
 			p.jump()
+			p.emote("wink")
 			Audio.play("star", 0.5, 1.5)
 			return true
 	return false
@@ -798,10 +843,15 @@ func _hero_on(mode: String) -> void:
 	_dimension(at)
 	_hero = _figure("man", at)
 	_hero_mode = mode
+	_idle = 0.0
+	if _clock_now() - _woke_at < 1.0:
+		_hero.emote("wake")  # the touch that woke him opened this sheet
 	if mode == "right":
 		_hero.face_right_idle()
 	else:
 		_hero.auto_look = false
+	if mode == "down":
+		_hero.emote("sad", 2.2)  # a life lost: head down, looking at his feet
 
 
 ## A dimension line from his feet to the top of his head, or of his hat.

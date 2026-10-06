@@ -108,6 +108,10 @@ var _practice_page := 0
 ## level clear is up, or the wardrobe or the question before quitting opened
 ## from it, and each of those goes back to it.
 var _between := false
+## Seconds left of his moment at the flag (an expression) before the level
+## clear opens, and whether the flag was a checkpoint.
+var _celebrate := 0.0
+var _celebrate_checkpoint := false
 
 # every try at this level (for the replay), the best run beside the player
 # (made when first needed: a Player draws on the random numbers), the replay
@@ -260,6 +264,8 @@ func _update_timer(delta: float) -> void:
 	hud.set_timer(secs, _time_left)
 	if secs > 0 and secs <= 3:
 		Audio.play_clock()
+		if not _low_time:
+			player.emote("scared")  # the clock is running out
 		_low_time = true
 	else:
 		Audio.stop_clock()
@@ -282,6 +288,13 @@ func _process(delta: float) -> void:
 		return
 
 	_update_timer(delta)
+
+	if _celebrate > 0.0:
+		_celebrate -= delta
+		player.update_at(map.get_player_position(), delta)
+		if _celebrate <= 0.0:
+			advance_level(_celebrate_checkpoint)
+		return
 
 	if dead:
 		if map.moving:  # a step the clock cut short still lands on its tile
@@ -314,6 +327,8 @@ func loaded() -> void:
 			_tries.begin(0 if custom != "" else level, player.outfit)
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
+		# Off he goes: determined, or scared when the level is a hard one.
+		player.emote("scared" if map.deaths.size() >= 10 else "determined")
 
 
 ## The tilt gauge shows while playing, on phones that tilt, unless turned off.
@@ -472,6 +487,7 @@ func move_player(delta: float) -> void:
 
 	if stuck and tilt.shook():
 		stuck = false
+		player.stop_mood()
 
 	if completed:
 		_update_ending(delta)
@@ -606,15 +622,18 @@ func update_player(delta: float) -> void:
 		_slide_step = map.last_step()
 		player.land()
 	if map.at_end():
-		player.cheer()
-		advance_level(map.is_checkpoint)
+		if tutorial or practice or completed or custom != "":
+			player.cheer()
+			advance_level(map.is_checkpoint)
+		else:
+			_celebrate_at_flag()
 		return
 
 	if map.on(map.reverses):
 		Audio.play("reverse")
 		reverse = not reverse
 		map.clear(map.reverses)
-		player.spin_around()
+		player.emote("dizzy")  # spins round, then the world swims
 
 	if vanish > 0 and not dead:
 		player.vanish()
@@ -635,6 +654,7 @@ func update_player(delta: float) -> void:
 		else:
 			map.clear(map.unhides)
 			map.unhide_tiles()
+		player.emote("curious")  # the map just changed under him
 		_flash("_last_hide")
 
 	if map.on(map.points):
@@ -667,18 +687,21 @@ func update_player(delta: float) -> void:
 		Audio.play("sticky")
 		map.clear(map.stickies)
 		stuck = true
+		player.emote("squint", 1.3)  # annoyed, until he shakes free
 
 	if map.on(map.more_times):
 		map.clear(map.more_times)
 		map.float_text(tr(FLOATS.more_time), Blueprint.INK)
 		_time_left += 5.0
 		_flash("_last_more_time")
+		player.emote("wink")
 
 	if map.on(map.less_times):
 		map.clear(map.less_times)
 		map.float_text(tr(FLOATS.less_time), Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
+		player.emote("gasp")
 
 	# Ice: he slides on the way he came until a tile that isn't ice, or an
 	# edge, stops him. Steering is ignored on the way (move_player() skips
@@ -879,6 +902,23 @@ func skip_level() -> void:
 	Save.save_all()
 
 
+## The flag: the clock stops and he has a moment, proud of a clean run or
+## just happy, before the level clear. His mood there follows the run too.
+func _celebrate_at_flag() -> void:
+	_timer_stop()
+	var lost: int = losses.get(level, 0)
+	player.face_idle()
+	player.emote("proud" if lost == 0 else "happy")
+	if lost > 0:
+		menus.hero_mood = "sad"
+	elif stars > 0:
+		menus.hero_mood = "proud"
+	else:
+		menus.hero_mood = "happy"
+	_celebrate = 1.9
+	_celebrate_checkpoint = map.is_checkpoint
+
+
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
 	if completed:
@@ -1034,6 +1074,7 @@ func lose_life(reason := "death") -> void:
 	Audio.play("lose_life")
 	_lose_reason = reason
 	player.show_player()
+	player.emote("gasp")
 	player.face_death()
 	dead = true
 	set_background()
