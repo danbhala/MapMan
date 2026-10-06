@@ -21,6 +21,7 @@ const STEP_TIME := 0.3
 const WALK_FROM := 3.0
 const TILE_H := 0.1
 const MAN_H := 2.2  # world units, feet to head (tiles are 1 apart)
+const HIDERS := ["i", "@", "!", "+"]  # the tiles a hide tile hides
 
 var cam_mode := "table"
 var level_no := 10
@@ -39,6 +40,7 @@ var cam: Camera3D
 var man: Sprite3D
 var player: Player
 var man_vp: SubViewport
+var foot_shadow: Sprite3D
 var t := 0.0
 var step_i := -1
 var hidden_now := false
@@ -304,8 +306,61 @@ func _build_man() -> void:
 	man.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
 	man.shaded = false
 	man.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	# Pivot at his feet: the billboard turns about the node's origin, so the
+	# picture is lifted by its offset and his feet stay planted on the tile.
+	man.offset = Vector2(0, 150 - 12)
 	man.visible = false
 	board.add_child(man)
+
+	# A soft contact shadow under his feet (the game has none; a 3D figure
+	# floats without one).
+	var grad := Gradient.new()
+	grad.set_color(0, Color(0.02, 0.06, 0.15, 0.55))
+	grad.set_color(1, Color(0.02, 0.06, 0.15, 0.0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = grad
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(1.0, 0.5)
+	foot_shadow = Sprite3D.new()
+	foot_shadow.texture = gt
+	foot_shadow.axis = Vector3.AXIS_Y
+	foot_shadow.pixel_size = 0.62 / 64.0
+	foot_shadow.scale = Vector3(1.0, 0.62, 1.0)
+	foot_shadow.shaded = false
+	foot_shadow.visible = false
+	board.add_child(foot_shadow)
+
+	# Hidden tiles: the one under his feet shows as a dashed outline, the
+	# drafting convention for an edge you can't see (as the pencil marks do in
+	# 2D). Only where he stands, so it gives nothing away ahead of him.
+	var ring := _dashed_ring()
+	for k: Vector2i in tiles:
+		if tiles[k]["type"] not in HIDERS:
+			continue
+		var r := Sprite3D.new()
+		r.texture = ring
+		r.axis = Vector3.AXIS_Y
+		r.pixel_size = 0.86 / 128.0
+		r.shaded = false
+		r.position = _tile_pos(k) + Vector3(0, 0.004, 0)
+		r.modulate.a = 0.0
+		board.add_child(r)
+		tiles[k]["ring"] = r
+
+
+func _dashed_ring() -> Texture2D:
+	var n := 128
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	img.fill(Color(1, 1, 1, 0))
+	for y in n:
+		for x in n:
+			var v := Vector2(x + 0.5 - n * 0.5, y + 0.5 - n * 0.5)
+			var d := v.length() / (n * 0.5)
+			var ang := fposmod(v.angle(), TAU) / TAU * 16.0
+			if d > 0.86 and d < 0.97 and fposmod(ang, 1.0) < 0.6:
+				img.set_pixel(x, y, Color(1, 1, 1, 0.85))
+	return ImageTexture.create_from_image(img)
 
 
 # --- the tour ----------------------------------------------------------------
@@ -316,8 +371,14 @@ func _tile_pos(k: Vector2i) -> Vector3:
 
 
 func _man_at(p: Vector3) -> void:
-	# The cut-out's feet sit 12 px above the bottom of its 300 px picture.
-	man.position = p + Vector3(0, (150 - 12) * man.pixel_size, 0)
+	man.position = p + Vector3(0, 0.01, 0)
+	foot_shadow.position = p + Vector3(0, 0.006, 0)
+	foot_shadow.visible = man.visible
+	for k: Vector2i in tiles:
+		if tiles[k].has("ring"):
+			var r: Sprite3D = tiles[k]["ring"]
+			var near := 1.0 - (Vector2(p.x, p.z) - Vector2(r.position.x, r.position.z)).length() / 0.75
+			r.modulate.a = clampf(near, 0.0, 1.0) if hidden_now else 0.0
 
 
 func _process(delta: float) -> void:
@@ -390,7 +451,7 @@ func _arrive(k: Vector2i) -> void:
 
 func _set_hidden(from: Vector2i, on: bool) -> void:
 	for k: Vector2i in tiles:
-		if tiles[k]["type"] not in ["i", "@", "!", "+"]:
+		if tiles[k]["type"] not in HIDERS:
 			continue
 		var node: Node3D = tiles[k]["node"]
 		var home: Vector3 = tiles[k]["home"]
@@ -433,7 +494,7 @@ func _place_camera(delta: float, snap: bool) -> void:
 			cam.projection = Camera3D.PROJECTION_PERSPECTIVE
 			cam.fov = 58.0
 			var over := centre + Vector3(0, span * 1.5, span * 1.1)
-			var m := man.position - Vector3(0, man.pixel_size * 138, 0) + centre
+			var m := man.position + centre
 			var behind := m + Vector3(0, 3.0, 4.2)
 			var k := clampf((t - 1.9) / 1.0, 0.0, 1.0)
 			k = k * k * (3.0 - 2.0 * k)
