@@ -74,6 +74,19 @@ var motion := true
 var alpha := 1.0
 ## Where hat points go: nowhere special, or flying off as he dies.
 var hat_xf := Transform2D.IDENTITY
+## Expressions (a prototype): how the head tilts (radians, + clockwise), where
+## the eyes look beyond `look` (in units), how far each upper lid has come
+## down (x left eye, y right, 0..1), the lids' slant (+ sad, outer corners
+## down; - cross, inner corners down), how much each eye has closed into a
+## smiling arch (0..1), and each eye's size.
+var roll := 0.0
+var gaze := Vector2.ZERO
+var lid := Vector2.ZERO
+var lid_tilt := 0.0
+var smile := Vector2.ZERO
+## How far the lower lids have come up, flat (0..1): a squint.
+var lower := 0.0
+var eye_size := Vector2.ONE
 
 var _xf := Transform2D.IDENTITY
 var _measured := false
@@ -86,6 +99,13 @@ func begin(on: CanvasItem, measure: bool) -> void:
 	_measured = false
 	alpha = 1.0
 	hat_xf = Transform2D.IDENTITY
+	roll = 0.0
+	gaze = Vector2.ZERO
+	lid = Vector2.ZERO
+	lid_tilt = 0.0
+	smile = Vector2.ZERO
+	lower = 0.0
+	eye_size = Vector2.ONE
 
 
 ## draw_set_transform(), remembered so measuring sees the same transform.
@@ -132,7 +152,7 @@ func bp(pts: Array) -> PackedVector2Array:
 
 ## A point relative to the head's centre, sinking and shrinking with it.
 func h(x: float, y: float) -> Vector2:
-	return hc + Vector2(x, y) * (hr / HEAD_R)
+	return hc + (Vector2(x, y) * (hr / HEAD_R)).rotated(roll)
 
 
 ## A point of a hat, relative to the head's centre.
@@ -143,12 +163,17 @@ func t(v: Vector2) -> Vector2:
 ## Where an eye is (side -1 or 1): where the sprite put them, 6.6 either side
 ## of the head's centre and 4 below it, sliding a little with the look.
 func eye(side: float) -> Vector2:
-	return hc + Vector2(side * 6.6 + look.x * 2.0, 4.05 + look.y * 0.5)
+	return hc + (Vector2(side * 6.6 + look.x * 2.0, 4.05 + look.y * 0.5) + gaze).rotated(roll)
 
 
-## How open the eyes are: blinking shuts them, happiness widens them.
-func eye_open() -> float:
-	return maxf(1.0 - blink, 0.12) * (1.0 + happy * 0.3)
+## How open the eyes are: blinking shuts them, happiness widens them. With a
+## side, that eye's lid and smile close it too (a wink).
+func eye_open(side := 0.0) -> float:
+	var open := maxf(1.0 - blink, 0.12) * (1.0 + happy * 0.3)
+	if side != 0.0:
+		var k := 0 if side < 0.0 else 1
+		open *= maxf(1.0 - maxf(lid[k] * 0.85, smile[k] * 0.8), 0.12)
+	return open
 
 
 ## Walking away from us: no face, no front-only details.
@@ -221,14 +246,47 @@ func arc(centre: Vector2, radius: float, from: float, to: float, c: Color, width
 func classic_eyes(c: Color) -> void:
 	if from_behind():
 		return
-	var open := eye_open()
 	for side: float in [-1.0, 1.0]:
-		var e := eye(side)
-		var pts := PackedVector2Array()
-		for k in 24:
-			var a := TAU * k / 24.0
-			pts.append(e + Vector2(cos(a) * 2.0, sin(a) * 2.0 * open))
-		poly(pts, c)
+		poly(eye_shape(side, 2.0), c)
+
+
+## Eye `side` (-1 left, 1 right) as an outline, `r` its radius when wide
+## open: blinking squashes it, the upper lid cuts it flat (slanting with
+## lid_tilt), a smile bends it into an arch, and it turns with the head.
+func eye_shape(side: float, r: float) -> PackedVector2Array:
+	var k := 0 if side < 0.0 else 1
+	var e := eye(side)
+	r *= eye_size[k]
+	var open := maxf(1.0 - blink, 0.12) * (1.0 + happy * 0.3)
+	var hgt := r * open
+	var sm := clampf(smile[k], 0.0, 1.0)
+	var arch := r * 0.42  # how thick a fully smiling eye's arch is
+	var n := 20
+	var tops := PackedVector2Array()
+	var bottoms := PackedVector2Array()
+	for i in n + 1:
+		var u := -cos(PI * i / n)  # bunched at the corners, where it curves
+		var x := u * r
+		var round := sqrt(maxf(1.0 - u * u, 0.0))
+		var top := -hgt * round
+		var bottom := hgt * round
+		# The upper lid: down by lid[k] of the eye's height, slanting.
+		var lid_y := -hgt + 2.0 * hgt * lid[k] + lid_tilt * u * side * hgt * 0.55
+		top = maxf(top, lid_y)
+		# A smile: the lower edge rises into an arch `arch` thick.
+		var inner := r - arch
+		var arch_y := -sqrt(maxf(inner * inner - x * x, 0.0)) * open + arch * 0.15
+		bottom = minf(bottom, hgt - 2.0 * hgt * lower * 0.5)
+		bottom = lerpf(bottom, maxf(arch_y, top + arch * 0.5 * open), sm)
+		bottom = maxf(bottom, top + 0.12 * r)
+		tops.append(Vector2(x, top))
+		bottoms.append(Vector2(x, bottom))
+	var pts := PackedVector2Array()
+	for v in tops:
+		pts.append(e + v.rotated(roll))
+	for i in range(n, -1, -1):
+		pts.append(e + bottoms[i].rotated(roll))
+	return pts
 
 
 ## The body between rest heights y0 (higher up) and y1, edge to edge.

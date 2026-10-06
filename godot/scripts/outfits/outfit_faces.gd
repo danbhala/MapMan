@@ -212,8 +212,8 @@ static func _pumpkin_head(pen: OutfitPen) -> void:
 static func _pumpkin_face(pen: OutfitPen) -> void:
 	if pen.from_behind():
 		return
-	var open := pen.eye_open()
 	for side: float in [-1.0, 1.0]:
+		var open := pen.eye_open(side)
 		var e := pen.eye(side)
 		pen.poly(
 			PackedVector2Array(
@@ -289,8 +289,8 @@ static func _robot_head(pen: OutfitPen) -> void:
 static func _robot_face(pen: OutfitPen) -> void:
 	if pen.from_behind():
 		return
-	var open := pen.eye_open()
 	for side: float in [-1.0, 1.0]:
+		var open := pen.eye_open(side)
 		var e := pen.eye(side)
 		pen.poly(OutfitPen.rrect(e, Vector2(4.3, 2.8 * open + 0.6), 1.5), Color(SKY, 0.3))
 		pen.poly(OutfitPen.rrect(e, Vector2(3.2, 1.9 * open + 0.2), 1.0), SKY)

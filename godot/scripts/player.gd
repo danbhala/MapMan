@@ -166,6 +166,16 @@ var spin := 0.0
 var happy := 0.0
 ## -1 facing left (mirrored) .. 1 facing right.
 var flip := 1.0
+## Expressions (a prototype, OutfitPen): head tilt in radians, how far the
+## head hangs down (units), and the eyes' gaze, lids, slant, smile and size.
+var head_roll := 0.0
+var head_drop := 0.0
+var gaze := Vector2.ZERO
+var lid := Vector2.ZERO
+var lid_tilt := 0.0
+var smile := Vector2.ZERO
+var lower := 0.0
+var eye_size := Vector2.ONE
 
 var _facing := Vector2i.ZERO  # ZERO is the neutral, front-on idle
 var _walk_target := 0.0
@@ -466,6 +476,13 @@ func _paint(measuring: bool) -> Rect2:
 	pen.sy = sy
 	pen.drop = drop
 	pen.motion = Blueprint.motion()
+	pen.roll = head_roll
+	pen.gaze = gaze
+	pen.lid = lid
+	pen.lid_tilt = lid_tilt
+	pen.smile = smile
+	pen.lower = lower
+	pen.eye_size = eye_size
 	pen.hips.clear()
 	pen.knees.clear()
 	pen.feet.clear()
@@ -478,9 +495,11 @@ func _paint(measuring: bool) -> Rect2:
 	var pts := pen.body_points()
 	pen.body = pts
 	var head_at := Vector2(
-		look.x * 5.3, (-61.6 - OutfitPen.RISE - bob + _head_bob() - squash * 5.0) * sy
+		look.x * 5.3, (-61.6 - OutfitPen.RISE - bob + _head_bob() - squash * 5.0 + head_drop) * sy
 	)
 	pen.hc = head_at + Vector2(0.0, sink)
+	if pen.roll != 0.0:
+		pen.hat_xf = Transform2D(pen.roll, pen.hc) * Transform2D(0.0, -pen.hc)
 	pen.hr = OutfitPen.HEAD_R * (1.0 - dead * 0.15)
 	var has_back := Outfits.has_back(outfit)
 	var behind := pen.from_behind()
