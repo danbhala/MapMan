@@ -300,5 +300,9 @@
   "PLAY FROM SHEET 001": "도면 001부터 플레이",
   "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "도면을 다시: 저장된 체크포인트부터",
   "REV B RELEASED": "개정 B 공개",
-  "REV B APPROVED": "개정 B 승인"
+  "REV B APPROVED": "개정 B 승인",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "조작 방식을 고르세요. 설정에서 바꿀 수 있습니다",
+  "HOW IS THE STEERING GOING?": "조작은 어떠세요?",
+  "KEEP %s": "%s 유지",
+  "TRY %s": "%s 해보기"
 }

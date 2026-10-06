@@ -300,5 +300,9 @@
   "PLAY FROM SHEET 001": "從圖紙001開始",
   "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "圖紙再來一遍：從存檔點開始",
   "REV B RELEASED": "修訂版B 已發布",
-  "REV B APPROVED": "修訂版B 已核准"
+  "REV B APPROVED": "修訂版B 已核准",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "選個操作方式？可以在選項中更改",
+  "HOW IS THE STEERING GOING?": "操作方式還可以嗎？",
+  "KEEP %s": "保持%s",
+  "TRY %s": "試試%s"
 }

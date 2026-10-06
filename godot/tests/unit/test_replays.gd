@@ -264,3 +264,25 @@ func test_only_a_better_win_replaces_the_ghost() -> void:
 	var lost := RunRecord.new()
 	lost.finish(1.0, "death")
 	assert_false(Save.record_ghost(5, lost), "only wins")
+
+
+func test_a_drafting_table_level_has_no_ghost_and_keeps_its_tries_apart() -> void:
+	game.new_game(1)
+	_start_try()
+	for i in 3:
+		_step(Vector2i.RIGHT)
+	game.advance_level(false)
+	assert_true(Save.ghosts.has(1))
+	game.new_game(1)
+	_start_try()
+	_step(Vector2i.RIGHT)
+	var d := Draft.new(0)
+	d.begin_stroke()
+	d.paint(Vector2i(2, 3), "b")
+	d.paint(Vector2i(3, 3), "c")
+	d.paint(Vector2i(4, 3), "e")
+	game.drafting.start(LevelCode.to_level(LevelCode.decode(d.code())), "received")
+	assert_eq(game.custom, "received")
+	_start_try()
+	assert_true(game._tries.ghost == null or game._tries.ghost.run == null, "no ghost of level 1")
+	assert_ne(game._tries.level, 1, "its tries aren't level 1's")

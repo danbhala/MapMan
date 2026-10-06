@@ -198,8 +198,7 @@ func _ready() -> void:
 func _end_intro() -> void:
 	intro.queue_free()
 	intro = null
-	show_start_menu()
-	drafting.check_clipboard()
+	FirstRun.after_title(self)  # the main menu, or a first launch's tutorial
 
 
 func _load_data() -> void:
@@ -313,7 +312,9 @@ func loaded() -> void:
 	player.show_player()
 	if not tutorial:
 		if not completed:
-			_tries.begin(level, player.outfit)
+			# A drafting table level plays as level 1 but is its own map: 0 keeps
+			# level 1's ghost and tries off it.
+			_tries.begin(0 if custom != "" else level, player.outfit)
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 

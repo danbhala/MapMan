@@ -340,5 +340,9 @@
   "PLAY FROM SHEET 001": "العب من الصفحة 001",
   "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "الصفحات من جديد: من نقطة حفظ",
   "REV B RELEASED": "صدرت المراجعة ب",
-  "REV B APPROVED": "اعتُمدت المراجعة ب"
+  "REV B APPROVED": "اعتُمدت المراجعة ب",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "كيف تريد التوجيه؟ يمكنك تغييره في الخيارات",
+  "HOW IS THE STEERING GOING?": "كيف يسير التحكم؟",
+  "KEEP %s": "أبقِ %s",
+  "TRY %s": "جرّب %s"
 }

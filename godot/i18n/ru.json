@@ -316,5 +316,9 @@
   "PLAY FROM SHEET 001": "ИГРАТЬ С ЛИСТА 001",
   "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "ЛИСТЫ ЗАНОВО: С СОХРАНЁННОЙ ТОЧКИ",
   "REV B RELEASED": "РЕВ B ВЫПУЩЕНА",
-  "REV B APPROVED": "РЕВ B УТВЕРЖДЕНА"
+  "REV B APPROVED": "РЕВ B УТВЕРЖДЕНА",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "КАК ВЫ ХОТИТЕ УПРАВЛЯТЬ? МОЖНО СМЕНИТЬ В НАСТРОЙКАХ",
+  "HOW IS THE STEERING GOING?": "КАК ВАМ УПРАВЛЕНИЕ?",
+  "KEEP %s": "ОСТАВИТЬ: %s",
+  "TRY %s": "ПОПРОБОВАТЬ: %s"
 }

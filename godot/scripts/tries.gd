@@ -22,7 +22,8 @@ var replay: Replay
 
 
 ## A try at `at_level` begins in `look` (a Wardrobe id), its clock at zero,
-## with the level's best run beside it when the ghost is on.
+## with the level's best run beside it when the ghost is on. Level 0 is one
+## from the drafting table, which has no ghost.
 func begin(at_level: int, look := "classic") -> void:
 	if at_level != level:
 		list.clear()
@@ -31,7 +32,7 @@ func begin(at_level: int, look := "classic") -> void:
 	run.outfit = look
 	clock = 0.0
 	var best: RunRecord = null
-	if Save.ghost_on and Save.ghosts.has(level):
+	if Save.ghost_on and level > 0 and Save.ghosts.has(level):
 		best = RunRecord.decode(Save.ghosts[level])
 	if best and ghost == null:
 		ghost = BestGhost.new()

@@ -300,5 +300,9 @@
   "PLAY FROM SHEET 001": "図面001からプレイ",
   "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "図面をもう一度：保存地点から",
   "REV B RELEASED": "改訂B 公開",
-  "REV B APPROVED": "改訂B 承認"
+  "REV B APPROVED": "改訂B 承認",
+  "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "操作方法を選んでください。設定でいつでも変更できます",
+  "HOW IS THE STEERING GOING?": "操作はいかがですか？",
+  "KEEP %s": "%sのまま",
+  "TRY %s": "%sを試す"
 }
