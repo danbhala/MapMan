@@ -73,8 +73,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
   until the tutorial is next started. A first-time player
   (`scripts/first_run.gd`, `FirstRun.applies()`: nothing played yet, no
-  level link) goes from TAP TO START straight into the tutorial, with SKIP
-  in the header's corner back to the main menu.
+  level link) picks TILT or DRAG TO MOVE (phones that can tilt), then goes
+  straight into the tutorial, with SKIP in the header's corner back to the
+  main menu; after two lessons, or three lost tries on one, it asks once
+  whether to keep that steering or try the other.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

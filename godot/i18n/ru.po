@@ -1216,3 +1216,19 @@ msgstr "Коснитесь экрана во время игры, чтобы п�
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "ТОЛЬКО НАКЛОН"
+
+#. First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)
+msgid "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS"
+msgstr "КАК ВЫ ХОТИТЕ УПРАВЛЯТЬ? МОЖНО СМЕНИТЬ В НАСТРОЙКАХ"
+
+#. First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player
+msgid "HOW IS THE STEERING GOING?"
+msgstr "КАК ВАМ УПРАВЛЕНИЕ?"
+
+#. First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "KEEP %s"
+msgstr "ОСТАВИТЬ: %s"
+
+#. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "TRY %s"
+msgstr "ПОПРОБОВАТЬ: %s"
