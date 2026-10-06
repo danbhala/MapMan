@@ -310,7 +310,9 @@ func loaded() -> void:
 	player.show_player()
 	if not tutorial:
 		if not completed:
-			_tries.begin(level, player.outfit)
+			# A drafting table level plays as level 1 but is its own map: 0 keeps
+			# level 1's ghost and tries off it.
+			_tries.begin(0 if custom != "" else level, player.outfit)
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
