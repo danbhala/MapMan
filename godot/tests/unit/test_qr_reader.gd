@@ -60,6 +60,16 @@ func test_reads_a_shared_level_link() -> void:
 	assert_eq(QrReader.read(_qr(link)), link)
 
 
+func test_reads_a_phone_cameras_brightness_plane() -> void:
+	# Android hands the camera picture over as brightness alone, in red.
+	var img := _qr(CODE)
+	img.convert(Image.FORMAT_L8)
+	var y := Image.create_from_data(
+		img.get_width(), img.get_height(), false, Image.FORMAT_R8, img.get_data()
+	)
+	assert_eq(QrReader.read(y), CODE)
+
+
 func test_reads_a_mirrored_code() -> void:
 	var img := _qr(CODE)
 	img.flip_y()

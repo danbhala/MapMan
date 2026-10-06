@@ -32,7 +32,12 @@ static func read(picture: Image) -> String:
 	if picture == null or picture.is_empty() or picture.is_compressed():
 		return ""
 	var img := picture.duplicate() as Image
-	if img.get_format() != Image.FORMAT_L8:
+	if img.get_format() == Image.FORMAT_R8:
+		# A phone camera's brightness plane: already grey levels.
+		img = Image.create_from_data(
+			img.get_width(), img.get_height(), false, Image.FORMAT_L8, img.get_data()
+		)
+	elif img.get_format() != Image.FORMAT_L8:
 		img.convert(Image.FORMAT_L8)
 	var side := maxi(img.get_width(), img.get_height())
 	if side > MAX_SIDE:
