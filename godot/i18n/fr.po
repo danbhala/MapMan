@@ -869,7 +869,7 @@ msgstr "FANTÔME RECORD"
 msgid "TAP TO START"
 msgstr "TOUCHEZ POUR COMMENCER"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "PASSER"
 
@@ -1206,6 +1206,22 @@ msgstr "Touchez l'écran pendant la partie pour faire une pause. Seul un toucher
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "INCLINAISON SEULE"
+
+#. First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)
+msgid "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS"
+msgstr "COMMENT VOULEZ-VOUS JOUER ? MODIFIABLE DANS OPTIONS"
+
+#. First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player
+msgid "HOW IS THE STEERING GOING?"
+msgstr "ÇA VA, LES COMMANDES ?"
+
+#. First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "KEEP %s"
+msgstr "GARDER : %s"
+
+#. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "TRY %s"
+msgstr "ESSAYER : %s"
 
 #. Level card: this level was drawn on this phone
 msgid "MADE BY YOU"

@@ -860,7 +860,7 @@ msgstr "최고 기록 고스트"
 msgid "TAP TO START"
 msgstr "탭하여 시작"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "건너뛰기"
 
@@ -1196,6 +1196,22 @@ msgstr "플레이 중 화면을 탭하면 일시정지됩니다. 짧게 탭할 �
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "기울기 전용"
+
+#. First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)
+msgid "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS"
+msgstr "조작 방식을 고르세요. 설정에서 바꿀 수 있습니다"
+
+#. First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player
+msgid "HOW IS THE STEERING GOING?"
+msgstr "조작은 어떠세요?"
+
+#. First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "KEEP %s"
+msgstr "%s 유지"
+
+#. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "TRY %s"
+msgstr "%s 해보기"
 
 #. Level card: this level was drawn on this phone
 msgid "MADE BY YOU"

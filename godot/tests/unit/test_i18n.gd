@@ -337,6 +337,21 @@ func _scan(kind: String) -> void:
 	DraftingSheet.scan_status(game.menus, kind)
 
 
+## FirstRun's steering question (`steering` ""), or its check-in while
+## steering that way.
+func _first_run(steering: String) -> void:
+	var run := FirstRun.new()
+	run._game = game
+	if steering == "":
+		run._show_choice()
+	else:
+		var was := Save.controls
+		Save.controls = steering
+		run._show_check()
+		Save.controls = was
+	run.free()
+
+
 func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
 	# Part way through: the first ten looks, the longest and MapWoman released.
@@ -350,6 +365,9 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_main(1842, true, 100),
 		func(): m.show_main(1842, true, 100, true),
 		func(): m.show_first_play(),
+		_first_run.bind(""),
+		_first_run.bind("tilt"),
+		_first_run.bind("touch"),
 		func(): m.show_options(),
 		func(): m.show_language(),
 		func(): m.show_controls(),
