@@ -33,6 +33,11 @@ const OPTIONS_PITCH := 35.0
 ## Classic; the dimension line measures the look he wears with
 ## Player.standing_height().
 const HERO_POS := Vector2(520, 230)
+## Portrait prototype (Portrait): the panel's scale and place, and MapMan
+## standing over the parts list instead of beside it.
+const PORTRAIT_SCALE := 0.88
+const PORTRAIT_PANEL := Vector2(-14, 190)
+const PORTRAIT_HERO := Vector2(230, -24)
 const HERO_SCALE := 1.2
 const HERO_HEIGHT := 77.0
 ## How far down the sheet the pair at the end stand.
@@ -402,6 +407,8 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 	# The sheet number keeps its order inside right-to-left text: "001-B".
 	var figure := _isolated(number)
 	var heading: String = _t("header") % [figure, title]
+	if Portrait.on():  # too narrow for the MAPMAN prefix
+		heading = "SHEET %s  —  %s" % [figure, title]
 	_header = Blueprint.label(self, heading, 14, Blueprint.INK, Vector2.ZERO, 700)
 	# "MAPMAN — SHEET 001 — TITLE" starts with Latin letters, so the text
 	# itself must say which way the sheet reads.
@@ -443,6 +450,10 @@ func _layout() -> void:
 		return
 	var vp := get_viewport_rect().size
 	_panel.position = ((vp - SHEET) / 2.0).floor()
+	if Portrait.on():
+		# Prototype: the landscape panel, a little smaller, under MapMan.
+		_panel.scale = Vector2.ONE * PORTRAIT_SCALE
+		_panel.position = PORTRAIT_PANEL
 	_bg.size = vp
 	_grid.size = vp
 	_grid.queue_redraw()
@@ -684,7 +695,7 @@ func _arrow(text: String, act: String, x: float, align: HorizontalAlignment, a11
 	b.accessibility_name = a11y
 	_clear_button(b)
 	_panel.add_child(b)
-	b.position = Vector2(_mx(x, 102), 266)
+	b.position = Vector2(_mx(x, 102), 315 if Portrait.on() else 266)
 	Blueprint.fit(b, Vector2(102, Blueprint.TAP_HEIGHT))
 	_connect(b, act)
 	_reveal(b)
@@ -793,6 +804,8 @@ func _figure(art: String, pos: Vector2, look := "") -> Player:
 ## mode: "tilt" (eyes follow the tilt), "down" (head hung) or "right".
 func _hero_on(mode: String) -> void:
 	var at := Vector2(_mx(HERO_POS.x, 0), HERO_POS.y)
+	if Portrait.on():
+		at = PORTRAIT_HERO
 	var ellipse := Blueprint.ellipse_points(at + Vector2(0, 2), 34, 12)
 	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
 	_dimension(at)
@@ -904,7 +917,10 @@ func show_main(
 	if levels > 0:
 		parts.append(_tn("level_count", levels))
 	if not parts.is_empty():
-		_note(_t("note") % " · ".join(parts), 312 if drafting else 308)
+		var note_y := 312 if drafting else 308
+		if Portrait.on():  # under the WARDROBE row, which joins the list
+			note_y = 360
+		_note(_t("note") % " · ".join(parts), note_y)
 	_hero_on("tilt")
 	WardrobeSheet.main_menu_row(self)
 	_focus_first()
@@ -1125,20 +1141,24 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	var title: String = _t("practice_title") % [first, last]
 	_open("practice", TEXT.practice_number % (page + 1), title)
 	var on_page := last - first + 1
+	# Portrait (prototype): four columns of narrower cells, five rows.
+	var cols := 4 if Portrait.on() else 5
+	var pitch := 95.0 if Portrait.on() else 118.0
+	var cell_w := pitch - 10.0
 	var heads := _row(56, 12)
-	for c in mini(5, on_page):
-		_text(heads, _t("practice_columns"), 9, Blueprint.FAINT, LIST_X + c * 118, 0, 108.0)
+	for c in mini(cols, on_page):
+		_text(heads, _t("practice_columns"), 9, Blueprint.FAINT, LIST_X + c * pitch, 0, cell_w)
 	_reveal(heads)
 	for i in on_page:
 		var level := first + i
 		var open := level <= furthest
 		@warning_ignore("integer_division")
-		var pos := Vector2(LIST_X + (i % 5) * 118, 72 + (i / 5) * 50)
+		var pos := Vector2(LIST_X + (i % cols) * pitch, 72 + (i / cols) * 50)
 		var a11y: String = (_t("a11y_level") if open else _t("a11y_level_locked")) % level
 		var act := "practice level %d" % level
 		_cell(
 			pos,
-			Vector2(108, Blueprint.TAP_HEIGHT),
+			Vector2(cell_w, Blueprint.TAP_HEIGHT),
 			open,
 			_t("part") % level,
 			_best_text(bests, level, open),
@@ -1165,12 +1185,12 @@ func show_practice(page: int, furthest: int, bests: Dictionary, count: int, note
 	caption += " · " + _tn("released", mini(furthest, count))
 	if note != "":
 		caption = note
-	var pos := Vector2(_mx(130, 200.0), 281)
+	var pos := Vector2(_mx(130, 200.0), 330 if Portrait.on() else 281)
 	var l := Blueprint.label(
 		_panel, caption, 10, Blueprint.FAINT, pos, 500, 200.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
 	_reveal(l)
-	_return_item(312)
+	_return_item(352 if Portrait.on() else 312)
 	_focus_first()
 
 

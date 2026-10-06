@@ -50,6 +50,6 @@ func follow(map: LevelMap, clock: float, delta: float) -> void:
 		if at.dir == Vector2i.ZERO:
 			face_idle()
 		else:
-			face_direction(at.dir, at.moving)
+			face_direction(Portrait.screen_dir(at.dir), at.moving)
 		_dir = at.dir
 		_moving = at.moving

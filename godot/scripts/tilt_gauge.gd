@@ -33,6 +33,9 @@ var steer := Vector2.ZERO
 ## What that tilt does: 0 MapMan stays put, 1 walks, 2 runs.
 var pace := 0
 
+## The portrait prototype's control deck, when there is one (Portrait).
+var deck: PortraitDeck
+
 var _ripple := -1.0
 var _fade := 1.0
 
@@ -45,6 +48,9 @@ func _init() -> void:
 
 ## Sits in the field's bottom-right corner, above the bottom bar.
 func place(screen: Vector2) -> void:
+	if deck != null:  # portrait prototype: big, in the control deck
+		deck.place_gauge(self)
+		return
 	var inner := Blueprint.INSET + 1.0
 	position = Vector2(
 		screen.x - inner - MARGIN - size.x + PAD,
@@ -58,6 +64,8 @@ func centre() -> Vector2:
 
 ## Fade while MapMan's feet (`feet`, in the same screen space) are close.
 func near_player(feet: Vector2, delta: float) -> void:
+	if deck != null:
+		return  # under the field, never in MapMan's way
 	var d := feet - centre()
 	var near := (
 		absf(d.x) < RADIUS + FADE_SIDE and d.y > -RADIUS - FADE_ABOVE and d.y < RADIUS + FADE_BELOW

@@ -168,15 +168,22 @@ func layout() -> void:
 	score_label.position = Vector2(0, 0)
 	Blueprint.fit(score_label, Vector2(inner_w, HEADER_HEIGHT))
 	header_note.position = Vector2(212, 0)
-	Blueprint.fit(header_note, Vector2(inner_w - 212 - 132, HEADER_HEIGHT))
+	Blueprint.fit(header_note, Vector2(maxf(inner_w - 212 - 132, 0.0), HEADER_HEIGHT))
 	lives_label.position = Vector2(inner_w - 12 - 120, 0)
 	Blueprint.fit(lives_label, Vector2(120, HEADER_HEIGHT))
 
 	bar.position = Vector2(inner_x, s.y - inset - 1.0 - BAR_HEIGHT)
+	if Portrait.on():  # the countdown sits under the header; the deck has the bottom
+		bar.position.y = inset + 1.0 + HEADER_HEIGHT
 	bar.size = Vector2(inner_w, BAR_HEIGHT)
 	Blueprint.fit(timer_label, Vector2(70, BAR_HEIGHT))
 	timer_label.position = Vector2(inner_w - 12 - 70, 0)
-	timer_line.position = Vector2(inner_w - 12 - 70 - 10 - TIMER_LENGTH, BAR_HEIGHT / 2.0)
+	# Portrait (prototype): a shorter countdown line leaves the note room.
+	var line_scale := 0.55 if Portrait.on() else 1.0
+	timer_line.scale.x = line_scale
+	timer_line.position = Vector2(
+		inner_w - 12 - 70 - 10 - TIMER_LENGTH * line_scale, BAR_HEIGHT / 2.0
+	)
 	_layout_note(timer_line.position.x)
 	tutorial_label.position = Vector2(12, 0)
 	Blueprint.fit(tutorial_label, Vector2(inner_w - 24, BAR_HEIGHT))

@@ -110,7 +110,7 @@ func _pose(i: int, delta: float) -> void:
 		if at.dir == Vector2i.ZERO:
 			g.face_idle()
 		else:
-			g.face_direction(at.dir, at.moving)
+			g.face_direction(Portrait.screen_dir(at.dir), at.moving)
 		s.dir = at.dir
 		s.moving = at.moving
 	if clock >= r.end_time:

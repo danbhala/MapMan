@@ -88,6 +88,8 @@ static func end_level(m: Menus, args: Array) -> void:
 		m._note(m._t("tap_final") if last else m._t("tap_next") % (level + 1), NOTE_Y)
 	m._hero_on("tilt")
 	var passed := Vector2(470, m._over_head(90, Menus.HERO_POS.y))
+	if Portrait.on():
+		passed = Vector2(40, -100)  # beside MapMan, over the list
 	if m._animate:
 		# Out of reach until the count is in: a tap until then finishes it.
 		for b in buttons:
