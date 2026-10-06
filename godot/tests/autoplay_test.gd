@@ -9,6 +9,7 @@ extends SceneTree
 ##   --levels=10        stop after that many levels
 ##   --start=35         skip the tutorial and start at level 35
 ##   --only-levels      skip the lose-life, game-over and pause checks
+##   --rev-b            play Revision B's sheets (data/levels_b.json) instead
 ##   --time-scale=1     play at real speed (default 3x), e.g. when recording
 ##                      with --write-movie for the playtester agent
 
@@ -25,6 +26,7 @@ var failures: Array[String] = []
 var max_levels := 100
 var start_level := 0  # 0 = play the tutorial, then from level 1
 var only_levels := false  # skip the lose-life / game-over / pause checks
+var rev_b := false  # Revision B's sheets, as a player who has finished the game
 
 
 func _initialize() -> void:
@@ -35,6 +37,8 @@ func _initialize() -> void:
 			start_level = int(arg.split("=")[1])
 		elif arg == "--only-levels":
 			only_levels = true
+		elif arg == "--rev-b":
+			rev_b = true
 		elif arg.begins_with("--time-scale="):
 			Engine.time_scale = float(arg.split("=")[1])
 	if Engine.time_scale == 1.0:
@@ -74,7 +78,16 @@ func run() -> void:
 	await frames(5)
 	check(game.menus.current == "main", "main menu shows at startup")
 
-	if start_level > 0:
+	if rev_b:
+		save.has_completed = true
+		if start_level > 0:
+			game.revision_b.start(start_level)
+		else:
+			game._on_menu_action("revision b")
+		check(game.game_active and save.rev_b, "Revision B starts from the main menu")
+		check(game.levels == game.revision_b.levels, "Revision B's sheets are played")
+		check(game.losses_here() == 0, "no assists in Revision B")
+	elif start_level > 0:
 		game.menus.close()
 		game.new_game(start_level)
 	else:
@@ -257,8 +270,10 @@ func step_to(target: Vector2i) -> bool:
 			continue
 		if map.spikes.has(target) and not map.moving and not _spikes_clear(map, target):
 			# Wait for the spikes ahead to drop, unless the ones underfoot are
-			# about to rise: then go while the way is at least not up.
-			Input.action_release(act)
+			# about to rise: then go while the way is at least not up. Every
+			# key goes, or the one held from the last step walks him on.
+			for a in ACTIONS.values():
+				Input.action_release(a)
 			await process_frame
 			continue
 		for other in ACTIONS.values():

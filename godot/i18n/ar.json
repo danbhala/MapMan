@@ -334,5 +334,11 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "ملاحظة: اسحب للتحرك · انقر اللوحة للإيقاف المؤقت",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "المس واسحب في أي مكان لتتحرك في الخريطة وتوجه إلى بلاطة الخروج.\nتجاوز الحلقة المتقطعة للمشي، والمتصلة للركض.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "انقر الشاشة أثناء اللعب للإيقاف المؤقت. النقرة السريعة وحدها توقف اللعب: إذا سحبت يتحرك MapMan.",
-  "TILT ONLY": "للإمالة فقط"
+  "TILT ONLY": "للإمالة فقط",
+  "PLAY REVISION B": "العب المراجعة ب",
+  "REVISION B": "المراجعة ب",
+  "PLAY FROM SHEET 001": "العب من الصفحة 001",
+  "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "الصفحات من جديد: من نقطة حفظ",
+  "REV B RELEASED": "صدرت المراجعة ب",
+  "REV B APPROVED": "اعتُمدت المراجعة ب"
 }

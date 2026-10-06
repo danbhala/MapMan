@@ -10,6 +10,11 @@ extends RefCounted
 
 const FIELD := Color("#16407a")
 const GRID := Color(1, 1, 1, 0.12)
+## Revision B's Redline look: the field a shade deeper, the grid in red
+## pencil, the tiles a warm paper colour (RevisionB sets it, revise()).
+const FIELD_B := Color("#112f66")
+const GRID_B := Color("#ff6b6b", 0.3)
+const TILE_TINT_B := Color("#ffe3bf")
 const INK := Color.WHITE
 const FAINT := Color(1, 1, 1, 0.66)
 const DIM := Color(1, 1, 1, 0.55)
@@ -44,6 +49,10 @@ const STAMP_ROTATION := -0.12
 ## The height of a tappable row or cell: 48 dp on a 360-450 dp phone screen.
 const TAP_HEIGHT := 44.0
 
+## The look in force: Revision A's blueprint, or Revision B's Redline.
+static var field := FIELD
+static var grid_color := GRID
+static var tile_tint := Color.WHITE
 static var _fonts := {}
 ## The subset the language on screen draws from, first among the fallbacks:
 ## the subsets share many characters (ideographs, punctuation) in different
@@ -392,9 +401,17 @@ class Grid:
 			y += GRID_STEP
 
 
-static func grid(parent: Node, size: Vector2, color := GRID) -> Grid:
+## Revision B on or off: the Redline look, for everything drawn from now on.
+static func revise(rev_b: bool) -> void:
+	field = FIELD_B if rev_b else FIELD
+	grid_color = GRID_B if rev_b else GRID
+	tile_tint = TILE_TINT_B if rev_b else Color.WHITE
+
+
+## The paper's grid; in the look in force unless a colour is given.
+static func grid(parent: Node, size: Vector2, color := Color.TRANSPARENT) -> Grid:
 	var g := Grid.new()
 	g.size = size
-	g.color = color
+	g.color = color if color.a > 0.0 else grid_color
 	parent.add_child(g)
 	return g

@@ -72,6 +72,20 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `Save.has_completed`. Finishing the game sets `Save.new_lessons`, which puts
   a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
   until the tutorial is next started.
+- Revision B (`scripts/revision_b.gd`, `main.revision_b`): the second game,
+  `data/levels_b.json`, every sheet of `levels.json` mirrored and reworked
+  with the crumble, ice and spike tiles by `tools/remix.py` (rerun it after
+  changing `levels.json`; hand-tuning goes in `tools/remix_overrides.json`,
+  never in `levels_b.json`). It opens when the game has been finished
+  (`Save.rev_b_open()`): PLAY REVISION B on the main menu, its own
+  checkpoints sheet ("B<n>" actions). `main.gd` `revise()` swaps `levels`,
+  the save track (`Save.rev_b`: checkpoints, furthest sheet, bests, ghosts
+  and high score live per track in `Save.track_a` / `track_b`, read through
+  the usual `Save.checkpoints` etc.) and the look (`Blueprint.revise()`:
+  `Blueprint.field`, `grid_color`, `tile_tint`, the Redline palette). No
+  assists in Revision B (`losses_here()`). The menus' actions themselves are
+  carried out by `scripts/menu_actions.gd`, the Options sheet's by
+  `scripts/options_actions.gd`, so `main.gd` stays under the lint's 1300 lines.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
@@ -154,7 +168,8 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 
 - `tests/unit/` – GUT tests, one per tile rule; add one for every new rule.
 - `tests/autoplay_test.gd` – a bot walks every level along a safe route; the
-  proof that all levels are still solvable.
+  proof that all levels are still solvable (`--rev-b` for Revision B's sheets;
+  `verify.sh --full` runs both).
 - `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of two dozen
   screens. Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
 - `tools/record_tour.sh` records a video tour (menus, a level, pause, level
