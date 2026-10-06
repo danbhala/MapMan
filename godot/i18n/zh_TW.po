@@ -860,7 +860,7 @@ msgstr "最佳紀錄回放"
 msgid "TAP TO START"
 msgstr "點一下開始"
 
-#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title
+#. Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu
 msgid "SKIP"
 msgstr "略過"
 
@@ -1196,6 +1196,22 @@ msgstr "遊戲中點一下螢幕即可暫停。只有快速點一下才會暫停
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "僅限傾斜"
+
+#. First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)
+msgid "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS"
+msgstr "選個操作方式？可以在選項中更改"
+
+#. First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player
+msgid "HOW IS THE STEERING GOING?"
+msgstr "操作方式還可以嗎？"
+
+#. First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "KEEP %s"
+msgstr "保持%s"
+
+#. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
+msgid "TRY %s"
+msgstr "試試%s"
 
 #. Level card: this level was drawn on this phone
 msgid "MADE BY YOU"

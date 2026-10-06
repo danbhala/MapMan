@@ -1067,7 +1067,7 @@
     },
     {
       "id": "SKIP",
-      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title",
+      "note": "Title screen at launch: small corner note while the intro plays; tapping anywhere skips it to the title. Also the corner button in the tutorial a first-time player is taken to, back to the main menu",
       "max": 12
     },
     {
@@ -1480,6 +1480,26 @@
       "id": "TILT ONLY",
       "note": "Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt",
       "max": 17
+    },
+    {
+      "id": "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS",
+      "note": "First run, before the tutorial: small print on the sheet asking whether to steer by tilting the device or dragging a finger (rows: TILT TO MOVE, DRAG TO MOVE)",
+      "max": 60
+    },
+    {
+      "id": "HOW IS THE STEERING GOING?",
+      "note": "First run, after two tutorial lessons: small print on the sheet asking once whether the chosen steering suits the player",
+      "max": 60
+    },
+    {
+      "id": "KEEP %s",
+      "note": "First run steering check: row that keeps the current steering; %s is TILT TO MOVE or DRAG TO MOVE",
+      "max": 30
+    },
+    {
+      "id": "TRY %s",
+      "note": "First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE",
+      "max": 30
     },
     {
       "id": "MADE BY YOU",
