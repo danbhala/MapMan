@@ -1196,3 +1196,39 @@ msgstr "Duraklatmak için oyun sırasında ekrana dokun. Yalnızca kısa bir dok
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "YALNIZCA EĞME"
+
+#. Row on the sheet after the last life is lost: watch a rewarded ad to get one more life and replay the level
+msgid "KEEP GOING: WATCH AN AD"
+msgstr "DEVAM ET: REKLAM İZLE"
+
+#. Row on the sheet after the last life is lost: no ad, the game is over
+msgid "END THE GAME"
+msgstr "OYUNU BİTİR"
+
+#. Small print under those rows: the ad gives one life, and only once in a game
+msgid "NOTE: ONE MORE LIFE, ONCE PER GAME"
+msgstr "NOT: OYUN BAŞINA BİR KEZ, BİR CAN DAHA"
+
+#. Options button under MapMan, only in the EU and UK: reopens Google's ad consent form
+msgid "AD PRIVACY"
+msgstr "REKLAM GİZLİLİĞİ"
+
+#. Level clear slip, small gold heading: a bonus from watching an ad
+msgid "AD BONUS"
+msgstr "REKLAM BONUSU"
+
+#. Level clear slip, main line: watching the ad doubles this level's points
+msgid "DOUBLE THE POINTS"
+msgstr "PUANI İKİYE KATLA"
+
+#. Level clear slip, small print under DOUBLE THE POINTS
+msgid "WATCH A SHORT AD"
+msgstr "KISA BİR REKLAM İZLE"
+
+#. Button on that slip: plays the ad
+msgid "DOUBLE IT"
+msgstr "İKİYE KAT"
+
+#. Level clear slip after the ad: this level's points were doubled
+msgid "POINTS DOUBLED"
+msgstr "PUAN İKİ KATI"

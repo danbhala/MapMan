@@ -1236,3 +1236,39 @@ msgstr "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ní ghlacann
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "CLAONADH AMHÁIN"
+
+#. Row on the sheet after the last life is lost: watch a rewarded ad to get one more life and replay the level
+msgid "KEEP GOING: WATCH AN AD"
+msgstr "LEAN ORT: FÉACH AR FHÓGRA"
+
+#. Row on the sheet after the last life is lost: no ad, the game is over
+msgid "END THE GAME"
+msgstr "CRÍOCHNAIGH AN CLUICHE"
+
+#. Small print under those rows: the ad gives one life, and only once in a game
+msgid "NOTE: ONE MORE LIFE, ONCE PER GAME"
+msgstr "NÓTA: BEATHA AMHÁIN EILE, UAIR AMHÁIN SA CHLUICHE"
+
+#. Options button under MapMan, only in the EU and UK: reopens Google's ad consent form
+msgid "AD PRIVACY"
+msgstr "PRÍOBHÁIDEACHT"
+
+#. Level clear slip, small gold heading: a bonus from watching an ad
+msgid "AD BONUS"
+msgstr "BÓNAS FÓGRA"
+
+#. Level clear slip, main line: watching the ad doubles this level's points
+msgid "DOUBLE THE POINTS"
+msgstr "DÚBAIL NA POINTÍ"
+
+#. Level clear slip, small print under DOUBLE THE POINTS
+msgid "WATCH A SHORT AD"
+msgstr "FÉACH AR FHÓGRA GEARR"
+
+#. Button on that slip: plays the ad
+msgid "DOUBLE IT"
+msgstr "DÚBAIL"
+
+#. Level clear slip after the ad: this level's points were doubled
+msgid "POINTS DOUBLED"
+msgstr "POINTÍ DÚBAILTE"

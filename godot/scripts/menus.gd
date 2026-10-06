@@ -84,6 +84,7 @@ const TEXT := {
 	# 001-B — options
 	"options_number": "001-B",
 	"options_title": "OPTIONS",
+	"ad_privacy": "AD PRIVACY",
 	"options": ["MUSIC", "SOUND EFFECTS", "VIBRATION", "REDUCE MOTION", "BEST-RUN GHOST"],
 	"on": "[X]",
 	"off": "[ ]",
@@ -121,6 +122,10 @@ const TEXT := {
 	"route_note": "NOTE: THE SAFE ROUTE IS SKETCHED AS EACH TRY STARTS",
 	"skip_sheet": "SKIP THIS SHEET",
 	"rework": "REWORK",
+	# the last life lost, with a rewarded ad on offer (Ads)
+	"keep_going": "KEEP GOING: WATCH AN AD",
+	"give_up": "END THE GAME",
+	"keep_going_note": "NOTE: ONE MORE LIFE, ONCE PER GAME",
 	# END — game over
 	"end_number": "END",
 	"game_over_title": "GAME OVER",
@@ -885,6 +890,7 @@ func show_main(
 	highscore: int, has_checkpoint: bool, levels := 0, drafting := false, new_lessons := false
 ) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
+	Ads.start()  # once: Google's consent form, where the law asks, over the menu
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
 	var acts := ["play from start", "restart from checkpoint", "practice", "tutorial", "options"]
 	var texts := _tl("main_items")
@@ -941,6 +947,14 @@ func show_options() -> void:
 	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
 	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
+	if Ads.privacy_options_required():
+		# Where Google's consent form was shown (the EU and UK), the way back to it.
+		var at := ClearSheet.REPLAY_POS
+		var pos := Vector2(_mx(at.x, ClearSheet.REPLAY_W), at.y)
+		var size := Vector2(ClearSheet.REPLAY_W, Blueprint.TAP_HEIGHT)
+		var privacy := Blueprint.item(_panel, _t("ad_privacy"), pos, size)
+		privacy.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_connect(privacy, "ad privacy")
 	_hero_on("tilt")
 	_focus_first()
 
@@ -1041,7 +1055,11 @@ func show_confirm_quit(back := "unpause") -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 ## help: the assist the next try gets ("", "marks", "route" or "skip",
 ## main.gd assist_name()); the note says so, and "skip" adds a row for it.
-func show_lose_life(lives: int, level := 0, reason := "death", help := "") -> void:
+## keep_going: the last life is gone and a rewarded ad can buy one more
+## (KEEP GOING or END THE GAME, in place of the try and skip rows).
+func show_lose_life(
+	lives: int, level := 0, reason := "death", help := "", keep_going := false
+) -> void:
 	_level = level
 	_open("lose_life", "%03d" % level, _t("defect_title") % level, Blueprint.PINK)
 	var timeout := reason == "timeout"
@@ -1066,6 +1084,14 @@ func show_lose_life(lives: int, level := 0, reason := "death", help := "") -> vo
 		more.horizontal_alignment = _align()
 	_reveal(row)
 	_rule(128)
+	if keep_going:
+		_item(1, _t("keep_going"), "keep going", 150)
+		_item(2, _t("give_up"), "give up", 194)
+		_note(_t("keep_going_note"), 252)
+		_stamp(_t("rework"), Vector2(222, 290), Blueprint.PINK, STAMP_DELAY, false)
+		_hero_on("down")
+		_focus_first()
+		return
 	_item(1, _t("try_again"), "try again", 150)
 	var note: String = _t("timeout_note") if timeout else _t("death_note")
 	match help:
@@ -1188,7 +1214,9 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
 ## WARDROBE and MAIN MENU. released: the look this first clear released, if
-## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
+## any; more: "tries", how many tries the replay would show (none: no WATCH
+## REPLAY), and "double", the DOUBLE IT slip (AdOffers): -1 on offer, or the
+## points a rewarded ad added by doubling the sheet's (none: no slip).
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1199,12 +1227,19 @@ func show_end_level(
 	seconds_left := -1,
 	last := false,
 	released := "",
-	tries := 0
+	more := {}
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released, tries]
+	_clear_args = args + [last, released, more]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
+
+
+## The level clear after DOUBLE IT: `extra` more points are in the score.
+func doubled_end_level(extra: int) -> void:
+	_clear_args[0] += extra
+	_clear_args[9] = _clear_args[9].merged({"double": extra}, true)
+	reopen_end_level()
 
 
 ## The level clear again, all in (no count), on the way back from the

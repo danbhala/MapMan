@@ -294,5 +294,14 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "註：拖曳移動 · 點一下圖面暫停",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "在任何位置按住並拖曳即可移動，前往出口地磚。\n超過虛線圈走路，超過實線圈奔跑。",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "遊戲中點一下螢幕即可暫停。只有快速點一下才會暫停：拖曳時MapMan會移動。",
-  "TILT ONLY": "僅限傾斜"
+  "TILT ONLY": "僅限傾斜",
+  "KEEP GOING: WATCH AN AD": "看廣告繼續",
+  "END THE GAME": "結束遊戲",
+  "NOTE: ONE MORE LIFE, ONCE PER GAME": "註：生命+1，每局一次",
+  "AD PRIVACY": "廣告設定",
+  "AD BONUS": "廣告獎勵",
+  "DOUBLE THE POINTS": "分數翻倍",
+  "WATCH A SHORT AD": "看一段短廣告",
+  "DOUBLE IT": "翻倍",
+  "POINTS DOUBLED": "分數已翻倍"
 }

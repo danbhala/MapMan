@@ -72,7 +72,13 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   `Save.has_completed`. Finishing the game sets `Save.new_lessons`, which puts
   a note on the game-complete sheet and NEW on the main menu's TUTORIAL row
   until the tutorial is next started.
-- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
+- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`, `Ads`.
+- Ads (`docs/ads.md`): `scripts/ads.gd` (`Ads`) holds the pacing and unit
+  IDs; `scripts/ads_admob.gd` is the only file that touches
+  `addons/admob/`, loaded only on a phone; `scripts/ad_offers.gd`
+  (`main.ad_offers`) is KEEP GOING, DOUBLE IT and NEXT's full-screen ad.
+  Tests set `Ads.fake` and call `Ads.reset()`. Never show an ad on levels 1
+  to 10, the tutorial, practice, drafts or replays.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
   dev cheats, build info and the play log. Dev tools are on when

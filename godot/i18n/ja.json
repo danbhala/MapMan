@@ -294,5 +294,14 @@
   "NOTE: DRAG TO MOVE · TAP THE SHEET TO PAUSE": "注記：ドラッグで移動 · 図面をタップで一時停止",
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "どこでもタッチしてドラッグすると移動し、出口のタイルへ向かいます。\n点線の円を越えると歩き、実線の円を越えると走ります。",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "プレイ中に画面をタップすると一時停止します。一時停止は短いタップだけ：ドラッグするとMapManが動きます。",
-  "TILT ONLY": "傾き操作のみ"
+  "TILT ONLY": "傾き操作のみ",
+  "KEEP GOING: WATCH AN AD": "広告を見て続ける",
+  "END THE GAME": "ゲームを終了",
+  "NOTE: ONE MORE LIFE, ONCE PER GAME": "注記：残機+1、1ゲームに1回",
+  "AD PRIVACY": "広告の設定",
+  "AD BONUS": "広告ボーナス",
+  "DOUBLE THE POINTS": "ポイント2倍",
+  "WATCH A SHORT AD": "短い広告を見る",
+  "DOUBLE IT": "2倍にする",
+  "POINTS DOUBLED": "ポイント2倍！"
 }

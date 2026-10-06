@@ -1206,3 +1206,39 @@ msgstr "Toca la pantalla durante la partida para pausar. Solo pausa un toque rá
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "SOLO INCLINAR"
+
+#. Row on the sheet after the last life is lost: watch a rewarded ad to get one more life and replay the level
+msgid "KEEP GOING: WATCH AN AD"
+msgstr "SEGUIR: VER UN ANUNCIO"
+
+#. Row on the sheet after the last life is lost: no ad, the game is over
+msgid "END THE GAME"
+msgstr "TERMINAR LA PARTIDA"
+
+#. Small print under those rows: the ad gives one life, and only once in a game
+msgid "NOTE: ONE MORE LIFE, ONCE PER GAME"
+msgstr "NOTA: UNA VIDA MÁS, UNA VEZ POR PARTIDA"
+
+#. Options button under MapMan, only in the EU and UK: reopens Google's ad consent form
+msgid "AD PRIVACY"
+msgstr "PRIVACIDAD"
+
+#. Level clear slip, small gold heading: a bonus from watching an ad
+msgid "AD BONUS"
+msgstr "BONUS POR ANUNCIO"
+
+#. Level clear slip, main line: watching the ad doubles this level's points
+msgid "DOUBLE THE POINTS"
+msgstr "DOBLA LOS PUNTOS"
+
+#. Level clear slip, small print under DOUBLE THE POINTS
+msgid "WATCH A SHORT AD"
+msgstr "MIRA UN ANUNCIO CORTO"
+
+#. Button on that slip: plays the ad
+msgid "DOUBLE IT"
+msgstr "DOBLAR"
+
+#. Level clear slip after the ad: this level's points were doubled
+msgid "POINTS DOUBLED"
+msgstr "PUNTOS DOBLADOS"

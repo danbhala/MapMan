@@ -1196,3 +1196,39 @@ msgstr "플레이 중 화면을 탭하면 일시정지됩니다. 짧게 탭할 �
 #. Controls sheet value on the greyed-out tilt rows while steering by touch: the setting only applies to tilt
 msgid "TILT ONLY"
 msgstr "기울기 전용"
+
+#. Row on the sheet after the last life is lost: watch a rewarded ad to get one more life and replay the level
+msgid "KEEP GOING: WATCH AN AD"
+msgstr "광고 보고 계속하기"
+
+#. Row on the sheet after the last life is lost: no ad, the game is over
+msgid "END THE GAME"
+msgstr "게임 종료"
+
+#. Small print under those rows: the ad gives one life, and only once in a game
+msgid "NOTE: ONE MORE LIFE, ONCE PER GAME"
+msgstr "주: 목숨 +1, 게임당 한 번"
+
+#. Options button under MapMan, only in the EU and UK: reopens Google's ad consent form
+msgid "AD PRIVACY"
+msgstr "광고 설정"
+
+#. Level clear slip, small gold heading: a bonus from watching an ad
+msgid "AD BONUS"
+msgstr "광고 보너스"
+
+#. Level clear slip, main line: watching the ad doubles this level's points
+msgid "DOUBLE THE POINTS"
+msgstr "점수 2배"
+
+#. Level clear slip, small print under DOUBLE THE POINTS
+msgid "WATCH A SHORT AD"
+msgstr "짧은 광고 보기"
+
+#. Button on that slip: plays the ad
+msgid "DOUBLE IT"
+msgstr "2배 받기"
+
+#. Level clear slip after the ad: this level's points were doubled
+msgid "POINTS DOUBLED"
+msgstr "점수 2배!"

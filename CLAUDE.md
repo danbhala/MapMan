@@ -19,6 +19,7 @@ now ported to Godot 4.5.
   design and the rules that keep extra parts on him from breaking his
   animations. Read its README before touching looks, releases or how MapMan
   is drawn.
+- `docs/ads.md` – the ads (AdMob): what shows when, and where the IDs live.
 - `docs/drafting-table.md` – the on-phone level editor and level codes. Read it
   before touching tiles, `godot/scripts/level_code.gd` or its frozen table.
 
