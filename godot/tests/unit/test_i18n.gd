@@ -16,6 +16,8 @@ const UNTRANSLATED := [
 	"001-F",
 	"001-G",
 	"001-H",
+	"001-I",
+	"001-J",
 	"D%d",
 	"R%d",
 	"D%d-S",
@@ -50,6 +52,10 @@ var game
 func before_all() -> void:
 	Save.persist = false
 	Dev.persist = false
+	Stats.persist = false
+	Stats.key = "phc_test"  # the play stats sheets show
+	Stats.answer = "no"
+	Stats.answered_at = int(Time.get_unix_time_from_system())
 	Dev.enabled = false
 	# The phone's screen, not the 64 px square headless Godot starts with:
 	# the sheets are laid out in it.
@@ -59,6 +65,12 @@ func before_all() -> void:
 		msgids[entry.id] = entry
 		if entry.has("plural"):
 			plurals[entry.plural] = entry
+
+
+func after_all() -> void:
+	Stats.key = ""
+	Stats.answer = ""
+	Stats.install_id = ""
 
 
 func before_each() -> void:
@@ -98,7 +110,13 @@ func _has_letters(text: String) -> bool:
 
 func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 	for table in [
-		Menus.TEXT, Hud.TEXT, WardrobeSheet.TEXT, Intro.TEXT, DraftingSheet.TEXT, ControlsSheet.TEXT
+		Menus.TEXT,
+		Hud.TEXT,
+		WardrobeSheet.TEXT,
+		Intro.TEXT,
+		DraftingSheet.TEXT,
+		ControlsSheet.TEXT,
+		StatsSheet.TEXT,
 	]:
 		for key in table:
 			var value = table[key]
@@ -253,6 +271,13 @@ func _wardrobe_sheet(worn: String) -> void:
 
 
 ## Sheet 001-H steering by touch: the tilt rows greyed out, TILT ONLY.
+## The PRIVACY sheet with play stats on (its ID note) or off.
+func _privacy(m, on: bool) -> void:
+	Stats.answer = "yes" if on else "no"
+	Stats.install_id = "3f9a0c12-0000-4000-8000-000000000000" if on else ""
+	StatsSheet.build(m)
+
+
 func _controls_by_touch(m) -> void:
 	Save.controls = "touch"
 	m.show_controls()
@@ -346,6 +371,9 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_language(),
 		func(): m.show_controls(),
 		_controls_by_touch.bind(m),
+		func(): StatsSheet.build_question(m),
+		_privacy.bind(m, true),
+		_privacy.bind(m, false),
 		func(): m.show_pause(false, 35, 12),
 		func(): m.show_pause(true),
 		func(): m.show_confirm_quit(),

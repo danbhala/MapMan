@@ -298,5 +298,18 @@
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "조작 방식을 고르세요. 설정에서 바꿀 수 있습니다",
   "HOW IS THE STEERING GOING?": "조작은 어떠세요?",
   "KEEP %s": "%s 유지",
-  "TRY %s": "%s 해보기"
+  "TRY %s": "%s 해보기",
+  "PLAY STATS": "플레이 통계",
+  "YES, SEND PLAY STATS": "예, 통계 보내기",
+  "NO THANKS": "아니요",
+  "PRIVACY POLICY": "개인정보 처리방침",
+  "PRIVACY": "개인정보",
+  "SHARE PLAY STATS": "플레이 통계 보내기",
+  "OPEN": "열기",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "통계 ID %s: 데이터 삭제를 요청할 때 알려주세요",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "아무것도 보내지 않습니다. 켜면 새 무작위 ID가 생깁니다",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "익명 플레이 통계로 MAPMAN 개선을 도와주시겠어요?",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "어떤 레벨을 시작하고, 클리어하고, 실패했는지, 어디서",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "이름, 계정, 광고 ID는 없습니다",
+  "CHANGE IT ANY TIME: %s > %s": "언제든 바꿀 수 있습니다: %s > %s"
 }

@@ -298,5 +298,18 @@
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "選個操作方式？可以在選項中更改",
   "HOW IS THE STEERING GOING?": "操作方式還可以嗎？",
   "KEEP %s": "保持%s",
-  "TRY %s": "試試%s"
+  "TRY %s": "試試%s",
+  "PLAY STATS": "遊戲統計",
+  "YES, SEND PLAY STATS": "好，傳送統計",
+  "NO THANKS": "不用了",
+  "PRIVACY POLICY": "隱私權政策",
+  "PRIVACY": "隱私",
+  "SHARE PLAY STATS": "傳送遊戲統計",
+  "OPEN": "開啟",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "統計ID %s：申請刪除資料時提供",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "不會傳送任何內容。開啟後會產生新的隨機ID",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "用匿名統計幫忙改進MAPMAN？",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "哪些關卡開始、通過或失敗，以及在哪裡",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "不含姓名、帳號或廣告ID",
+  "CHANGE IT ANY TIME: %s > %s": "可隨時更改：%s > %s"
 }

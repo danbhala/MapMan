@@ -941,6 +941,16 @@ func show_options() -> void:
 	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
 	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
+	# PRIVACY (StatsSheet): play stats and the privacy policy.
+	var at := ClearSheet.REPLAY_POS
+	var pos := Vector2(_mx(at.x, ClearSheet.REPLAY_W), at.y)
+	var privacy := Blueprint.item(
+		_panel, tr(StatsSheet.TEXT.title), pos, Vector2(ClearSheet.REPLAY_W, Blueprint.TAP_HEIGHT)
+	)
+	privacy.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	privacy.accessibility_name = _sentence(tr(StatsSheet.TEXT.title))
+	_connect(privacy, "privacy")
+	_reveal(privacy)
 	_hero_on("tilt")
 	_focus_first()
 

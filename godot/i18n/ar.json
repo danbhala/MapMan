@@ -338,5 +338,18 @@
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "كيف تريد التوجيه؟ يمكنك تغييره في الخيارات",
   "HOW IS THE STEERING GOING?": "كيف يسير التحكم؟",
   "KEEP %s": "أبقِ %s",
-  "TRY %s": "جرّب %s"
+  "TRY %s": "جرّب %s",
+  "PLAY STATS": "إحصاءات اللعب",
+  "YES, SEND PLAY STATS": "نعم، أرسل الإحصاءات",
+  "NO THANKS": "لا، شكرًا",
+  "PRIVACY POLICY": "سياسة الخصوصية",
+  "PRIVACY": "الخصوصية",
+  "SHARE PLAY STATS": "إرسال الإحصاءات",
+  "OPEN": "فتح",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "معرّف الإحصاءات %s: اذكره لحذف بياناته",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "لا يُرسل شيء. التشغيل ينشئ معرّفًا عشوائيًا جديدًا",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "هل تساعد في تحسين MAPMAN بإحصاءات لعب مجهولة؟",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "أي المستويات بدأت أو اجتيزت أو خسرت، وأين",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "بلا اسم ولا حساب ولا معرّف إعلاني",
+  "CHANGE IT ANY TIME: %s > %s": "غيّر ذلك متى شئت: %s > %s"
 }

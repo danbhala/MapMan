@@ -77,7 +77,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   straight into the tutorial, with SKIP in the header's corner back to the
   main menu; after two lessons, or three lost tries on one, it asks once
   whether to keep that steering or try the other.
-- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
+- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`,
+  `Stats` (opt-in play stats, `docs/stats.md`: nothing is queued or sent
+  without the player's yes; `scripts/stats_sheet.gd` asks once before the
+  main menu and draws Options > PRIVACY, sheet 001-I).
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
   dev cheats, build info and the play log. Dev tools are on when

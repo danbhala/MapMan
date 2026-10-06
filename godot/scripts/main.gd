@@ -306,6 +306,8 @@ func loaded() -> void:
 		return
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
+	if not completed:
+		Stats.event("level_start", Stats.of(self))
 	if not tutorial:
 		if not completed:
 			# A drafting table level plays as level 1 but is its own map: 0 keeps
@@ -869,6 +871,7 @@ func skip_level() -> void:
 	if not assists_on(ASSIST_SKIP):
 		return
 	Dev.record(level, "skip", _time_left, _moves)
+	Stats.event("level_skip", Stats.of(self))
 	menus.close()
 	losses.erase(level)
 	level += 1
@@ -880,6 +883,8 @@ func skip_level() -> void:
 
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
+	if not completed:
+		Stats.event("level_clear", Stats.of(self, {"time_left": _time_left, "stars": stars}))
 	if completed:
 		# Into the vortex: on to the completion scoring.
 		Audio.play("end_level")
@@ -949,6 +954,7 @@ func finish_advancing_level() -> void:
 	if level > count:
 		if tutorial:
 			# The tutorial runs straight on into level 1 of the real game.
+			Stats.event("tutorial_done")
 			tutorial = false
 			level = 1
 			hud.show_stats(true)
@@ -956,6 +962,7 @@ func finish_advancing_level() -> void:
 			# Past the last level: the bonus map where MapWoman waits. Finishing
 			# the game releases her into the wardrobe.
 			completed = true
+			Stats.event("game_finished", {"score": score, "lives": lives})
 			_mark_completed()
 			Save.release("mapwoman")
 			Save.save_all()
@@ -1032,6 +1039,8 @@ func lose_life(reason := "death") -> void:
 			losses[level] = losses.get(level, 0) + 1
 	Audio.play("lose_life")
 	_lose_reason = reason
+	var at := {"reason": reason, "time_left": _time_left, "x": map.position_key.x}
+	Stats.event("life_lost", Stats.of(self, at.merged({"y": map.position_key.y})))
 	player.show_player()
 	player.face_death()
 	dead = true
@@ -1071,6 +1080,7 @@ func game_over(show_score := true) -> void:
 	paused = false
 	set_background()
 	if show_score:
+		Stats.event("game_over", {"level": level, "score": score})
 		Audio.play_game_over()
 		var previous_best := Save.highscore
 		var pb := Save.submit_score(score)
@@ -1106,6 +1116,10 @@ func _end_practice(note := "") -> void:
 
 func show_start_menu() -> void:
 	Audio.play_menu()
+	if Stats.should_ask():
+		# Once, before the menu: may MapMan send play stats? (StatsSheet)
+		StatsSheet.build_question(menus)
+		return
 	var drafting := Save.drafting_open()
 	menus.show_main(
 		Save.highscore, Save.has_any_checkpoint(), levels.size(), drafting, Save.new_lessons
@@ -1148,11 +1162,18 @@ func _on_menu_action(act: String) -> void:
 				# while the sheet is open, through a tap that redraws it).
 				Save.mark_seen()
 			if game_active:
+				Stats.event(
+					"quit", Stats.of(self, {"after_clear": _between, "time_left": _time_left})
+				)
 				game_over(false)
 			show_start_menu()
 		"confirm quit":
 			menus.show_confirm_quit()
 		"end game", "end tutorial":
+			if game_active:
+				Stats.event(
+					"quit", Stats.of(self, {"after_clear": _between, "time_left": _time_left})
+				)
 			if practice:
 				_end_practice()
 			else:
@@ -1174,6 +1195,7 @@ func _on_menu_action(act: String) -> void:
 			menus.close()
 			next_level()
 		"replay":
+			Stats.event("replay_watched", Stats.of(self))
 			_start_replay()
 		"clear wardrobe":
 			menus.show_wardrobe(level)
@@ -1213,6 +1235,8 @@ func _on_menu_action(act: String) -> void:
 		_:
 			if steering.handle(act) or OptionsActions.handle(act, menus):
 				pass  # the Options, CONTROLS and language sheets
+			elif StatsSheet.handle(act, menus):
+				pass  # the play stats question and the PRIVACY sheet
 			elif act.begins_with("practice page "):
 				show_practice_menu(int(act.get_slice(" ", 2)))
 			elif act.begins_with("practice level "):
@@ -1223,6 +1247,7 @@ func _on_menu_action(act: String) -> void:
 				# it: he wears it from now on.
 				if Save.wear(act.get_slice(" ", 1)):
 					player.outfit = Save.worn
+					Stats.event("look_worn", {"look": Save.worn})
 				if menus.current == "end_level":
 					menus.redraw()
 				else:
@@ -1265,35 +1290,6 @@ func _notification(what: int) -> void:
 		go_back()
 
 
-## Android's back button or gesture: steps out one level, like other apps.
-## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
+## Android's back button or gesture: steps out one level (BackButton).
 func go_back() -> void:
-	if _tries.replay:
-		_end_replay()
-		return
-	if intro:
-		intro.advance()
-		return
-	if dev_panel and dev_panel.is_open():
-		dev_panel.close()
-		return
-	if drafting.go_back():
-		return
-	match menus.current:
-		"":
-			if game_active and not dead:
-				show_pause_menu()
-		"pause":
-			_on_menu_action("unpause")
-		"confirm_quit":
-			_on_menu_action(menus.confirm_back)
-		"wardrobe":
-			_on_menu_action("back to clear" if _between else "main menu")
-		"options", "restart", "first_play", "game_over", "congratulations", "practice":
-			_on_menu_action("main menu")
-		"language", "controls":
-			_on_menu_action("options")
-		"main":
-			get_tree().quit()
-		# Tap-to-continue screens (life lost, level clear, completion scoring)
-		# ignore back so a stray press can't skip or lose anything.
+	BackButton.press(self)

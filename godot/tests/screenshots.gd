@@ -315,6 +315,22 @@ func run() -> void:
 	game.tilt.stick_release()
 	save.controls = "tilt"
 	game.steering.apply()
+
+	# Play stats: the question before the main menu, then PRIVACY with them on.
+	var stats := Blueprint.autoload("Stats")
+	stats.key = "phc_screenshots"
+	stats.answer = ""
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("28_stats_question")
+	stats.choose(true)
+	stats.install_id = "3f9a0c12-0000-4000-8000-000000000000"
+	game._on_menu_action("options")
+	game._on_menu_action("privacy")
+	await frames(70)
+	await shot("29_privacy")
+	stats.choose(false)
+	stats.key = ""
 	save.set_locale("")
 
 	if failures.is_empty():

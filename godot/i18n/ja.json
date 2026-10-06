@@ -298,5 +298,18 @@
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "操作方法を選んでください。設定でいつでも変更できます",
   "HOW IS THE STEERING GOING?": "操作はいかがですか？",
   "KEEP %s": "%sのまま",
-  "TRY %s": "%sを試す"
+  "TRY %s": "%sを試す",
+  "PLAY STATS": "プレイ統計",
+  "YES, SEND PLAY STATS": "はい、送信します",
+  "NO THANKS": "いいえ",
+  "PRIVACY POLICY": "プライバシーポリシー",
+  "PRIVACY": "プライバシー",
+  "SHARE PLAY STATS": "プレイ統計を送信",
+  "OPEN": "開く",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "統計ID %s：データ削除の依頼に使います",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "何も送信されません。オンにすると新しいIDが作られます",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "匿名のプレイ統計でMAPMANの改善に協力しますか？",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "どのレベルを始め、クリアし、失敗したか、どこで",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "名前、アカウント、広告IDは含みません",
+  "CHANGE IT ANY TIME: %s > %s": "いつでも変更できます：%s > %s"
 }

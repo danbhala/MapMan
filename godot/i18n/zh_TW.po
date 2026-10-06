@@ -1212,3 +1212,55 @@ msgstr "保持%s"
 #. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
 msgid "TRY %s"
 msgstr "試試%s"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "遊戲統計"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "用匿名統計幫忙改進MAPMAN？"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "哪些關卡開始、通過或失敗，以及在哪裡"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "不含姓名、帳號或廣告ID"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "可隨時更改：%s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "好，傳送統計"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "不用了"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "隱私權政策"
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "隱私"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "傳送遊戲統計"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "開啟"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "統計ID %s：申請刪除資料時提供"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "不會傳送任何內容。開啟後會產生新的隨機ID"

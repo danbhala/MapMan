@@ -314,5 +314,18 @@
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "КАК ВЫ ХОТИТЕ УПРАВЛЯТЬ? МОЖНО СМЕНИТЬ В НАСТРОЙКАХ",
   "HOW IS THE STEERING GOING?": "КАК ВАМ УПРАВЛЕНИЕ?",
   "KEEP %s": "ОСТАВИТЬ: %s",
-  "TRY %s": "ПОПРОБОВАТЬ: %s"
+  "TRY %s": "ПОПРОБОВАТЬ: %s",
+  "PLAY STATS": "ИГРОВАЯ СТАТИСТИКА",
+  "YES, SEND PLAY STATS": "ДА, ОТПРАВЛЯТЬ",
+  "NO THANKS": "НЕТ, СПАСИБО",
+  "PRIVACY POLICY": "ПОЛИТИКА ДАННЫХ",
+  "PRIVACY": "ПРИВАТНОСТЬ",
+  "SHARE PLAY STATS": "ОТПРАВКА СТАТИСТИКИ",
+  "OPEN": "ОТКРЫТЬ",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "ID СТАТИСТИКИ %s: НАЗОВИТЕ ЕГО ДЛЯ УДАЛЕНИЯ ДАННЫХ",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "НИЧЕГО НЕ ОТПРАВЛЯЕТСЯ. ПРИ ВКЛЮЧЕНИИ СОЗДАЁТСЯ НОВЫЙ ID",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "ПОМОЧЬ УЛУЧШИТЬ MAPMAN АНОНИМНОЙ СТАТИСТИКОЙ?",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "КАКИЕ УРОВНИ НАЧАТЫ, ПРОЙДЕНЫ ИЛИ ПРОИГРАНЫ, И ГДЕ",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "БЕЗ ИМЕНИ, БЕЗ АККАУНТА, БЕЗ РЕКЛАМНОГО ID",
+  "CHANGE IT ANY TIME: %s > %s": "МОЖНО ИЗМЕНИТЬ В ЛЮБОЙ МОМЕНТ: %s > %s"
 }

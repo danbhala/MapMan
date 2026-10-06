@@ -112,6 +112,7 @@ func test_options_toggle_the_current_state() -> void:
 			"vibration off",
 			"reduce motion off",
 			"ghost off",
+			"privacy",
 			"controls",
 			"language",
 			"main menu"
