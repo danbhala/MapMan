@@ -194,9 +194,7 @@ func _ready() -> void:
 func _end_intro() -> void:
 	intro.queue_free()
 	intro = null
-	if not FirstRun.begin(self):
-		show_start_menu()
-		drafting.check_clipboard()
+	FirstRun.after_title(self)  # the main menu, or a first launch's tutorial
 
 
 func _load_data() -> void:

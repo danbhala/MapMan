@@ -47,13 +47,14 @@ static func applies(link := "") -> bool:
 	)
 
 
-## After TAP TO START: the first run if this is a first launch (true), else
-## nothing, and the caller opens the main menu (false).
-static func begin(game: Node) -> bool:
-	if not applies():
-		return false
-	start(game)
-	return true
+## After TAP TO START: the first run on a first launch, else the main menu
+## (and a level code found on the clipboard).
+static func after_title(game: Node) -> void:
+	if applies():
+		start(game)
+	else:
+		game.show_start_menu()
+		game.drafting.check_clipboard()
 
 
 ## Asks how to steer, then opens the tutorial. A phone that can't be tilted
