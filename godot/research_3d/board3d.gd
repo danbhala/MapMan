@@ -49,6 +49,15 @@ var _cam_pos := Vector3.ZERO
 var _cam_look := Vector3.ZERO
 var _textures := {}
 
+# The finale at the flag: the camera swoops in, he jumps for joy, confetti,
+# then a pose picked at random (or POSE=spin|lean|stretch|star|wiggle).
+const POSES := ["spin", "lean", "stretch", "star", "wiggle"]
+var finale_t := -1.0
+var pose := ""
+var _jumps := 0
+var _posed := false
+var _confetti_done := false
+
 
 func _ready() -> void:
 	cam_mode = OS.get_environment("CAM") if OS.has_environment("CAM") else "table"
@@ -273,6 +282,7 @@ func _build_tiles() -> void:
 		gold.albedo_color = Color("#ffd166")
 		cloth.material_override = gold
 		flag.add_child(cloth)
+		flag.position = Vector3(0.62, 0, -0.1)  # beside him, not in front
 		(tiles[exit_key]["node"] as Node3D).add_child(flag)
 
 
@@ -287,13 +297,13 @@ func _is_checkpoint() -> bool:
 
 func _build_man() -> void:
 	man_vp = SubViewport.new()
-	man_vp.size = Vector2i(240, 300)
+	man_vp.size = Vector2i(360, 400)
 	man_vp.transparent_bg = true
 	man_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(man_vp)
 	player = Player.new()
 	player.scale = Vector2(2.8, 2.8)
-	player.position = Vector2(120, 288)
+	player.position = Vector2(180, 388)  # feet; room above for jumps
 	man_vp.add_child(player)
 	player.vanish()
 
@@ -308,7 +318,7 @@ func _build_man() -> void:
 	man.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	# Pivot at his feet: the billboard turns about the node's origin, so the
 	# picture is lifted by its offset and his feet stay planted on the tile.
-	man.offset = Vector2(0, 150 - 12)
+	man.offset = Vector2(0, 200 - 12)
 	man.visible = false
 	board.add_child(man)
 
@@ -390,10 +400,14 @@ func _process(delta: float) -> void:
 		player.face_idle()
 		_man_at(_tile_pos(start))
 	_walk()
+	_finale()
 	player.tick(delta)
 	_tilt_board(delta)
 	_place_camera(delta, false)
 	_shots()
+	if OS.has_environment("FINALE_HOLD") and finale_t >= 0.0:
+		if t >= finale_t + float(OS.get_environment("FINALE_HOLD")):
+			get_tree().quit()
 	if end_after > 0.0 and t >= end_after:
 		get_tree().quit()
 
@@ -423,7 +437,7 @@ func _walk() -> void:
 		if step_i != route.size() - 1:
 			step_i = route.size() - 1
 			player.face_idle()
-			player.cheer()
+			_start_finale()
 		_man_at(_tile_pos(route.back()))
 		tilt = Vector2.ZERO
 		return
@@ -505,6 +519,13 @@ func _place_camera(delta: float, snap: bool) -> void:
 			cam.fov = 38.0
 			pos = centre + Vector3(0, span * 1.6, span * 1.4)
 			look = centre + Vector3(0, 0, -0.6)
+			if finale_t >= 0.0:
+				# Swoop down to MapMan at the flag.
+				var m := man.position + centre
+				var k := clampf((t - finale_t) / 1.1, 0.0, 1.0)
+				k = k * k * (3.0 - 2.0 * k)
+				pos = pos.lerp(m + Vector3(0.0, 3.3, 3.7), k)
+				look = look.lerp(m + Vector3(0, 1.05, 0), k)
 	if snap or cam_mode != "chase":
 		_cam_pos = pos
 		_cam_look = look
@@ -523,3 +544,97 @@ func _shots() -> void:
 		var s: float = shot_at.pop_front()
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("%s/%s_%04.1f.png" % [shots_dir, cam_mode, s])
+
+
+# --- the finale --------------------------------------------------------------
+
+
+func _start_finale() -> void:
+	finale_t = t
+	pose = OS.get_environment("POSE")
+	if pose not in POSES:
+		randomize()
+		pose = POSES[randi() % POSES.size()]
+	print("finale at %.2f, pose %s" % [t, pose])
+
+
+func _finale() -> void:
+	if finale_t < 0.0:
+		return
+	var f := t - finale_t
+	player.happy = 1.0
+	# Three jumps for joy while the camera comes in.
+	if _jumps < 3 and f >= 0.15 + _jumps * 0.5:
+		_jumps += 1
+		player.jump()
+	if not _confetti_done and f >= 0.35:
+		_confetti_done = true
+		_confetti(man.position + Vector3(0, MAN_H + 0.3, 0))
+		_confetti(man.position + Vector3(0.25, 1.25, 0.05))
+	if f < 1.75:
+		return
+	var p := f - 1.75
+	match pose:
+		"spin":
+			if not _posed:
+				_posed = true
+				player.spin_around()
+				get_tree().create_timer(0.5).timeout.connect(player.spin_around)
+		"lean":
+			# Leans back on one foot, looking our way.
+			player.rotation = lerpf(player.rotation, -0.32, 0.15)
+			player.squash = -0.3
+		"stretch":
+			# Up on his toes, as tall as he can be.
+			player.scale = player.scale.lerp(Vector2(2.8 * 0.86, 2.8 * 1.22), 0.2)
+		"star":
+			if not _posed:
+				_posed = true
+				player.spin_around()
+				player._jump = 0.0
+				player.jump()
+		"wiggle":
+			# A happy little dance from side to side.
+			player.rotation = sin(p * 11.0) * 0.22
+			player.flip = 1.0 if sin(p * 5.5) > 0.0 else -1.0
+			player.squash = absf(sin(p * 11.0)) * 0.35
+
+
+func _confetti(at: Vector3) -> void:
+	var c := CPUParticles3D.new()
+	c.one_shot = true
+	c.explosiveness = 0.92
+	c.amount = 90
+	c.lifetime = 3.2
+	c.position = at
+	c.direction = Vector3(0, 1, 0)
+	c.spread = 75.0
+	c.initial_velocity_min = 2.6
+	c.initial_velocity_max = 4.6
+	c.gravity = Vector3(0, -3.2, 0)
+	c.damping_min = 1.2
+	c.damping_max = 2.2
+	c.angle_min = 0.0
+	c.angle_max = 360.0
+	c.angular_velocity_min = -540.0
+	c.angular_velocity_max = 540.0
+	c.scale_amount_min = 0.7
+	c.scale_amount_max = 1.2
+	var g := Gradient.new()
+	g.interpolation_mode = Gradient.GRADIENT_INTERPOLATE_CONSTANT
+	g.offsets = PackedFloat32Array([0.0, 0.2, 0.4, 0.6, 0.8])
+	g.colors = PackedColorArray(
+		[Color("#ff9fb5"), Color("#ffd166"), Color("#c9a6ff"), Color("#8be0c8"), Color.WHITE]
+	)
+	c.color_initial_ramp = g
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.09, 0.05)
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.vertex_color_use_as_albedo = true
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	quad.material = mat
+	c.mesh = quad
+	board.add_child(c)
+	c.emitting = true
