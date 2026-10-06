@@ -1,19 +1,17 @@
 class_name PortraitDeck
 extends Control
 ## The control deck under the field in the portrait prototype (Portrait): the
-## place for the thumbs, drawn like a detail on the sheet. PAUSE on the left,
-## TILT / DRAG on the right, and in the middle the tilt gauge, larger (tap it
-## to recentre), or, steering by drag, the stick's resting ring. A drag
-## anywhere on the screen still steers; the deck just says where the thumb
-## goes. Only exists when Portrait.on().
+## place for the thumb, drawn like a detail on the sheet. PAUSE on the left
+## and in the middle the tilt gauge, larger (tap it to recentre), or, steering
+## by drag, the stick's resting ring. TILT or DRAG is chosen in Options, as in
+## landscape. A drag anywhere on the screen still steers; the deck just says
+## where the thumb goes. Only exists when Portrait.on().
 
-const GAUGE_SCALE := 1.8
+const GAUGE_ZOOM := 1.8
 const BUTTON := Vector2(86, 40)
 
 var _game  # main.gd
 var _pause: Button
-var _tilt: Button
-var _drag: Button
 var _caption: Label
 var _title: Label
 
@@ -45,10 +43,6 @@ func _ready() -> void:
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pause = _button("II  PAUSE")
 	_pause.pressed.connect(_on_pause)
-	_tilt = _button("TILT")
-	_tilt.pressed.connect(_choose.bind("tilt"))
-	_drag = _button("DRAG")
-	_drag.pressed.connect(_choose.bind("touch"))
 	get_viewport().size_changed.connect(layout)
 	layout()
 
@@ -77,29 +71,22 @@ func layout() -> void:
 	var mid := r.position.y + r.size.y / 2.0 + 6.0
 	_pause.position = Vector2(r.position.x + 10, mid - BUTTON.y / 2.0)
 	_pause.size = BUTTON
-	var right := r.end.x - 10 - BUTTON.x
-	_tilt.position = Vector2(right, mid - BUTTON.y - 2.0)
-	_drag.position = Vector2(right, mid + 2.0)
-	for b in [_tilt, _drag]:
-		b.size = Vector2(BUTTON.x, BUTTON.y - 4.0)
 	_caption.position = Vector2(r.get_center().x - 70.0, r.end.y - 20.0)
 	Blueprint.fit(_caption, Vector2(140, 14))
 	queue_redraw()
 
 
-## Where the tilt gauge sits, scaled up, in the middle of the deck.
-func place_gauge(gauge: Control) -> void:
-	gauge.scale = Vector2.ONE * GAUGE_SCALE
+## Where the tilt gauge sits, drawn bigger, in the middle of the deck.
+func place_gauge(gauge: TiltGauge) -> void:
+	gauge.zoom = GAUGE_ZOOM
 	var c := rect().get_center() + Vector2(0, 2)
-	gauge.position = c - gauge.size * GAUGE_SCALE / 2.0
+	gauge.position = c - gauge.size / 2.0
 
 
 func _process(_delta: float) -> void:
 	visible = _game.game_active and not _game.menus.visible and _game.hud.bar.visible
 	var touch: bool = Save.controls == "touch"
 	_caption.text = "DRAG ANYWHERE" if touch else "TAP GAUGE TO LEVEL"
-	_tilt.add_theme_color_override("font_color", Blueprint.FAINT if touch else Blueprint.GOLD)
-	_drag.add_theme_color_override("font_color", Blueprint.GOLD if touch else Blueprint.FAINT)
 	queue_redraw()
 
 
@@ -108,25 +95,13 @@ func _on_pause() -> void:
 		_game.show_pause_menu()
 
 
-func _choose(mode: String) -> void:
-	ControlsSheet.choose("controls " + mode)
-	_game.steering.apply()
-
-
 func _draw() -> void:
 	var r := rect()
 	var ink := Blueprint.INK
 	draw_rect(r, Blueprint.STRIP)
 	draw_line(r.position, Vector2(r.end.x, r.position.y), ink, Blueprint.FRAME_WIDTH)
-	# Outlines for the buttons; the chosen way of steering is boxed in gold.
 	draw_rect(Rect2(_pause.position, _pause.size), Color(ink, 0.8), false, 1.2)
 	var touch: bool = Save.controls == "touch"
-	draw_rect(
-		Rect2(_tilt.position, _tilt.size), Blueprint.FAINT if touch else Blueprint.GOLD, false, 1.2
-	)
-	draw_rect(
-		Rect2(_drag.position, _drag.size), Blueprint.GOLD if touch else Blueprint.FAINT, false, 1.2
-	)
 	if touch and not _game.steering.stick.held:
 		# The stick's resting ring, where a thumb would naturally land.
 		var c := r.get_center() + Vector2(0, 2)

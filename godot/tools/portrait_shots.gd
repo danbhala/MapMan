@@ -2,7 +2,7 @@ extends "res://tools/tour.gd"
 ## Pictures of the portrait prototype (research/portrait):
 ##
 ##   env -u DISPLAY xvfb-run -a godot --path godot --rendering-driver opengl3 \
-##       --resolution 750x1334 --fixed-fps 30 --audio-driver Dummy \
+##       --resolution 1080x1920 --fixed-fps 30 --audio-driver Dummy \
 ##       --script res://tools/portrait_shots.gd -- <out dir> [level] [touch]
 
 var out := "/tmp/pshots"
