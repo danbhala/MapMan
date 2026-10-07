@@ -10,7 +10,8 @@ extends Node3D
 ##
 ## Run it as the main scene:
 ##   godot --path godot --resolution 1334x750 res://research_3d/fez3d.tscn
-## Environment: SHOTS dir + SHOT_AT "1,2,3", END seconds, POSE (finale).
+## Environment: FEZ_LEVEL bridge|circle, SHOTS dir + SHOT_AT "1,2,3", END
+## seconds, POSE (finale).
 
 const TILE_DIR := "res://assets/tiles/"
 const FIELD := Color("#16407a")
@@ -23,34 +24,69 @@ const STEP_TIME := 0.3
 const PITCH := 45.0
 const STEP := 1.0
 
-## The level: [column x, height, depth z, type], in walking order. "o" is
-## the turn tile: the sheet can only be turned while standing on one. From the
-## front the ledge (height 2) floats off to the right; seen from the right
-## side it sits exactly in the gap.
-const LEVEL := [
-	[0, 0, 5, "b"],
-	[1, 0, 5, "c"],
-	[2, 0, 5, "c"],
-	[3, 0, 5, "o"],
-	[6, 2, 5, "c"],
-	[7, 2, 5, "p"],
-	[8, 2, 5, "c"],
-	[9, 2, 5, "c"],
-	[8, 0, 5, "e"],
-]
-
-## Timeline (seconds).
+## Levels: [column x, height, depth z, type], in walking order (the tour
+## walks them in this order). "o" is a turn tile: stepping onto it turns the
+## sheet a quarter turn clockwise, once. FEZ_LEVEL picks one.
+const LEVELS := {
+	# From the front the ledge floats off to the right; seen from the right
+	# side it sits exactly in the gap.
+	"bridge":
+	[
+		[0, 0, 5, "b"],
+		[1, 0, 5, "c"],
+		[2, 0, 5, "c"],
+		[3, 0, 5, "o"],
+		[5, 1, 5, "c"],
+		[6, 1, 5, "p"],
+		[7, 1, 5, "c"],
+		[8, 1, 5, "c"],
+		[8, 0, 5, "e"],
+	],
+	# Full Circle: the flag is in the same screen cell as the start. Three
+	# turns and a climb of four bring him back to where he began, four
+	# steps up. Checked by turn_solver.py: one way through, 24 steps.
+	"circle":
+	[
+		[0, 0, 0, "b"],
+		[1, 0, 0, "c"],
+		[2, 0, 0, "c"],
+		[3, 0, 0, "o"],
+		[4, 1, -1, "c"],
+		[5, 2, -2, "p"],
+		[6, 3, -3, "c"],
+		[7, 4, -4, "o"],
+		[7, 4, -5, "c"],
+		[6, 4, -5, "c"],
+		[5, 4, -5, "c"],
+		[4, 4, -5, "p"],
+		[3, 4, -5, "c"],
+		[2, 4, -5, "c"],
+		[1, 4, -5, "c"],
+		[0, 4, -5, "o"],
+		[0, 4, -4, "c"],
+		[0, 4, -3, "c"],
+		[0, 4, -2, "p"],
+		[0, 4, -1, "c"],
+		[0, 4, 0, "c"],
+		[0, 4, 1, "c"],
+		[0, 4, 2, "c"],
+		[0, 4, 3, "c"],
+		[0, 4, 4, "e"],
+	],
+}
 const T_MAN := 1.4
 const T_WALK := 1.8
-const T_TURN := 4.0
 const TURN_TIME := 0.7  # quick: a flick of the wrist, not a slow pan
-const T_ON := 5.1
-const T_BACK := 11.5
 const POSES := ["spin", "lean", "stretch", "star", "wiggle"]
 
+var level: Array = []
+var plan: Array = []  # the tour: {at, until, kind, a, b, from, to}
+var exit_key := Vector3i.ZERO
+var return_at := 0.0  # when the sheet starts coming back round after the finale
+var size := 9.0
 var tiles := {}  # Vector3i (x, h, z) -> {type, node}
 var route: Array[Vector3i] = []
-var centre := Vector3(4.5, 0.6, 5.0)
+var centre := Vector3.ZERO
 var cam: Camera3D
 var man: Sprite3D
 var foot_shadow: Sprite3D
@@ -77,12 +113,69 @@ func _ready() -> void:
 	if OS.has_environment("END"):
 		end_after = float(OS.get_environment("END"))
 	seed(3)
+	var name := OS.get_environment("FEZ_LEVEL")
+	level = LEVELS[name if LEVELS.has(name) else "bridge"]
+	for row: Array in level:
+		route.append(Vector3i(row[0], row[1], row[2]))
+		if row[3] == "e":
+			exit_key = route.back()
+	var lo := Vector3(route[0])
+	var hi := lo
+	for k in route:
+		lo = lo.min(Vector3(k))
+		hi = hi.max(Vector3(k))
+	centre = (lo + hi) * 0.5
+	centre.y = (lo.y + hi.y) * 0.5 * STEP + 0.6
+	size = maxf(9.0, (hi - lo).length() * 0.9)
 	_build_world()
 	_build_tiles()
 	_build_man()
-	for row: Array in LEVEL:
-		route.append(Vector3i(row[0], row[1], row[2]))
+	_plan_tour()
 	_place_camera()
+
+
+## The tour: a step per tile, a pause and a turn on each turn tile, a long
+## look at the gap before the first turn.
+func _plan_tour() -> void:
+	var at := T_WALK
+	var y := 0.0
+	for i in route.size():
+		if i > 0:
+			plan.append({"at": at, "until": at + STEP_TIME, "kind": "step", "a": i - 1, "b": i})
+			at += STEP_TIME
+		if tiles[route[i]]["type"] == "o":
+			var pause := 1.6 if i < 4 else 0.5
+			plan.append({"at": at, "until": at + pause, "kind": "look", "a": i})
+			at += pause
+			plan.append(
+				{
+					"at": at,
+					"until": at + TURN_TIME,
+					"kind": "turn",
+					"from": y,
+					"to": y + 90.0,
+					"a": i
+				}
+			)
+			y += 90.0
+			at += TURN_TIME + 0.3
+	plan.append({"at": at, "until": at + 3.4, "kind": "finale", "a": route.size() - 1})
+	at += 3.4
+	# Then the sheet comes round to the front again, to show where he is.
+	return_at = at
+	while y < 360.0:
+		plan.append(
+			{
+				"at": at,
+				"until": at + TURN_TIME,
+				"kind": "turn",
+				"from": y,
+				"to": y + 90.0,
+				"a": route.size() - 1
+			}
+		)
+		y += 90.0
+		at += TURN_TIME + 0.2
 
 
 # --- building ----------------------------------------------------------------
@@ -150,7 +243,7 @@ func _top_texture(file: String) -> Texture2D:
 func _build_tiles() -> void:
 	var lip := StandardMaterial3D.new()
 	lip.albedo_color = LIP
-	for row: Array in LEVEL:
+	for row: Array in level:
 		var key := Vector3i(row[0], row[1], row[2])
 		var h: float = row[1] * STEP
 		var ty: String = row[3]
@@ -210,7 +303,7 @@ func _build_tiles() -> void:
 	gold.albedo_color = Color("#ffd166")
 	cloth.material_override = gold
 	flag.add_child(cloth)
-	flag.position = Vector3(8.62, 0, 4.9)
+	flag.position = Vector3(exit_key.x + 0.62, exit_key.y * STEP, exit_key.z - 0.1)
 	flag.visible = false
 	flag.name = "Flag"
 	add_child(flag)
@@ -277,8 +370,7 @@ func _process(delta: float) -> void:
 		player.show_player()
 		player.face_idle()
 		_man_at(_top(route[0]))
-	_walk()
-	_turn()
+	_play()
 	_finale()
 	player.tick(delta)
 	_place_camera()
@@ -292,7 +384,7 @@ func _pop_in() -> void:
 		var tile: Dictionary = tiles[k]
 		if tile.get("in", false):
 			continue
-		if t >= 0.2 + k.x * 0.06:
+		if t >= 0.2 + (k.x + k.z - route[0].z) * 0.05:
 			tile["in"] = true
 			var node: Node3D = tile["node"]
 			var home := node.position
@@ -301,76 +393,79 @@ func _pop_in() -> void:
 			var tw := create_tween()
 			tw.tween_property(node, "position", home, 0.28)
 			tw.set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-			if k == Vector3i(8, 0, 5):
+			if k == exit_key:
 				get_node("Flag").visible = true
 
 
-## The turn: the sheet swings a quarter turn. Nothing moves; what is next
-## to what changes, because that is decided by where the tiles land on
-## the screen, not where they are.
-func _turn() -> void:
-	if t < T_TURN:
-		return
-	var k := clampf((t - T_TURN) / TURN_TIME, 0.0, 1.0)
-	yaw = 90.0 * k * k * (3.0 - 2.0 * k)
-	if t >= T_BACK:
-		var j := clampf((t - T_BACK) / TURN_TIME, 0.0, 1.0)
-		yaw = 90.0 * (1.0 - j * j * (3.0 - 2.0 * j))
+## Plays the tour. The turn: the sheet swings a quarter turn. Nothing
+## moves; what is next to what changes, because that is decided by where
+## the tiles land on the screen, not where they are.
+func _play() -> void:
+	for item: Dictionary in plan:
+		if t < item["at"]:
+			continue
+		var k := clampf((t - item["at"]) / (item["until"] - item["at"]), 0.0, 1.0)
+		match item["kind"]:
+			"step":
+				var a: Vector3i = route[item["a"]]
+				var b: Vector3i = route[item["b"]]
+				if step_i != item["b"]:
+					step_i = item["b"]
+					var d := b - a
+					# Facing is on the screen: from the side, along x is down.
+					var y := deg_to_rad(yaw)
+					var sx := roundf(d.x * cos(y) - d.z * sin(y))
+					var sy := roundf(d.z * cos(y) + d.x * sin(y))
+					player.face_direction(Vector2i(int(sx), int(sy)), true)
+				# From tile to tile along the screen, however far apart they are.
+				_man_at(_top(a).lerp(_top(b), k))
+			"look":
+				# On a turn tile: he looks across the gap, then back at us.
+				if item.get("done", false):
+					continue
+				if k < 0.5:
+					if not item.get("looked", false):
+						item["looked"] = true
+						player.face_direction(Vector2i.RIGHT, false)
+				else:
+					item["done"] = true
+					player.face_idle()
+				_man_at(_top(route[item["a"]]))
+			"turn":
+				var e := k * k * (3.0 - 2.0 * k)
+				yaw = lerpf(item["from"], item["to"], e)
+				if not item.get("spent", false) and k > 0.0:
+					item["spent"] = true
+					_spend(route[item["a"]])
+			"finale":
+				if finale_t < 0.0:
+					player.face_idle()
+					_start_finale()
 
 
-func _walk() -> void:
-	if t < T_WALK:
-		return
-	# Three steps to the edge, a stop at the gap, then on after the turn.
-	var steps := (t - T_WALK) / STEP_TIME
-	if t >= T_ON:
-		steps = 3.0 + (t - T_ON) / STEP_TIME
-	else:
-		steps = minf(steps, 3.0)
-	var i := mini(int(steps), route.size() - 1)
-	var frac := clampf(steps - i, 0.0, 1.0)
-	if i >= route.size() - 1:
-		if step_i != route.size() - 1:
-			step_i = route.size() - 1
-			player.face_idle()
-			_start_finale()
-		_man_at(_top(route.back()))
-		return
-	if i == 3 and t < T_ON:
-		# Stuck at the gap: he looks across it, then back at us.
-		if step_i != 3:
-			step_i = 3
-			player.face_direction(Vector2i.RIGHT, false)
-			get_tree().create_timer(0.9).timeout.connect(player.face_idle)
-		_man_at(_top(route[3]))
-		return
-	var a := route[i]
-	var b := route[i + 1]
-	if i != step_i:
-		step_i = i
-		var d := b - a
-		# Facing is on the screen: from the side, walking along x is down.
-		var y := deg_to_rad(yaw)
-		var sx := roundf(d.x * cos(y) - d.z * sin(y))
-		var sy := roundf(d.z * cos(y) + d.x * sin(y))
-		player.face_direction(Vector2i(int(sx), int(sy)), true)
-	# From tile to tile along the screen, however far apart they really are.
-	_man_at(_top(a).lerp(_top(b), frac))
+## A used turn tile: its arrow fades to a dot.
+func _spend(k: Vector3i) -> void:
+	var node: Node3D = tiles[k]["node"]
+	for c in node.get_children():
+		if c is Label3D:
+			create_tween().tween_property(c, "modulate:a", 0.25, 0.4)
 
 
 func _place_camera() -> void:
 	var pitch := deg_to_rad(PITCH)
 	var y := deg_to_rad(yaw)
 	var look := centre
-	var size := 9.0
+	var sz := size
 	if finale_t >= 0.0:
 		var f := clampf((t - finale_t) / 1.1, 0.0, 1.0)
+		if t >= return_at:
+			f = 1.0 - clampf((t - return_at) / 1.0, 0.0, 1.0)  # back out for the reveal
 		f = f * f * (3.0 - 2.0 * f)
 		look = look.lerp(man.position + Vector3(0, 1.05, 0), f)
-		size = lerpf(size, 5.5, f)
+		sz = lerpf(size, 5.5, f)
 	var dir := Vector3(sin(y) * cos(pitch), sin(pitch), cos(y) * cos(pitch))
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = size
+	cam.size = sz
 	cam.position = look + dir * 40.0
 	cam.look_at(look, Vector3.UP)
 
