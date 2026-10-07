@@ -355,8 +355,12 @@ func run() -> void:
 	await frames(70)
 	await shot("32_toolbox")
 	game._on_menu_action("toolbox back")
-	await frames(10)
-	game.new_game(3)
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.level = 3
+	game.load_level()
+	game.reset_all()
 	while not game._timer_running:
 		await process_frame
 	game.toolbox.use("slow")
