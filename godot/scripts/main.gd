@@ -31,6 +31,10 @@ var check_point_levels: Array = []
 var journeys: Array = []
 var journey := -1
 var journey_done := false
+## Playing the bonus roll (research prototype): data/bonus.json.
+var scroller := false
+var bonus_level: Dictionary = {}
+var bonus_stars_total := 0
 
 var map: JourneyMap
 var player: Player
@@ -99,6 +103,8 @@ var _key_badge: JourneyMap.KeyBadge
 var _key_plan: JourneyMap.KeyPlan
 var _journey_note := ""
 var _journey_note_at := -100.0
+var _roll: JourneyMap.PaperRoll
+var _scroll_wait := 0.0
 
 
 func _ready() -> void:
@@ -145,6 +151,10 @@ func _ready() -> void:
 	_key_plan.map = map
 	_key_plan.position = Vector2(_screen_size().x - 100, 64)
 	hud_layer.add_child(_key_plan)
+	_roll = JourneyMap.PaperRoll.new()
+	_roll.z_index = 12
+	_roll.visible = false
+	add_child(_roll)
 	_key_badge = JourneyMap.KeyBadge.new()
 	_key_badge.z_index = 12
 	add_child(_key_badge)
@@ -177,6 +187,7 @@ func _load_data() -> void:
 	completion_level = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/completion.json")
 	)
+	bonus_level = JSON.parse_string(FileAccess.get_file_as_string("res://data/bonus.json"))
 	journeys = (
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/journeys.json"))["journeys"]
 	)
@@ -237,7 +248,7 @@ func _update_timer(delta: float) -> void:
 
 
 func started() -> bool:
-	if tutorial or completed:
+	if tutorial or completed or scroller:
 		return map.loaded()
 	return _timer_running
 
@@ -254,6 +265,8 @@ func _process(delta: float) -> void:
 	if journey_done:
 		player.update_at(map.get_player_position(), delta)
 		return
+	if scroller and started() and not dead:
+		_update_scroll(delta)
 	if not map.sliding():
 		_update_timer(delta)
 
@@ -286,6 +299,11 @@ func loaded() -> void:
 
 
 func _update_stats() -> void:
+	if scroller:
+		hud._set_text(hud.level_label, "BONUS ROLL")
+		hud._set_text(hud.score_label, "★ %d / %d" % [stars, bonus_stars_total])
+		hud.set_lives(lives)
+		return
 	if journey >= 0:
 		hud._set_text(
 			hud.level_label,
@@ -300,7 +318,7 @@ func _update_stats() -> void:
 
 
 func set_time_message(time_left: int) -> void:
-	if tutorial or completed:
+	if tutorial or completed or scroller:
 		hud.set_time_message("")
 	elif journey >= 0:
 		hud.set_time_message(tr("GO!") if time_left > 19 and started() else "")
@@ -387,7 +405,7 @@ func set_controls_message() -> void:
 		else:
 			hud.show_effect("unhide")
 			hud.set_controls_message(tr("TILES UNHIDDEN"))
-	elif journey >= 0 and _now() - _journey_note_at < 3.0:
+	elif (journey >= 0 or scroller) and _now() - _journey_note_at < 3.0:
 		hud.set_controls_message(_journey_note)
 		hud.clear_effect()
 	else:
@@ -650,6 +668,8 @@ func _update_ending(delta: float) -> void:
 func _current_level_data() -> Dictionary:
 	if completed:
 		return completion_level
+	if scroller:
+		return bonus_level
 	if journey >= 0:
 		return journeys[journey]
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
@@ -667,6 +687,12 @@ func load_level() -> void:
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
 		_start_ending()
+	elif scroller:
+		hud.set_tutorial_text("")
+		hud.set_timer(0, -1.0, false)
+		hud.set_time_message("")
+		bonus_stars_total = map.points.size()
+		_scroll_wait = 1.2
 	elif tutorial:
 		hud.set_tutorial_text(tr(data.get("description", "")))
 		hud.set_timer(0, -1.0, false)
@@ -713,6 +739,9 @@ func advance_level(check_point: bool) -> void:
 		Audio.play("end_level")
 		_hide_ending()
 		show_game_complete()
+		return
+	if scroller:
+		_end_bonus("FINISHED")
 		return
 	if journey >= 0:
 		# Prototype: no clear sheet for journeys yet, just the note.
@@ -801,6 +830,8 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	Audio.play_game()
 	tutorial = is_tutorial
 	journey = -1
+	scroller = false
+	_roll.visible = false
 	completed = false
 	practice = false
 	player.outfit = Save.worn
@@ -820,7 +851,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
-	if not tutorial and not practice:
+	if not tutorial and not practice and not scroller:
 		Dev.record(level, reason, _time_left, _moves)
 	Audio.play("lose_life")
 	_lose_reason = reason
@@ -831,6 +862,10 @@ func lose_life(reason := "death") -> void:
 
 
 func finish_lose_life() -> void:
+	if scroller:
+		# A bonus costs no lives: the run just ends.
+		_end_bonus("ROLLED UP" if _lose_reason == "rolled" else "OUT")
+		return
 	if practice:
 		# No lives in practice: straight back to the start of the level.
 		load_level()
@@ -877,6 +912,48 @@ func start_journey(i: int) -> void:
 	journey = clampi(i, 0, journeys.size() - 1)
 	load_level()
 	reset_all()
+
+
+## Start the bonus roll (research prototype). Nothing to lose: no clock, and
+## falling behind or a death tile only ends the run.
+func start_bonus() -> void:
+	menus.close()
+	new_game(1)
+	journey_done = false
+	scroller = true
+	load_level()
+	reset_all()
+	_roll.visible = true
+	_roll.height = LevelMap.TILE_H * 10.0
+	_roll.position = Vector2(map.window.position.x, LevelMap.CENTRE_Y)
+	_grid.size.x = _screen_size().x + Blueprint.GRID_STEP
+
+
+func _update_scroll(delta: float) -> void:
+	if _scroll_wait > 0.0:
+		_scroll_wait -= delta
+		return
+	var before := map.scrolled
+	map.scroll(delta)
+	_roll.spin += map.scrolled - before
+	_roll.queue_redraw()
+	# The background grid rolls with the sheet.
+	_grid.position.x = fposmod(map.position.x, Blueprint.GRID_STEP) - Blueprint.GRID_STEP
+	if map.player_window_x() < 26.0 + 6.0:
+		lose_life("rolled")
+
+
+func _end_bonus(how: String) -> void:
+	journey_done = true
+	stuck = false
+	reverse = false
+	hud.clear_effect()
+	if how == "FINISHED":
+		Audio.play("end_level")
+		player.cheer()
+	score += stars * 5
+	_journey_flash("%s · ★ %d / %d · +%d POINTS" % [how, stars, bonus_stars_total, stars * 5])
+	_update_stats()
 
 
 func _on_room_entered(_room: Vector2i, first_time: bool) -> void:
@@ -1054,6 +1131,8 @@ func _on_menu_action(act: String) -> void:
 				var code := act.get_slice(" ", 1)
 				Save.set_locale("" if code == "system" else code)
 				menus.show_language()
+			elif act == "bonus roll":
+				start_bonus()
 			elif act.begins_with("journey "):
 				menus.close()
 				start_journey(int(act.get_slice(" ", 1)) - 1)

@@ -15,6 +15,11 @@ signal door_bumped
 const SLIDE_TIME := 0.5
 
 var journey := false
+## A bonus roll (research prototype): the sheet scrolls left by itself.
+var scroller := false
+var scroll_speeds := Vector2(1.3, 2.4)  # tiles per second, start and end
+var scrolled := 0.0  # pixels the sheet has moved left
+var scroll_length := 1.0  # pixels from the start until the finish is in view
 var room_size := Vector2i(15, 8)
 var room := Vector2i.ZERO
 var rooms := {}  # Vector2i room -> true, every room with tiles
@@ -52,7 +57,12 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	_screen = screen_size
 	if _slide:
 		_slide.kill()
+	scroller = level.has("scroll")
+	scrolled = 0.0
 	super.load_level(level, screen_size, x_hides_override)
+	if scroller:
+		_start_scroller(level, screen_size)
+		return
 	if not journey:
 		position = Vector2.ZERO
 		if window:
@@ -76,6 +86,36 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 	lines.map = self
 	lines.z_index = 2
 	add_child(lines)
+
+
+func _start_scroller(level: Dictionary, screen_size: Vector2) -> void:
+	scroll_speeds = Vector2(float(level["scroll"][0]), float(level["scroll"][1]))
+	var inner := Blueprint.INSET + 1.0
+	window.position = Vector2(inner, 0)
+	window.size = Vector2(screen_size.x - 2.0 * inner, screen_size.y)
+	window.clip_contents = true
+	# Column 0 starts a little in from the left edge.
+	position = Vector2(70.0 - tiles[Vector2i(0, 0)].position.x, 0)
+	var last := 0.0
+	for tile: Tile in tiles.values():
+		if not tile.blank:
+			last = maxf(last, tile.position.x)
+	scroll_length = maxf(1.0, position.x + last - (window.size.x - 50.0))
+
+
+## Roll the sheet on by delta seconds; it stops once the finish is in view.
+func scroll(delta: float) -> void:
+	if scrolled >= scroll_length:
+		return
+	var speed := lerpf(scroll_speeds.x, scroll_speeds.y, scrolled / scroll_length) * TILE_W
+	var dx := minf(speed * delta, scroll_length - scrolled)
+	scrolled += dx
+	position.x -= dx
+
+
+## How far into the window MapMan stands, in pixels from its left edge.
+func player_window_x() -> float:
+	return get_player_position().x - window.position.x
 
 
 func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: Array[Tile]) -> void:
@@ -116,6 +156,12 @@ func get_player_position() -> Vector2:
 
 
 func move(step: Vector2i, seconds: float) -> void:
+	if scroller:
+		# No running ahead into the part of the sheet that hasn't rolled in.
+		var t := position_key + step
+		if tiles.has(t) and position.x + tiles[t].position.x > window.size.x - TILE_W:
+			moving = false
+			return
 	if not journey:
 		super.move(step, seconds)
 		return
@@ -266,6 +312,37 @@ class Mark:
 			)
 		else:
 			JourneyMap.draw_key(self, Vector2(0, -14 + sin(_clock * 3.0) * 2.0), 1.0)
+
+
+## The roll the sheet winds onto at the left edge of a bonus roll: stay off it.
+class PaperRoll:
+	extends Node2D
+	var height := 230.0
+	var spin := 0.0
+
+	func _draw() -> void:
+		var w := 26.0
+		var top := -height / 2.0
+		# The danger strip in front of it.
+		for i in range(int(height / 10.0)):
+			var y := top + i * 10.0
+			draw_line(Vector2(w, y), Vector2(w + 10, y + 10), Color(Blueprint.PINK, 0.55), 2.0)
+		draw_dashed_line(Vector2(w + 12, top), Vector2(w + 12, -top), Blueprint.PINK, 1.5, 5.0)
+		# The roll: a cylinder of paper, its turns slipping by as it winds.
+		draw_rect(Rect2(0, top, w, height), Blueprint.FIELD.lightened(0.25))
+		for i in 6:
+			var x := fposmod(i * 5.0 + spin, w)
+			draw_line(Vector2(x, top + 4), Vector2(x, -top - 4), Color(1, 1, 1, 0.25), 1.0)
+		draw_rect(Rect2(w * 0.65, top, w * 0.35, height), Color(0, 0, 0, 0.18))
+		draw_rect(Rect2(0, top, w, height), Blueprint.INK, false, 1.5)
+		for y in [top, -top]:
+			draw_colored_polygon(
+				Blueprint.ellipse_points(Vector2(w / 2.0, y), w / 2.0, 4.0).slice(0, 32),
+				Blueprint.FIELD.lightened(0.4)
+			)
+			draw_polyline(
+				Blueprint.ellipse_points(Vector2(w / 2.0, y), w / 2.0, 4.0), Blueprint.INK, 1.5
+			)
 
 
 ## A gold key, ring on the left, centred on at.
