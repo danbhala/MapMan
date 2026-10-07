@@ -345,7 +345,7 @@ func run() -> void:
 	save.furthest_level = 23
 	save.bank = 128
 	save.tools = {"hop": 2, "hardhat": 3, "slow": 1}
-	save.belt = ["hop", "slow"]
+	save.belt.assign(["hop", "slow"])
 	save.fresh_sheet = true
 	game.toolbox.selected = "hardhat"
 	game._on_menu_action("main menu")

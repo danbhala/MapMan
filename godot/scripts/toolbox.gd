@@ -172,6 +172,7 @@ var _look_pending := false
 var _slow_held := 0.0
 ## The after-images behind him in Slow-mo, and where he has been.
 var _trail: Array[Player] = []
+var _trail_parent: Node
 var _trail_pos: Array[Vector2] = []
 ## Draws the pins and the Light Table's view on the map.
 var _marks: ToolMarks
@@ -784,6 +785,7 @@ func _start_slow() -> void:
 	Audio.slow_music(SLOW_PITCH)
 	_game.hud.show_effect("slow")
 	_trail_pos.clear()
+	_make_trail()
 	for p in _trail:
 		p.outfit = _game.player.outfit
 		p.visible = false
@@ -864,12 +866,20 @@ func look_update(delta: float) -> bool:
 
 
 ## The two faint copies of him that trail behind in Slow-mo, on the field.
+## They are only made the first time Slow-mo runs: a Player draws on the
+## random numbers, and the sheets' loading must stay the same without one.
 func make_trail(parent: Node) -> void:
+	_trail_parent = parent
+
+
+func _make_trail() -> void:
+	if not _trail.is_empty():
+		return
 	for i in TRAIL:
 		var p := Player.new()
 		p.z_index = 9
 		p.auto_look = false
-		parent.add_child(p)
+		_trail_parent.add_child(p)
 		p.vanish()
 		_trail.append(p)
 
