@@ -247,7 +247,7 @@ func _build_tiles() -> void:
 		face.texture = _top_texture(LevelMap.texture_file(ty))
 		face.axis = Vector3.AXIS_Y
 		face.pixel_size = 0.84 / 96.0
-		face.scale = Vector3(1, 96.0 / 59.0, 1)  # un-squash the drawn ellipse
+		face.scale = Vector3(1, 1, 96.0 / 59.0)  # un-squash the ellipse
 		face.position.y = TILE_H + 0.002
 		face.shaded = true
 		face.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
