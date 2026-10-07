@@ -21,6 +21,8 @@ func before_each() -> void:
 	Save.ghost_on = true
 	Save.vibration_on = true
 	Save.new_lessons = false
+	Save.furthest_level = 1
+	Save.has_completed = false
 	_wardrobe([])
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
@@ -176,6 +178,19 @@ func test_picking_a_language_saves_it_and_stays_on_the_sheet() -> void:
 	assert_eq(TranslationServer.get_locale(), phone)
 	game.go_back()
 	assert_eq(game.menus.current, "options", "back goes to the options sheet")
+
+
+func test_toolbox_buttons_once_it_is_open() -> void:
+	Save.furthest_level = 11
+	game.menus.show_main(0, false)
+	assert_eq(
+		_press_all(), ["toolbox", "play from start", "practice", "tutorial", "wardrobe", "options"]
+	)
+	game.menus.show_pause(false, 35, 12, true)
+	assert_eq(_press_all(), ["unpause", "confirm quit", "toolbox pause"])
+	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14, false, "", 0, {"paid": 3, "bank": 12})
+	assert_has(_texts(), "★ 3 INTO THE STAR BANK · NOW ★ 12")
+	assert_eq(_press_all(), ["next level", "clear wardrobe", "leave clear", "toolbox"])
 
 
 func test_pause_and_confirm() -> void:

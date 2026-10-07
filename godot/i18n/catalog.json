@@ -1620,6 +1620,331 @@
       "id": "The level's map",
       "note": "Screen reader: the picture of the level on its card",
       "max": 30
+    },
+    {
+      "id": "YOUR HAND",
+      "note": "Toolbox: first branch of tools, the ones the player uses by tapping",
+      "max": 14
+    },
+    {
+      "id": "you help him",
+      "note": "Toolbox: line under the YOUR HAND branch",
+      "max": 20
+    },
+    {
+      "id": "HIS FEET",
+      "note": "Toolbox: second branch, MapMan's own moves and saves",
+      "max": 14
+    },
+    {
+      "id": "he gets moves",
+      "note": "Toolbox: line under the HIS FEET branch",
+      "max": 20
+    },
+    {
+      "id": "THE CLOCK",
+      "note": "Toolbox: third branch, tools that change the level's countdown",
+      "max": 14
+    },
+    {
+      "id": "time bends",
+      "note": "Toolbox: line under THE CLOCK branch",
+      "max": 20
+    },
+    {
+      "id": "LIGHT TABLE",
+      "note": "Toolbox tool: shows the hidden tiles for a moment, like paper on a light table",
+      "max": 14
+    },
+    {
+      "id": "PUSH PIN",
+      "note": "Toolbox tool: pins spikes or a crumble tile so it stays as it is",
+      "max": 14
+    },
+    {
+      "id": "HOP",
+      "note": "Toolbox tool: MapMan hops over the next tile",
+      "max": 14
+    },
+    {
+      "id": "SECOND DRAFT",
+      "note": "Toolbox tool: out of lives, MapMan gets back up on the same sheet (a drawing's second draft); also floats over the field when it happens",
+      "max": 14
+    },
+    {
+      "id": "SLOW-MO",
+      "note": "Toolbox tool: everything at half speed for a few seconds",
+      "max": 14
+    },
+    {
+      "id": "FIRST LOOK",
+      "note": "Toolbox tool: the clock waits a few seconds at the start of a try; also the HUD's note while it does",
+      "max": 14
+    },
+    {
+      "id": "STOP CLOCK",
+      "note": "Toolbox tool: the countdown stops for a few seconds while MapMan keeps walking",
+      "max": 14
+    },
+    {
+      "id": "HARD HAT!",
+      "note": "Floats over the field when the Hard Hat tool saves MapMan from a skull or spikes",
+      "max": 12
+    },
+    {
+      "id": "Tap a skull to rub it out, even one you can't see.",
+      "note": "Toolbox: what the Eraser does (card, wraps over 3-4 short lines)",
+      "max": 60
+    },
+    {
+      "id": "The hidden tiles show through the paper for a moment.",
+      "note": "Toolbox: what the Light Table does",
+      "max": 60
+    },
+    {
+      "id": "Tap spikes or a crumble tile to pin it: it stays put.",
+      "note": "Toolbox: what the Push Pin does",
+      "max": 60
+    },
+    {
+      "id": "He hops over the next tile the way he's facing.",
+      "note": "Toolbox: what Hop does",
+      "max": 60
+    },
+    {
+      "id": "The first skull on a sheet doesn't get him.",
+      "note": "Toolbox: what the Hard Hat does",
+      "max": 60
+    },
+    {
+      "id": "Out of lives, he gets back up on the same sheet.",
+      "note": "Toolbox: what Second Draft does",
+      "max": 60
+    },
+    {
+      "id": "Everything at half speed for a few seconds, music too.",
+      "note": "Toolbox: what Slow-mo does",
+      "max": 60
+    },
+    {
+      "id": "The clock waits while you take in the sheet.",
+      "note": "Toolbox: what First Look does",
+      "max": 60
+    },
+    {
+      "id": "The countdown stops while he keeps walking.",
+      "note": "Toolbox: what Stop Clock does",
+      "max": 60
+    },
+    {
+      "id": "RECHARGES IN %s S",
+      "note": "Toolbox tier line: the Eraser's recharge time (%s seconds)",
+      "max": 26
+    },
+    {
+      "id": "%s S LOOK",
+      "note": "Toolbox tier line: how long the Light Table or First Look shows (%s seconds)",
+      "max": 26
+    },
+    {
+      "id": "PINNED %s S",
+      "note": "Toolbox tier line: how long the Push Pin holds (%s seconds)",
+      "max": 26
+    },
+    {
+      "id": "1 TILE, %s S RECHARGE",
+      "note": "Toolbox tier line: Hop clears one tile, recharges in %s seconds",
+      "max": 26
+    },
+    {
+      "id": "2 TILES, %s S RECHARGE",
+      "note": "Toolbox tier line: Hop clears two tiles, recharges in %s seconds",
+      "max": 26
+    },
+    {
+      "id": "BACK UP WITH %s S",
+      "note": "Toolbox tier line: Second Draft puts MapMan back up with %s seconds on the clock",
+      "max": 26
+    },
+    {
+      "id": "TWICE A GAME, %s S",
+      "note": "Toolbox tier line: Second Draft works twice a game, with %s seconds",
+      "max": 26
+    },
+    {
+      "id": "%s S AT HALF SPEED",
+      "note": "Toolbox tier line: how long Slow-mo lasts",
+      "max": 26
+    },
+    {
+      "id": "CLOCK STOPS %s S",
+      "note": "Toolbox tier line: how long Stop Clock holds the countdown",
+      "max": 26
+    },
+    {
+      "id": "TOOLBOX",
+      "note": "Title of sheet 001-T, the tree of tools bought with stars; also the main menu row, pause row and level-clear button that open it",
+      "max": 11
+    },
+    {
+      "id": "IN THE BANK",
+      "note": "Toolbox: label under the star count the player has to spend",
+      "max": 14
+    },
+    {
+      "id": "ON BELT",
+      "note": "Toolbox: tag on a tool carried into levels",
+      "max": 11
+    },
+    {
+      "id": "OWNED",
+      "note": "Toolbox: tag on a tool bought but not on the belt",
+      "max": 10
+    },
+    {
+      "id": "RECHARGES",
+      "note": "Toolbox card: how often a tool works (it recharges after each use)",
+      "max": 15
+    },
+    {
+      "id": "ONCE A TRY",
+      "note": "Toolbox card: the tool works once per try at a level",
+      "max": 15
+    },
+    {
+      "id": "ONCE A SHEET",
+      "note": "Toolbox card: the tool works once per level",
+      "max": 15
+    },
+    {
+      "id": "ONCE A GAME",
+      "note": "Toolbox card: the tool works once per game from the start",
+      "max": 15
+    },
+    {
+      "id": "EVERY TRY",
+      "note": "Toolbox card: the tool works at the start of every try",
+      "max": 15
+    },
+    {
+      "id": "BUY %s  ★ %d",
+      "note": "Toolbox card button: buy tier %s (I, II or III) for %d stars",
+      "max": 22
+    },
+    {
+      "id": "EVERY TIER OWNED",
+      "note": "Toolbox card: all three tiers of the tool are bought",
+      "max": 20
+    },
+    {
+      "id": "★ %d MORE TO GO",
+      "note": "Toolbox card: stars still needed for the next tier",
+      "max": 18
+    },
+    {
+      "id": "BUY %s FIRST",
+      "note": "Toolbox card: the tool above (%s, its name) must be bought before this one",
+      "max": 26
+    },
+    {
+      "id": "PUT ON BELT",
+      "note": "Toolbox card button: carry the tool into levels",
+      "max": 16
+    },
+    {
+      "id": "TAKE OFF BELT",
+      "note": "Toolbox card button: stop carrying the tool",
+      "max": 16
+    },
+    {
+      "id": "BELT FULL",
+      "note": "Toolbox card: no free belt slot for this tool",
+      "max": 15
+    },
+    {
+      "id": "BELT",
+      "note": "Toolbox: label of the strip of belt slots (the tools carried into levels)",
+      "max": 8
+    },
+    {
+      "id": "SHEET %d",
+      "note": "Toolbox: the third belt slot opens at level %d",
+      "max": 12
+    },
+    {
+      "id": "FRESH SHEET",
+      "note": "Toolbox: the reset that takes back every star spent (bought once)",
+      "max": 14
+    },
+    {
+      "id": "BUY FOR ★ %d",
+      "note": "Toolbox: Fresh Sheet button before it is bought",
+      "max": 16
+    },
+    {
+      "id": "TAKE BACK ★ %s",
+      "note": "Toolbox: Fresh Sheet button once bought, %s is the stars that come back",
+      "max": 18
+    },
+    {
+      "id": "NOTHING SPENT",
+      "note": "Toolbox: Fresh Sheet has nothing to take back",
+      "max": 20
+    },
+    {
+      "id": "BETWEEN SHEETS ONLY",
+      "note": "Toolbox: Fresh Sheet can't be used while a level is paused",
+      "max": 22
+    },
+    {
+      "id": "<  SHEET %s",
+      "note": "Toolbox: button back to the level it was opened from (%s is its number); keep <",
+      "max": 14
+    },
+    {
+      "id": "%s, tier %d of 3",
+      "note": "Screen reader name of a tool's node in the toolbox (%s its name)",
+      "max": 40
+    },
+    {
+      "id": "%s, not owned",
+      "note": "Screen reader name of a tool not bought yet",
+      "max": 40
+    },
+    {
+      "id": "%s, locked",
+      "note": "Screen reader name of a tool whose tool above isn't bought",
+      "max": 40
+    },
+    {
+      "id": "%d stars in the bank",
+      "note": "Screen reader name of the toolbox's star count",
+      "max": 40
+    },
+    {
+      "id": "★ %d INTO THE STAR BANK · NOW ★ %d",
+      "note": "Level clear small print: stars the level paid into the bank, and the bank's total",
+      "max": 40
+    },
+    {
+      "id": "★ %s / ★ %s SPENT",
+      "note": "Toolbox: stars spent so far of the whole tree's price (small print under the bank)",
+      "max": 24
+    },
+    {
+      "id": "SKULL, ONCE A SHEET",
+      "note": "Toolbox tier line: the Hard Hat saves from a skull once a sheet",
+      "max": 26
+    },
+    {
+      "id": "SKULL OR SPIKES, ONCE",
+      "note": "Toolbox tier line: the Hard Hat saves from a skull or spikes once a sheet",
+      "max": 26
+    },
+    {
+      "id": "SKULL OR SPIKES, TWICE",
+      "note": "Toolbox tier line: the Hard Hat saves twice a sheet",
+      "max": 26
     }
   ]
 }

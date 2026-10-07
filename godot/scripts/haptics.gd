@@ -24,6 +24,16 @@ const PATTERNS := {
 	"toggle": [40, 0.6],  # turning vibration on in the options
 	"stamp": [60, 0.9],  # a rubber stamp landing on a menu sheet
 	"recentre": [25, 0.5],  # tapping the tilt gauge to take a new level
+	"tool": [20, 0.4],  # a Toolbox tool used
+	"tool_arm": [12, 0.3],  # the eraser or pin picked up, waiting for a tile
+	"tool_no": [30, 0.5],  # a tool that can't be used now
+	"erase": [40, 0.6],  # a skull rubbed out
+	"pin": [40, 0.6],  # a tile pinned
+	"hop": [25, 0.4],
+	"hardhat": [80, 0.8],  # the hat took the hit
+	"buy": [40, 0.6],  # a tool bought
+	"fresh": [60, 0.7],  # every star taken back
+	"revive": [120, 0.8],  # back up with Second Draft
 }
 
 ## The last buzz requested, for tests: [name, milliseconds, strength].

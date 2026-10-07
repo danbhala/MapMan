@@ -20,6 +20,8 @@ const ASSIST_MARKS := 2  # hidden death tiles are marked, and a death step needs
 const ASSIST_ROUTE := 4  # the safe route is sketched as each try starts
 const ASSIST_SKIP := 6  # the lost-life sheet offers to skip the sheet
 const ROUTE_SKETCH_SECONDS := 2.5
+## A sheet cleared with this much time left earns its quick star (the Toolbox).
+const QUICK_SECONDS := 10
 
 ## The frame, grid and notes take an effect's colour while it is on.
 const REVERSE_COLOR := Blueprint.PINK
@@ -27,6 +29,8 @@ const VANISH_COLOR := Blueprint.LILAC
 const STUCK_COLOR := Blueprint.GOLD
 const DEATH_COLOR := Blueprint.PINK
 const HIDDEN_COLOR := Blueprint.MINT
+const SLOW_COLOR := Blueprint.LILAC
+const FREEZE_COLOR := Blueprint.GOLD
 ## The notes that float up from a tile as it is collected (the time ones translate).
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
@@ -63,6 +67,9 @@ var practice := false
 var custom := ""
 ## The drafting table's flow: the open draft and the level being played.
 var drafting := DraftingTable.new(self)
+## The Toolbox (docs/toolbox.md): the tools in play, and its sheet's actions.
+var toolbox := Toolbox.new(self)
+var belt: ToolBelt
 var level := 1
 var score := 0
 var lives := INITIAL_LIVES
@@ -165,6 +172,10 @@ func _ready() -> void:
 	gauge.visible = false
 	hud_layer.add_child(gauge)
 	gauge.recentre.connect(recentre)
+	belt = ToolBelt.new(toolbox)
+	belt.visible = false
+	hud_layer.add_child(belt)
+	toolbox.make_trail(self)
 
 	var menu_layer := CanvasLayer.new()
 	menu_layer.layer = 10
@@ -214,6 +225,7 @@ func _layout() -> void:
 	var s := get_viewport_rect().size
 	tilt.screen_size = s
 	gauge.place(s)
+	belt.place(hud)
 	_grid.size = s
 	_grid.queue_redraw()
 
@@ -253,7 +265,7 @@ func _timer_start() -> void:
 func _update_timer(delta: float) -> void:
 	if not _timer_running:
 		return
-	if not (Dev.enabled and Dev.unlimited_time):
+	if not (Dev.enabled and Dev.unlimited_time) and not toolbox.clock_stopped():
 		_time_left = maxf(0.0, _time_left - delta)
 	var secs := _seconds_remaining()
 	hud.set_timer(secs, _time_left)
@@ -276,6 +288,7 @@ func started() -> bool:
 
 func _process(delta: float) -> void:
 	_update_gauge(delta)
+	_update_belt()
 	steering.update()
 	if _tries.replay or menus.visible or not game_active:
 		return
@@ -290,6 +303,7 @@ func _process(delta: float) -> void:
 			finish_lose_life()
 	elif started():
 		_tries.tick(map, delta)
+		toolbox.update(delta)
 		move_player(delta)
 		update_player(delta)
 		_update_stats()
@@ -298,7 +312,9 @@ func _process(delta: float) -> void:
 		if time_left < 1 and not dead and not tutorial:
 			lose_life("timeout")
 	elif map.loaded():
-		loaded()
+		# First Look (the Toolbox): the clock waits while the player looks.
+		if not toolbox.look_update(delta):
+			loaded()
 
 
 func loaded() -> void:
@@ -328,6 +344,21 @@ func _update_gauge(delta: float) -> void:
 	gauge.steer = tilt.get_vector()
 	gauge.pace = pace(gauge.steer)
 	gauge.near_player(player.position, delta)
+
+
+## The tool belt shows beside the gauge while a sheet with tools is played.
+func _update_belt() -> void:
+	belt.visible = (
+		toolbox.showing() and not menus.visible and hud.visible and _tries.replay == null
+	)
+	var ids: Array[String] = []
+	if toolbox.showing():
+		ids = toolbox.belt()
+	belt.refresh(ids)
+	var room := ToolBelt.room(ids.size())
+	if room != hud.belt_room:
+		hud.belt_room = room
+		hud.layout()
 
 
 ## Tapping the gauge: the way the phone is held now becomes level.
@@ -391,6 +422,10 @@ func set_background() -> void:
 		color = VANISH_COLOR
 	elif stuck:
 		color = STUCK_COLOR
+	elif toolbox.slowing():
+		color = SLOW_COLOR
+	elif toolbox.clock_stopped():
+		color = FREEZE_COLOR
 	hud.set_state_color(color)
 	_grid.color = Color(color, Blueprint.GRID.a if color == Blueprint.INK else 0.22)
 	_grid.queue_redraw()
@@ -563,6 +598,19 @@ func _start_move(actual: Vector2i, seconds: float) -> void:
 			vanish -= 1
 
 
+## A hop (the Toolbox) of `tiles` tiles in direction `actual` over `seconds`
+## has begun: the try records it as that many quick steps, so its replay
+## and ghost cross the tiles he hopped over on foot.
+func hopped(actual: Vector2i, tiles: int, seconds: float) -> void:
+	for i in tiles:
+		_tries.step(actual, seconds / tiles)
+	map.update_move(0.0)
+	player.face_direction(actual, true)
+	_moves += 1
+	if vanish > 0:
+		vanish -= 1
+
+
 # --- tries, the replay and the best-run ghost ----------------------------------
 
 
@@ -589,7 +637,7 @@ func _end_replay() -> void:
 
 
 func update_player(delta: float) -> void:
-	player.update_at(map.get_player_position(), delta)
+	player.update_at(map.get_player_position() + Vector2(0, -toolbox.hop_lift()), delta)
 	map.spike_cycle = Dev.t("spike_cycle")
 	if map.update_spikes(delta):
 		Audio.play("spikes")
@@ -602,7 +650,7 @@ func update_player(delta: float) -> void:
 	if _was_moving:
 		_was_moving = false
 		_landed_at = _now()
-		_slide_step = map.last_step()
+		_slide_step = map.last_step().sign()
 		player.land()
 	if map.at_end():
 		player.cheer()
@@ -645,13 +693,16 @@ func update_player(delta: float) -> void:
 			stars += 1
 		_flash("_last_points")
 
+	# The Hard Hat (the Toolbox) takes the first hit on a sheet.
 	if map.on(map.deaths) and not dead:
 		map.unhide_tile_at(map.position_key)
-		lose_life()
+		if not toolbox.hat_saves(map.position_key, "death"):
+			lose_life()
 
 	# Spikes kill while up: stepping onto them, or standing there as they rise.
 	if map.spikes_up_at(map.position_key) and not dead:
-		lose_life()
+		if not toolbox.hat_saves(map.position_key, "spikes"):
+			lose_life()
 
 	if map.on(map.lives):
 		Audio.play("life")
@@ -780,6 +831,8 @@ func load_level() -> void:
 	_hide_ending()
 	var data := _current_level_data()
 	map.load_level(data, _screen_size())
+	toolbox.begin_sheet()
+	toolbox.mark_map()
 	if completed:
 		hud.set_tutorial_text("")
 		hud.set_timer(0, -1.0, false)
@@ -826,6 +879,7 @@ func reset_all(reset_stars := true) -> void:
 	_calibrate_pending = true
 	_landed_at = _now()
 	_apply_assists()
+	toolbox.begin_try()
 
 
 # --- assists -----------------------------------------------------------------
@@ -880,6 +934,7 @@ func skip_level() -> void:
 
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
+	toolbox.stop()
 	if completed:
 		# Into the vortex: on to the completion scoring.
 		Audio.play("end_level")
@@ -892,6 +947,7 @@ func advance_level(check_point: bool) -> void:
 		return
 	if not tutorial and not practice:
 		losses.erase(level)
+	var bank := {}
 	if not tutorial:
 		var new_best := false
 		var run := _tries.end("win", _time_left)
@@ -899,6 +955,7 @@ func advance_level(check_point: bool) -> void:
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
 			if run:
 				Save.record_ghost(level, run)
+			bank = _bank_stars()
 		if practice:
 			Audio.play("end_level")
 			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
@@ -924,8 +981,30 @@ func advance_level(check_point: bool) -> void:
 	_between = true
 	var tries := _tries.list.size() if _tries.replayable(level) else 0
 	menus.show_end_level(
-		score, POINTS_PER_LEVEL, time_bonus, stars, check_point, level, clock, last, released, tries
+		score,
+		POINTS_PER_LEVEL,
+		time_bonus,
+		stars,
+		check_point,
+		level,
+		clock,
+		last,
+		released,
+		tries,
+		bank
 	)
+
+
+## The sheet just cleared pays into the star bank (the Toolbox): its star
+## tiles the first time each is picked up, its clear star, and its quick
+## star with QUICK_SECONDS or more left. What the level clear says of it:
+## {"paid", "bank"}, or {} while the Toolbox is still closed.
+func _bank_stars() -> Dictionary:
+	var key := Toolbox.sheet_key(level, Save.get("rev_b") == true)
+	var paid := Save.bank_sheet(key, stars, _seconds_remaining() >= QUICK_SECONDS)
+	if not Save.toolbox_open():
+		return {}
+	return {"paid": paid.total, "bank": Save.bank}
 
 
 func next_level() -> void:
@@ -1008,6 +1087,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	_between = false
 	_tries.clear()
 	_tries.end("", _time_left)
+	toolbox.begin_game()
 	player.outfit = Save.worn
 	score = 0
 	level = start_level
@@ -1025,6 +1105,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 ## reason: "death" (a death tile) or "timeout" (the clock ran out).
 func lose_life(reason := "death") -> void:
 	_timer_stop()
+	toolbox.stop()
 	_tries.end(reason, _time_left)
 	if not tutorial and not practice and custom == "":
 		Dev.record(level, reason, _time_left, _moves)
@@ -1047,6 +1128,8 @@ func finish_lose_life() -> void:
 	if not tutorial and not (Dev.enabled and Dev.unlimited_lives):
 		lives -= 1
 	_update_stats()
+	if lives < 1 and _second_draft():
+		return
 	if lives < 1:
 		game_over()
 	elif not tutorial:
@@ -1055,7 +1138,23 @@ func finish_lose_life() -> void:
 		reset_all()
 
 
+## Second Draft (the Toolbox): out of lives, he gets back up on the same
+## sheet with its seconds on the clock; false when there is no draft left.
+func _second_draft() -> bool:
+	var seconds := toolbox.second_draft()
+	if seconds < 0.0:
+		return false
+	lives = 1
+	_update_stats()
+	reset_all(false)
+	_time_left = seconds
+	map.float_text(tr("SECOND DRAFT"), Blueprint.GOLD)
+	Audio.play("revive")
+	return true
+
+
 func game_over(show_score := true) -> void:
+	toolbox.stop()
 	hud.show_bar(false)
 	hud.show_stats(false)
 	map.unload()
@@ -1117,16 +1216,20 @@ func show_start_menu() -> void:
 func show_pause_menu() -> void:
 	_timer_stop()
 	paused = true
+	toolbox.suspend()
 	# The final sheet after level 100 has no number and no clock.
 	var clock := -1 if tutorial or completed else _seconds_remaining()
 	if custom != "":
 		DraftingSheet.build_pause(menus, drafting.pause_number())
 	else:
-		menus.show_pause(tutorial, 0 if completed else level, clock)
+		var tools := Save.toolbox_open() and toolbox.enabled()
+		menus.show_pause(tutorial, 0 if completed else level, clock, tools)
 
 
 func _on_menu_action(act: String) -> void:
-	if drafting.action(act):
+	if act == "unpause":
+		toolbox.resume()
+	if drafting.action(act) or toolbox.action(act):
 		return
 	match act:
 		"play from start", "play", "new game", "play game":
@@ -1247,6 +1350,9 @@ func _can_pause() -> bool:
 func _unhandled_input(event: InputEvent) -> void:
 	if _tries.replay:
 		return  # the replay takes its own taps
+	if game_active and not menus.visible and toolbox.field_tap(event):
+		get_viewport().set_input_as_handled()  # a tile for the eraser or pin
+		return
 	if event.is_action_pressed("pause") and _can_pause():
 		show_pause_menu()
 		get_viewport().set_input_as_handled()
@@ -1289,6 +1395,8 @@ func go_back() -> void:
 			_on_menu_action(menus.confirm_back)
 		"wardrobe":
 			_on_menu_action("back to clear" if _between else "main menu")
+		"toolbox":
+			_on_menu_action("toolbox back")
 		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
 		"language", "controls":

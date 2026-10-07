@@ -1308,3 +1308,263 @@ msgstr "Nama level"
 #. Screen reader: the picture of the level on its card
 msgid "The level's map"
 msgstr "Peta level"
+
+#. Toolbox: first branch of tools, the ones the player uses by tapping
+msgid "YOUR HAND"
+msgstr "TANGANMU"
+
+#. Toolbox: line under the YOUR HAND branch
+msgid "you help him"
+msgstr "kamu membantunya"
+
+#. Toolbox: second branch, MapMan's own moves and saves
+msgid "HIS FEET"
+msgstr "KAKINYA"
+
+#. Toolbox: line under the HIS FEET branch
+msgid "he gets moves"
+msgstr "dia dapat gerakan"
+
+#. Toolbox: third branch, tools that change the level's countdown
+msgid "THE CLOCK"
+msgstr "JAM"
+
+#. Toolbox: line under THE CLOCK branch
+msgid "time bends"
+msgstr "waktu melengkung"
+
+#. Toolbox tool: shows the hidden tiles for a moment, like paper on a light table
+msgid "LIGHT TABLE"
+msgstr "MEJA CAHAYA"
+
+#. Toolbox tool: pins spikes or a crumble tile so it stays as it is
+msgid "PUSH PIN"
+msgstr "PAKU PAYUNG"
+
+#. Toolbox tool: MapMan hops over the next tile
+msgid "HOP"
+msgstr "LOMPAT"
+
+#. Toolbox tool: out of lives, MapMan gets back up on the same sheet (a drawing's second draft); also floats over the field when it happens
+msgid "SECOND DRAFT"
+msgstr "DRAF KEDUA"
+
+#. Toolbox tool: everything at half speed for a few seconds
+msgid "SLOW-MO"
+msgstr "GERAK LAMBAT"
+
+#. Toolbox tool: the clock waits a few seconds at the start of a try; also the HUD's note while it does
+msgid "FIRST LOOK"
+msgstr "LIHAT DULU"
+
+#. Toolbox tool: the countdown stops for a few seconds while MapMan keeps walking
+msgid "STOP CLOCK"
+msgstr "HENTIKAN JAM"
+
+#. Floats over the field when the Hard Hat tool saves MapMan from a skull or spikes
+msgid "HARD HAT!"
+msgstr "HELM!"
+
+#. Toolbox: what the Eraser does (card, wraps over 3-4 short lines)
+msgid "Tap a skull to rub it out, even one you can't see."
+msgstr "Ketuk tengkorak untuk menghapusnya, meski tak terlihat."
+
+#. Toolbox: what the Light Table does
+msgid "The hidden tiles show through the paper for a moment."
+msgstr "Ubin tersembunyi tampak menembus kertas sesaat."
+
+#. Toolbox: what the Push Pin does
+msgid "Tap spikes or a crumble tile to pin it: it stays put."
+msgstr "Ketuk duri atau ubin rapuh untuk menyematkannya: ia diam saja."
+
+#. Toolbox: what Hop does
+msgid "He hops over the next tile the way he's facing."
+msgstr "Dia melompati ubin berikutnya ke arah dia menghadap."
+
+#. Toolbox: what the Hard Hat does
+msgid "The first skull on a sheet doesn't get him."
+msgstr "Tengkorak pertama di lembar tak mengenainya."
+
+#. Toolbox: what Second Draft does
+msgid "Out of lives, he gets back up on the same sheet."
+msgstr "Kehabisan nyawa, dia bangkit lagi di lembar yang sama."
+
+#. Toolbox: what Slow-mo does
+msgid "Everything at half speed for a few seconds, music too."
+msgstr "Semuanya setengah kecepatan beberapa detik, musiknya juga."
+
+#. Toolbox: what First Look does
+msgid "The clock waits while you take in the sheet."
+msgstr "Jam menunggu selagi kamu mengamati lembar."
+
+#. Toolbox: what Stop Clock does
+msgid "The countdown stops while he keeps walking."
+msgstr "Hitung mundur berhenti sementara dia terus berjalan."
+
+#. Toolbox tier line: the Eraser's recharge time (%s seconds)
+msgid "RECHARGES IN %s S"
+msgstr "ISI ULANG %s DTK"
+
+#. Toolbox tier line: how long the Light Table or First Look shows (%s seconds)
+msgid "%s S LOOK"
+msgstr "LIHAT %s DTK"
+
+#. Toolbox tier line: how long the Push Pin holds (%s seconds)
+msgid "PINNED %s S"
+msgstr "TERSEMAT %s DTK"
+
+#. Toolbox tier line: Hop clears one tile, recharges in %s seconds
+msgid "1 TILE, %s S RECHARGE"
+msgstr "1 UBIN, ULANG %s DTK"
+
+#. Toolbox tier line: Hop clears two tiles, recharges in %s seconds
+msgid "2 TILES, %s S RECHARGE"
+msgstr "2 UBIN, ULANG %s DTK"
+
+#. Toolbox tier line: Second Draft puts MapMan back up with %s seconds on the clock
+msgid "BACK UP WITH %s S"
+msgstr "BANGKIT DENGAN %s DTK"
+
+#. Toolbox tier line: Second Draft works twice a game, with %s seconds
+msgid "TWICE A GAME, %s S"
+msgstr "2× PER PERMAINAN, %s DTK"
+
+#. Toolbox tier line: how long Slow-mo lasts
+msgid "%s S AT HALF SPEED"
+msgstr "%s DTK SETENGAH LAJU"
+
+#. Toolbox tier line: how long Stop Clock holds the countdown
+msgid "CLOCK STOPS %s S"
+msgstr "JAM BERHENTI %s DTK"
+
+#. Title of sheet 001-T, the tree of tools bought with stars; also the main menu row, pause row and level-clear button that open it
+msgid "TOOLBOX"
+msgstr "PERKAKAS"
+
+#. Toolbox: label under the star count the player has to spend
+msgid "IN THE BANK"
+msgstr "DI BANK"
+
+#. Toolbox: tag on a tool carried into levels
+msgid "ON BELT"
+msgstr "DI SABUK"
+
+#. Toolbox: tag on a tool bought but not on the belt
+msgid "OWNED"
+msgstr "PUNYA"
+
+#. Toolbox card: how often a tool works (it recharges after each use)
+msgid "RECHARGES"
+msgstr "ISI ULANG"
+
+#. Toolbox card: the tool works once per try at a level
+msgid "ONCE A TRY"
+msgstr "1× TIAP COBA"
+
+#. Toolbox card: the tool works once per level
+msgid "ONCE A SHEET"
+msgstr "1× TIAP LEMBAR"
+
+#. Toolbox card: the tool works once per game from the start
+msgid "ONCE A GAME"
+msgstr "1× TIAP MAIN"
+
+#. Toolbox card: the tool works at the start of every try
+msgid "EVERY TRY"
+msgstr "TIAP COBA"
+
+#. Toolbox card button: buy tier %s (I, II or III) for %d stars
+msgid "BUY %s  ★ %d"
+msgstr "BELI %s  ★ %d"
+
+#. Toolbox card: all three tiers of the tool are bought
+msgid "EVERY TIER OWNED"
+msgstr "SEMUA TINGKAT ADA"
+
+#. Toolbox card: stars still needed for the next tier
+msgid "★ %d MORE TO GO"
+msgstr "KURANG ★ %d"
+
+#. Toolbox card: the tool above (%s, its name) must be bought before this one
+msgid "BUY %s FIRST"
+msgstr "BELI %s DULU"
+
+#. Toolbox card button: carry the tool into levels
+msgid "PUT ON BELT"
+msgstr "PASANG DI SABUK"
+
+#. Toolbox card button: stop carrying the tool
+msgid "TAKE OFF BELT"
+msgstr "LEPAS DARI SABUK"
+
+#. Toolbox card: no free belt slot for this tool
+msgid "BELT FULL"
+msgstr "SABUK PENUH"
+
+#. Toolbox: label of the strip of belt slots (the tools carried into levels)
+msgid "BELT"
+msgstr "SABUK"
+
+#. Toolbox: the third belt slot opens at level %d
+msgid "SHEET %d"
+msgstr "LEMBAR %d"
+
+#. Toolbox: the reset that takes back every star spent (bought once)
+msgid "FRESH SHEET"
+msgstr "LEMBAR BARU"
+
+#. Toolbox: Fresh Sheet button before it is bought
+msgid "BUY FOR ★ %d"
+msgstr "BELI ★ %d"
+
+#. Toolbox: Fresh Sheet button once bought, %s is the stars that come back
+msgid "TAKE BACK ★ %s"
+msgstr "AMBIL KEMBALI ★ %s"
+
+#. Toolbox: Fresh Sheet has nothing to take back
+msgid "NOTHING SPENT"
+msgstr "BELUM ADA BELANJA"
+
+#. Toolbox: Fresh Sheet can't be used while a level is paused
+msgid "BETWEEN SHEETS ONLY"
+msgstr "HANYA ANTAR LEMBAR"
+
+#. Toolbox: button back to the level it was opened from (%s is its number); keep <
+msgid "<  SHEET %s"
+msgstr "<  LEMBAR %s"
+
+#. Screen reader name of a tool's node in the toolbox (%s its name)
+msgid "%s, tier %d of 3"
+msgstr "%s, tingkat %d dari 3"
+
+#. Screen reader name of a tool not bought yet
+msgid "%s, not owned"
+msgstr "%s, belum dimiliki"
+
+#. Screen reader name of a tool whose tool above isn't bought
+msgid "%s, locked"
+msgstr "%s, terkunci"
+
+#. Screen reader name of the toolbox's star count
+msgid "%d stars in the bank"
+msgstr "%d bintang di bank"
+
+#. Level clear small print: stars the level paid into the bank, and the bank's total
+msgid "★ %d INTO THE STAR BANK · NOW ★ %d"
+msgstr "★ %d KE BANK BINTANG · KINI ★ %d"
+
+#. Toolbox: stars spent so far of the whole tree's price (small print under the bank)
+msgid "★ %s / ★ %s SPENT"
+msgstr "★ %s / ★ %s TERPAKAI"
+
+#. Toolbox tier line: the Hard Hat saves from a skull once a sheet
+msgid "SKULL, ONCE A SHEET"
+msgstr "TENGKORAK, 1× PER LEMBAR"
+
+#. Toolbox tier line: the Hard Hat saves from a skull or spikes once a sheet
+msgid "SKULL OR SPIKES, ONCE"
+msgstr "TENGKORAK ATAU DURI, 1×"
+
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "TENGKORAK ATAU DURI, 2×"

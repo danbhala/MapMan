@@ -1348,3 +1348,263 @@ msgstr "Ainm an leibhéil"
 #. Screen reader: the picture of the level on its card
 msgid "The level's map"
 msgstr "Léarscáil an leibhéil"
+
+#. Toolbox: first branch of tools, the ones the player uses by tapping
+msgid "YOUR HAND"
+msgstr "DO LÁMH"
+
+#. Toolbox: line under the YOUR HAND branch
+msgid "you help him"
+msgstr "cabhraíonn tú leis"
+
+#. Toolbox: second branch, MapMan's own moves and saves
+msgid "HIS FEET"
+msgstr "A CHOSA"
+
+#. Toolbox: line under the HIS FEET branch
+msgid "he gets moves"
+msgstr "faigheann sé céimeanna"
+
+#. Toolbox: third branch, tools that change the level's countdown
+msgid "THE CLOCK"
+msgstr "AN CLOG"
+
+#. Toolbox: line under THE CLOCK branch
+msgid "time bends"
+msgstr "lúbann an t-am"
+
+#. Toolbox tool: shows the hidden tiles for a moment, like paper on a light table
+msgid "LIGHT TABLE"
+msgstr "BORD SOLAIS"
+
+#. Toolbox tool: pins spikes or a crumble tile so it stays as it is
+msgid "PUSH PIN"
+msgstr "TACÓID"
+
+#. Toolbox tool: MapMan hops over the next tile
+msgid "HOP"
+msgstr "LÉIM"
+
+#. Toolbox tool: out of lives, MapMan gets back up on the same sheet (a drawing's second draft); also floats over the field when it happens
+msgid "SECOND DRAFT"
+msgstr "2Ú DRÉACHT"
+
+#. Toolbox tool: everything at half speed for a few seconds
+msgid "SLOW-MO"
+msgstr "MALLGHLUAISNE"
+
+#. Toolbox tool: the clock waits a few seconds at the start of a try; also the HUD's note while it does
+msgid "FIRST LOOK"
+msgstr "CÉAD AMHARC"
+
+#. Toolbox tool: the countdown stops for a few seconds while MapMan keeps walking
+msgid "STOP CLOCK"
+msgstr "STAD AN CHLOIG"
+
+#. Floats over the field when the Hard Hat tool saves MapMan from a skull or spikes
+msgid "HARD HAT!"
+msgstr "CLOGAD!"
+
+#. Toolbox: what the Eraser does (card, wraps over 3-4 short lines)
+msgid "Tap a skull to rub it out, even one you can't see."
+msgstr "Tapáil cloigeann chun é a scriosadh, fiú ceann nach bhfeiceann tú."
+
+#. Toolbox: what the Light Table does
+msgid "The hidden tiles show through the paper for a moment."
+msgstr "Feictear na tíleanna folaithe tríd an bpáipéar ar feadh nóiméid."
+
+#. Toolbox: what the Push Pin does
+msgid "Tap spikes or a crumble tile to pin it: it stays put."
+msgstr "Tapáil spící nó tíl bhriosc chun í a phionnáil: fanann sí mar atá."
+
+#. Toolbox: what Hop does
+msgid "He hops over the next tile the way he's facing."
+msgstr "Léimeann sé thar an gcéad tíl eile sa treo a bhfuil sé ag féachaint."
+
+#. Toolbox: what the Hard Hat does
+msgid "The first skull on a sheet doesn't get him."
+msgstr "Ní bhfaigheann an chéad chloigeann ar bhileog é."
+
+#. Toolbox: what Second Draft does
+msgid "Out of lives, he gets back up on the same sheet."
+msgstr "Gan aon bheatha fágtha, éiríonn sé arís ar an mbileog chéanna."
+
+#. Toolbox: what Slow-mo does
+msgid "Everything at half speed for a few seconds, music too."
+msgstr "Gach rud ar leathluas ar feadh cúpla soicind, an ceol freisin."
+
+#. Toolbox: what First Look does
+msgid "The clock waits while you take in the sheet."
+msgstr "Fanann an clog fad a bhreathnaíonn tú ar an mbileog."
+
+#. Toolbox: what Stop Clock does
+msgid "The countdown stops while he keeps walking."
+msgstr "Stadann an comhaireamh síos fad a shiúlann sé ar aghaidh."
+
+#. Toolbox tier line: the Eraser's recharge time (%s seconds)
+msgid "RECHARGES IN %s S"
+msgstr "ATHLUCHTÚ I %s S"
+
+#. Toolbox tier line: how long the Light Table or First Look shows (%s seconds)
+msgid "%s S LOOK"
+msgstr "AMHARC %s S"
+
+#. Toolbox tier line: how long the Push Pin holds (%s seconds)
+msgid "PINNED %s S"
+msgstr "PIONNÁILTE %s S"
+
+#. Toolbox tier line: Hop clears one tile, recharges in %s seconds
+msgid "1 TILE, %s S RECHARGE"
+msgstr "1 TÍL, ATHLUCHTÚ %s S"
+
+#. Toolbox tier line: Hop clears two tiles, recharges in %s seconds
+msgid "2 TILES, %s S RECHARGE"
+msgstr "2 THÍL, ATHLUCHTÚ %s S"
+
+#. Toolbox tier line: Second Draft puts MapMan back up with %s seconds on the clock
+msgid "BACK UP WITH %s S"
+msgstr "AR AIS LE %s S"
+
+#. Toolbox tier line: Second Draft works twice a game, with %s seconds
+msgid "TWICE A GAME, %s S"
+msgstr "2× SA CHLUICHE, %s S"
+
+#. Toolbox tier line: how long Slow-mo lasts
+msgid "%s S AT HALF SPEED"
+msgstr "%s S AR LEATHLUAS"
+
+#. Toolbox tier line: how long Stop Clock holds the countdown
+msgid "CLOCK STOPS %s S"
+msgstr "CLOG STOPTHA %s S"
+
+#. Title of sheet 001-T, the tree of tools bought with stars; also the main menu row, pause row and level-clear button that open it
+msgid "TOOLBOX"
+msgstr "UIRLISÍ"
+
+#. Toolbox: label under the star count the player has to spend
+msgid "IN THE BANK"
+msgstr "SA BHANC"
+
+#. Toolbox: tag on a tool carried into levels
+msgid "ON BELT"
+msgstr "AR CHRIOS"
+
+#. Toolbox: tag on a tool bought but not on the belt
+msgid "OWNED"
+msgstr "AGAT"
+
+#. Toolbox card: how often a tool works (it recharges after each use)
+msgid "RECHARGES"
+msgstr "ATHLUCHTAÍONN"
+
+#. Toolbox card: the tool works once per try at a level
+msgid "ONCE A TRY"
+msgstr "UAIR SA TRIAIL"
+
+#. Toolbox card: the tool works once per level
+msgid "ONCE A SHEET"
+msgstr "UAIR SA BHILEOG"
+
+#. Toolbox card: the tool works once per game from the start
+msgid "ONCE A GAME"
+msgstr "UAIR SA CHLUICHE"
+
+#. Toolbox card: the tool works at the start of every try
+msgid "EVERY TRY"
+msgstr "GACH TRIAIL"
+
+#. Toolbox card button: buy tier %s (I, II or III) for %d stars
+msgid "BUY %s  ★ %d"
+msgstr "FAIGH %s  ★ %d"
+
+#. Toolbox card: all three tiers of the tool are bought
+msgid "EVERY TIER OWNED"
+msgstr "GACH LEIBHÉAL AGAT"
+
+#. Toolbox card: stars still needed for the next tier
+msgid "★ %d MORE TO GO"
+msgstr "★ %d EILE"
+
+#. Toolbox card: the tool above (%s, its name) must be bought before this one
+msgid "BUY %s FIRST"
+msgstr "CEANNAIGH %s AR DTÚS"
+
+#. Toolbox card button: carry the tool into levels
+msgid "PUT ON BELT"
+msgstr "CUIR AR CHRIOS"
+
+#. Toolbox card button: stop carrying the tool
+msgid "TAKE OFF BELT"
+msgstr "BAIN DEN CHRIOS"
+
+#. Toolbox card: no free belt slot for this tool
+msgid "BELT FULL"
+msgstr "CRIOS LÁN"
+
+#. Toolbox: label of the strip of belt slots (the tools carried into levels)
+msgid "BELT"
+msgstr "CRIOS"
+
+#. Toolbox: the third belt slot opens at level %d
+msgid "SHEET %d"
+msgstr "BILEOG %d"
+
+#. Toolbox: the reset that takes back every star spent (bought once)
+msgid "FRESH SHEET"
+msgstr "BILEOG NUA"
+
+#. Toolbox: Fresh Sheet button before it is bought
+msgid "BUY FOR ★ %d"
+msgstr "CEANNAIGH ★ %d"
+
+#. Toolbox: Fresh Sheet button once bought, %s is the stars that come back
+msgid "TAKE BACK ★ %s"
+msgstr "FAIGH ★ %s AR AIS"
+
+#. Toolbox: Fresh Sheet has nothing to take back
+msgid "NOTHING SPENT"
+msgstr "FAIC CAITE"
+
+#. Toolbox: Fresh Sheet can't be used while a level is paused
+msgid "BETWEEN SHEETS ONLY"
+msgstr "IDIR BHILEOGA AMHÁIN"
+
+#. Toolbox: button back to the level it was opened from (%s is its number); keep <
+msgid "<  SHEET %s"
+msgstr "<  BILEOG %s"
+
+#. Screen reader name of a tool's node in the toolbox (%s its name)
+msgid "%s, tier %d of 3"
+msgstr "%s, leibhéal %d as 3"
+
+#. Screen reader name of a tool not bought yet
+msgid "%s, not owned"
+msgstr "%s, gan cheannach"
+
+#. Screen reader name of a tool whose tool above isn't bought
+msgid "%s, locked"
+msgstr "%s, faoi ghlas"
+
+#. Screen reader name of the toolbox's star count
+msgid "%d stars in the bank"
+msgstr "%d réalta sa bhanc"
+
+#. Level clear small print: stars the level paid into the bank, and the bank's total
+msgid "★ %d INTO THE STAR BANK · NOW ★ %d"
+msgstr "★ %d SA BHANC RÉALTAÍ · ANOIS ★ %d"
+
+#. Toolbox: stars spent so far of the whole tree's price (small print under the bank)
+msgid "★ %s / ★ %s SPENT"
+msgstr "★ %s / ★ %s CAITE"
+
+#. Toolbox tier line: the Hard Hat saves from a skull once a sheet
+msgid "SKULL, ONCE A SHEET"
+msgstr "CLOIGEANN, UAIR SA BHILEOG"
+
+#. Toolbox tier line: the Hard Hat saves from a skull or spikes once a sheet
+msgid "SKULL OR SPIKES, ONCE"
+msgstr "CLOIGEANN NÓ SPÍCÍ, 1×"
+
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "CLOIGEANN NÓ SPÍCÍ, 2×"

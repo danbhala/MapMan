@@ -59,6 +59,17 @@ var received_names := {}
 ## "ghost", its best run (RunRecord.encode()). A changed draft is a new code,
 ## so its record starts afresh.
 var level_stats := {}
+## The Toolbox (docs/toolbox.md): stars in the bank to spend, the tier owned
+## of each tool (id -> 1..3; absent is none), the tools on the belt, whether
+## Fresh Sheet has been bought, and what each sheet has paid into the bank
+## ("A35", or "B35" in Revision B -> {"tiles": star tiles banked, "clear":
+## its clear star paid, "quick": its quick star paid}), so a sheet never pays
+## twice for the same stars.
+var bank := 0
+var tools := {}
+var belt: Array[String] = []
+var fresh_sheet := false
+var banked := {}
 ## Tests turn this off so they never overwrite the player's real progress.
 var persist := true
 
@@ -177,6 +188,7 @@ func load_all(path := PATH) -> void:
 		for code in saved_stats:
 			if code is String and saved_stats[code] is Dictionary:
 				level_stats[code] = _stat_of(saved_stats[code])
+	_load_toolbox()
 	# Saves from before the wardrobe have the progress but not the looks.
 	sync_wardrobe()
 	var saved_worn: Variant = _cfg.get_value("wardrobe", "worn", "classic")
@@ -211,6 +223,11 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("drafting", "drafts", drafts)
 	_cfg.set_value("drafting", "received", received)
 	_cfg.set_value("drafting", "clipboard_seen", clipboard_seen)
+	_cfg.set_value("toolbox", "bank", bank)
+	_cfg.set_value("toolbox", "tools", tools)
+	_cfg.set_value("toolbox", "belt", belt)
+	_cfg.set_value("toolbox", "fresh_sheet", fresh_sheet)
+	_cfg.set_value("toolbox", "banked", banked)
 	_cfg.set_value("drafting", "names", received_names)
 	_cfg.set_value("drafting", "stats", level_stats)
 	_cfg.save(path)
@@ -447,3 +464,124 @@ static func _stat_of(saved: Dictionary) -> Dictionary:
 		"best": maxi(int(saved.get("best", -1)), -1),
 		"ghost": ghost if ghost is String else "",
 	}
+
+
+# --- the toolbox (docs/toolbox.md) ------------------------------------------------
+
+
+func _load_toolbox() -> void:
+	bank = maxi(int(_cfg.get_value("toolbox", "bank", 0)), 0)
+	tools.clear()
+	var saved_tools: Variant = _cfg.get_value("toolbox", "tools", {})
+	if saved_tools is Dictionary:
+		for id in saved_tools:
+			if id is String and Toolbox.is_tool(id):
+				tools[id] = clampi(int(saved_tools[id]), 0, Toolbox.TIERS)
+	belt.clear()
+	for id in _cfg.get_value("toolbox", "belt", []):
+		if id is String and tool_tier(id) > 0 and id not in belt:
+			belt.append(id)
+	fresh_sheet = bool(_cfg.get_value("toolbox", "fresh_sheet", false))
+	banked.clear()
+	var saved_banked: Variant = _cfg.get_value("toolbox", "banked", {})
+	if saved_banked is Dictionary:
+		for key in saved_banked:
+			if key is String and saved_banked[key] is Dictionary:
+				var b: Dictionary = saved_banked[key]
+				banked[key] = {
+					"tiles": maxi(int(b.get("tiles", 0)), 0),
+					"clear": bool(b.get("clear", false)),
+					"quick": bool(b.get("quick", false)),
+				}
+
+
+## The Toolbox opens once the first checkpoint (level 10) is cleared, like
+## the drafting table.
+func toolbox_open() -> bool:
+	return drafting_open()
+
+
+## The tier of tool `id` owned: 0 for none.
+func tool_tier(id: String) -> int:
+	return int(tools.get(id, 0))
+
+
+## Whether tool `id` is on the belt (owned and carried).
+func on_belt(id: String) -> bool:
+	return tool_tier(id) > 0 and id in belt
+
+
+## The stars a cleared sheet pays into the bank: its star tiles beyond any
+## it has paid before, its clear star the first time, and its quick star the
+## first time it is cleared with `quick` true. `key` names the sheet ("A35").
+## Returns what was paid: {"tiles", "clear", "quick", "total"}.
+func bank_sheet(key: String, star_tiles: int, quick: bool) -> Dictionary:
+	var b: Dictionary = banked.get(key, {"tiles": 0, "clear": false, "quick": false})
+	var paid := {"tiles": maxi(star_tiles - int(b.tiles), 0), "clear": 0, "quick": 0}
+	if not b.clear:
+		paid.clear = 1
+	if quick and not b.quick:
+		paid.quick = 1
+	paid["total"] = paid.tiles + paid.clear + paid.quick
+	b.tiles = maxi(int(b.tiles), star_tiles)
+	b.clear = true
+	b.quick = bool(b.quick) or quick
+	banked[key] = b
+	if paid.total > 0:
+		bank += paid.total
+	save_all()
+	return paid
+
+
+## The next tier of tool `id` is bought, if the bank can pay for it and the
+## tool above it in its branch is owned; true if it was.
+func buy_tool(id: String) -> bool:
+	var price := Toolbox.next_price(id, tool_tier(id))
+	if price < 0 or price > bank or not Toolbox.unlocked(id, self):
+		return false
+	bank -= price
+	tools[id] = tool_tier(id) + 1
+	save_all()
+	return true
+
+
+## Fresh Sheet is bought once, for its price; true if it was just now.
+func buy_fresh_sheet() -> bool:
+	if fresh_sheet or bank < Toolbox.FRESH_SHEET_PRICE:
+		return false
+	bank -= Toolbox.FRESH_SHEET_PRICE
+	fresh_sheet = true
+	save_all()
+	return true
+
+
+## Fresh Sheet: every star spent on tools comes back to the bank, and the
+## tools and the belt are cleared; true if there was anything to take back.
+func refund_tools() -> bool:
+	if not fresh_sheet:
+		return false
+	var refund := Toolbox.spent_stars(self)
+	if refund == 0:
+		return false
+	bank += refund
+	tools.clear()
+	belt.clear()
+	save_all()
+	return true
+
+
+## Puts an owned tool on the belt, or takes it off; false when there is no
+## room, or it isn't owned.
+func set_on_belt(id: String, on: bool) -> bool:
+	if on:
+		if tool_tier(id) == 0 or id in belt:
+			return false
+		if belt.size() >= Toolbox.belt_slots(self):
+			return false
+		belt.append(id)
+	else:
+		if id not in belt:
+			return false
+		belt.erase(id)
+	save_all()
+	return true

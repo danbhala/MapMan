@@ -46,6 +46,11 @@ var note_label: Label
 var tutorial_label: Label
 var timer_label: Label
 var timer_line: TimerLine
+## First Look's countdown (the Toolbox), big in the field under the header.
+var look_label: Label
+## Room the tool belt takes at the bar's left end (ToolBelt), before the
+## effect icon and the note.
+var belt_room := 0.0
 
 var _effect_textures := {}
 var _controls_text := ""
@@ -139,6 +144,10 @@ func _ready() -> void:
 	bar.add_child(timer_line)
 	timer_label = Blueprint.label(bar, "", TIMER_SIZE, Blueprint.INK, Vector2.ZERO, 700)
 	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	look_label = Blueprint.label(
+		self, "", 34, Blueprint.GOLD, Vector2.ZERO, 800, 0.0, HORIZONTAL_ALIGNMENT_CENTER
+	)
+	look_label.visible = false
 	_name_for_readers()
 	Save.locale_changed.connect(_name_for_readers)
 
@@ -174,6 +183,11 @@ func layout() -> void:
 
 	bar.position = Vector2(inner_x, s.y - inset - 1.0 - BAR_HEIGHT)
 	bar.size = Vector2(inner_w, BAR_HEIGHT)
+	effect_single.position.x = 10 + belt_room
+	effect_top.position.x = 8 + belt_room
+	effect_bottom.position.x = 30 + belt_room
+	look_label.position = Vector2(0, inset + 1.0 + HEADER_HEIGHT + 8.0)
+	Blueprint.fit(look_label, Vector2(s.x, 40))
 	Blueprint.fit(timer_label, Vector2(70, BAR_HEIGHT))
 	timer_label.position = Vector2(inner_w - 12 - 70, 0)
 	timer_line.position = Vector2(inner_w - 12 - 70 - 10 - TIMER_LENGTH, BAR_HEIGHT / 2.0)
@@ -188,6 +202,7 @@ func _layout_note(width_to_timer: float) -> void:
 		x = 48.0
 	elif effect_top.visible:
 		x = 60.0
+	x += belt_room
 	note_label.position = Vector2(x, 0)
 	Blueprint.fit(note_label, Vector2(width_to_timer - x - 8.0, BAR_HEIGHT))
 
@@ -304,8 +319,21 @@ func blank_timer() -> void:
 	timer_line.queue_redraw()
 
 
+## The icon for an effect: the bar's own art, or a Toolbox tool's icon.
+func _effect_texture(name: String) -> Texture2D:
+	if _effect_textures.has(name):
+		return _effect_textures[name]
+	return ToolIcons.texture(name, 1.5)
+
+
+## First Look's countdown: `seconds` big in gold over the field, or gone at 0.
+func set_look(seconds: int, _left: float) -> void:
+	look_label.visible = seconds > 0
+	_set_text(look_label, str(seconds) if seconds > 0 else "")
+
+
 func show_effect(name: String) -> void:
-	effect_single.texture = _effect_textures[name]
+	effect_single.texture = _effect_texture(name)
 	effect_single.visible = true
 	effect_top.visible = false
 	effect_bottom.visible = false
@@ -313,8 +341,8 @@ func show_effect(name: String) -> void:
 
 
 func show_double_effect(top: String, bottom: String) -> void:
-	effect_top.texture = _effect_textures[top]
-	effect_bottom.texture = _effect_textures[bottom]
+	effect_top.texture = _effect_texture(top)
+	effect_bottom.texture = _effect_texture(bottom)
 	effect_single.visible = false
 	effect_top.visible = true
 	effect_bottom.visible = true
