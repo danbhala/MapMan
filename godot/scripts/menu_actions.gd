@@ -119,8 +119,7 @@ static func _prefixed(game, act: String) -> void:
 	elif act.begins_with("practice page "):
 		game.show_practice_menu(int(act.get_slice(" ", 2)))
 	elif act.begins_with("practice level "):
-		game.menus.close()
-		game.start_practice(int(act.get_slice(" ", 2)))
+		game.drafting.open_cell("practice", int(act.get_slice(" ", 2)))
 	elif act.begins_with("wear "):
 		# From the wardrobe, or the slip on the level clear that released it:
 		# he wears it from now on.

@@ -1333,6 +1333,30 @@ msgstr "Nama level"
 msgid "The level's map"
 msgstr "Peta level"
 
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "LEVEL %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "BINTANG"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "LIHAT REKOR"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "REKOR — LEVEL %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "LATIHAN"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "SELESAIKAN UNTUK MELIHAT PETAK TERSEMBUNYI"
+
 #. Sheet title: the question whether the game may send anonymous play statistics
 msgid "PLAY STATS"
 msgstr "STATISTIK BERMAIN"
