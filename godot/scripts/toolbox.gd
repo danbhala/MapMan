@@ -605,6 +605,8 @@ func field_tap(event: InputEvent) -> bool:
 	if looking():
 		if not event.pressed:
 			_look_left = 0.0
+			_game.hud.set_look(0, 0.0)
+			_game.hud.set_time_message("")
 		return true
 	if _armed == "":
 		return false

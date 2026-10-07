@@ -450,6 +450,7 @@ func test_first_look_holds_the_clock_until_a_lean_or_a_tap() -> void:
 	e.pressed = false
 	assert_true(game.toolbox.field_tap(e), "a tap ends it")
 	assert_false(game.toolbox.looking())
+	assert_false(game.hud.look_label.visible, "the countdown goes with it")
 
 
 func test_tools_do_nothing_off_the_belt_or_on_a_pause() -> void:
