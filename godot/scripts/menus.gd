@@ -74,6 +74,12 @@ const TEXT := {
 	"main_items":
 	["PLAY FROM START", "CONTINUE FROM CHECKPOINT", "PRACTICE A LEVEL", "TUTORIAL", "OPTIONS"],
 	"drafting_item": "DRAFTING TABLE",
+	"rev_b_item": "PLAY REVISION B",
+	"rev_b_title": "REVISION B",
+	"rev_b_header": "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT",
+	"rev_b_start": "PLAY FROM SHEET 001",
+	"rev_b_released": "REV B RELEASED",
+	"rev_b_approved": "REV B APPROVED",
 	"best_score": "BEST SCORE %d",
 	"level_count": ["%d LEVEL", "%d LEVELS"],
 	# 000 — first run
@@ -396,7 +402,7 @@ func _open(tag: String, number: String, title: String, frame_color := Blueprint.
 	_cascade = 0.0
 	_clock = 0.0
 	var vp := get_viewport_rect().size
-	_bg = Blueprint.rect(self, Blueprint.FIELD, Vector2.ZERO, vp)
+	_bg = Blueprint.rect(self, Blueprint.field, Vector2.ZERO, vp)
 	_grid = Blueprint.grid(self, vp)
 	_frame = Blueprint.line(self, Blueprint.frame_points(vp), frame_color, Blueprint.FRAME_WIDTH)
 	# The sheet number keeps its order inside right-to-left text: "001-B".
@@ -432,6 +438,8 @@ func _title_block(number: String, color: Color) -> Control:
 	var rev: String = Dev.build_info.version.get_slice("-", 0)
 	if rev == "":
 		rev = TEXT.rev_dev
+	if Save.rev_b:
+		rev += "-B"
 	var text: String = _t("title_block") % [rev, number]
 	Blueprint.label(block, text, 11, Blueprint.INK, Vector2(11, 8))
 	return block
@@ -464,7 +472,7 @@ func _level_number(suffix: String) -> String:
 		number = "T"
 	elif _level <= 0:
 		number = TEXT.final_number
-	return number + "-" + suffix
+	return number + "-" + ("B" if Save.rev_b and not _tutorial else suffix)
 
 
 ## "PLAY FROM START" -> "Play from start", for screen readers.
@@ -734,8 +742,11 @@ func _score_block(score: int, previous_best: int) -> void:
 
 ## A stamp slams onto the sheet after `delay` (or just sits there, with reduced
 ## motion or on a redrawn sheet); MapMan cheers as it lands, if it's good news.
-func _stamp(text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, cheer := true) -> void:
-	var at := Vector2(_mx(pos.x, 120.0), pos.y)
+## width: about how wide the stamp is, for its place on a mirrored sheet.
+func _stamp(
+	text: String, pos: Vector2, color: Color, delay := STAMP_DELAY, cheer := true, width := 120.0
+) -> void:
+	var at := Vector2(_mx(pos.x, width), pos.y)
 	if not _animate:
 		Blueprint.stamp(_panel, text, at, color)
 		if cheer:
@@ -881,8 +892,14 @@ func _tap_to(act: String, delay := 0.3) -> void:
 # --- the menus -----------------------------------------------------------
 
 
+## rev_b: Revision B is open (the game has been finished), a row of its own.
 func show_main(
-	highscore: int, has_checkpoint: bool, levels := 0, drafting := false, new_lessons := false
+	highscore: int,
+	has_checkpoint: bool,
+	levels := 0,
+	drafting := false,
+	new_lessons := false,
+	rev_b := false
 ) -> void:
 	_open("main", TEXT.main_number, _t("main_title"))
 	_columns([_t("col_item"), _t("col_description")], [TEXT_X, TEXT_X + 6 * CHAR_W])
@@ -893,18 +910,25 @@ func show_main(
 		texts.insert(4, _t("drafting_item"))
 		acts.insert(4, "drafting table")
 		enabled.append(true)
-	var top := 76.0 if drafting else 80.0
-	var pitch := 38.0 if drafting else 44.0
+	var tutorial_row := 3
+	if rev_b:  # after CONTINUE FROM CHECKPOINT; the rows close up again
+		texts.insert(2, _t("rev_b_item"))
+		acts.insert(2, "revision b")
+		enabled.append(true)
+		tutorial_row = 4
+	var extra := texts.size() - 5
+	var top := 80.0 - 4.0 * extra
+	var pitch := 44.0 - 6.0 * extra
 	_items(texts, acts, top, pitch, enabled)
 	if new_lessons:  # a NEW tag on the TUTORIAL row
-		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, top + 3 * pitch - 10.0)
+		WardrobeSheet.tag(self, _t("new"), LIST_X + LIST_W + 8.0, top + tutorial_row * pitch - 10.0)
 	var parts: Array[String] = []
 	if highscore > 0:
 		parts.append(_t("best_score") % highscore)
 	if levels > 0:
 		parts.append(_tn("level_count", levels))
 	if not parts.is_empty():
-		_note(_t("note") % " · ".join(parts), 312 if drafting else 308)
+		_note(_t("note") % " · ".join(parts), 308 + 4 * extra)
 	_hero_on("tilt")
 	WardrobeSheet.main_menu_row(self)
 	_focus_first()
@@ -941,16 +965,7 @@ func show_options() -> void:
 	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
 	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
-	# PRIVACY (StatsSheet): play stats and the privacy policy.
-	var at := ClearSheet.REPLAY_POS
-	var pos := Vector2(_mx(at.x, ClearSheet.REPLAY_W), at.y)
-	var privacy := Blueprint.item(
-		_panel, tr(StatsSheet.TEXT.title), pos, Vector2(ClearSheet.REPLAY_W, Blueprint.TAP_HEIGHT)
-	)
-	privacy.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	privacy.accessibility_name = _sentence(tr(StatsSheet.TEXT.title))
-	_connect(privacy, "privacy")
-	_reveal(privacy)
+	StatsSheet.privacy_button(self)
 	_hero_on("tilt")
 	_focus_first()
 
@@ -1107,9 +1122,11 @@ func show_game_over(score: int, pb: bool, has_checkpoint: bool, previous_best :=
 
 
 ## The checkpoint picker: `reached` holds the levels whose checkpoint is saved.
-func show_restart(reached: Array) -> void:
-	_open("restart", TEXT.cp_number, _t("checkpoints_title"))
-	_columns([_t("checkpoints_header")], [LIST_X])
+## rev_b: Revision B's checkpoints (its cells report "B<level>"), with a row
+## to play it from the first sheet.
+func show_restart(reached: Array, rev_b := false) -> void:
+	_open("restart", TEXT.cp_number, _t("rev_b_title" if rev_b else "checkpoints_title"))
+	_columns([_t("rev_b_header" if rev_b else "checkpoints_header")], [LIST_X])
 	for r in CHECKPOINT_ROWS.size():
 		for c in CHECKPOINT_ROWS[r].size():
 			var level: int = CHECKPOINT_ROWS[r][c]
@@ -1120,8 +1137,10 @@ func show_restart(reached: Array) -> void:
 				(_t("a11y_checkpoint") if open else _t("a11y_checkpoint_locked")) % level
 			)
 			var size := Vector2(90, Blueprint.TAP_HEIGHT)
-			_cell(pos, size, open, str(level), detail, "L%d" % level, a11y)
-	_return_item(240)
+			_cell(pos, size, open, str(level), detail, ("B%d" if rev_b else "L%d") % level, a11y)
+	if rev_b:
+		_item(1, _t("rev_b_start"), "B1", 232, true, 36.0)
+	_return_item(272 if rev_b else 240)
 	_hero_on("tilt")
 	_focus_first()
 
@@ -1225,7 +1244,9 @@ func reopen_end_level() -> void:
 
 
 ## released: "mapwoman" when finishing the game this time released her.
-func show_congratulations(score: int, pb: bool, released := "") -> void:
+## rev_b: "released" the first time the game is finished (Revision B opens),
+## "approved" on finishing Revision B itself; a stamp either way.
+func show_congratulations(score: int, pb: bool, released := "", rev_b := "") -> void:
 	_open("congratulations", TEXT.end_sheet, _t("congratulations_title"), Blueprint.GOLD)
 	_score_block(score, 0)
 	_rule(182)
@@ -1236,6 +1257,9 @@ func show_congratulations(score: int, pb: bool, released := "") -> void:
 		WardrobeSheet.mapwoman_slip(self)
 	if pb:
 		_stamp(_t("new_best"), Vector2(220, 100), Blueprint.GOLD)
+	if rev_b != "":  # under NEW BEST when both land
+		var at := Vector2(220, 146) if pb else Vector2(220, 100)
+		_stamp(_t("rev_b_" + rev_b), at, Blueprint.PINK, STAMP_DELAY + 0.3, true, 200.0)
 	_focus_first()
 
 

@@ -868,6 +868,30 @@ msgstr "GEÇ"
 msgid "DRAFTING TABLE"
 msgstr "ÇİZİM MASASI"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "REVİZYON B'Yİ OYNA"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "REVİZYON B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "SAYFALAR YENİDEN: KAYITLI NOKTADAN"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "SAYFA 001'DEN OYNA"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "REV B YAYINDA"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "REV B ONAYLANDI"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "TASLAKLARIN"
@@ -1212,6 +1236,102 @@ msgstr "DEVAM: %s"
 #. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
 msgid "TRY %s"
 msgstr "DENE: %s"
+
+#. Level card: this level was drawn on this phone
+msgid "MADE BY YOU"
+msgstr "SENİN YAPTIĞIN"
+
+#. Level card: this level came from someone else's code
+msgid "FROM A FRIEND"
+msgstr "BİR ARKADAŞTAN"
+
+#. Level card title: a level a friend sent (%d is its number on the drafting table, 1 to 12)
+msgid "RECEIVED LEVEL %d"
+msgstr "ALINAN SEVİYE %d"
+
+#. Level card figure label: how many tries the level has had
+msgid "PLAYED"
+msgstr "OYNANDI"
+
+#. Level card figure label: how many times it was won
+msgid "CLEARED"
+msgstr "GEÇİLDİ"
+
+#. Level card figure label: the best time
+msgid "BEST"
+msgstr "EN İYİ"
+
+#. Level card figure: the best time, as seconds left on the clock (%d)
+msgid "%ds LEFT"
+msgstr "%ds KALDI"
+
+#. Level card button: play this level
+msgid "PLAY"
+msgstr "OYNA"
+
+#. Level card button: open the draft in the editor
+msgid "EDIT"
+msgstr "DÜZENLE"
+
+#. Level card button: copy a friend's level into an empty draft, to change it
+msgid "REMIX"
+msgstr "REMİKS"
+
+#. Level card button, and the button that confirms it: remove the level for good
+msgid "DELETE"
+msgstr "SİL"
+
+#. Level card button: give the level a name that only this player sees
+msgid "RENAME"
+msgstr "ADLANDIR"
+
+#. Replay heading for a drafting table level: its name (%s)
+msgid "REPLAY — %s"
+msgstr "TEKRAR — %s"
+
+#. Delete question button: don't delete
+msgid "KEEP IT"
+msgstr "KALSIN"
+
+#. Share sheet item: back to the level's card
+msgid "BACK TO THE LEVEL"
+msgstr "SEVİYEYE DÖN"
+
+#. Delete question (%d is the draft's number, 1 to 6)
+msgid "DELETE DRAFT %d?"
+msgstr "TASLAK %d SİLİNSİN Mİ?"
+
+#. Delete question for a level a friend sent (%d is its number, 1 to 12)
+msgid "DELETE RECEIVED LEVEL %d?"
+msgstr "ALINAN SEVİYE %d SİLİNSİN Mİ?"
+
+#. Delete question note, under the question; wraps onto two lines
+msgid "ITS NAME, BEST TIME AND GHOST GO WITH IT. THIS CAN'T BE UNDONE"
+msgstr "ADI, EN İYİ SÜRESİ VE HAYALETİ DE GİDER. BU GERİ ALINAMAZ"
+
+#. Rename sheet: the name stays on this phone and is never sent with the level's code
+msgid "NAME THIS LEVEL · ONLY YOU SEE IT"
+msgstr "BU SEVİYEYE AD VER · YALNIZCA SEN GÖRÜRSÜN"
+
+#. Rename sheet button
+msgid "SAVE THE NAME"
+msgstr "ADI KAYDET"
+
+#. Level card note when no draft is empty, so REMIX can't copy the level
+msgid "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX"
+msgstr "6 TASLAĞIN HEPSİ DOLU: BİRİNİ SİL"
+
+#. Level card note after a win with more time left than ever before (%d seconds)
+msgid "CLEARED WITH %ds LEFT · NEW BEST"
+msgstr "%ds KALA GEÇİLDİ · YENİ REKOR"
+
+#. Screen reader: the text box for a level's name
+msgid "Level name"
+msgstr "Seviye adı"
+
+#. Screen reader: the picture of the level on its card
+msgid "The level's map"
+msgstr "Seviyenin haritası"
 
 #. Sheet title: the question whether the game may send anonymous play statistics
 msgid "PLAY STATS"

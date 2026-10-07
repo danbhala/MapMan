@@ -904,6 +904,30 @@ msgstr "LÉIM"
 msgid "DRAFTING TABLE"
 msgstr "BORD LÍNÍOCHTA"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "IMIR LEASÚ B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "LEASÚ B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "NA BILEOGA ARÍS: Ó PHOINTE SÁBHÁILTE"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "IMIR Ó BHILEOG 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "LEASÚ B EISITHE"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "LEASÚ B CEADAITHE"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "DO DHRÉACHTAÍ"
@@ -1252,6 +1276,102 @@ msgstr "COINNIGH: %s"
 #. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
 msgid "TRY %s"
 msgstr "TRIAIL: %s"
+
+#. Level card: this level was drawn on this phone
+msgid "MADE BY YOU"
+msgstr "DÉANTA AGAT"
+
+#. Level card: this level came from someone else's code
+msgid "FROM A FRIEND"
+msgstr "Ó CHARA"
+
+#. Level card title: a level a friend sent (%d is its number on the drafting table, 1 to 12)
+msgid "RECEIVED LEVEL %d"
+msgstr "LEIBHÉAL A FUARTHAS %d"
+
+#. Level card figure label: how many tries the level has had
+msgid "PLAYED"
+msgstr "IMRITHE"
+
+#. Level card figure label: how many times it was won
+msgid "CLEARED"
+msgstr "CRÍOCHNAITHE"
+
+#. Level card figure label: the best time
+msgid "BEST"
+msgstr "BUAIC"
+
+#. Level card figure: the best time, as seconds left on the clock (%d)
+msgid "%ds LEFT"
+msgstr "%ds FÁGTHA"
+
+#. Level card button: play this level
+msgid "PLAY"
+msgstr "IMIR"
+
+#. Level card button: open the draft in the editor
+msgid "EDIT"
+msgstr "CUIR IN EAGAR"
+
+#. Level card button: copy a friend's level into an empty draft, to change it
+msgid "REMIX"
+msgstr "ATHMHEASC"
+
+#. Level card button, and the button that confirms it: remove the level for good
+msgid "DELETE"
+msgstr "SCRIOS"
+
+#. Level card button: give the level a name that only this player sees
+msgid "RENAME"
+msgstr "ATHAINMNIGH"
+
+#. Replay heading for a drafting table level: its name (%s)
+msgid "REPLAY — %s"
+msgstr "ATHIMRT — %s"
+
+#. Delete question button: don't delete
+msgid "KEEP IT"
+msgstr "COINNIGH É"
+
+#. Share sheet item: back to the level's card
+msgid "BACK TO THE LEVEL"
+msgstr "AR AIS GO DTÍ AN LEIBHÉAL"
+
+#. Delete question (%d is the draft's number, 1 to 6)
+msgid "DELETE DRAFT %d?"
+msgstr "DRÉACHT %d A SCRIOSADH?"
+
+#. Delete question for a level a friend sent (%d is its number, 1 to 12)
+msgid "DELETE RECEIVED LEVEL %d?"
+msgstr "LEIBHÉAL %d A SCRIOSADH?"
+
+#. Delete question note, under the question; wraps onto two lines
+msgid "ITS NAME, BEST TIME AND GHOST GO WITH IT. THIS CAN'T BE UNDONE"
+msgstr "IMEOIDH A AINM, A BHUAIC AGUS A THAIBHSE LEIS. NÍ FÉIDIR É A CHEALÚ"
+
+#. Rename sheet: the name stays on this phone and is never sent with the level's code
+msgid "NAME THIS LEVEL · ONLY YOU SEE IT"
+msgstr "AINMNIGH AN LEIBHÉAL · TUSA AMHÁIN A FHEICEANN É"
+
+#. Rename sheet button
+msgid "SAVE THE NAME"
+msgstr "SÁBHÁIL AN T-AINM"
+
+#. Level card note when no draft is empty, so REMIX can't copy the level
+msgid "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX"
+msgstr "TÁ NA 6 DHRÉACHT IN ÚSÁID: SCRIOS CEANN"
+
+#. Level card note after a win with more time left than ever before (%d seconds)
+msgid "CLEARED WITH %ds LEFT · NEW BEST"
+msgstr "CRÍOCHNAITHE, %ds FÁGTHA · BUAIC NUA"
+
+#. Screen reader: the text box for a level's name
+msgid "Level name"
+msgstr "Ainm an leibhéil"
+
+#. Screen reader: the picture of the level on its card
+msgid "The level's map"
+msgstr "Léarscáil an leibhéil"
 
 #. Sheet title: the question whether the game may send anonymous play statistics
 msgid "PLAY STATS"

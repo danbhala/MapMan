@@ -16,7 +16,10 @@ moves. The level legend is in `.claude/skills/new-level/SKILL.md`.
 How to work:
 
 1. Run `python3 godot/tools/level_report.py --json` (optionally with level
-   numbers) from the repository root. It returns, per level: shortest safe
+   numbers) from the repository root; `--rev-b` reads Revision B's sheets
+   (`godot/data/levels_b.json`, the same hundred mirrored and reworked with
+   crumble `k`, ice `j` and spike `^` `%` tiles; `python3
+   godot/tools/remix.py --report` prints A and B side by side). It returns, per level: shortest safe
    route length in moves, `slack_seconds` left on the clock at full tilt,
    time-loss and extra-time tiles on that route, sticky and reverse tiles on
    the route, stars and death tiles, checkpoints, and `needs_extra_time`.
@@ -24,7 +27,10 @@ How to work:
    and run `python3 godot/tools/playlog_report.py <file>`: real attempts,
    clear rate, deaths and timeouts per level next to the estimated slack.
    Real play outranks estimates when they disagree.
-3. Read the layouts of any level you comment on from `godot/data/levels.json`.
+3. Read the layouts of any level you comment on from `godot/data/levels.json`
+   (or `levels_b.json`). A spike on the route costs about a second of waiting;
+   a crumble closes the way back; an ice run is crossed in one slide and
+   can't be steered on.
 4. Look for: unsolvable levels; levels whose slack is far below their
    neighbours (a difficulty spike); long runs of near-identical levels;
    mechanics used before the tutorial introduces them (tutorial order:

@@ -117,6 +117,7 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 		DraftingSheet.TEXT,
 		ControlsSheet.TEXT,
 		StatsSheet.TEXT,
+		LevelCard.TEXT,
 	]:
 		for key in table:
 			var value = table[key]
@@ -134,7 +135,7 @@ func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
 	var literal := RegEx.create_from_string('\\btr(?:_n)?\\(\\s*"((?:[^"\\\\]|\\\\.)*)"')
 	var count := 0
 	var scripts := ["main.gd", "hud.gd", "menus.gd", "wardrobe_sheet.gd", "level_map.gd"]
-	scripts.append_array(["drafting_sheet.gd", "draft.gd"])
+	scripts.append_array(["drafting_sheet.gd", "draft.gd", "level_card.gd"])
 	for script in scripts:
 		var source := FileAccess.get_file_as_string("res://scripts/" + script)
 		for m in literal.search_all(source):
@@ -312,6 +313,26 @@ func _received() -> Array:
 	return codes.slice(0, Draft.RECEIVED_KEPT)
 
 
+## A level card at its fullest: the longest name, a note, every action,
+## figures in the thousands.
+func _card(kind: String) -> LevelCard.Card:
+	var c := LevelCard.Card.new()
+	c.draft = _drafts()[0]
+	c.number = "R12" if kind == "received" else "D6"
+	c.title = (
+		tr(LevelCard.TEXT.received_title) % 12
+		if kind == "received"
+		else tr(DraftingSheet.TEXT.draft_title) % 6
+	)
+	c.kind_line = c.title
+	c.name = "W".repeat(Draft.NAME_MAX)
+	c.source = tr(LevelCard.TEXT.no_slot)
+	c.stats = {"played": 1234, "cleared": 999, "best": 120}
+	c.edit = "remix" if kind == "received" else "edit"
+	c.replay = true
+	return c
+
+
 ## The editor with the tool whose name takes the most room in the language
 ## on screen, so the status line is at its longest.
 func _editor(draft: Draft) -> void:
@@ -383,12 +404,16 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_lose_life(1, 35, "timeout", "skip"),
 		func(): m.show_game_over(1842, true, true, 1790),
 		func(): m.show_restart([10, 30]),
+		func(): m.show_restart([10, 30], true),
+		func(): m.show_main(1842, true, 100, true, true, true),
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
 		func(): m.show_wardrobe(36),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),
+		func(): m.show_congratulations(2042, true, "mapwoman", "released"),
+		func(): m.show_congratulations(2042, false, "", "approved"),
 		func(): m.show_game_complete(1842, 100, 100),
 		func(): m.show_game_complete(1842, 100, 100, true),
 		_wardrobe_sheet.bind(longest),
@@ -403,12 +428,32 @@ func _open_every_sheet(check: Callable) -> void:
 		_scan.bind("looking"),
 		_scan.bind("no_permission"),
 		_scan.bind("not_a_level"),
-		func(): DraftingSheet.build_share(m, _drafts()[0], true),
+		func():
+			DraftingSheet.build_share(
+				m,
+				_drafts()[0].code(),
+				"D1-S",
+				tr(DraftingSheet.TEXT.back_to_draft),
+				"draft 0",
+				true
+			),
 		_editor.bind(Draft.new(5)),
 		_editor.bind(_drafts()[1]),
 		_editor.bind(_drafts()[0]),
 		func(): DraftingSheet.build_pause(m, "D6"),
 		func(): DraftingSheet.build_pause(m, "R"),
+		func(): LevelCard.build(m, _card("draft")),
+		func():
+			var c := _card("received")
+			c.note = tr(LevelCard.TEXT.new_best) % 120
+			LevelCard.build(m, c),
+		func():
+			LevelCard.build_delete(m, _card("received"), tr(LevelCard.TEXT.delete_received) % 12),
+		func(): LevelCard.build_rename(m, _card("draft")),
+		func():
+			Save.received_names[LevelCode.clean(_received()[0])] = "W".repeat(Draft.NAME_MAX)
+			DraftingSheet.build(m, _drafts(), _received())
+			Save.received_names.clear(),
 	]
 	for open_sheet in sheets:
 		open_sheet.call()

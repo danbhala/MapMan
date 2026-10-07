@@ -49,7 +49,9 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   level being drawn, `scripts/drafting_sheet.gd` draws sheet 001-E, the
   editor, code entry, the share sheet (QR from `addons/kenyoni/qr_code/`)
   and the scan sheet (`scripts/qr_scanner.gd` camera view,
-  `scripts/qr_reader.gd` QR decoder).
+  `scripts/qr_reader.gd` QR decoder); `scripts/level_card.gd` draws a
+  level's card (preview, name, record, actions) and its rename and delete
+  sheets. Names stay on the phone: codes never carry them.
   `scripts/level_code.gd` turns a level into a short code and back, matching
   `tools/level_code.py` bit for bit; `data/level_code_v0.json` is frozen.
   `main.gd` plays drafts and friends' codes with `custom` set ("draft",
@@ -77,6 +79,20 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   straight into the tutorial, with SKIP in the header's corner back to the
   main menu; after two lessons, or three lost tries on one, it asks once
   whether to keep that steering or try the other.
+- Revision B (`scripts/revision_b.gd`, `main.revision_b`): the second game,
+  `data/levels_b.json`, every sheet of `levels.json` mirrored and reworked
+  with the crumble, ice and spike tiles by `tools/remix.py` (rerun it after
+  changing `levels.json`; hand-tuning goes in `tools/remix_overrides.json`,
+  never in `levels_b.json`). It opens when the game has been finished
+  (`Save.rev_b_open()`): PLAY REVISION B on the main menu, its own
+  checkpoints sheet ("B<n>" actions). `main.gd` `revise()` swaps `levels`,
+  the save track (`Save.rev_b`: checkpoints, furthest sheet, bests, ghosts
+  and high score live per track in `Save.track_a` / `track_b`, read through
+  the usual `Save.checkpoints` etc.) and the look (`Blueprint.revise()`:
+  `Blueprint.field`, `grid_color`, `tile_tint`, the Redline palette). No
+  assists in Revision B (`losses_here()`). The menus' actions themselves are
+  carried out by `scripts/menu_actions.gd`, the Options sheet's by
+  `scripts/options_actions.gd`, so `main.gd` stays under the lint's 1300 lines.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`,
   `Stats` (opt-in play stats, `docs/stats.md`: nothing is queued or sent
   without the player's yes; `scripts/stats_sheet.gd` asks once before the
@@ -162,7 +178,8 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
 
 - `tests/unit/` – GUT tests, one per tile rule; add one for every new rule.
 - `tests/autoplay_test.gd` – a bot walks every level along a safe route; the
-  proof that all levels are still solvable.
+  proof that all levels are still solvable (`--rev-b` for Revision B's sheets;
+  `verify.sh --full` runs both).
 - `tests/screenshots.gd` + `tests/baseline/` – pixel comparison of two dozen
   screens. Deterministic only with `--fixed-fps 60` and the fixed seed it sets.
 - `tools/record_tour.sh` records a video tour (menus, a level, pause, level

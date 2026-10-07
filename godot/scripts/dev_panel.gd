@@ -17,6 +17,7 @@ var _build_label: Label
 var _panel: Control
 var _gauge: TiltReadout
 var _level_box: SpinBox
+var _rev_b_box: CheckBox
 var _toast: Label
 var _playlog_label: Label
 var _value_labels := {}
@@ -141,6 +142,10 @@ func _build_panel(theme: Theme) -> Control:
 	_level_box.min_value = 1
 	_level_box.max_value = game.levels.size()
 	row.add_child(_level_box)
+	_rev_b_box = CheckBox.new()
+	_rev_b_box.text = "Rev B"
+	_rev_b_box.tooltip_text = "Revision B's sheets (as a player who has finished the game)"
+	row.add_child(_rev_b_box)
 	row.add_child(_button_for("Play from here", _on_play_from_here))
 	row.add_child(_button_for("Skip this level", _on_skip_level))
 	box.add_child(row)
@@ -200,7 +205,7 @@ func _build_panel(theme: Theme) -> Control:
 
 func _on_play_from_here() -> void:
 	close()
-	go_to_level(game, int(_level_box.value))
+	go_to_level(game, int(_level_box.value), _rev_b_box.button_pressed)
 
 
 func _on_skip_level() -> void:
@@ -208,10 +213,14 @@ func _on_skip_level() -> void:
 	skip_level(game)
 
 
-## Start a normal game at any level.
-static func go_to_level(main, n: int) -> void:
+## Start a normal game at any level; in Revision B (opening it) when rev_b.
+static func go_to_level(main, n: int, rev_b := false) -> void:
 	main.menus.close()
 	main.custom = ""
+	if rev_b:
+		Save.has_completed = true
+		main.revision_b.start(n)
+		return
 	main.new_game(clampi(n, 1, main.levels.size()))
 
 
@@ -282,6 +291,8 @@ func _on_clear_drafting() -> void:
 		return
 	Save.drafts.clear()
 	Save.received.clear()
+	Save.received_names.clear()
+	Save.level_stats.clear()
 	Save.save_all()
 	game.drafting.draft = null
 	_refresh_main_menu()

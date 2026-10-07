@@ -91,6 +91,18 @@ static func build(m: Menus) -> void:
 	m._focus_first()
 
 
+## PRIVACY in the Options' corner, opening 001-I.
+static func privacy_button(m: Menus) -> void:
+	var at := ClearSheet.REPLAY_POS
+	var pos := Vector2(m._mx(at.x, ClearSheet.REPLAY_W), at.y)
+	var size := Vector2(ClearSheet.REPLAY_W, Blueprint.TAP_HEIGHT)
+	var b := Blueprint.item(m._panel, m.tr(TEXT.title), pos, size)
+	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.accessibility_name = m._sentence(m.tr(TEXT.title))
+	m._connect(b, "privacy")
+	m._reveal(b)
+
+
 ## A full-width row with no number that reports `act`.
 static func _row(m: Menus, text: String, act: String, y: float) -> void:
 	var pos := Vector2(m._mx(Menus.LIST_X, Menus.LIST_W), y)

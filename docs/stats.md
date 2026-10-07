@@ -36,7 +36,7 @@ launch), `build` (`dev` or `release`), `app_version`, `commit`, `platform`, and
 `$process_person_profile: false` (no person profiles). Never a name, account,
 advertising ID or device ID.
 
-Level events (`Stats.of()` in `main.gd`) add `level`, `mode` (`main`,
+Level events (`Stats.of()` in `main.gd`) add `level`, `revision` (`A`, or `B` for Revision B), `mode` (`main`,
 `practice`, `tutorial` or `custom`), `lives` and `lost_here` (lives lost on
 this level this session, which says which assist was on).
 

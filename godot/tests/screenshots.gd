@@ -316,22 +316,40 @@ func run() -> void:
 	save.controls = "tilt"
 	game.steering.apply()
 
+	save.set_locale("")
+
+	# Revision B: its row on the main menu once the game has been finished,
+	# and sheet 16 again in the Redline look, mirrored with its new tiles.
+	save.has_completed = true
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("28_main_menu_rev_b")
+	game.revision_b.start(16)
+	while not game._timer_running:
+		await process_frame
+	await frames(20)
+	await shot("29_rev_b_playing")
+	game.show_pause_menu()
+	await frames(70)
+	await shot("30_rev_b_pause")
+	game._on_menu_action("end game")
+	save.has_completed = false
+
 	# Play stats: the question before the main menu, then PRIVACY with them on.
 	var stats := Blueprint.autoload("Stats")
 	stats.key = "phc_screenshots"
 	stats.answer = ""
 	game._on_menu_action("main menu")
 	await frames(70)
-	await shot("28_stats_question")
+	await shot("31_stats_question")
 	stats.choose(true)
 	stats.install_id = "3f9a0c12-0000-4000-8000-000000000000"
 	game._on_menu_action("options")
 	game._on_menu_action("privacy")
 	await frames(70)
-	await shot("29_privacy")
+	await shot("32_privacy")
 	stats.choose(false)
 	stats.key = ""
-	save.set_locale("")
 
 	if failures.is_empty():
 		print("SCREENSHOTS OK")

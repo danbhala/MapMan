@@ -157,8 +157,8 @@ func _on_sent(result: int, code: int, _headers: PackedStringArray, _body: Packed
 		_save()
 
 
-## What every level event says, for main.gd `g`: the sheet, how it is being
-## played and the lives, plus `more` (times rounded to a tenth).
+## What every level event says, for main.gd `g`: the sheet, the revision,
+## how it is being played and the lives, plus `more` (times rounded to a tenth).
 func of(g: Node, more := {}) -> Dictionary:
 	var mode := "main"
 	if g.tutorial:
@@ -168,6 +168,7 @@ func of(g: Node, more := {}) -> Dictionary:
 	elif g.practice:
 		mode = "practice"
 	var props := {"level": g.level, "mode": mode, "lives": g.lives, "lost_here": g.losses_here()}
+	props["revision"] = "B" if Save.rev_b else "A"  # which game: levels.json or levels_b.json
 	for k in more:
 		props[k] = snappedf(more[k], 0.1) if more[k] is float else more[k]
 	return props

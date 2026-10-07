@@ -1,0 +1,209 @@
+{
+ "_about": "The layouts of the sheets PR #27 eased in Revision A, as they were before (Revision B keeps the originals; tools/remix.py reads this).",
+ "levels": {
+  "35": {
+   "rows": [
+    " N",
+    " t      ",
+    " t    m",
+    " t    c",
+    " t    c",
+    " ccccccb"
+   ],
+   "loading": [
+    " k",
+    " j      ",
+    " i    n",
+    " h    m",
+    " g    l",
+    " fedcba0"
+   ]
+  },
+  "62": {
+   "rows": [
+    "       N",
+    "       t",
+    "       t",
+    "       t",
+    "       t",
+    " mccvccbccrccm",
+    "       c",
+    "       y",
+    "       m"
+   ],
+   "loading": [
+    "       m",
+    "       l",
+    "       k",
+    "       j",
+    "       i",
+    "hmgedcb1234557",
+    "       8",
+    "       9",
+    "       a"
+   ]
+  },
+  "72": {
+   "rows": [
+    "n mcc     mcc",
+    "t c c     c c",
+    "t ctccctccctcccm",
+    "t c   c c   c",
+    "ttt   mcc bcc"
+   ],
+   "loading": [
+    "z pon     987",
+    "y q m     a 6",
+    "x rzlkjzdcbz5zzz",
+    "w s   i e   4",
+    "vut   hgf 123"
+   ]
+  },
+  "86": {
+   "rows": [
+    "   cccc   piip",
+    "   c  c   i  i",
+    "   c  c   i  i",
+    "  cc  cc ip  pi",
+    "  c    c i    i",
+    "  c    c i    i",
+    " cc    ccu    pi",
+    " c      s      i",
+    "cc             pt",
+    "b               l"
+   ],
+   "loading": [
+    "   cccc   ****",
+    "   c  c   *  *",
+    "   c  c   *  *",
+    "  cc  cc **  **",
+    "  c    c *    *",
+    "  c    c *    *",
+    " cc    ccc    **",
+    " c      c      *",
+    "cc             **",
+    "b               *"
+   ]
+  },
+  "93": {
+   "rows": [
+    "--ddddddddddddd",
+    "--dcccccccccccd-",
+    "--dcdddddddddcd-",
+    "--dcdcccccccdcd-",
+    "--dcdcdddddcdcd-",
+    "--dcdcdwccccdrd-",
+    "--dcdcdddddddcd-",
+    "--dcdcccccccccd-",
+    "bcrcddddddddddd-"
+   ],
+   "loading": [
+    "--kkkkkkkkkkkkk",
+    "--l44556677889m-",
+    "--l4ooooooooo9m-",
+    "--l3pffggghhqam-",
+    "--l3pfttttthqam-",
+    "--l3pesjjiiiqam-",
+    "--l2perrrrrrrbm-",
+    "--l2oedddcccbbm-",
+    "1112nnnnnnnnnnn-"
+   ]
+  },
+  "94": {
+   "rows": [
+    "--dddddddmddddd",
+    "--dcccccccccccd-",
+    "--dcdddddddddcd-",
+    "--dcdcccccccdcd-",
+    "--dcdcdddddcdcd-",
+    "--dcdcdwccccdcd-",
+    "--dcdcdddddddcd-",
+    "--dcd4ccccccccd-",
+    "bc8cddddddddddd-"
+   ],
+   "loading": [
+    "--kkkkkkkkkkkkk",
+    "--l44556677889m-",
+    "--l4ooooooooo9m-",
+    "--l3pffggghhqam-",
+    "--l3pfttttthqam-",
+    "--l3pesjjiiiqam-",
+    "--l2perrrrrrrbm-",
+    "--l2oedddcccbbm-",
+    "1112nnnnnnnnnnn-"
+   ]
+  },
+  "95": {
+   "rows": [
+    "--!!!!!!!!!!!!!-",
+    "--!iiiiciiiiii!-",
+    "--!i!!!!!!!!!i!-",
+    "--!i!iiiiiii!i!-",
+    "--!i!i!!!!!c!i!-",
+    "--!i!i!wcccu!i!-",
+    "--!i!i!!!!!!!i!-",
+    "--!i!iiiiiicii!-",
+    "bcch!!!!!!!!!!!-"
+   ],
+   "loading": [
+    "--kkkkkkkkkkkkk-",
+    "--l44556677889m-",
+    "--l4ooooooooo9m-",
+    "--l3pffggghhqam-",
+    "--l3pfttttthqam-",
+    "--l3pesjjiiiqam-",
+    "--l2perrrrrrrbm-",
+    "--l2oedddcccbbm-",
+    "1112nnnnnnnnnnn-"
+   ]
+  },
+  "97": {
+   "rows": [
+    "wu--------------",
+    "-cccccccccccccc-",
+    "-cccccccccccccc-",
+    "-!!!!!!!!!i!!!!-",
+    "-cccccccccccccc-",
+    "-!i!!!!!!!!!!!!-",
+    "-cccccccccccccc-",
+    "-cccccccccccccc-",
+    "--------------hb"
+   ],
+   "loading": [
+    "dd--------------",
+    "-ccbbaa99887766-",
+    "-cbbaa998877665-",
+    "-bbaa9988776655-",
+    "-baa99887766554-",
+    "-aa998877665544-",
+    "-a9988776655443-",
+    "-99887766554433-",
+    "--------------21"
+   ]
+  },
+  "98": {
+   "rows": [
+    "wu--------------",
+    "-cccccccccccccc-",
+    "-i!!!!!!!!!!!!!-",
+    "-cccccccccccccc-",
+    "-!!!!!!!!!!i!!!-",
+    "-cccccccccccccc-",
+    "-!!!!!!!!!i!!!!-",
+    "-cccccccccccccc-",
+    "--------------hb"
+   ],
+   "loading": [
+    "dd--------------",
+    "-ccbbaa99887766-",
+    "-cbbaa998877665-",
+    "-bbaa9988776655-",
+    "-baa99887766554-",
+    "-aa998877665544-",
+    "-a9988776655443-",
+    "-99887766554433-",
+    "--------------21"
+   ]
+  }
+ }
+}

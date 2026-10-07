@@ -30,7 +30,8 @@ const HIDDEN_COLOR := Blueprint.MINT
 ## The notes that float up from a tile as it is collected (the time ones translate).
 const FLOATS := {"star": "+1 ★", "life": "+1 ♥", "more_time": "+5 S", "less_time": "−5 S"}
 
-var levels: Array = []
+var levels: Array = []  # the sheets being played: Revision A's, or B's
+var revision_b := RevisionB.new(self)
 var tutorial_levels: Array = []  # the lessons on offer now (see lessons())
 var tutorial_all: Array = []  # every lesson in data/tutorial.json
 var completion_level: Dictionary = {}
@@ -82,6 +83,9 @@ var losses := {}
 
 var _bg: ColorRect
 var _grid: Blueprint.Grid
+var _levels_a: Array = []  # Revision A's sheets, while B's are being played
+var _check_points_a: Array = []
+var _first_finish := false  # this game finished Revision A for the first time
 var _was_moving := false
 var _sliding := false  # a slide on ice is under way (one sound per slide)
 var _slide_step := Vector2i.ZERO  # the screen direction of the last step, for ice
@@ -310,9 +314,8 @@ func loaded() -> void:
 		Stats.event("level_start", Stats.of(self))
 	if not tutorial:
 		if not completed:
-			# A drafting table level plays as level 1 but is its own map: 0 keeps
-			# level 1's ghost and tries off it.
-			_tries.begin(0 if custom != "" else level, player.outfit)
+			# A drafting table level plays as level 1, but as level 0 here, by its code.
+			_tries.begin(0 if custom != "" else level, player.outfit, drafting.begin_try())
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 
@@ -395,7 +398,8 @@ func set_background() -> void:
 	elif stuck:
 		color = STUCK_COLOR
 	hud.set_state_color(color)
-	_grid.color = Color(color, Blueprint.GRID.a if color == Blueprint.INK else 0.22)
+	_bg.color = Blueprint.field
+	_grid.color = Blueprint.grid_color if color == Blueprint.INK else Color(color, 0.22)
 	_grid.queue_redraw()
 
 
@@ -584,7 +588,8 @@ func _start_replay() -> void:
 func _end_replay() -> void:
 	if _tries.stop_replay():
 		hud.visible = true
-		menus.redraw()
+		if not drafting.replay_ended():
+			menus.redraw()
 
 
 # --- tile rules (update_player) --------------------------------------------
@@ -836,8 +841,8 @@ func reset_all(reset_stars := true) -> void:
 ## Lives lost on this level in the main game; the tutorial, practice and the
 ## ending never count, so they never get help.
 func losses_here() -> int:
-	if tutorial or practice or completed:
-		return 0
+	if tutorial or practice or completed or Save.rev_b:
+		return 0  # Revision B gives no help
 	return losses.get(level, 0)
 
 
@@ -963,6 +968,7 @@ func finish_advancing_level() -> void:
 			# the game releases her into the wardrobe.
 			completed = true
 			Stats.event("game_finished", {"score": score, "lives": lives})
+			_first_finish = not Save.has_completed and not Save.rev_b
 			_mark_completed()
 			Save.release("mapwoman")
 			Save.save_all()
@@ -999,7 +1005,9 @@ func show_game_complete() -> void:
 	menus.show_game_complete(score, COMPLETION_BONUS, lives_bonus, Save.new_lessons)
 
 
-func new_game(start_level := 1, is_tutorial := false) -> void:
+## in_rev_b: Revision B's sheets, save track and look (RevisionB.start()).
+func new_game(start_level := 1, is_tutorial := false, in_rev_b := false) -> void:
+	revise(in_rev_b)
 	if Save.first_play:
 		Save.first_play = false
 		Save.save_all()
@@ -1013,6 +1021,7 @@ func new_game(start_level := 1, is_tutorial := false) -> void:
 	completed = false
 	practice = false
 	_between = false
+	_first_finish = false
 	_tries.clear()
 	_tries.end("", _time_left)
 	player.outfit = Save.worn
@@ -1114,7 +1123,23 @@ func _end_practice(note := "") -> void:
 	show_practice_menu(-1, note)
 
 
+## Revision B (the second game) or A: which sheets, save track and look.
+func revise(rev_b: bool) -> void:
+	if rev_b and not Save.rev_b:
+		_levels_a = levels
+		_check_points_a = check_point_levels
+		levels = revision_b.levels
+		check_point_levels = revision_b.check_points
+	elif Save.rev_b and not rev_b:
+		levels = _levels_a
+		check_point_levels = _check_points_a
+	Save.rev_b = rev_b
+	Blueprint.revise(rev_b)
+	set_background()
+
+
 func show_start_menu() -> void:
+	revise(false)
 	Audio.play_menu()
 	if Stats.should_ask():
 		# Once, before the menu: may MapMan send play stats? (StatsSheet)
@@ -1122,7 +1147,12 @@ func show_start_menu() -> void:
 		return
 	var drafting := Save.drafting_open()
 	menus.show_main(
-		Save.highscore, Save.has_any_checkpoint(), levels.size(), drafting, Save.new_lessons
+		Save.highscore,
+		Save.has_any_checkpoint(),
+		levels.size(),
+		drafting,
+		Save.new_lessons,
+		Save.rev_b_open()
 	)
 	# A level link that came in during the main game.
 	self.drafting.check_link()
@@ -1140,121 +1170,9 @@ func show_pause_menu() -> void:
 
 
 func _on_menu_action(act: String) -> void:
-	if drafting.action(act):
+	if drafting.action(act) or revision_b.action(act):
 		return
-	match act:
-		"play from start", "play", "new game", "play game":
-			if Save.first_play and act == "play from start":
-				menus.show_first_play()
-			else:
-				menus.close()
-				new_game()
-		"tutorial", "take tutorial":
-			menus.close()
-			new_game(1, true)
-		"restart from checkpoint":
-			menus.show_restart(Save.checkpoints.keys())
-		"wardrobe":
-			menus.show_wardrobe(level if _between else 0)
-		"main menu":
-			if menus.current == "wardrobe":
-				# Looked at: nothing in it is new any more (the marks stay
-				# while the sheet is open, through a tap that redraws it).
-				Save.mark_seen()
-			if game_active:
-				Stats.event(
-					"quit", Stats.of(self, {"after_clear": _between, "time_left": _time_left})
-				)
-				game_over(false)
-			show_start_menu()
-		"confirm quit":
-			menus.show_confirm_quit()
-		"end game", "end tutorial":
-			if game_active:
-				Stats.event(
-					"quit", Stats.of(self, {"after_clear": _between, "time_left": _time_left})
-				)
-			if practice:
-				_end_practice()
-			else:
-				if _between:
-					# Quitting from a level clear: its checkpoint is kept, and
-					# the next level opens in practice.
-					_bank_level()
-					if level <= levels.size():
-						Save.level_reached(level)
-				game_over(false)
-				show_start_menu()
-		"practice":
-			# Open on the page with the furthest level reached.
-			var last_page := (levels.size() - 1) / Menus.PRACTICE_PAGE
-			show_practice_menu(
-				clampi((Save.furthest_level - 1) / Menus.PRACTICE_PAGE, 0, last_page)
-			)
-		"next level":
-			menus.close()
-			next_level()
-		"replay":
-			Stats.event("replay_watched", Stats.of(self))
-			_start_replay()
-		"clear wardrobe":
-			menus.show_wardrobe(level)
-		"back to clear":
-			if menus.current == "wardrobe":
-				Save.mark_seen()
-			menus.reopen_end_level()
-		"leave clear":
-			# MAIN MENU on the level clear: the same question as quitting
-			# from the pause; the level still counts if the game ends.
-			menus.show_confirm_quit("back to clear")
-		"try again":
-			menus.close()
-			reset_all(false)
-		"skip sheet":
-			skip_level()
-		"unpause":
-			menus.close()
-			paused = false
-			# The player may hold the phone differently after a pause.
-			_calibrate_pending = true
-			if not tutorial and started() == false and map.loaded():
-				_timer_start()
-		"completion done":
-			score += end_of_level_points
-			var pb := Save.submit_score(score)
-			_mark_completed()
-			Save.save_all()
-			game_active = false
-			hud.show_bar(false)
-			hud.show_stats(false)
-			set_background()
-			# Her slip shows until the wardrobe has been looked at, so leaving
-			# the ending before the vortex the first time doesn't lose it.
-			var new_woman := Save.is_released("mapwoman") and "mapwoman" not in Save.seen
-			menus.show_congratulations(score, pb, "mapwoman" if new_woman else "")
-		_:
-			if steering.handle(act) or OptionsActions.handle(act, menus):
-				pass  # the Options, CONTROLS and language sheets
-			elif StatsSheet.handle(act, menus):
-				pass  # the play stats question and the PRIVACY sheet
-			elif act.begins_with("practice page "):
-				show_practice_menu(int(act.get_slice(" ", 2)))
-			elif act.begins_with("practice level "):
-				menus.close()
-				start_practice(int(act.get_slice(" ", 2)))
-			elif act.begins_with("wear "):
-				# From the wardrobe, or the slip on the level clear that released
-				# it: he wears it from now on.
-				if Save.wear(act.get_slice(" ", 1)):
-					player.outfit = Save.worn
-					Stats.event("look_worn", {"look": Save.worn})
-				if menus.current == "end_level":
-					menus.redraw()
-				else:
-					menus.show_wardrobe(level if _between else 0)
-			elif act.begins_with("L") and act.substr(1).is_valid_int():
-				menus.close()
-				new_game(int(act.substr(1)) + 1)
+	MenuActions.handle(self, act)
 
 
 # --- input -----------------------------------------------------------------
@@ -1290,6 +1208,36 @@ func _notification(what: int) -> void:
 		go_back()
 
 
-## Android's back button or gesture: steps out one level (BackButton).
+## Android's back button or gesture: steps out one level, like other apps.
+## (project.godot turns off quit_on_go_back so back doesn't just close the app.)
 func go_back() -> void:
-	BackButton.press(self)
+	if _tries.replay:
+		_end_replay()
+		return
+	if intro:
+		intro.advance()
+		return
+	if dev_panel and dev_panel.is_open():
+		dev_panel.close()
+		return
+	if drafting.go_back():
+		return
+	match menus.current:
+		"":
+			if game_active and not dead:
+				show_pause_menu()
+		"pause":
+			_on_menu_action("unpause")
+		"confirm_quit":
+			_on_menu_action(menus.confirm_back)
+		"wardrobe":
+			_on_menu_action("back to clear" if _between else "main menu")
+		"options", "restart", "first_play", "game_over", "congratulations", "practice":
+			_on_menu_action("main menu")
+		"language", "controls", "privacy":
+			_on_menu_action("options")
+		"main":
+			get_tree().quit()
+		# Tap-to-continue screens (life lost, level clear, completion scoring)
+		# and the play stats question ignore back so a stray press can't
+		# skip, lose or answer anything.
