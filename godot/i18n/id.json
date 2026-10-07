@@ -328,5 +328,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "KE-6 DRAF TERPAKAI: HAPUS SATU",
   "CLEARED WITH %ds LEFT · NEW BEST": "SELESAI, SISA %ds · REKOR BARU",
   "Level name": "Nama level",
-  "The level's map": "Peta level"
+  "The level's map": "Peta level",
+  "LEVEL %d": "LEVEL %d",
+  "STARS": "BINTANG",
+  "WATCH BEST RUN": "LIHAT REKOR",
+  "BEST RUN — LEVEL %d": "REKOR — LEVEL %d",
+  "PRACTICE": "LATIHAN",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SELESAIKAN UNTUK MELIHAT PETAK TERSEMBUNYI"
 }

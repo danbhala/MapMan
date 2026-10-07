@@ -336,5 +336,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "LOS 6 BORRADORES ESTÁN OCUPADOS: BORRA UNO",
   "CLEARED WITH %ds LEFT · NEW BEST": "SUPERADO CON %ds · NUEVO RÉCORD",
   "Level name": "Nombre del nivel",
-  "The level's map": "Mapa del nivel"
+  "The level's map": "Mapa del nivel",
+  "LEVEL %d": "NIVEL %d",
+  "STARS": "ESTRELLAS",
+  "WATCH BEST RUN": "VER EL RÉCORD",
+  "BEST RUN — LEVEL %d": "RÉCORD — NIVEL %d",
+  "PRACTICE": "PRÁCTICA",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SUPÉRALO PARA VER SUS CASILLAS OCULTAS"
 }

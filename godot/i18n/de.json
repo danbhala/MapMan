@@ -336,5 +336,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "ALLE 6 ENTWÜRFE BELEGT: LÖSCHE EINEN",
   "CLEARED WITH %ds LEFT · NEW BEST": "GESCHAFFT MIT %ds · REKORD",
   "Level name": "Name des Levels",
-  "The level's map": "Karte des Levels"
+  "The level's map": "Karte des Levels",
+  "LEVEL %d": "LEVEL %d",
+  "STARS": "STERNE",
+  "WATCH BEST RUN": "BESTZEIT ANSEHEN",
+  "BEST RUN — LEVEL %d": "BESTZEIT — LEVEL %d",
+  "PRACTICE": "ÜBEN",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SCHAFF ES, UM VERSTECKTE FELDER ZU SEHEN"
 }

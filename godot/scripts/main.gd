@@ -1110,7 +1110,8 @@ func start_practice(n: int) -> void:
 
 func _end_practice(note := "") -> void:
 	game_over(false)
-	show_practice_menu(-1, note)
+	if not drafting.practice_ended(note):
+		show_practice_menu(-1, note)
 
 
 ## Revision B (the second game) or A: which sheets, save track and look.

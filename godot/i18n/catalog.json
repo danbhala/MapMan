@@ -1650,6 +1650,36 @@
       "id": "The level's map",
       "note": "Screen reader: the picture of the level on its card",
       "max": 30
+    },
+    {
+      "id": "LEVEL %d",
+      "note": "Level card title for a main game level opened from practice (%d is 1 to 100)",
+      "max": 20
+    },
+    {
+      "id": "STARS",
+      "note": "Level card figure label: stars collected of the stars on the level, shown like ★ 2/3",
+      "max": 12
+    },
+    {
+      "id": "WATCH BEST RUN",
+      "note": "Level card button: play back the level's best run (its ghost)",
+      "max": 16
+    },
+    {
+      "id": "BEST RUN — LEVEL %d",
+      "note": "Heading while a level's best run plays back (%d is the level)",
+      "max": 28
+    },
+    {
+      "id": "PRACTICE",
+      "note": "Level card: the line above the map, and the way back to the practice sheets",
+      "max": 14
+    },
+    {
+      "id": "CLEAR IT TO SEE ITS HIDDEN TILES",
+      "note": "Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten",
+      "max": 50
     }
   ]
 }

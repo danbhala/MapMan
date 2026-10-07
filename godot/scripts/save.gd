@@ -36,6 +36,10 @@ class Track:
 	var furthest_level := 1
 	var bests := {}
 	var ghosts := {}
+	## level number -> {"played": tries, "cleared": wins}, main game and
+	## practice, counted since level cards came in (campaign_stat() fills in
+	## from bests).
+	var plays := {}
 
 
 ## Which track the progress fields below read and write: Revision B while it
@@ -78,6 +82,11 @@ var ghosts: Dictionary:
 		return track().ghosts
 	set(v):
 		track().ghosts = v
+var plays: Dictionary:
+	get:
+		return track().plays
+	set(v):
+		track().plays = v
 ## The look MapMan wears (a Wardrobe id), and the looks released so far, in
 ## the order they came. Classic is always there and never listed.
 var worn := "classic"
@@ -267,6 +276,14 @@ func _load_track(t: Track, section: String) -> void:
 	for key in saved_ghosts:
 		if saved_ghosts[key] is String:
 			t.ghosts[int(key)] = saved_ghosts[key]
+	var saved_plays: Dictionary = _cfg.get_value(section, "plays", {})
+	t.plays.clear()
+	for key in saved_plays:
+		if saved_plays[key] is Dictionary:
+			var p: Dictionary = saved_plays[key]
+			t.plays[int(key)] = {
+				"played": int(p.get("played", 0)), "cleared": int(p.get("cleared", 0))
+			}
 
 
 func _save_track(t: Track, section: String) -> void:
@@ -275,6 +292,7 @@ func _save_track(t: Track, section: String) -> void:
 	_cfg.set_value(section, "furthest_level", t.furthest_level)
 	_cfg.set_value(section, "bests", t.bests)
 	_cfg.set_value(section, "ghosts", t.ghosts)
+	_cfg.set_value(section, "plays", t.plays)
 
 
 func checkpoint_reached(level: int, score: int) -> void:
@@ -291,12 +309,33 @@ func level_reached(level: int) -> void:
 
 ## Keeps the best time left and the most stars separately; true if either improved.
 func record_best(level: int, time_left: int, stars: int) -> bool:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	p.cleared += 1
+	plays[level] = p
 	var old: Dictionary = bests.get(level, {"time": -1, "stars": -1})
 	if time_left <= old.time and stars <= old.stars:
+		save_all()
 		return false
 	bests[level] = {"time": maxi(time_left, old.time), "stars": maxi(stars, old.stars)}
 	save_all()
 	return true
+
+
+## A try at main game level `level` began.
+func level_played(level: int) -> void:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	p.played += 1
+	plays[level] = p
+	save_all()
+
+
+## Main game level `level`'s record for its card: tries, wins and best time.
+## A level cleared before plays were counted has at least that one clear.
+func campaign_stat(level: int) -> Dictionary:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	var best: Dictionary = bests.get(level, {})
+	var cleared := maxi(p.cleared, 0 if best.is_empty() else 1)
+	return {"played": maxi(p.played, cleared), "cleared": cleared, "best": best.get("time", -1)}
 
 
 ## Keeps `run` as the level's ghost if it won with more time left than the

@@ -360,5 +360,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "TÁ NA 6 DHRÉACHT IN ÚSÁID: SCRIOS CEANN",
   "CLEARED WITH %ds LEFT · NEW BEST": "CRÍOCHNAITHE, %ds FÁGTHA · BUAIC NUA",
   "Level name": "Ainm an leibhéil",
-  "The level's map": "Léarscáil an leibhéil"
+  "The level's map": "Léarscáil an leibhéil",
+  "LEVEL %d": "LEIBHÉAL %d",
+  "STARS": "RÉALTAÍ",
+  "WATCH BEST RUN": "FÉACH AN BHUAIC",
+  "BEST RUN — LEVEL %d": "BUAIC — LEIBHÉAL %d",
+  "PRACTICE": "CLEACHTADH",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "CRÍOCHNAIGH É LE TÍLEANNA I BHFOLACH A FHEICEÁIL"
 }

@@ -27,6 +27,10 @@ var replay: Replay
 ## with the level's best run beside it when the ghost is on. Level 0 is one
 ## from the drafting table, `code` its level code: its ghost is its own.
 func begin(at_level: int, look := "classic", code := "") -> void:
+	if at_level > 0:
+		Save.level_played(at_level)
+	elif code != "":
+		Save.level_tried(code)
 	if at_level != level or code != key:
 		list.clear()
 		level = at_level
@@ -90,14 +94,16 @@ func replayable(at_level: int, code := "") -> bool:
 
 ## Plays every try on `map` (the level loaded or loading); `finished` fires
 ## when it is over or tapped away.
-## title: the replay's heading, for a drafting table level.
-func play(map: LevelMap, title := "") -> Replay:
+## title: the replay's heading, and runs what it plays, for a level card.
+func play(map: LevelMap, title := "", runs: Array[RunRecord] = []) -> Replay:
+	if runs.is_empty():
+		runs = list
 	replay = Replay.new()
 	add_child(replay)
-	var n := list.size()
+	var n := runs.size()
 	if title == "":
 		title = tr("REPLAY — LEVEL %d") % level
-	replay.setup(map, list, title, tr_n("%d TRY", "%d TRIES", n) % n)
+	replay.setup(map, runs, title, tr_n("%d TRY", "%d TRIES", n) % n)
 	return replay
 
 

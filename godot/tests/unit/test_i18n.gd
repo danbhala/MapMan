@@ -428,6 +428,16 @@ func _open_every_sheet(check: Callable) -> void:
 			LevelCard.build_delete(m, _card("received"), tr(LevelCard.TEXT.delete_received) % 12),
 		func(): LevelCard.build_rename(m, _card("draft")),
 		func():
+			var c := _card("draft")
+			c.practice = true
+			c.name = ""
+			c.title = tr(LevelCard.TEXT.level) % 100
+			c.kind_line = tr(LevelCard.TEXT.practice)
+			c.source = tr(LevelCard.TEXT.hidden_later)
+			c.stars = "★ 12/12"
+			c.replay_text = LevelCard.TEXT.watch_best
+			LevelCard.build(m, c),
+		func():
 			Save.received_names[LevelCode.clean(_received()[0])] = "W".repeat(Draft.NAME_MAX)
 			DraftingSheet.build(m, _drafts(), _received())
 			Save.received_names.clear(),

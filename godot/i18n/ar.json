@@ -368,5 +368,11 @@
   "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX": "كل المسودات الست مستخدمة: احذف واحدة",
   "CLEARED WITH %ds LEFT · NEW BEST": "فزت وبقي %d ث · رقم قياسي",
   "Level name": "اسم المستوى",
-  "The level's map": "خريطة المستوى"
+  "The level's map": "خريطة المستوى",
+  "LEVEL %d": "المستوى %d",
+  "STARS": "النجوم",
+  "WATCH BEST RUN": "شاهد أفضل محاولة",
+  "BEST RUN — LEVEL %d": "أفضل محاولة — المستوى %d",
+  "PRACTICE": "تدريب",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "اجتزه لترى البلاطات المخفية"
 }

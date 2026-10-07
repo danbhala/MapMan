@@ -1332,3 +1332,27 @@ msgstr "Seviye adı"
 #. Screen reader: the picture of the level on its card
 msgid "The level's map"
 msgstr "Seviyenin haritası"
+
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "BÖLÜM %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "YILDIZ"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "REKORU İZLE"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "REKOR — BÖLÜM %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "ANTRENMAN"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR"
