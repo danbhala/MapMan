@@ -1,0 +1,16 @@
+{
+ "_about": "Hand tuning for tools/remix.py, applied after its rules: `budget` caps the swaps, `kinds` limits which tiles, `set` writes a tile at column,row (after mirroring, row 0 at top) last of all. From the level-analyst pass of 2026-10-06.",
+ "35": {"set": {"4,5": "m"}, "note": "the original layout before Revision A eased it: four t tiles on the climb; the +5 s on the bottom row keeps it playable without the stub detour"},
+ "43": {"set": {"5,6": "m"}, "note": "2 s of slack, three t in a row and no m anywhere: +5 s on the bottom corridor before the crumbles"},
+ "62": {"set": {"6,4": "m"}, "note": "the original cruel layout, four t in the exit column: the +5 s Revision A added comes back"},
+ "72": {"set": {"4,2": "c", "8,2": "c", "15,4": "m"}, "note": "the original layout was 27 s short on the straight route; two row-2 time losses go and +5 s sits on the exit column"},
+ "59": {"kinds": "k^", "note": "ten sticky tiles, reverse and ice together is too much: no ice here"},
+ "37": {"kinds": "kj", "note": "37 and 38 are twins in Revision A; different tiles tell them apart"},
+ "38": {"kinds": "k^"},
+ "40": {"kinds": "kj", "note": "40 and 41 are near twins"},
+ "41": {"kinds": "k^"},
+ "45": {"kinds": "k^", "note": "45 and 46 are near twins"},
+ "46": {"kinds": "kj"},
+ "69": {"kinds": "kj", "note": "69 and 70 are near twins"},
+ "70": {"kinds": "k^"}
+}

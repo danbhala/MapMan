@@ -317,6 +317,23 @@ func run() -> void:
 	game.steering.apply()
 	save.set_locale("")
 
+	# Revision B: its row on the main menu once the game has been finished,
+	# and sheet 16 again in the Redline look, mirrored with its new tiles.
+	save.has_completed = true
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("28_main_menu_rev_b")
+	game.revision_b.start(16)
+	while not game._timer_running:
+		await process_frame
+	await frames(20)
+	await shot("29_rev_b_playing")
+	game.show_pause_menu()
+	await frames(70)
+	await shot("30_rev_b_pause")
+	game._on_menu_action("end game")
+	save.has_completed = false
+
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
 		quit(0)

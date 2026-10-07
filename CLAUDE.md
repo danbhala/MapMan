@@ -11,6 +11,9 @@ now ported to Godot 4.5.
 - `godot/tools/convert_assets.py` – regenerates `godot/assets/` and `godot/data/`
   from `Script/`. Rerunning it overwrites hand edits to `godot/data/levels.json`
   and `godot/data/tutorial.json` (the crumble and spikes lessons are hand-added).
+- `godot/tools/remix.py` – regenerates `godot/data/levels_b.json` (Revision B,
+  the second playthrough) from `levels.json`; tune a sheet in
+  `godot/tools/remix_overrides.json`, never in `levels_b.json` by hand.
 - `android-build` branch – holds only the latest APK for phones. Never commit
   APKs, `.ipa`s or `godot/build/` to master.
 - iPhone builds go through TestFlight (Test builds and Release workflows,
@@ -34,6 +37,8 @@ Other commands, from the repo root:
 - Import after adding assets: `godot --headless --path godot --import`
 - Unit tests only: `godot --headless --path godot -s addons/gut/gut_cmdln.gd`
 - Level difficulty numbers: `python3 godot/tools/level_report.py [levels]`
+  (`--rev-b` for Revision B; `python3 godot/tools/remix.py --report` puts
+  A and B side by side)
 - Every screen in every language, with a layout check:
   `godot/tools/i18n_shots.sh [out dir] [locales]` (local only; look at the
   contact sheets it writes). After editing a translation: `python3

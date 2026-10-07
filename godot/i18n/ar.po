@@ -913,6 +913,30 @@ msgstr "تخطي"
 msgid "DRAFTING TABLE"
 msgstr "طاولة الرسم"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "العب المراجعة ب"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "المراجعة ب"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "الصفحات من جديد: من نقطة حفظ"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "العب من الصفحة 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "صدرت المراجعة ب"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "اعتُمدت المراجعة ب"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "مسوداتك"
