@@ -93,7 +93,10 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   assists in Revision B (`losses_here()`). The menus' actions themselves are
   carried out by `scripts/menu_actions.gd`, the Options sheet's by
   `scripts/options_actions.gd`, so `main.gd` stays under the lint's 1300 lines.
-- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
+- Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`,
+  `Stats` (opt-in play stats, `docs/stats.md`: nothing is queued or sent
+  without the player's yes; `scripts/stats_sheet.gd` asks once before the
+  main menu and draws Options > PRIVACY, sheet 001-I).
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the
   dev cheats, build info and the play log. Dev tools are on when

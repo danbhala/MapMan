@@ -334,5 +334,18 @@
   "WATCH BEST RUN": "觀看最佳紀錄",
   "BEST RUN — LEVEL %d": "最佳紀錄 — 第%d關",
   "PRACTICE": "練習",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "過關後才能看到隱藏的格子"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "過關後才能看到隱藏的格子",
+  "PLAY STATS": "遊戲統計",
+  "YES, SEND PLAY STATS": "好，傳送統計",
+  "NO THANKS": "不用了",
+  "PRIVACY POLICY": "隱私權政策",
+  "PRIVACY": "隱私",
+  "SHARE PLAY STATS": "傳送遊戲統計",
+  "OPEN": "開啟",
+  "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED": "統計ID %s：申請刪除資料時提供",
+  "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID": "不會傳送任何內容。開啟後會產生新的隨機ID",
+  "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?": "用匿名統計幫忙改進MAPMAN？",
+  "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE": "哪些關卡開始、通過或失敗，以及在哪裡",
+  "NO NAME, NO ACCOUNT, NO ADVERTISING ID": "不含姓名、帳號或廣告ID",
+  "CHANGE IT ANY TIME: %s > %s": "可隨時更改：%s > %s"
 }

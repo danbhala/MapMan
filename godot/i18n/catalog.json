@@ -1680,6 +1680,71 @@
       "id": "CLEAR IT TO SEE ITS HIDDEN TILES",
       "note": "Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten",
       "max": 50
+    },
+    {
+      "id": "PLAY STATS",
+      "note": "Sheet title: the question whether the game may send anonymous play statistics",
+      "max": 26
+    },
+    {
+      "id": "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?",
+      "note": "Play stats question, main line. Must stay neutral: asks, does not push",
+      "max": 56
+    },
+    {
+      "id": "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE",
+      "note": "Play stats question, small print: what the stats say",
+      "max": 62
+    },
+    {
+      "id": "NO NAME, NO ACCOUNT, NO ADVERTISING ID",
+      "note": "Play stats question, small print: what they never include",
+      "max": 62
+    },
+    {
+      "id": "CHANGE IT ANY TIME: %s > %s",
+      "note": "Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game",
+      "max": 62
+    },
+    {
+      "id": "YES, SEND PLAY STATS",
+      "note": "Play stats question: the yes row; same weight as the no row",
+      "max": 30
+    },
+    {
+      "id": "NO THANKS",
+      "note": "Play stats question: the no row",
+      "max": 30
+    },
+    {
+      "id": "PRIVACY POLICY",
+      "note": "Row that opens the privacy policy web page",
+      "max": 18
+    },
+    {
+      "id": "PRIVACY",
+      "note": "Button on the Options sheet and title of the privacy sheet",
+      "max": 18
+    },
+    {
+      "id": "SHARE PLAY STATS",
+      "note": "Privacy sheet row: play stats on or off",
+      "max": 18
+    },
+    {
+      "id": "OPEN",
+      "note": "Privacy sheet value: opens the privacy policy page in the browser",
+      "max": 12
+    },
+    {
+      "id": "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED",
+      "note": "Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request",
+      "max": 60
+    },
+    {
+      "id": "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID",
+      "note": "Privacy sheet note while play stats are off",
+      "max": 60
     }
   ]
 }

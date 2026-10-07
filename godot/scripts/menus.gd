@@ -965,6 +965,7 @@ func show_options() -> void:
 	var lang := _value_row(_t("language_title"), _language_name(Save.locale), y + OPTIONS_PITCH)
 	_connect(lang, "language")
 	_return_item(y + 2 * OPTIONS_PITCH, OPTIONS_PITCH)
+	StatsSheet.privacy_button(self)
 	_hero_on("tilt")
 	_focus_first()
 

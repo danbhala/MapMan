@@ -1376,3 +1376,55 @@ msgstr "ТРЕНИРОВКА"
 #. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
 msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
 msgstr "ПРОЙДИТЕ ЕГО, ЧТОБЫ УВИДЕТЬ СКРЫТЫЕ ПЛИТКИ"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "ИГРОВАЯ СТАТИСТИКА"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "ПОМОЧЬ УЛУЧШИТЬ MAPMAN АНОНИМНОЙ СТАТИСТИКОЙ?"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "КАКИЕ УРОВНИ НАЧАТЫ, ПРОЙДЕНЫ ИЛИ ПРОИГРАНЫ, И ГДЕ"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "БЕЗ ИМЕНИ, БЕЗ АККАУНТА, БЕЗ РЕКЛАМНОГО ID"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "МОЖНО ИЗМЕНИТЬ В ЛЮБОЙ МОМЕНТ: %s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "ДА, ОТПРАВЛЯТЬ"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "НЕТ, СПАСИБО"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "ПОЛИТИКА ДАННЫХ"
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "ПРИВАТНОСТЬ"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "ОТПРАВКА СТАТИСТИКИ"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "ОТКРЫТЬ"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "ID СТАТИСТИКИ %s: НАЗОВИТЕ ЕГО ДЛЯ УДАЛЕНИЯ ДАННЫХ"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "НИЧЕГО НЕ ОТПРАВЛЯЕТСЯ. ПРИ ВКЛЮЧЕНИИ СОЗДАЁТСЯ НОВЫЙ ID"

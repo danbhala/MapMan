@@ -1366,3 +1366,55 @@ msgstr "PRÁTICA"
 #. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
 msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
 msgstr "VENÇA PARA VER AS CASAS OCULTAS"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "ESTATÍSTICAS DE JOGO"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "AJUDE A MELHORAR O MAPMAN COM ESTATÍSTICAS ANÔNIMAS?"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "QUAIS NÍVEIS SÃO INICIADOS, CONCLUÍDOS OU PERDIDOS, E ONDE"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "SEM NOME, SEM CONTA, SEM ID DE PUBLICIDADE"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "MUDE QUANDO QUISER: %s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "SIM, ENVIAR ESTATÍSTICAS"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "NÃO, OBRIGADO"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "POLÍTICA PRIVACID."
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "PRIVACIDADE"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "ENVIAR ESTATÍSTICAS"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "ABRIR"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "ID DE ESTATÍSTICAS %s: CITE-O PARA APAGAR OS DADOS"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "NADA É ENVIADO. AO ATIVAR, UM NOVO ID ALEATÓRIO É CRIADO"

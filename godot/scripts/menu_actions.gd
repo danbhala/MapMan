@@ -28,11 +28,14 @@ static func handle(game, act: String) -> void:
 				# while the sheet is open, through a tap that redraws it).
 				Save.mark_seen()
 			if game.game_active:
+				_stat_quit(game)
 				game.game_over(false)
 			game.show_start_menu()
 		"confirm quit":
 			game.menus.show_confirm_quit()
 		"end game", "end tutorial":
+			if game.game_active:
+				_stat_quit(game)
 			_end_game(game)
 		"practice":
 			# Open on the page with the furthest level reached.
@@ -44,6 +47,7 @@ static func handle(game, act: String) -> void:
 			game.menus.close()
 			game.next_level()
 		"replay":
+			Stats.event("replay_watched", Stats.of(game))
 			game._start_replay()
 		"clear wardrobe":
 			game.menus.show_wardrobe(game.level)
@@ -110,6 +114,8 @@ static func _completion_done(game) -> void:
 static func _prefixed(game, act: String) -> void:
 	if game.steering.handle(act) or OptionsActions.handle(act, game.menus):
 		pass  # the Options, CONTROLS and language sheets
+	elif StatsSheet.handle(act, game.menus):
+		pass  # the play stats question and the PRIVACY sheet
 	elif act.begins_with("practice page "):
 		game.show_practice_menu(int(act.get_slice(" ", 2)))
 	elif act.begins_with("practice level "):
@@ -119,6 +125,7 @@ static func _prefixed(game, act: String) -> void:
 		# he wears it from now on.
 		if Save.wear(act.get_slice(" ", 1)):
 			game.player.outfit = Save.worn
+			Stats.event("look_worn", {"look": Save.worn})
 		if game.menus.current == "end_level":
 			game.menus.redraw()
 		else:
@@ -126,3 +133,10 @@ static func _prefixed(game, act: String) -> void:
 	elif act.begins_with("L") and act.substr(1).is_valid_int():
 		game.menus.close()
 		game.new_game(int(act.substr(1)) + 1)
+
+
+## Play stats (Stats): leaving a game for the menu, mid-level or from a level
+## clear.
+static func _stat_quit(game) -> void:
+	var more := {"after_clear": game._between, "time_left": game._time_left}
+	Stats.event("quit", Stats.of(game, more))

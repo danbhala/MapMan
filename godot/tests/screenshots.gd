@@ -315,6 +315,7 @@ func run() -> void:
 	game.tilt.stick_release()
 	save.controls = "tilt"
 	game.steering.apply()
+
 	save.set_locale("")
 
 	# Revision B: its row on the main menu once the game has been finished,
@@ -333,6 +334,22 @@ func run() -> void:
 	await shot("30_rev_b_pause")
 	game._on_menu_action("end game")
 	save.has_completed = false
+
+	# Play stats: the question before the main menu, then PRIVACY with them on.
+	var stats := Blueprint.autoload("Stats")
+	stats.key = "phc_screenshots"
+	stats.answer = ""
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("31_stats_question")
+	stats.choose(true)
+	stats.install_id = "3f9a0c12-0000-4000-8000-000000000000"
+	game._on_menu_action("options")
+	game._on_menu_action("privacy")
+	await frames(70)
+	await shot("32_privacy")
+	stats.choose(false)
+	stats.key = ""
 
 	if failures.is_empty():
 		print("SCREENSHOTS OK")
