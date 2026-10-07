@@ -9,6 +9,31 @@ extends RefCounted
 const PERIOD := 4.0
 const LENGTHS := {"wake": 1.1, "gasp": 1.0, "doze": INF, "lie": INF}
 
+## What matters more wins: a smaller reaction never cuts off a bigger one
+## (a wink waits out the dizziness), a bigger one takes over at once.
+const PRIORITIES := {
+	"wink": 1,
+	"curious": 1,
+	"determined": 1,
+	"blink": 1,
+	"squint": 2,
+	"dizzy": 2,
+	"happy": 2,
+	"proud": 2,
+	"surprised": 2,
+	"scared": 3,
+	"gasp": 3,
+	"sad": 3,
+	"doze": 0,
+	"lie": 0,
+	"sleepy": 0,
+	"wake": 4,
+}
+
+
+static func priority(id: String) -> int:
+	return PRIORITIES.get(id, 1)
+
 
 static func length(id: String) -> float:
 	return LENGTHS.get(id, PERIOD)

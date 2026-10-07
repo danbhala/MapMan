@@ -136,8 +136,7 @@ func run() -> void:
 	# --- tiles he reacts to ----------------------------------------------------
 	await play_level(2)
 	say("A STAR ON THE WAY")
-	await walk_to(game.map.points.keys())
-	await hold(0.6)
+	await through(game.map.points.keys(), 0)
 	say("")
 	await walk(safe_route(game.map))
 	say("AT THE FLAG, NO LIVES LOST: PROUD")
@@ -146,34 +145,44 @@ func run() -> void:
 	await hold(6.0)
 
 	await play_level(3)
-	say("A STICKY TILE: SQUINTING, ANNOYED")
-	await walk_to(game.map.stickies.keys())
-	await hold(2.5)
-	say("SHAKEN FREE")
-	await shake()
+	say("A STICKY TILE: SQUINTING (THE TILE HOLDS HIM, AS ALWAYS, UNTIL A SHAKE)")
+	await through(game.map.stickies.keys(), 0)
 	await hold(1.5)
+	say("SHAKEN FREE, AND STRAIGHT ON")
+	await shake()
+	await walk(safe_route(game.map).slice(0, 6))
+	await settle()
 
 	await play_level(5)
-	say("CONTROLS REVERSED: A SPIN, THEN DIZZY")
-	await walk_to(game.map.reverses.keys())
-	await hold(3.5)
+	say("CONTROLS REVERSED: A SPIN AND DIZZY EYES, WALKING RIGHT ON")
+	await through(game.map.reverses.keys(), 7)
+	await settle()
 
 	await play_level(4)
-	say("AN UNHIDE TILE CHANGES THE MAP: CURIOUS")
-	await walk_to(game.map.unhides.keys())
-	await hold(3.5)
+	say("AN UNHIDE TILE CHANGES THE MAP: CURIOUS, WITHOUT BREAKING STRIDE")
+	await through(game.map.unhides.keys(), 8)
+	await settle()
+
+	await play_level(62)
+	say("+5 S: A WINK...")
+	await through(game.map.more_times.keys(), 0)
+	say("...THEN A FLIP TILE MID-WINK: THE WINK MELTS INTO DIZZY")
+	await through(game.map.reverses.keys(), 0)
+	say("ANOTHER +5 S WHILE DIZZY: THE WINK WAITS ITS TURN")
+	var far: Array = game.map.more_times.keys().filter(
+		func(k): return k.x > game.map.position_key.x
+	)
+	await through(far, 0)
+	await settle()
+	await hold(1.0)
 
 	await play_level(35)
-	say("+5 SECONDS: A WINK")
-	await walk_to(game.map.more_times.keys())
-	await hold(2.5)
-	say("-5 SECONDS: A GASP")
-	await walk_to(game.map.less_times.keys())
-	await hold(2.0)
+	say("-5 S: A GASP, STILL WALKING")
+	await through(game.map.less_times.keys(), 0)
 	say("THE CLOCK RUNNING OUT: SCARED")
-	game._time_left = 4.6
-	await hold(5.0)
-	say("LOST A LIFE: HEAD DOWN, LOOKING AT HIS FEET")
+	game._time_left = 3.6
+	await walk(find_path(game.map, game.map.position_key, [game.map.start_position]))
+	say("OUT OF TIME, A LIFE LOST: HEAD DOWN, LOOKING AT HIS FEET")
 	await wait_until(func(): return game.menus.current == "lose_life")
 	await hold(4.0)
 
@@ -239,16 +248,25 @@ func shake() -> void:
 	Input.action_release("shake")
 
 
+## Walks to the nearest of `goals` and on towards the exit for `after`
+## more steps, never letting go of the controls in between.
+func through(goals: Array, after: int) -> void:
+	await walk(find_path(game.map, game.map.position_key, goals), false)
+	if after > 0:
+		await walk(safe_route(game.map).slice(0, after), false)
+
+
 func walk_to(goals: Array) -> void:
 	await walk(find_path(game.map, game.map.position_key, goals))
 	await settle()
 
 
-func walk(path: Array) -> void:
+func walk(path: Array, let_go := true) -> void:
 	for target in path:
 		if not await step_to(target):
 			break
-	release_all()
+	if let_go:
+		release_all()
 
 
 func step_to(target: Vector2i) -> bool:

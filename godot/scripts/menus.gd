@@ -358,15 +358,15 @@ func _doze(delta: float) -> void:
 			_wake()
 			return
 	if _idle >= LIE_AFTER and _hero.mood == "doze":
-		_hero.emote("lie")
+		_hero.emote("lie", -1.0, 1.0, false, true)
 	elif _idle >= DOZE_AFTER and not asleep:
-		_hero.emote("doze")
+		_hero.emote("doze", -1.0, 1.0, false, true)
 
 
 func _wake() -> void:
 	_idle = 0.0
 	if _hero != null and (_hero.mood == "doze" or _hero.mood == "lie"):
-		_hero.emote("wake")
+		_hero.emote("wake", -1.0, 1.0, false, true)
 		_woke_at = _clock_now()
 
 
@@ -383,7 +383,7 @@ func _poke(at: Vector2) -> bool:
 		var local: Vector2 = p.get_global_transform().affine_inverse() * at
 		if p.measure().grow(6.0).has_point(local):
 			p.jump()
-			p.emote("wink")
+			p.emote("wink", -1.0, 1.0, false, true)
 			Audio.play("star", 0.5, 1.5)
 			return true
 	return false
@@ -845,13 +845,13 @@ func _hero_on(mode: String) -> void:
 	_hero_mode = mode
 	_idle = 0.0
 	if _clock_now() - _woke_at < 1.0:
-		_hero.emote("wake")  # the touch that woke him opened this sheet
+		_hero.emote("wake", -1.0, 1.0, false, true)  # the touch that woke him opened this sheet
 	if mode == "right":
 		_hero.face_right_idle()
 	else:
 		_hero.auto_look = false
 	if mode == "down":
-		_hero.emote("sad", 2.2)  # a life lost: head down, looking at his feet
+		_hero.emote("sad", 2.2, 1.0, false, true)  # a life lost: head down, looking at his feet
 
 
 ## A dimension line from his feet to the top of his head, or of his hat.

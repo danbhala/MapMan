@@ -265,7 +265,7 @@ func _update_timer(delta: float) -> void:
 	if secs > 0 and secs <= 3:
 		Audio.play_clock()
 		if not _low_time:
-			player.emote("scared")  # the clock is running out
+			player.emote("scared", -1.0, 1.5, true)  # the clock is running out
 		_low_time = true
 	else:
 		Audio.stop_clock()
@@ -328,7 +328,7 @@ func loaded() -> void:
 		_timer_start()
 		hud.set_timer(_seconds_remaining(), _time_left)
 		# Off he goes: determined, or scared when the level is a hard one.
-		player.emote("scared" if map.deaths.size() >= 10 else "determined")
+		player.emote("scared" if map.deaths.size() >= 10 else "determined", -1.0, 2.0, true)
 
 
 ## The tilt gauge shows while playing, on phones that tilt, unless turned off.
@@ -633,7 +633,7 @@ func update_player(delta: float) -> void:
 		Audio.play("reverse")
 		reverse = not reverse
 		map.clear(map.reverses)
-		player.emote("dizzy")  # spins round, then the world swims
+		player.emote("dizzy", -1.0, 2.0, true)  # spins round, then the world swims
 
 	if vanish > 0 and not dead:
 		player.vanish()
@@ -654,7 +654,7 @@ func update_player(delta: float) -> void:
 		else:
 			map.clear(map.unhides)
 			map.unhide_tiles()
-		player.emote("curious")  # the map just changed under him
+		player.emote("curious", -1.0, 2.0, true)  # the map just changed under him
 		_flash("_last_hide")
 
 	if map.on(map.points):
@@ -687,21 +687,21 @@ func update_player(delta: float) -> void:
 		Audio.play("sticky")
 		map.clear(map.stickies)
 		stuck = true
-		player.emote("squint", 1.3)  # annoyed, until he shakes free
+		player.emote("squint", 1.3, 2.0, true)  # annoyed, until he shakes free
 
 	if map.on(map.more_times):
 		map.clear(map.more_times)
 		map.float_text(tr(FLOATS.more_time), Blueprint.INK)
 		_time_left += 5.0
 		_flash("_last_more_time")
-		player.emote("wink")
+		player.emote("wink", -1.0, 2.5, true)
 
 	if map.on(map.less_times):
 		map.clear(map.less_times)
 		map.float_text(tr(FLOATS.less_time), Blueprint.PINK)
 		_time_left = maxf(0.0, _time_left - 5.0)
 		_flash("_last_less_time")
-		player.emote("gasp")
+		player.emote("gasp", -1.0, 1.0, true)
 
 	# Ice: he slides on the way he came until a tile that isn't ice, or an
 	# edge, stops him. Steering is ignored on the way (move_player() skips
@@ -908,7 +908,7 @@ func _celebrate_at_flag() -> void:
 	_timer_stop()
 	var lost: int = losses.get(level, 0)
 	player.face_idle()
-	player.emote("proud" if lost == 0 else "happy")
+	player.emote("proud" if lost == 0 else "happy", -1.0, 1.0, false, true)
 	if lost > 0:
 		menus.hero_mood = "sad"
 	elif stars > 0:
@@ -1074,7 +1074,7 @@ func lose_life(reason := "death") -> void:
 	Audio.play("lose_life")
 	_lose_reason = reason
 	player.show_player()
-	player.emote("gasp")
+	player.emote("gasp", -1.0, 1.0, false, true)
 	player.face_death()
 	dead = true
 	set_background()

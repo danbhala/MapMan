@@ -185,6 +185,32 @@ var mood := ""
 var woke_from := 0.0
 var _mood_t := 0.0
 var _mood_hold := -1.0
+## How fast the expression's timeline runs (2 plays it in half the time),
+## and whether it may only touch his face (in play: no hops or stamps, so
+## his walk never looks interrupted).
+var _mood_speed := 1.0
+var _mood_face_only := false
+## The dials as they were when the expression changed, eased away from over
+## BLEND seconds, so one expression melts into the next instead of snapping.
+var _blend_from := {}
+var _blend_t := 0.0
+
+## Seconds one expression takes to melt into the next (or back to rest).
+const BLEND := 0.2
+## The dials an expression moves, blended between expressions.
+const MOOD_DIALS: Array[String] = [
+	"look",
+	"head_roll",
+	"head_drop",
+	"gaze",
+	"lid",
+	"lid_tilt",
+	"smile",
+	"lower",
+	"eye_size",
+	"lean",
+	"zzz"
+]
 
 var _facing := Vector2i.ZERO  # ZERO is the neutral, front-on idle
 var _walk_target := 0.0
@@ -420,31 +446,67 @@ func tick(delta: float) -> void:
 	if _dying:
 		_death_clock += delta
 	if mood != "":
-		_mood_t += delta
+		_mood_t += delta * _mood_speed
 		if _mood_hold < 0.0 and _mood_t >= Expressions.length(mood):
-			mood = ""
-			Expressions.reset(self)
+			_end_mood()
 		else:
 			var t := _mood_t if _mood_hold < 0.0 else minf(_mood_t, _mood_hold)
 			var walking_look := look
+			var body := [squash, _hop, _jump, shake_x]
 			Expressions.apply(self, mood, t)
+			if _mood_face_only:
+				squash = body[0]
+				_hop = body[1]
+				_jump = body[2]
+				shake_x = body[3]
 			# Walking, he still looks where he goes.
 			look = look.lerp(walking_look, walking)
+	if not _blend_from.is_empty():
+		_blend_t += delta
+		var k := smoothstep(0.0, BLEND, _blend_t)
+		for dial in MOOD_DIALS:
+			set(dial, lerp(_blend_from[dial], get(dial), k))
+		if _blend_t >= BLEND:
+			_blend_from.clear()
 	queue_redraw()
 
 
-## Plays expression `id` (Expressions) from its start; with `hold`, it stops
-## that many seconds in and stays until the next emote() or stop_mood().
-func emote(id: String, hold := -1.0) -> void:
+## Plays expression `id` (Expressions) from its start, eased in from his
+## face as it is. With `hold`, it stops that many seconds into its timeline
+## and stays until the next emote() or stop_mood(); `speed` runs the timeline
+## faster; `face_only` leaves his body (hops, stamps) to the game. An
+## expression that matters less than the one playing (Expressions.PRIORITY)
+## is let go, unless `force`d. False when it was let go.
+func emote(id: String, hold := -1.0, speed := 1.0, face_only := false, force := false) -> bool:
+	if not force and mood != "" and Expressions.priority(id) < Expressions.priority(mood):
+		return false
+	_snapshot()
 	woke_from = lean
 	mood = id
 	_mood_t = 0.0
 	_mood_hold = hold
+	_mood_speed = speed
+	_mood_face_only = face_only
+	return true
 
 
+## Ends the expression, easing his face back to rest.
 func stop_mood() -> void:
+	if mood != "":
+		_end_mood()
+
+
+func _end_mood() -> void:
+	_snapshot()
 	mood = ""
 	Expressions.reset(self)
+
+
+func _snapshot() -> void:
+	_blend_from.clear()
+	for dial in MOOD_DIALS:
+		_blend_from[dial] = get(dial)
+	_blend_t = 0.0
 
 
 ## True once the death animation has played through.
