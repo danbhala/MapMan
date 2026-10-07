@@ -76,12 +76,21 @@ if [ "${results[$last]:0:4}" = "PASS" ] && grep -q "Failed to load script\|Parse
   results[$last]="FAIL  unit: a test file did not load (log: $OUT/unit.log)"
   failed=1
 fi
+# The bot walks every level; a run that ends without its success line failed.
+autoplay() {
+  local name=$1; shift
+  step "$name" "$GODOT" --headless --path . --script res://tests/autoplay_test.gd -- "$@"
+  last=$((${#results[@]} - 1))
+  if [ "${results[$last]:0:4}" = "PASS" ] && ! grep -q "ALL CHECKS PASSED" "$OUT/$name.log"; then
+    results[$last]="FAIL  $name did not report success (log: $OUT/$name.log)"
+    failed=1
+  fi
+}
 # shellcheck disable=SC2086
-step autoplay "$GODOT" --headless --path . --script res://tests/autoplay_test.gd -- $LEVELS
-last=$((${#results[@]} - 1))
-if [ "${results[$last]:0:4}" = "PASS" ] && ! grep -q "ALL CHECKS PASSED" "$OUT/autoplay.log"; then
-  results[$last]="FAIL  autoplay did not report success (log: $OUT/autoplay.log)"
-  failed=1
+autoplay autoplay $LEVELS
+# Revision B's sheets too, with --full (the sheets of the second playthrough).
+if [ -z "$LEVELS" ]; then
+  autoplay autoplay_b --rev-b --only-levels
 fi
 
 if command -v xvfb-run >/dev/null 2>&1 || [ -n "${DISPLAY:-}" ]; then

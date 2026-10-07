@@ -320,3 +320,14 @@ func test_a_level_not_cleared_keeps_its_hidden_tiles_secret() -> void:
 	assert_false(c.draft.hidden.is_empty(), "shown once cleared")
 	assert_eq(c.stats.cleared, 1, "a clear from before counts")
 	Save.bests.erase(n)
+
+
+func test_revision_b_keeps_its_own_play_counts() -> void:
+	Save.track_a.plays.erase(4)
+	Save.track_b.plays.erase(4)
+	Save.rev_b = true
+	Save.level_played(4)
+	Save.rev_b = false
+	assert_eq(Save.track_b.plays[4].played, 1)
+	assert_false(Save.track_a.plays.has(4), "practice cards show Revision A's record")
+	Save.track_b.plays.erase(4)

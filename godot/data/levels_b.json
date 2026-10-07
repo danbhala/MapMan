@@ -1,0 +1,2672 @@
+{
+ "check_points": [
+  10,
+  20,
+  30,
+  40,
+  50,
+  60,
+  70,
+  75,
+  80,
+  85,
+  90,
+  95
+ ],
+ "levels": [
+  {
+   "number": 1,
+   "rows": [
+    "ccccccce",
+    "c",
+    "cccccccc",
+    "       c",
+    "bcccckcc"
+   ],
+   "loading": [
+    "stuvexyz",
+    "r",
+    "qponmlkj",
+    "       i",
+    "abcdwfgh"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 2,
+   "rows": [
+    "b",
+    "c",
+    "c  p  p  p  p",
+    "c  c  c  c  c",
+    "c  c  c  c  c",
+    "c  c  c  c  c",
+    "cckcccccccccce"
+   ],
+   "loading": [
+    "a-------------",
+    "b-------------",
+    "c--n--q--t--e-",
+    "d--m--p--s--v-",
+    "w--l--o--r--u-",
+    "f--k--n--q--t-",
+    "ghijklmnopqrst"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 3,
+   "rows": [
+    "          cb",
+    "         cc",
+    "        cc",
+    "pypypypcc",
+    "      cc",
+    "     ck",
+    "    ccpypypyp",
+    "   cc",
+    "  wc"
+   ],
+   "loading": [
+    "----------ba-",
+    "---------dc--",
+    "--------fw---",
+    "onmlkjihg----",
+    "------ji-----",
+    "-----lk------",
+    "----nmnopqrst",
+    "---po--------",
+    "--rq---------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 4,
+   "rows": [
+    "  ccccccccccc  p",
+    "  c         c  p",
+    "  c ccccccc c  p",
+    "  c c     c c  p",
+    "  c cccb  c cccu",
+    "  c       c c  p",
+    "  ccccccccc c  p",
+    "            j  p",
+    "wcccccccccccc  p"
+   ],
+   "loading": [
+    "--fgghhiijjkk--*",
+    "--f---------l--*",
+    "--w-3445566-l--*",
+    "--w-3-----7-m--*",
+    "--d-2211--7-mvve",
+    "--d-------8-n--*",
+    "--ccbbaa998-n--*",
+    "------------o--*",
+    "uuttssrrqqppo--*"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 5,
+   "rows": [
+    " cE zcc",
+    " z  c c",
+    " cjcz z",
+    "      c",
+    "bccrczr"
+   ],
+   "loading": [
+    " tu mlk",
+    " s  n j",
+    " rqpo i",
+    "      h",
+    "abcdwfg"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 6,
+   "rows": [
+    "  cccc",
+    "  c  c",
+    "Wcc  ccccc   p",
+    "         ccccp",
+    "  b     rc   p",
+    "  c    rc",
+    "  cj3ccc"
+   ],
+   "loading": [
+    "--rqpo---------",
+    "--s--n---------",
+    "vut--mlkji---1-",
+    "---------54321-",
+    "--h-----76---1-",
+    "--g----98------",
+    "--fwdcba-------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 7,
+   "rows": [
+    "",
+    "iihcccccccb",
+    "i",
+    "iiuckccchii",
+    "          i",
+    "iihcccccuii",
+    "i",
+    "iiuccccccce",
+    ""
+   ],
+   "loading": [
+    "-----------",
+    "fwwddccbbaa",
+    "f----------",
+    "gghhiijjkkl",
+    "----------l",
+    "rqqppoonnmm",
+    "r----------",
+    "ssttuuvveex",
+    "-----------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 8,
+   "rows": [
+    "     cckc",
+    "    cc  c8",
+    "Wcccc    cccccb",
+    "   c     c",
+    "   ccr  cr",
+    "     cccc"
+   ],
+   "loading": [
+    "     lkji",
+    "    nm--hg",
+    "srqpo----fwdcba",
+    "   p-----g",
+    "   pon--ih",
+    "     mlkj"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 9,
+   "rows": [
+    "   ccccccccb",
+    "   c     c",
+    " ccc     c",
+    " y   vccccrc",
+    " cc  c     c",
+    "  c  c     c",
+    "wccc^ccccccc"
+   ],
+   "loading": [
+    "---ihgfwdcba",
+    "---j-----d--",
+    "-llk-----w--",
+    "-m---jihgfgg",
+    "-nn--j-----h",
+    "--o--l-----h",
+    "rqponmmlkjii"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 10,
+   "rows": [
+    "     n",
+    " ccccccuii",
+    " c       i",
+    " c      pip",
+    " c       i",
+    " ccc9chiii",
+    "     ^",
+    "     cjjjccb"
+   ],
+   "loading": [
+    "-----v------",
+    "-qrstutsrq--",
+    "-p-------p--",
+    "-o------zoz-",
+    "-n-------n--",
+    "-mlkjijklm--",
+    "-----h------",
+    "-----gfwdcba"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 11,
+   "rows": [
+    " rr   pp",
+    "Wrrrcpppp",
+    "rrrr pppp",
+    " rr   pp",
+    "       ^",
+    "       c",
+    "       c",
+    "byyyjjjc"
+   ],
+   "loading": [
+    " rq   oo",
+    "srqponnnn",
+    "srqp mmmm",
+    " rq   ll",
+    "       k",
+    "       j",
+    "       i",
+    "abcdwfgh"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 12,
+   "rows": [
+    "pccccccccccccccp",
+    "       cc",
+    "     cc^ccc",
+    "     c    c",
+    "    cc    cc",
+    "    k      c",
+    "   cx      cc",
+    "  bc        ce"
+   ],
+   "loading": [
+    "utsrqponnopqrstu",
+    "-------mm-------",
+    "-----ijklmn-----",
+    "-----h----o-----",
+    "----fg----pq----",
+    "----w------r----",
+    "---cd------st---",
+    "--ab--------uv--"
+   ],
+   "delay": 0.05,
+   "x_hides": 17,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 13,
+   "rows": [
+    "   ccccccccb",
+    "   c     j",
+    " ccc     j",
+    " y   v^cccrt",
+    " tt  t     c",
+    "  t  t     c",
+    "wccccccccccc"
+   ],
+   "loading": [
+    "---ihgfwdcba",
+    "---j-----d--",
+    "-llk-----w--",
+    "-m---jihgfgg",
+    "-nn--j-----h",
+    "--o--l-----h",
+    "rqponmmlkjii"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 14,
+   "rows": [
+    "ccc ^cc ccc ccc",
+    "c c c c c c j c",
+    "c c c c c c j r",
+    "c c c c c c j c",
+    "c c c c c c c c",
+    "S ccc ccc ccc b"
+   ],
+   "loading": [
+    "hgf hgf hgf hgf",
+    "w w w w w w w w",
+    "d d d d d d d d",
+    "c c c c c c c c",
+    "b b b b b b b b",
+    "a hgf hgf hgf a"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 15,
+   "rows": [
+    "          cb",
+    "         ih",
+    "        ii",
+    "mppppppik",
+    "      ii",
+    "     ii",
+    "    iiyyyyttl",
+    "   uk",
+    "  wc"
+   ],
+   "loading": [
+    "----------ba-",
+    "---------dc--",
+    "--------fw---",
+    "onmlkjihg----",
+    "------ji-----",
+    "-----lk------",
+    "----nmnopqrst",
+    "---po--------",
+    "--rq---------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 16,
+   "rows": [
+    "c^c ccc ccc",
+    "c c c c c c",
+    "c c c j c x",
+    "c c c j c c",
+    "c c c j c c",
+    "S ccc ccc b"
+   ],
+   "loading": [
+    "hgf hgf hgf",
+    "w w w w w w",
+    "d d d d d d",
+    "c c c c c c",
+    "b b b b b b",
+    "a hgf hgf a"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 17,
+   "rows": [
+    "          rb",
+    "         kc",
+    "        cc",
+    "pcccccccc",
+    "      cc",
+    "     cc",
+    "    ccccccccl",
+    "   ^c",
+    "  wc"
+   ],
+   "loading": [
+    "----------ba-",
+    "---------dc--",
+    "--------fw---",
+    "onmlkjihg----",
+    "------ji-----",
+    "-----lk------",
+    "----nmnopqrst",
+    "---po--------",
+    "--rq---------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 18,
+   "rows": [
+    "  ccccccccccc",
+    "  c         j",
+    "  c c^ccccc j",
+    "  c c     c j",
+    "  c rccb  c cccc",
+    "  c       c c  c",
+    "  ccccccccc c  c",
+    "            c  c",
+    "wcccccccccccc  l"
+   ],
+   "loading": [
+    "--fgghhiijjkk---",
+    "--f---------l---",
+    "--w-3445566-l---",
+    "--w-3-----7-m---",
+    "--d-2211--7-m***",
+    "--d-------8-n--*",
+    "--ccbbaa998-n--*",
+    "------------o--*",
+    "uuttssrrqqppo--*"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 19,
+   "rows": [
+    "bcchcc^cccc",
+    "        i",
+    "cccccjjjccc",
+    "    i",
+    "ccccccccccc",
+    "          i",
+    "wccuccccccc"
+   ],
+   "loading": [
+    "aabbccddwwf",
+    "--------f--",
+    "jjiihhggfgg",
+    "----i------",
+    "kkjjijjkkll",
+    "----------m",
+    "rrqqppoonnm"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 20,
+   "rows": [
+    "  ccccccccccc",
+    "  c         cc",
+    "  cccccccc   c",
+    "         c   c",
+    " bccjjjccr wcr",
+    "         c   c",
+    "  cccccccc   c",
+    "  c         cc",
+    "  cccc^cccccc"
+   ],
+   "loading": [
+    "--aabbcccddww---",
+    "--9---------ff--",
+    "--98877665---g--",
+    "---------5---g--",
+    "-b11223344-ihh--",
+    "---------5---g--",
+    "--98877665---g--",
+    "--9---------ff--",
+    "--aabbcccddww---"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 21,
+   "rows": [
+    "",
+    "    b      n",
+    "    c      c",
+    "    y      r",
+    "    r      y",
+    "    c      k",
+    "    y      r",
+    "    rjjyrccy",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----1------k----",
+    "----2------j----",
+    "----3------i----",
+    "----4------h----",
+    "----5------g----",
+    "----6------f----",
+    "----789abcdw----",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 22,
+   "rows": [
+    "",
+    "   ccccc^ccccb",
+    "   c",
+    "   c    wyd",
+    "   c     c",
+    "   c     c",
+    "   cjjjccc",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "---ba987654321--",
+    "---c------------",
+    "---d----qpq-----",
+    "---w-----o------",
+    "---f-----n------",
+    "---ghijklm------",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 23,
+   "rows": [
+    "",
+    "   cccccjjjccb",
+    "   c",
+    "   c    wrd",
+    "   c     c",
+    "   c     c",
+    "   cc^cccc",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "---ba987654321--",
+    "---c------------",
+    "---d----qpq-----",
+    "---w-----o------",
+    "---f-----n------",
+    "---ghijklm------",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 24,
+   "rows": [
+    " ddddddddddd",
+    "wccc^ccjjjccb",
+    " ddddddddddd"
+   ],
+   "loading": [
+    "-onmlkjihgfw-",
+    "mlkjihgfwdcba",
+    "-onmlkjihgfw-"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 25,
+   "rows": [
+    " ddddddddddd",
+    "wcykycycykycb",
+    " ddddddddddd"
+   ],
+   "loading": [
+    "-onmlkjihgfw-",
+    "mlkjihgfwdcba",
+    "-onmlkjihgfw-"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 26,
+   "rows": [
+    " ddddddddddd",
+    "wcycycykykyrb",
+    " ddddddddddd"
+   ],
+   "loading": [
+    "-onmlkjihgfw-",
+    "mlkjihgfwdcba",
+    "-onmlkjihgfw-"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 27,
+   "rows": [
+    "diiiiiiiihcb",
+    " i",
+    " i       n",
+    "iiiid    i",
+    "d  i     k",
+    "   iiiikiid",
+    "   d"
+   ],
+   "loading": [
+    "ffwwddccbbaa",
+    "-f----------",
+    "-g-------o--",
+    "ghhii----o--",
+    "h--j-----n--",
+    "---jkkllmmn-",
+    "---k--------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 28,
+   "rows": [
+    "dccc",
+    "pj ccc",
+    "dc   c",
+    "pc   ccb",
+    "dc",
+    "pc",
+    "dc^cce",
+    " pdpd"
+   ],
+   "loading": [
+    "ujih",
+    "lk gfw",
+    "vl   d",
+    "nm   cba",
+    "en",
+    "po",
+    "xpqrst",
+    " pyrz"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 29,
+   "rows": [
+    "       i^ucce",
+    "       i  !!",
+    "     !iiiiiii",
+    "        !  i",
+    "bccchjjiiiiii"
+   ],
+   "loading": [
+    "-------89abcd-",
+    "-------8--bc--",
+    "-----6789abcd-",
+    "--------9--c--",
+    "123456789abcd-"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 30,
+   "rows": [
+    "rrrrrE",
+    "r",
+    "rcjjjr",
+    "     r",
+    "brrrrr"
+   ],
+   "loading": [
+    "wfghij",
+    "d",
+    "cbaabc",
+    "     d",
+    "juhgfw"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 31,
+   "rows": [
+    "    ccctjjcE",
+    "lttcc dmd",
+    "    ccc^cc^c",
+    "           c",
+    "    bccccccc"
+   ],
+   "loading": [
+    "    jklmnopq",
+    "utsri vev",
+    "    hgfwdcba",
+    "           9",
+    "    12345678"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 32,
+   "rows": [
+    "",
+    "",
+    "     yyyyyyyy",
+    "     c      yd",
+    " bccck      yye",
+    "     c      yd",
+    "     yyyyyyyy",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----------------",
+    "-----noppqrst---",
+    "-----m      fw--",
+    "-12345      cda-",
+    "-----m      fw--",
+    "-----noppqrst---",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 33,
+   "rows": [
+    "Wccrccrccrcc",
+    "           c",
+    "crcrccrcrjrc",
+    "c",
+    "cjjrkrcrcrcb"
+   ],
+   "loading": [
+    "543213213213",
+    "           2",
+    "231231231231",
+    "1-----------",
+    "321321321321"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 34,
+   "rows": [
+    "ykyyyyyE",
+    "y",
+    "ykyyyyyy",
+    "       y",
+    "byyyyyyy"
+   ],
+   "loading": [
+    "anbocpdq",
+    "m",
+    "9l8k7j6i",
+    "       5",
+    "1w2f3g4h"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 35,
+   "rows": [
+    "      N",
+    "      t",
+    " m    t",
+    " c    t",
+    " c    t",
+    "bccjmjc"
+   ],
+   "loading": [
+    "      k",
+    "      j",
+    " n    i",
+    " m    h",
+    " l    g",
+    "0abcdwf"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 36,
+   "rows": [
+    "l        cjjjtE",
+    "y   d    c",
+    "y   m    c",
+    "mccccccccc",
+    "      tt",
+    "      tt",
+    "       c",
+    "       yyyb"
+   ],
+   "loading": [
+    "f        abcdwf",
+    "w   a    9",
+    "d   9----8",
+    "cba9876567",
+    "      14",
+    "      23",
+    "       4",
+    "       5678"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 37,
+   "rows": [
+    "    pkcpccpccpcb",
+    "    c  c  c  c",
+    "   cvccvccvccvc",
+    "    c  c  c  c",
+    "  pcpccpccpccp",
+    "    j  c  c",
+    " vjjvccvccvcc",
+    " c  c  c  c",
+    "wpccdccdccdc"
+   ],
+   "loading": [
+    "----cba987654321",
+    "----p--o--p--p--",
+    "---dwfghijklmno-",
+    "----q--q--q--q--",
+    "--cba987654321--",
+    "----r--r--r-----",
+    "-dwfghijklmno---",
+    "-s--s--s--s-----",
+    "cba987654321----"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 38,
+   "rows": [
+    "    pccp^cpckpcb",
+    "    c  c  c  c",
+    "   cyccyccyccyc",
+    "    c  c  c  c",
+    "  pcpccpccpccp",
+    "    c  c  c",
+    " rckrccrccrcc",
+    " c  c  c  c",
+    "wrccdccdccdc"
+   ],
+   "loading": [
+    "----cba987654321",
+    "----p--o--p--p--",
+    "---dwfghijklmno-",
+    "----q--q--q--q--",
+    "--cba987654321--",
+    "----r--r--r-----",
+    "-dwfghijklmno---",
+    "-s--s--s--s-----",
+    "cba987654321----"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 39,
+   "rows": [
+    "",
+    "  xccccccccccb",
+    "  p          c",
+    "  p          c",
+    "  p          k",
+    "  p          c",
+    "  l          c",
+    "  d          s",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "--ihgfwdcba981--",
+    "--j----------2--",
+    "--k----------3--",
+    "--l----------4--",
+    "--m----------5--",
+    "--n----------6--",
+    "--o----------7--",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 40,
+   "rows": [
+    "        tlt",
+    "        t tc",
+    "        t  cc",
+    "        t   cc",
+    "  wccjjjc    cb",
+    "        c   kc",
+    "        c  cc",
+    "        j cc",
+    "        ccc"
+   ],
+   "loading": [
+    "--------ba9-----",
+    "--------c-87----",
+    "--------d--65---",
+    "--------w---43--",
+    "--lkjihgf----21-",
+    "--------w---43--",
+    "--------d--65---",
+    "--------c-87----",
+    "--------ba9-----"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 41,
+   "rows": [
+    "",
+    "    kccc^ckcc",
+    "    c       h",
+    "    c       b",
+    "    c",
+    "    ccccc",
+    "    iiiic",
+    "    !i!!!",
+    "    iiiis"
+   ],
+   "loading": [
+    "----------------",
+    "----ba9876543---",
+    "----c-------2---",
+    "----d-------1---",
+    "----w-----------",
+    "----fghij-------",
+    "----ghijk-------",
+    "----hijkl-------",
+    "----ijklm-------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 42,
+   "rows": [
+    "               n",
+    "  cccccccccccb c",
+    "  c          cck",
+    "  c  cccccccc",
+    "ccc  c      cpp",
+    "c    ccc      pl",
+    "c      cccccc",
+    "cccc        c",
+    "   cccccccccc"
+   ],
+   "loading": [
+    "---------------6",
+    "--hgfwdcba9871-5",
+    "--h----------234",
+    "--i--uuuvvvee---",
+    "jji--t------exx-",
+    "k----tts------xy",
+    "k------ssrrrq---",
+    "llmm--------q---",
+    "---nnnooopppq---"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 43,
+   "rows": [
+    "",
+    "        cccyce",
+    "        c",
+    "  ccccccc",
+    "  j",
+    "  j",
+    "  cccmccctttcb",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "--------nopqrs--",
+    "--------m-------",
+    "--fghijkl-------",
+    "--w-------------",
+    "--d-------------",
+    "--cba987654321--",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 44,
+   "rows": [
+    "  cc^ckccccd n",
+    "  c      c   c t",
+    "  c   d  cccccct",
+    "  c   c        t",
+    "dccjjjc        t",
+    "      c        c",
+    "ccccccccd      c",
+    "c              c",
+    "cccccccccccccccb"
+   ],
+   "loading": [
+    " --pqqrrssttu-8--",
+    " --p------u---7-5",
+    " --o---m--uvve654",
+    "s--o---m--------4",
+    " oonnmml--------3",
+    " ------l--------3",
+    " iijjkkllm------2",
+    " h--------------2",
+    " hggffwwddccbbaa1"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 45,
+   "rows": [
+    "     ppp     ppp",
+    "  cccpyp^ckccpbp",
+    "  c  ppp     ppp",
+    "  c",
+    "  c ppp    ppp",
+    "  ccpyp    pnp",
+    "    ppp    ppp",
+    "     c      c",
+    "     ^ccccccc"
+   ],
+   "loading": [
+    "-----a99-----443",
+    "--cbbab887766513",
+    "--c--a99-----522",
+    "--d-------------",
+    "--d-fgg----nnn--",
+    "--wwfhh----mom--",
+    "----fgg----mlm--",
+    "-----g------l---",
+    "-----hhiijjkk---"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 46,
+   "rows": [
+    "     ppp     ppp",
+    "  cjjpdpcccccpbp",
+    "  k  ppp     ppp",
+    "  c",
+    "  c ppp    ppp",
+    "  ccpdp    pnp",
+    "    ppp    ppp",
+    "     j      c",
+    "     cccccccc"
+   ],
+   "loading": [
+    "-----a99-----443",
+    "--cbbab887766513",
+    "--c--a99-----522",
+    "--d-------------",
+    "--d-fgg----nnn--",
+    "--wwfhh----mom--",
+    "----fgg----mlm--",
+    "-----g------l---",
+    "-----hhiijjkk---"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 47,
+   "rows": [
+    "        n",
+    "       cpc",
+    "       pdp",
+    "     cpyyypc",
+    "    wpdybydpe",
+    "     cpyyypk",
+    "       pdp",
+    "       cpc",
+    "        s"
+   ],
+   "loading": [
+    "--------7-------",
+    "-------565------",
+    "-------484------",
+    "-----5432345----",
+    "----768414867---",
+    "-----5432345----",
+    "-------484------",
+    "-------565------",
+    "--------7-------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 48,
+   "rows": [
+    "        n",
+    "   iii!iu!iiii",
+    "   +iiiiiiii!i",
+    "   !iiiiii!ii+",
+    "   iiiii!iiiii",
+    "   iiiiiiiiiii",
+    "        h",
+    "  bccjjjc",
+    ""
+   ],
+   "loading": [
+    "--------w-------",
+    "---ihgfwdfwghi--",
+    "---hgfwdcdfwgh--",
+    "---gfwdcbcdwfg--",
+    "---fwdcbabcdwf--",
+    "---wdcba9abcdw--",
+    "--------8-------",
+    "--1234567-------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 49,
+   "rows": [
+    "",
+    "",
+    "     ppppnpppp",
+    "     ppppppppp",
+    " bccxppppppppe",
+    "     ppppppppp",
+    "     ppppspppp",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----------------",
+    "-----noppqrstu--",
+    "-----mlkjihgfw--",
+    "-123456789abcd--",
+    "-----mlkjihgfw--",
+    "-----noppqrstu--",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 50,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 50,
+   "rows": [
+    "",
+    "",
+    "",
+    "wccdckcccdc^ccc",
+    " ccjccd^ccccdccb",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----------------",
+    "----------------",
+    "hgfwdcba9876543-",
+    "-fwdcba987654321",
+    "----------------",
+    "----------------",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 51,
+   "rows": [
+    "",
+    "",
+    "     dpppnpppd",
+    "     ppppppppp",
+    " bccxpppdpdppe",
+    "     ppppppppp",
+    "     dpppsppod",
+    "",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----------------",
+    "-----noppqrstu--",
+    "-----mlkjihgfw--",
+    "-123456789abcd--",
+    "-----mlkjihgfw--",
+    "-----noppqrstu--",
+    "----------------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 50,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 52,
+   "rows": [
+    "",
+    "",
+    "   ^pjjhiit",
+    "   c      i",
+    "   t      iuce",
+    "   ^crjjy !",
+    "        c",
+    "        b",
+    ""
+   ],
+   "loading": [
+    "----------------",
+    "----------------",
+    "---bcdwfghi-----",
+    "---a------j-----",
+    "---9------klmn--",
+    "---876543-o-----",
+    "--------2-------",
+    "--------1-------",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 53,
+   "rows": [
+    "    p",
+    "   dy    dp",
+    "    y     y",
+    "wccdcjc^cdcckcc",
+    " ccc^cdcccccdccb",
+    "       y     y",
+    "      dp    dy",
+    "             p",
+    ""
+   ],
+   "loading": [
+    "----o-----------",
+    "---sn----ql-----",
+    "----m-----k-----",
+    "hgfwdcba9876543-",
+    "-fwdcba987654321",
+    "-------l-----i--",
+    "------rm----pj--",
+    "-------------k--",
+    "----------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 54,
+   "rows": [
+    "              ue",
+    " cccccccccccccc",
+    " cccccccccccccc",
+    " cccccccccccckc",
+    " !!!!!!!!!!c!!!",
+    " ccccccccccjccc",
+    " cccccccccccccc",
+    " ccccc^ccc^cccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "-12-------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 55,
+   "rows": [
+    "              ue",
+    " cccccccccccccc",
+    " ccccccccccccck",
+    " !!!!c!!!!!!!!!",
+    " cccccccccjjjcc",
+    " !!!!!!!!!!!!^!",
+    " cccccccccccccc",
+    " ccccccccckcccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "12--------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 56,
+   "rows": [
+    "              ue",
+    " cccccccccccccc",
+    " !!!!!!!!!!!!!j",
+    " ccccjjjccc^ccc",
+    " !!!c!!!!!!!!!!",
+    " cccccccccccccc",
+    " !!!!c!!!!!!!!!",
+    " cjjjcccccccccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "12--------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 57,
+   "rows": [
+    "      puc",
+    "      p c",
+    "      pcc",
+    "   ddd y ppp",
+    "   w cybyc e",
+    "   ppp y ddd",
+    "      ccp",
+    "      c p",
+    "      cup"
+   ],
+   "loading": [
+    "------ccc-----",
+    "------c-c-----",
+    "------ccc-----",
+    "---***-c-***--",
+    "---*-*ccc*-*--",
+    "---***-c-***--",
+    "------ccc-----",
+    "------c-c-----",
+    "------ccc-----"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 58,
+   "rows": [
+    "   dcjjjcE",
+    "   d^ddddd",
+    "   dccjjjc",
+    "   ddddddc",
+    "bcckccdccc",
+    "   ddcdcdd",
+    "   ddcccdd",
+    "   ddddddd"
+   ],
+   "loading": [
+    "   xnopqrs",
+    "   xmxxxxx",
+    "   xlkjihg",
+    "   xxxxxxf",
+    "123456xcdw",
+    "   xx7xbxx",
+    "   xx89axx",
+    "   xxxxxxx"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 59,
+   "rows": [
+    "mpppp   dcrccccE",
+    "    p    ^     d",
+    "    pccccv^ccccc",
+    "               c",
+    "bccyyyytyyyyyyct",
+    "  c           c",
+    "  ccccccttccccc"
+   ],
+   "loading": [
+    "nmlkj   nfghijkm",
+    "    i    w     o",
+    "    hggfwwdccbaa",
+    "               9",
+    "1223334445556678",
+    "  2           7",
+    "  3344455556667"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 60,
+   "rows": [
+    "   dcccccE",
+    "   dcddddd",
+    "   dccjjjc",
+    "   ddddddc",
+    "bccjjcdccc",
+    "   ddrd^dd",
+    "   ddkccdd",
+    "   ddddddd"
+   ],
+   "loading": [
+    "   xnopqrs",
+    "   xmxxxxx",
+    "   xlkjihg",
+    "   xxxxxxf",
+    "123456xcdw",
+    "   xxzxbxx",
+    "   xx89axx",
+    "   xxxxxxx"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 61,
+   "rows": [
+    "       d",
+    "    diii iih",
+    "     i i i %",
+    "  diii i i ^",
+    "iiii   iii c",
+    "S      i d j",
+    "   uiiii   j",
+    "           j",
+    "    bccjjjcc"
+   ],
+   "loading": [
+    "       m",
+    "    jnnn nng",
+    "     o o o f",
+    "  jppp p p w",
+    "qqqq   qqq d",
+    "l      r h c",
+    "   kuuuu   b",
+    "           a",
+    "    12345678"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 62,
+   "rows": [
+    "      N",
+    "      t",
+    "      t",
+    "      t",
+    "      m",
+    "mccrccbccvccm",
+    "      c",
+    "      y",
+    "      m"
+   ],
+   "loading": [
+    "      m",
+    "      l",
+    "      k",
+    "      j",
+    "      i",
+    "7554321bcdwgmh",
+    "      8",
+    "      9",
+    "      a"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 63,
+   "rows": [
+    "   dcccccE",
+    "   dcddddd",
+    "   dccjjjc",
+    "   ddddddc",
+    "bccjjcd%cc",
+    "   ddvd^dd",
+    "   ddcccdd",
+    "   ddddddd"
+   ],
+   "loading": [
+    "   xnopqrs",
+    "   xmxxxxx",
+    "   xlkjihg",
+    "   xxxxxxf",
+    "123456xcdw",
+    "   xxzxbxx",
+    "   xx89axx",
+    "   xxxxxxx"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 64,
+   "rows": [
+    "rkrrrE",
+    "r",
+    "rrkrrr",
+    "     r",
+    "brrrrr"
+   ],
+   "loading": [
+    "wfghij",
+    "d",
+    "cbaabc",
+    "     d",
+    "juhgfw"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 65,
+   "rows": [
+    "              ue",
+    " ccccccccccccck",
+    " cccccccccccccc",
+    " cccccccccccc^%",
+    " !!!!!!!!!!i!!!",
+    " cccccccccccccc",
+    " cccccccccccccc",
+    " ckcccccccccccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "-12-------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 66,
+   "rows": [
+    "   dyyyyyE",
+    "   dyddddd",
+    "   dyyyyyy",
+    "   ddddddy",
+    "byyyyydyky",
+    "   ddydydd",
+    "   ddykydd",
+    "   ddddddd"
+   ],
+   "loading": [
+    "   xnopqrs",
+    "   xmxxxxx",
+    "   xlkjihg",
+    "   xxxxxxf",
+    "123456xcdw",
+    "   xx7xbxx",
+    "   xx89axx",
+    "   xxxxxxx"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 67,
+   "rows": [
+    "Wcrcrcrcrcrcrc",
+    "             r",
+    "crcrcrjjrcrcrc",
+    "r",
+    "krcrkrcrcrjrcb"
+   ],
+   "loading": [
+    "abcdwfghijklmn",
+    "             o",
+    "tuvexyzzyxevut",
+    "o-------------",
+    "nmlkjihgfwdcba"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 68,
+   "rows": [
+    "cbccclll",
+    "c",
+    "cjjjcdpp",
+    "    ^  p",
+    "dccc%dpp",
+    "   c   p",
+    "wccucccp"
+   ],
+   "loading": [
+    "stuvexyz",
+    "*",
+    "********",
+    "    z  *",
+    "********",
+    "   *   *",
+    "***z***z"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 69,
+   "rows": [
+    "ddddddddddddddd",
+    "dcjjjcccccccckd",
+    "djdddddcdddddccce",
+    "dcd   dld   ddd",
+    "dcd   ddd   dcccb",
+    "dcd         dcd",
+    "dcdddddddddddcd",
+    "dcccccccccjjjxd",
+    "ddddddddddddddd"
+   ],
+   "loading": [
+    "oppqqrrssttuvex--",
+    "odwwffgghhijjky--",
+    "niopqqrhtttuvkllm",
+    "ncn---rhs---exy--",
+    "mcm---rss---b2211",
+    "mbl---------c3c--",
+    "lbkjiihhggfdc3c--",
+    "laa99887766544c--",
+    "kkjjiihhggffwdd--"
+   ],
+   "delay": 0.05,
+   "x_hides": 5,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 70,
+   "rows": [
+    "ddddddddddddddd",
+    "dcccc^%ccccc^%d",
+    "dcdddddldddddccce",
+    "dcd   drd   ddd",
+    "dcd   ddd   dcrcb",
+    "dcd         dcd",
+    "dcdddddddddddkd",
+    "dcccccccccccccd",
+    "ddddddddddddddd"
+   ],
+   "loading": [
+    "oppqqrrssttuvex--",
+    "odwwffgghhijjky--",
+    "niopqqrhtttuvkllm",
+    "ncn---rhs---exy--",
+    "mcm---rss---b2211",
+    "mbl---------c3c--",
+    "lbkjiihhggfdc3c--",
+    "laa99887766544c--",
+    "kkjjiihhggffwdd--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 71,
+   "rows": [
+    "iiipppplpppppiii",
+    "i              i",
+    "i yyydyyydyyy  i",
+    "i c c c c c c^ii",
+    "i i c c c c c",
+    "scc yyydyyy kccb"
+   ],
+   "loading": [
+    "****************",
+    "*              *",
+    "* ccc ccc ccc  *",
+    "* c c c c c cc**",
+    "* c c c c c c",
+    "scc ccc ccc cccb"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 72,
+   "rows": [
+    "   ccm     ccm n",
+    "   c c     c c t",
+    "mccccccccccctc t",
+    "   c   c c   c t",
+    "   ccb ccm   ttm"
+   ],
+   "loading": [
+    "   789     nop z",
+    "   6 a     m q y",
+    "zzz5zbcdzjklzr x",
+    "   4   w i   s e",
+    "   321 fgh   tuv"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 73,
+   "rows": [
+    "  n",
+    " dcd",
+    " dyd",
+    " dkd",
+    " dyd",
+    " dkd",
+    " dyd",
+    " dcddddddddddd",
+    " dykycycycycyccb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "--a-------------",
+    "-dbd------------",
+    "-ccc------------",
+    "-bdb------------",
+    "-awa------------",
+    "-9f9------------",
+    "-8g8------------",
+    "-8h87654332211--",
+    "-7ijklmnopqrstuv",
+    "-7665544332211--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 74,
+   "rows": [
+    "  n",
+    " dcd",
+    " dyd",
+    " dkd",
+    " dyd",
+    " dcd",
+    " dyd",
+    " dkddddddddddd",
+    " dycycycycykycrb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "--a-------------",
+    "-dbd------------",
+    "-ccc------------",
+    "-bdb------------",
+    "-awa------------",
+    "-9f9------------",
+    "-8g8------------",
+    "-8h87654332211--",
+    "-7ijklmnopqrstuv",
+    "-7665544332211--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 75,
+   "rows": [
+    " ddddd",
+    " dycycd",
+    " dkddykd",
+    " dyd dycd",
+    " dcd  dsd",
+    " dyd",
+    " dcddddddddddd",
+    " dycycykycycyccb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "-78889----------",
+    "-7999a9---------",
+    "-78aaaa9--------",
+    "-68a-bbba-------",
+    "-689--bbb-------",
+    "-679------------",
+    "-5788777666555--",
+    "-576665554443333",
+    "-5444333222111--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 76,
+   "rows": [
+    "yyyyyyyyE",
+    "y",
+    "yyyyryyky",
+    "        y",
+    "byykyyyyy"
+   ],
+   "loading": [
+    "987654321",
+    "a",
+    "bcdwfwdcb",
+    "        a",
+    "123456789"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 77,
+   "rows": [
+    "ryryryrE",
+    "k",
+    "ryryrkry",
+    "       r",
+    "byryryry"
+   ],
+   "loading": [
+    "67abcdwf",
+    "5",
+    "43211234",
+    "       5",
+    "fwdcba76"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 78,
+   "rows": [
+    " ddddd",
+    " dycycd",
+    " dkddykddddddd",
+    " dyd dycycycyce",
+    " dcd  dddddddd",
+    " dyd",
+    " dcddddddddddd",
+    " dycykycycycyccb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "-bbccd----------",
+    "-aaabbd---------",
+    "-a9abcdwffgghi--",
+    "-999-dcddffgghi-",
+    "-989--wwffgghi--",
+    "-888------------",
+    "-8776544332211--",
+    "-776655443322111",
+    "-7665544332211--"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 79,
+   "rows": [
+    " ddddd",
+    " dycykd",
+    " dcddycddddddd",
+    " dyd dycycycyce",
+    " dkd  dddddddd",
+    " dyd",
+    " dcddddddddddd",
+    " dycycykycycycrb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "-bbccd----------",
+    "-azabbd---------",
+    "-a9abcdwffgghi--",
+    "-999-dcddffgghi-",
+    "-989--wwffgghi--",
+    "-888------------",
+    "-8776544332211--",
+    "-776655443322111",
+    "-7665544332211--"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 80,
+   "rows": [
+    " ddddddddddd",
+    "wryrykyrkryrb",
+    " ddddddddddd"
+   ],
+   "loading": [
+    "-onmlkjihgfw-",
+    "mlkjihgfwdcba",
+    "-onmlkjihgfw-"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 81,
+   "rows": [
+    "d d d d d d d d",
+    "^cc ccc ccc ccc",
+    "% k c c j c j c",
+    "c c c c j c j c",
+    "c c c c j c j c",
+    "c c c c c c c c",
+    "S ccc ccc ccc b",
+    "  d d d d d d"
+   ],
+   "loading": [
+    "p o n m l k j i",
+    "hgf hgf hgf hgf",
+    "w w w w w w w w",
+    "d d d d d d d d",
+    "c c c c c c c c",
+    "b b b b b b b b",
+    "a hgf hgf hgf a",
+    "  v u t s r q"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 82,
+   "rows": [
+    "c^c",
+    "j j",
+    "j j",
+    "j j",
+    "h ccckxcccb",
+    "i",
+    "i",
+    "iiiiii^ce",
+    "d"
+   ],
+   "loading": [
+    "fwd",
+    "g-c",
+    "h-b",
+    "i-a",
+    "j-987654321",
+    "k",
+    "l",
+    "mnoqrstuv",
+    "n"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 83,
+   "rows": [
+    "   dyykyyE",
+    "   dkddddd",
+    "   dyyyyyy",
+    "   ddddddy",
+    "brcyyydyyy",
+    "   ddydydd",
+    "   ddyyydd",
+    "   ddddddd"
+   ],
+   "loading": [
+    "j-j",
+    "i-i",
+    "h-h",
+    "g-987654321",
+    "f",
+    "w",
+    "987654321",
+    "d"
+   ],
+   "delay": 0.05,
+   "x_hides": 100,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 84,
+   "rows": [
+    " ccccc     b",
+    "djd dcd  ccx",
+    " j   %^ckc",
+    "djd     d",
+    " c        n",
+    " c d   d dcd",
+    " cjjjcccccc",
+    "   d   d"
+   ],
+   "loading": [
+    " fwdcb     1",
+    "ygy xax  432",
+    " h   98765",
+    "yiy     x",
+    " j        e",
+    " k z   z zvz",
+    " lmnopqrstu",
+    "   z   z"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 85,
+   "rows": [
+    "   ujjc",
+    "   j  c",
+    "   j  ^cccccc",
+    "   j    ccccc",
+    "   c    ccbcc",
+    "   c    ccccc",
+    "wc^c    ccccc"
+   ],
+   "loading": [
+    "   ****",
+    "   *  *",
+    "   *  **ccccc",
+    "   *    ccccc",
+    "   *    ccbcc",
+    "   *    ccccc",
+    "****    ccccc"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 86,
+   "rows": [
+    "   piip   cc^c",
+    "   i  i   j  j",
+    "   i  i   j  j",
+    "  ip  pi cc  cc",
+    "  i    i c    c",
+    "  i    i c    c",
+    " ip    ucc    cc",
+    " i      s      k",
+    "tp             cc",
+    "l               b"
+   ],
+   "loading": [
+    "   ****   cccc",
+    "   *  *   c  c",
+    "   *  *   c  c",
+    "  **  ** cc  cc",
+    "  *    * c    c",
+    "  *    * c    c",
+    " **    ccc    cc",
+    " *      c      c",
+    "**             cc",
+    "*               b"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 87,
+   "rows": [
+    "rcccccccr",
+    "j       j",
+    "c rkccr j",
+    "c c   c j",
+    "c c b c c",
+    "j k c c c",
+    "j rct c c",
+    "j     c c",
+    "rcccccr S"
+   ],
+   "loading": [
+    "eijjkkllx",
+    "i       m",
+    "h s789t m",
+    "h 6   a n",
+    "g 5 1 a n",
+    "g 4 2 b o",
+    "f r3q b o",
+    "f     c p",
+    "vwwddcu y"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 88,
+   "rows": [
+    "ndpdpdpdmdpdpdpdm",
+    "ccccccccccccccccc",
+    "^dcdcdcdcdcdcdcdc",
+    "ccccccccccccccccc",
+    "cdcdcdcdcdcdcdcdc",
+    "cccjcc^ccccckcccc",
+    "ldpdpdpdmdpdpdpdb"
+   ],
+   "loading": [
+    "imimimimimimimimi",
+    "hgfwdcba987654321",
+    "jnjnjnjnjnjnjnjnj",
+    "hgfwdcba987654321",
+    "kokokokokokokokok",
+    "hgfwdcba987654321",
+    "lplplplplplplplpl"
+   ],
+   "delay": 0.1,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 89,
+   "rows": [
+    "nrrrrrrrrrrrrrrrm",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "mrrrrrrrrrrrrrrrb"
+   ],
+   "loading": [
+    "4rrrrrrrrrrrrrrr2",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrr",
+    "3rrrrrrrrrrrrrrr1"
+   ],
+   "delay": 0.2,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 90,
+   "rows": [
+    "   ppp   yyy",
+    "wc^pdpjjjydy",
+    "   ppp   yyy",
+    "          j",
+    "          j",
+    "          j",
+    "   ppp   rrr",
+    "bccpdpcjcrdr",
+    "   ppp   rrr"
+   ],
+   "loading": [
+    "   ihg   987",
+    "lkjbafonm216",
+    "   cdw   345",
+    "          q",
+    "          p",
+    "          q",
+    "   987   ihg",
+    "onm216lkjbaf",
+    "   345   cdw"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 91,
+   "rows": [
+    "nyyyyyydyyyyyyy",
+    "yyyyyyydyyyyyyy",
+    "dddxddddyyyyyyy",
+    "yyyyyyykyyyyyyy",
+    "yyyyyyydyyyyyyy",
+    "yyyyyyydyyyyyyy",
+    "yyyyyyydkyyyyyycb"
+   ],
+   "loading": [
+    "1111111wfffffff",
+    "2222222dggggggg",
+    "3333333chhhhhhh",
+    "4444444biiiiiii",
+    "5555555ajjjjjjj",
+    "66666669kkkkkkk",
+    "77777778lllllllll"
+   ],
+   "delay": 0.05,
+   "x_hides": 50,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 92,
+   "rows": [
+    " ddddddddddddd",
+    " dcccccccccccd",
+    " dcdddddddddcd",
+    " dcdcccjjjcdcd",
+    " dcdcdddddkdcd",
+    " dcdcc^cedcdjd",
+    " dcdddddddcdjd",
+    " d^%cccccccdjd",
+    " dddddddddddcccb"
+   ],
+   "loading": [
+    " kkkkkkkkkkkkk--",
+    "-m98877665544l--",
+    "-m9ooooooooo4l--",
+    "-maqhhgggffp3l--",
+    "-maqhtttttfp3l--",
+    "-maqiiijjswp3l--",
+    "-mbrrrrrrrwp2l--",
+    "-mbbcccdddwo2l--",
+    "-nnnnnnnnnnn2111"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 93,
+   "rows": [
+    " ddddddddddddd",
+    " dcccccccccccd",
+    " dcdddddddddcd",
+    " dcdcccjjjcdkd",
+    " dcdcdddddcdcd",
+    " drdcc^cedcdcd",
+    " dcddddddd%dcd",
+    " dcjjjcccc^dcd",
+    " dddddddddddcrcb"
+   ],
+   "loading": [
+    " kkkkkkkkkkkkk--",
+    "-m98877665544l--",
+    "-m9ooooooooo4l--",
+    "-maqhhgggffp3l--",
+    "-maqhtttttfp3l--",
+    "-maqiiijjswp3l--",
+    "-mbrrrrrrrwp2l--",
+    "-mbbcccdddwo2l--",
+    "-nnnnnnnnnnn2111"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 94,
+   "rows": [
+    " dddddmddddddd",
+    " dcjjjcccckccd",
+    " dcdddddddddcd",
+    " dcdcccccccdcd",
+    " dcdcdddddcdcd",
+    " dcdccccedcdjd",
+    " dcdddddddcdjd",
+    " d^%ccccc^4djd",
+    " dddddddddddc8cb"
+   ],
+   "loading": [
+    " kkkkkkkkkkkkk--",
+    "-m98877665544l--",
+    "-m9ooooooooo4l--",
+    "-maqhhgggffp3l--",
+    "-maqhtttttfp3l--",
+    "-maqiiijjswp3l--",
+    "-mbrrrrrrrwp2l--",
+    "-mbbcccdddwo2l--",
+    "-nnnnnnnnnnn2111"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 95,
+   "rows": [
+    " !!!!!!!!!!!!!",
+    " !iiiiiikiiii!",
+    " !i!!!!!!!!!i!",
+    " !i!iiiiiii!i!",
+    " !i!^!!!!!i!i!",
+    " !i!ujjce!i!i!",
+    " !i!!!!!!!i!i!",
+    " !iijiiiiii!i!",
+    " !!!!!!!!!!!hccb"
+   ],
+   "loading": [
+    "-kkkkkkkkkkkkk--",
+    "-m98877665544l--",
+    "-m9ooooooooo4l--",
+    "-maqhhgggffp3l--",
+    "-maqhtttttfp3l--",
+    "-maqiiijjswp3l--",
+    "-mbrrrrrrrwp2l--",
+    "-mbbcccdddwo2l--",
+    "-nnnnnnnnnnn2111"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": true,
+   "message": ""
+  },
+  {
+   "number": 96,
+   "rows": [
+    "ccc ccc ccc ccc",
+    "j c j c c c c c",
+    "c c j j c c ^ r",
+    "c c j j c c % x",
+    "c k c j c c c c",
+    "S ccc ccc ccc b"
+   ],
+   "loading": [
+    "hgf hgf hgf hgf",
+    "w w w w w w w w",
+    "d d d d d d d d",
+    "c c c c c c c c",
+    "b b b b b b b b",
+    "a hgf hgf hgf a"
+   ],
+   "delay": 0.1,
+   "x_hides": 100,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 97,
+   "rows": [
+    "              ue",
+    " cccccccccccccc",
+    " cccccccccccccc",
+    " !!!!i!!!!!!!!!",
+    " ccccc%^ccjjjcc",
+    " !!!!!!!!!!!!i!",
+    " cccccccccccccc",
+    " cccjccccc^%ccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "12--------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 98,
+   "rows": [
+    "              ue",
+    " cccccccccccccc",
+    " !!!!!!!!!!!!!i",
+    " ccccjjjc^%ccc^",
+    " !!!i!!!!!!!!!!",
+    " cccccccccccccc",
+    " !!!!i!!!!!!!!!",
+    " cjjjcccccccccc",
+    "bh"
+   ],
+   "loading": [
+    "--------------dd",
+    "-66778899aabbcc-",
+    "-566778899aabbc-",
+    "-5566778899aabb-",
+    "-45566778899aab-",
+    "-445566778899aa-",
+    "-3445566778899a-",
+    "-33445566778899-",
+    "12--------------"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 99,
+   "rows": [
+    " ddddd       dnd",
+    " dykycd      dyd",
+    " dcddycdddddddcd",
+    " dyd dycycycycyd",
+    " dkd  dddddddddd",
+    " dyd",
+    " dcddddddddddd",
+    " dycycycykycycb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "-didid-------tuv",
+    "-whwhwj------srq",
+    "-fgfgfkpkpkpkpkp",
+    "-987-flololololo",
+    "-abc-mnmnmnmnmnm",
+    "-987------------",
+    "-3434343434343--",
+    "-25252525252522-",
+    " 1616161616161--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  },
+  {
+   "number": 100,
+   "rows": [
+    " ddddd       dnd",
+    " drcycd      dyd",
+    " dcddycdddddddcd",
+    " dyd dycycykycyd",
+    " dcd  dddddddddd",
+    " dyd",
+    " dcddddddddddd",
+    " dykycycycykycb",
+    " ddddddddddddd"
+   ],
+   "loading": [
+    "-didid-------tuv",
+    "-whwhwj------srq",
+    "-fgfgfkpkpkpkpkp",
+    "-987-flololololo",
+    "-abc-mnmnmnmnmnm",
+    "-987------------",
+    "-3434343434343--",
+    "-25252525252522-",
+    " 1616161616161--"
+   ],
+   "delay": 0.05,
+   "x_hides": 25,
+   "checkpoint": false,
+   "message": ""
+  }
+ ]
+}

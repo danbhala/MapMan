@@ -30,6 +30,10 @@ MapMan, default 25), `checkpoint` (bool; also list it in `check_points`),
 | `j` | ice: slide on until a tile that isn't ice, or an edge | | |
 | `^` / `%` | spikes on a 2 s beat (`%` half a beat behind); deadly while up | | |
 
+Revision B (`godot/data/levels_b.json`) is generated from these levels by
+`python3 godot/tools/remix.py`: rerun it after changing a level, and tune a
+Revision B sheet in `godot/tools/remix_overrides.json`, not in the file.
+
 ## Steps
 
 1. Read the neighbouring levels so difficulty ramps smoothly.
