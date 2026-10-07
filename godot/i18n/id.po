@@ -868,6 +868,30 @@ msgstr "LEWATI"
 msgid "DRAFTING TABLE"
 msgstr "MEJA GAMBAR"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "MAINKAN REVISI B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "REVISI B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "LEMBAR LAGI: DARI CHECKPOINT TERSIMPAN"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "MAIN DARI LEMBAR 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "REVISI B DIRILIS"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "REVISI B DISETUJUI"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "DRAF KAMU"
@@ -1565,6 +1589,26 @@ msgstr "TENGKORAK, 1× PER LEMBAR"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "TENGKORAK ATAU DURI, 1×"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "TENGKORAK ATAU DURI, 2×"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "LEVEL %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "BINTANG"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "LIHAT REKOR"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "REKOR — LEVEL %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "LATIHAN"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "SELESAIKAN UNTUK MELIHAT PETAK TERSEMBUNYI"

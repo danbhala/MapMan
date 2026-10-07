@@ -76,6 +76,7 @@ func test_practice_plays_one_level_without_lives_or_score() -> void:
 	Save.highscore = 77
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 2")
+	game._on_menu_action("card play")
 	assert_true(game.practice)
 	assert_eq(game.level, 2)
 	_loaded()
@@ -86,7 +87,7 @@ func test_practice_plays_one_level_without_lives_or_score() -> void:
 	assert_false(game.dead)
 	_loaded()
 	_win()
-	assert_eq(game.menus.current, "practice", "back to the grid after a win")
+	assert_eq(game.menus.current, "card", "back to the level's card after a win")
 	assert_false(game.practice)
 	assert_false(game.game_active)
 	assert_eq(Save.highscore, 77, "practice never touches the high score")
@@ -111,14 +112,15 @@ func test_locked_levels_cannot_be_played() -> void:
 	assert_eq(open.size(), 3, "levels 1-2 and main menu")
 
 
-func test_ending_practice_from_pause_returns_to_the_grid() -> void:
+func test_ending_practice_from_pause_returns_to_its_card() -> void:
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 1")
+	game._on_menu_action("card play")
 	_loaded()
 	game.show_pause_menu()
 	game._on_menu_action("confirm quit")
 	game._on_menu_action("end game")
-	assert_eq(game.menus.current, "practice")
+	assert_eq(game.menus.current, "card")
 	assert_false(game.game_active)
 
 
@@ -159,9 +161,10 @@ func test_practising_the_last_level_never_starts_the_ending() -> void:
 	Save.furthest_level = 3
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 3")
+	game._on_menu_action("card play")
 	_loaded()
 	_win()
-	assert_eq(game.menus.current, "practice")
+	assert_eq(game.menus.current, "card")
 	assert_false(game.completed)
 	assert_false(Save.has_completed)
 	assert_true(Save.checkpoints.is_empty())
@@ -170,6 +173,7 @@ func test_practising_the_last_level_never_starts_the_ending() -> void:
 func test_timeout_in_practice_restarts_the_level() -> void:
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 1")
+	game._on_menu_action("card play")
 	_loaded()
 	game._time_left = 0.0
 	game._process(0.0)  # the main loop notices the clock ran out
@@ -185,10 +189,11 @@ func test_dev_skip_level_ends_practice() -> void:
 	game.levels[0]["checkpoint"] = true
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 1")
+	game._on_menu_action("card play")
 	_loaded()
 	DevPanel.skip_level(game)
 	Dev.enabled = false
-	assert_eq(game.menus.current, "practice")
+	assert_eq(game.menus.current, "card")
 	assert_true(Save.checkpoints.is_empty(), "no checkpoint saved")
 	assert_eq(Save.furthest_level, 1, "nothing unlocked")
 
@@ -197,5 +202,6 @@ func test_practice_keeps_the_first_play_screen() -> void:
 	Save.first_play = true
 	game._on_menu_action("practice")
 	game._on_menu_action("practice level 1")
+	game._on_menu_action("card play")
 	assert_true(Save.first_play)
 	Save.first_play = false

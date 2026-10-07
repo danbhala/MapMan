@@ -304,7 +304,7 @@ func _add_tile(t: String, key: Vector2i, loading, loadings: Dictionary, order: A
 	if t != " " and t != "-":
 		var s := Sprite2D.new()
 		s.texture = _texture_for(t)
-		s.modulate.a = TILE_ALPHA
+		s.modulate = Color(Blueprint.tile_tint, TILE_ALPHA)
 		s.scale = Vector2.ZERO
 		s.position = tile.position
 		add_child(s)
@@ -833,7 +833,7 @@ func reset() -> void:
 	for key in broken:
 		var tile: Tile = tiles[key]
 		tile.sprite.position = tile.position
-		tile.sprite.modulate.a = TILE_ALPHA
+		tile.sprite.modulate = Color(Blueprint.tile_tint, TILE_ALPHA)
 		tile.sprite.visible = true
 	broken.clear()
 	for d in [

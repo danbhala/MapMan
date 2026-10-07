@@ -886,6 +886,30 @@ msgstr "ПРОПУСТИТЬ"
 msgid "DRAFTING TABLE"
 msgstr "ЧЕРТЁЖНЫЙ СТОЛ"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "ИГРАТЬ РЕВИЗИЮ B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "РЕВИЗИЯ B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "ЛИСТЫ ЗАНОВО: С СОХРАНЁННОЙ ТОЧКИ"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "ИГРАТЬ С ЛИСТА 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "РЕВ B ВЫПУЩЕНА"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "РЕВ B УТВЕРЖДЕНА"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "ВАШИ ЧЕРНОВИКИ"
@@ -1585,6 +1609,26 @@ msgstr "ЧЕРЕП, РАЗ НА ЛИСТ"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "ЧЕРЕП ИЛИ ШИПЫ, 1 РАЗ"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "ЧЕРЕП ИЛИ ШИПЫ, 2 РАЗА"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "УРОВЕНЬ %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "ЗВЁЗДЫ"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "СМОТРЕТЬ РЕКОРД"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "РЕКОРД — УРОВЕНЬ %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "ТРЕНИРОВКА"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "ПРОЙДИТЕ ЕГО, ЧТОБЫ УВИДЕТЬ СКРЫТЫЕ ПЛИТКИ"

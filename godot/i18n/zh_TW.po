@@ -868,6 +868,30 @@ msgstr "略過"
 msgid "DRAFTING TABLE"
 msgstr "繪圖桌"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "遊玩修訂版B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "修訂版B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "圖紙再來一遍：從存檔點開始"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "從圖紙001開始"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "修訂版B 已發布"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "修訂版B 已核准"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "你的草稿"
@@ -1565,6 +1589,26 @@ msgstr "骷髏，每張 1 次"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "骷髏或尖刺，1 次"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "骷髏或尖刺，2 次"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "第%d關"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "星星"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "觀看最佳紀錄"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "最佳紀錄 — 第%d關"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "練習"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "過關後才能看到隱藏的格子"

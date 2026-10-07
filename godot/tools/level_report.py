@@ -4,6 +4,8 @@
     python3 godot/tools/level_report.py            # table of every level
     python3 godot/tools/level_report.py --json     # same data as JSON
     python3 godot/tools/level_report.py 35 43      # just these levels
+    python3 godot/tools/level_report.py --rev-b    # data/levels_b.json instead
+    python3 godot/tools/level_report.py --file p   # any levels file
 
 For each level it finds the shortest safe route (never touching a death
 tile, avoiding time-loss tiles when it can) and estimates how much of the
@@ -19,10 +21,13 @@ from collections import Counter, deque
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LEVELS = os.path.join(HERE, '..', 'data', 'levels.json')
+LEVELS_B = os.path.join(HERE, '..', 'data', 'levels_b.json')
 
 CLOCK = 20.0
 FAST_STEP = 7.0 / 60.0      # seconds per tile at a firm tilt (main.gd STOP_TIME / 2)
 TIME_TILE = 5.0
+SPIKE_WAIT = 1.0            # seconds a spike tile on the route costs, waiting for a gap
+SPIKES = set('^%')
 ENDS = set('nsewNSEW')
 DEATH = set('d!')
 EMPTY = set(' -')
@@ -75,6 +80,19 @@ def slide(cells, cur, d):
     return visited
 
 
+def crossed(path):
+    """Every tile the route passes over, the ones slid across on ice included
+    (path holds only where each move lands)."""
+    out = []
+    for a, b in zip(path, path[1:]):
+        d = ((b[0] > a[0]) - (b[0] < a[0]), (b[1] > a[1]) - (b[1] < a[1]))
+        p = a
+        while p != b:
+            p = (p[0] + d[0], p[1] + d[1])
+            out.append(p)
+    return out
+
+
 def analyse(level):
     cells = grid(level)
     start = next(k for k, v in cells.items() if v.lower() == 'b')
@@ -90,7 +108,9 @@ def analyse(level):
         return result
     on_path = Counter(cells[p] for p in path[1:])
     moves = len(path) - 1
-    slack = CLOCK - moves * FAST_STEP - TIME_TILE * on_path['t'] + TIME_TILE * on_path['m']
+    spikes = sum(on_path[s] for s in SPIKES)
+    slack = (CLOCK - moves * FAST_STEP - TIME_TILE * on_path['t'] + TIME_TILE * on_path['m']
+             - SPIKE_WAIT * spikes)
     result.update({
         'moves': moves,
         'time_loss_on_route': on_path['t'],
@@ -98,6 +118,9 @@ def analyse(level):
         'extra_time_available': counts['m'],
         'sticky_on_route': on_path['y'],
         'reverse_on_route': on_path['r'],
+        'spikes_on_route': spikes,
+        'crumble_on_route': on_path['k'],
+        'ice_on_route': sum(1 for p in crossed(path) if cells[p] == 'j'),
         'stars_available': counts['p'] + counts['@'],
         'deaths': counts['d'] + counts['!'],
         'slack_seconds': round(slack, 1),
@@ -106,16 +129,23 @@ def analyse(level):
     return result
 
 
+def load_levels(path=LEVELS):
+    with open(path) as f:
+        return json.load(f)['levels']
+
+
 def main(argv):
     as_json = '--json' in argv
     wanted = {int(a) for a in argv if a.isdigit()}
-    with open(LEVELS) as f:
-        levels = json.load(f)['levels']
+    path = LEVELS_B if '--rev-b' in argv else LEVELS
+    if '--file' in argv:
+        path = argv[argv.index('--file') + 1]
+    levels = load_levels(path)
     rows = [analyse(lv) for lv in levels if not wanted or lv['number'] in wanted]
     if as_json:
         print(json.dumps(rows, indent=1))
         return
-    head = ['lvl', 'moves', 'slack s', 't on route', 'm avail', 'sticky', 'reverse', 'stars', 'deaths', 'cp']
+    head = ['lvl', 'moves', 'slack s', 't on route', 'm avail', 'sticky', 'reverse', 'new', 'stars', 'deaths', 'cp']
     print(' | '.join(head))
     print(' | '.join('---' for _ in head))
     for r in rows:
@@ -126,7 +156,9 @@ def main(argv):
         print(' | '.join(str(v) for v in [
             r['level'], r['moves'], '{0}{1}'.format(r['slack_seconds'], flag),
             r['time_loss_on_route'], r['extra_time_available'], r['sticky_on_route'],
-            r['reverse_on_route'], r['stars_available'], r['deaths'],
+            r['reverse_on_route'],
+            '{0}k {1}j {2}^'.format(r['crumble_on_route'], r['ice_on_route'], r['spikes_on_route']),
+            r['stars_available'], r['deaths'],
             'yes' if r['checkpoint'] else '']))
 
 

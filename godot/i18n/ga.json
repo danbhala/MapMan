@@ -327,6 +327,12 @@
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "Tadhaill agus tarraing áit ar bith le bogadh agus déan ar an tíl amach.\nThar an bhfáinne briste siúl, thar an bhfáinne iomlán rith.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ní ghlacann ach tapáil ghasta sos: má tharraingíonn tú, bogann MapMan.",
   "TILT ONLY": "CLAONADH AMHÁIN",
+  "PLAY REVISION B": "IMIR LEASÚ B",
+  "REVISION B": "LEASÚ B",
+  "PLAY FROM SHEET 001": "IMIR Ó BHILEOG 001",
+  "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "NA BILEOGA ARÍS: Ó PHOINTE SÁBHÁILTE",
+  "REV B RELEASED": "LEASÚ B EISITHE",
+  "REV B APPROVED": "LEASÚ B CEADAITHE",
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "CONAS IS MIAN LEAT STIÚRADH? ATHRAIGH É I ROGHANNA",
   "HOW IS THE STEERING GOING?": "CONAS ATÁ AN STIÚRADH AG DUL?",
   "KEEP %s": "COINNIGH: %s",
@@ -419,5 +425,11 @@
   "★ %s / ★ %s SPENT": "★ %s / ★ %s CAITE",
   "SKULL, ONCE A SHEET": "CLOIGEANN, UAIR SA BHILEOG",
   "SKULL OR SPIKES, ONCE": "CLOIGEANN NÓ SPÍCÍ, 1×",
-  "SKULL OR SPIKES, TWICE": "CLOIGEANN NÓ SPÍCÍ, 2×"
+  "SKULL OR SPIKES, TWICE": "CLOIGEANN NÓ SPÍCÍ, 2×",
+  "LEVEL %d": "LEIBHÉAL %d",
+  "STARS": "RÉALTAÍ",
+  "WATCH BEST RUN": "FÉACH AN BHUAIC",
+  "BEST RUN — LEVEL %d": "BUAIC — LEIBHÉAL %d",
+  "PRACTICE": "CLEACHTADH",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "CRÍOCHNAIGH É LE TÍLEANNA I BHFOLACH A FHEICEÁIL"
 }

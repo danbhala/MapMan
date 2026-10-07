@@ -868,6 +868,30 @@ msgstr "GEÇ"
 msgid "DRAFTING TABLE"
 msgstr "ÇİZİM MASASI"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "REVİZYON B'Yİ OYNA"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "REVİZYON B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "SAYFALAR YENİDEN: KAYITLI NOKTADAN"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "SAYFA 001'DEN OYNA"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "REV B YAYINDA"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "REV B ONAYLANDI"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "TASLAKLARIN"
@@ -1565,6 +1589,26 @@ msgstr "KURU KAFA, PAFTADA 1 KEZ"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "KURU KAFA YA DA DİKEN, 1"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "KURU KAFA YA DA DİKEN, 2"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "BÖLÜM %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "YILDIZ"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "REKORU İZLE"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "REKOR — BÖLÜM %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "ANTRENMAN"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR"

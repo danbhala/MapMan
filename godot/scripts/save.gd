@@ -25,20 +25,68 @@ var ghost_on := true
 var locale := ""
 ## "sitting" or "standing": how far the phone is tilted back when neutral.
 var playing_position := "sitting"
-var highscore := 0
+
+
+## The progress of one playthrough: Revision A (the first game) or Revision
+## B (the second, with the same sheets mirrored and reworked). Each keeps its
+## own high score, checkpoints, furthest sheet, bests and ghosts.
+class Track:
+	var highscore := 0
+	var checkpoints := {}
+	var furthest_level := 1
+	var bests := {}
+	var ghosts := {}
+	## level number -> {"played": tries, "cleared": wins}, main game and
+	## practice, counted since level cards came in (campaign_stat() fills in
+	## from bests).
+	var plays := {}
+
+
+## Which track the progress fields below read and write: Revision B while it
+## is being played (main.gd sets it with the game), else Revision A.
+var rev_b := false
+var track_a := Track.new()
+var track_b := Track.new()
+var highscore: int:
+	get:
+		return track().highscore
+	set(v):
+		track().highscore = v
 var first_play := true
+## Revision A finished once: the tutorial's extra lessons, and Revision B, open.
 var has_completed := false
 ## Finishing the game added lessons to the tutorial it hasn't shown yet:
 ## the main menu says NEW on TUTORIAL until then.
 var new_lessons := false
 ## level number -> best score when that checkpoint was reached
-var checkpoints := {}
+var checkpoints: Dictionary:
+	get:
+		return track().checkpoints
+	set(v):
+		track().checkpoints = v
 ## The furthest level reached in the main game; practice unlocks up to it.
-var furthest_level := 1
+var furthest_level: int:
+	get:
+		return track().furthest_level
+	set(v):
+		track().furthest_level = v
 ## level number -> {"time": best seconds left, "stars": most stars}
-var bests := {}
+var bests: Dictionary:
+	get:
+		return track().bests
+	set(v):
+		track().bests = v
 ## level number -> the best run there (RunRecord.encode()): the most time left.
-var ghosts := {}
+var ghosts: Dictionary:
+	get:
+		return track().ghosts
+	set(v):
+		track().ghosts = v
+var plays: Dictionary:
+	get:
+		return track().plays
+	set(v):
+		track().plays = v
 ## The look MapMan wears (a Wardrobe id), and the looks released so far, in
 ## the order they came. Classic is always there and never listed.
 var worn := "classic"
@@ -139,32 +187,20 @@ func load_all(path := PATH) -> void:
 	playing_position = _cfg.get_value("options", "playing_position", "sitting")
 	if playing_position not in ["sitting", "standing"]:
 		playing_position = "sitting"
-	highscore = _cfg.get_value("progress", "highscore", 0)
 	first_play = _cfg.get_value("progress", "first_play", true)
 	has_completed = _cfg.get_value("progress", "has_completed", false)
 	new_lessons = _cfg.get_value("progress", "new_lessons", false)
-	var cps: Dictionary = _cfg.get_value("progress", "checkpoints", {})
-	checkpoints.clear()
-	for key in cps:
-		checkpoints[int(key)] = int(cps[key])
+	rev_b = false
+	_load_track(track_a, "progress")
 	# Saves from before practice mode have no furthest level: count what they
 	# had reached (a checkpoint restarts on the level after it).
 	var seeded := 1
-	for level in checkpoints:
+	for level in track_a.checkpoints:
 		seeded = maxi(seeded, level + 1)
 	if has_completed:
 		seeded = 100
-	furthest_level = _cfg.get_value("progress", "furthest_level", seeded)
-	var saved_bests: Dictionary = _cfg.get_value("progress", "bests", {})
-	bests.clear()
-	for key in saved_bests:
-		var b: Dictionary = saved_bests[key]
-		bests[int(key)] = {"time": int(b.get("time", 0)), "stars": int(b.get("stars", 0))}
-	var saved_ghosts: Dictionary = _cfg.get_value("progress", "ghosts", {})
-	ghosts.clear()
-	for key in saved_ghosts:
-		if saved_ghosts[key] is String:
-			ghosts[int(key)] = saved_ghosts[key]
+	track_a.furthest_level = _cfg.get_value("progress", "furthest_level", seeded)
+	_load_track(track_b, "rev_b")
 	released = _looks(_cfg.get_value("wardrobe", "released", []))
 	seen = _looks(_cfg.get_value("wardrobe", "seen", []))
 	drafts = []
@@ -209,14 +245,11 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("options", "ghost", ghost_on)
 	_cfg.set_value("options", "locale", locale)
 	_cfg.set_value("options", "playing_position", playing_position)
-	_cfg.set_value("progress", "highscore", highscore)
 	_cfg.set_value("progress", "first_play", first_play)
 	_cfg.set_value("progress", "has_completed", has_completed)
 	_cfg.set_value("progress", "new_lessons", new_lessons)
-	_cfg.set_value("progress", "checkpoints", checkpoints)
-	_cfg.set_value("progress", "furthest_level", furthest_level)
-	_cfg.set_value("progress", "bests", bests)
-	_cfg.set_value("progress", "ghosts", ghosts)
+	_save_track(track_a, "progress")
+	_save_track(track_b, "rev_b")
 	_cfg.set_value("wardrobe", "worn", worn)
 	_cfg.set_value("wardrobe", "released", released)
 	_cfg.set_value("wardrobe", "seen", seen)
@@ -233,6 +266,52 @@ func save_all(path := PATH) -> void:
 	_cfg.save(path)
 
 
+## The progress being played: Revision B's while `rev_b`, else Revision A's.
+func track() -> Track:
+	return track_b if rev_b else track_a
+
+
+## Revision B's sheets have been opened: the first game has been finished.
+func rev_b_open() -> bool:
+	return has_completed
+
+
+func _load_track(t: Track, section: String) -> void:
+	t.highscore = _cfg.get_value(section, "highscore", 0)
+	var cps: Dictionary = _cfg.get_value(section, "checkpoints", {})
+	t.checkpoints.clear()
+	for key in cps:
+		t.checkpoints[int(key)] = int(cps[key])
+	t.furthest_level = _cfg.get_value(section, "furthest_level", 1)
+	var saved_bests: Dictionary = _cfg.get_value(section, "bests", {})
+	t.bests.clear()
+	for key in saved_bests:
+		var b: Dictionary = saved_bests[key]
+		t.bests[int(key)] = {"time": int(b.get("time", 0)), "stars": int(b.get("stars", 0))}
+	var saved_ghosts: Dictionary = _cfg.get_value(section, "ghosts", {})
+	t.ghosts.clear()
+	for key in saved_ghosts:
+		if saved_ghosts[key] is String:
+			t.ghosts[int(key)] = saved_ghosts[key]
+	var saved_plays: Dictionary = _cfg.get_value(section, "plays", {})
+	t.plays.clear()
+	for key in saved_plays:
+		if saved_plays[key] is Dictionary:
+			var p: Dictionary = saved_plays[key]
+			t.plays[int(key)] = {
+				"played": int(p.get("played", 0)), "cleared": int(p.get("cleared", 0))
+			}
+
+
+func _save_track(t: Track, section: String) -> void:
+	_cfg.set_value(section, "highscore", t.highscore)
+	_cfg.set_value(section, "checkpoints", t.checkpoints)
+	_cfg.set_value(section, "furthest_level", t.furthest_level)
+	_cfg.set_value(section, "bests", t.bests)
+	_cfg.set_value(section, "ghosts", t.ghosts)
+	_cfg.set_value(section, "plays", t.plays)
+
+
 func checkpoint_reached(level: int, score: int) -> void:
 	if not checkpoints.has(level) or score > checkpoints[level]:
 		checkpoints[level] = score
@@ -247,12 +326,33 @@ func level_reached(level: int) -> void:
 
 ## Keeps the best time left and the most stars separately; true if either improved.
 func record_best(level: int, time_left: int, stars: int) -> bool:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	p.cleared += 1
+	plays[level] = p
 	var old: Dictionary = bests.get(level, {"time": -1, "stars": -1})
 	if time_left <= old.time and stars <= old.stars:
+		save_all()
 		return false
 	bests[level] = {"time": maxi(time_left, old.time), "stars": maxi(stars, old.stars)}
 	save_all()
 	return true
+
+
+## A try at main game level `level` began.
+func level_played(level: int) -> void:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	p.played += 1
+	plays[level] = p
+	save_all()
+
+
+## Main game level `level`'s record for its card: tries, wins and best time.
+## A level cleared before plays were counted has at least that one clear.
+func campaign_stat(level: int) -> Dictionary:
+	var p: Dictionary = plays.get(level, {"played": 0, "cleared": 0})
+	var best: Dictionary = bests.get(level, {})
+	var cleared := maxi(p.cleared, 0 if best.is_empty() else 1)
+	return {"played": maxi(p.played, cleared), "cleared": cleared, "best": best.get("time", -1)}
 
 
 ## Keeps `run` as the level's ghost if it won with more time left than the
@@ -326,7 +426,7 @@ func unseen() -> int:
 ## Releases every look the progress has earned: a save from before the
 ## wardrobe, or a level skipped in a dev build.
 func sync_wardrobe() -> void:
-	for id in Wardrobe.earned(furthest_level, has_completed):
+	for id in Wardrobe.earned(track_a.furthest_level, has_completed):
 		if not is_released(id):
 			released.append(id)
 
@@ -346,7 +446,7 @@ func _looks(saved: Variant) -> Array[String]:
 
 ## The drafting table opens once the first checkpoint (level 10) is cleared.
 func drafting_open() -> bool:
-	return furthest_level > 10 or has_completed
+	return track_a.furthest_level > 10 or has_completed
 
 
 ## Every draft slot, as a Draft.

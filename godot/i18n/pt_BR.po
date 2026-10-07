@@ -877,6 +877,30 @@ msgstr "PULAR"
 msgid "DRAFTING TABLE"
 msgstr "PRANCHETA"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "JOGAR A REVISÃO B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "REVISÃO B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "AS FOLHAS DE NOVO: DE UM CHECKPOINT SALVO"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "JOGAR DA FOLHA 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "REV B LIBERADA"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "REV B APROVADA"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "SEUS RASCUNHOS"
@@ -1575,6 +1599,26 @@ msgstr "CAVEIRA, 1 VEZ POR FOLHA"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "CAVEIRA OU ESPINHOS, 1×"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "CAVEIRA OU ESPINHOS, 2×"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "NÍVEL %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "ESTRELAS"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "VER O RECORDE"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "RECORDE — NÍVEL %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "PRÁTICA"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "VENÇA PARA VER AS CASAS OCULTAS"

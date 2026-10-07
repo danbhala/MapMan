@@ -877,6 +877,30 @@ msgstr "SALTA"
 msgid "DRAFTING TABLE"
 msgstr "TAVOLO DA DISEGNO"
 
+#. Main menu row, shown once the game has been finished: the second game, the same sheets mirrored and reworked with new tiles. 'Revision B' is a drawing-sheet revision letter; keep 'B'.
+msgid "PLAY REVISION B"
+msgstr "GIOCA LA REVISIONE B"
+
+#. Title of Revision B's checkpoints sheet.
+msgid "REVISION B"
+msgstr "REVISIONE B"
+
+#. Column header of Revision B's checkpoints sheet.
+msgid "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT"
+msgstr "I FOGLI DI NUOVO: DA UN CHECKPOINT SALVATO"
+
+#. Row on Revision B's checkpoints sheet: start it from the first sheet.
+msgid "PLAY FROM SHEET 001"
+msgstr "GIOCA DAL FOGLIO 001"
+
+#. Stamp on the congratulations sheet the first time the game is finished: Revision B has opened.
+msgid "REV B RELEASED"
+msgstr "REV B RILASCIATA"
+
+#. Stamp on the congratulations sheet on finishing Revision B.
+msgid "REV B APPROVED"
+msgstr "REV B APPROVATA"
+
 #. Drafting table: heading over the six levels the player is drawing
 msgid "YOUR DRAFTS"
 msgstr "LE TUE BOZZE"
@@ -1575,6 +1599,26 @@ msgstr "TESCHIO, 1 VOLTA PER TAVOLA"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "TESCHIO O SPINE, 1 VOLTA"
 
-#. Toolbox tier line: the Hard Hat saves twice a sheet
-msgid "SKULL OR SPIKES, TWICE"
-msgstr "TESCHIO O SPINE, 2 VOLTE"
+#. Level card title for a main game level opened from practice (%d is 1 to 100)
+msgid "LEVEL %d"
+msgstr "LIVELLO %d"
+
+#. Level card figure label: stars collected of the stars on the level, shown like ★ 2/3
+msgid "STARS"
+msgstr "STELLE"
+
+#. Level card button: play back the level's best run (its ghost)
+msgid "WATCH BEST RUN"
+msgstr "GUARDA IL RECORD"
+
+#. Heading while a level's best run plays back (%d is the level)
+msgid "BEST RUN — LEVEL %d"
+msgstr "RECORD — LIVELLO %d"
+
+#. Level card: the line above the map, and the way back to the practice sheets
+msgid "PRACTICE"
+msgstr "ALLENAMENTO"
+
+#. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
+msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
+msgstr "SUPERALO PER VEDERE LE CASELLE NASCOSTE"

@@ -335,6 +335,12 @@
   "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.": "المس واسحب في أي مكان لتتحرك في الخريطة وتوجه إلى بلاطة الخروج.\nتجاوز الحلقة المتقطعة للمشي، والمتصلة للركض.",
   "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.": "انقر الشاشة أثناء اللعب للإيقاف المؤقت. النقرة السريعة وحدها توقف اللعب: إذا سحبت يتحرك MapMan.",
   "TILT ONLY": "للإمالة فقط",
+  "PLAY REVISION B": "العب المراجعة ب",
+  "REVISION B": "المراجعة ب",
+  "PLAY FROM SHEET 001": "العب من الصفحة 001",
+  "THE SHEETS AGAIN: FROM A SAVED CHECKPOINT": "الصفحات من جديد: من نقطة حفظ",
+  "REV B RELEASED": "صدرت المراجعة ب",
+  "REV B APPROVED": "اعتُمدت المراجعة ب",
   "HOW DO YOU WANT TO STEER? YOU CAN CHANGE IT IN OPTIONS": "كيف تريد التوجيه؟ يمكنك تغييره في الخيارات",
   "HOW IS THE STEERING GOING?": "كيف يسير التحكم؟",
   "KEEP %s": "أبقِ %s",
@@ -427,5 +433,11 @@
   "★ %s / ★ %s SPENT": "أُنفق ★ %s / ★ %s",
   "SKULL, ONCE A SHEET": "جمجمة، مرة لكل لوحة",
   "SKULL OR SPIKES, ONCE": "جمجمة أو أشواك، مرة",
-  "SKULL OR SPIKES, TWICE": "جمجمة أو أشواك، مرتان"
+  "SKULL OR SPIKES, TWICE": "جمجمة أو أشواك، مرتان",
+  "LEVEL %d": "المستوى %d",
+  "STARS": "النجوم",
+  "WATCH BEST RUN": "شاهد أفضل محاولة",
+  "BEST RUN — LEVEL %d": "أفضل محاولة — المستوى %d",
+  "PRACTICE": "تدريب",
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "اجتزه لترى البلاطات المخفية"
 }
