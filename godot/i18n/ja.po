@@ -738,6 +738,86 @@ msgstr "純金"
 msgid "MAPWOMAN"
 msgstr "MAPWOMAN"
 
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sky-blue MapWoman
+msgid "SKY BLUE"
+msgstr "スカイブルー"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a beret on her head
+msgid "BERET"
+msgstr "ベレー帽"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sports headband
+msgid "HEADBAND"
+msgstr "ヘアバンド"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); yellow, with a sunflower on her front
+msgid "SUNFLOWER"
+msgstr "ひまわり"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); round goggles over her eyes
+msgid "GOGGLES"
+msgstr "ゴーグル"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a striped football kit
+msgid "FOOTBALLER"
+msgstr "サッカー選手"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a chef's hat and neckerchief
+msgid "CHEF"
+msgstr "シェフ"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a fire helmet and turnout coat
+msgid "FIREFIGHTER"
+msgstr "消防士"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a deerstalker hat and magnifying glass
+msgid "DETECTIVE"
+msgstr "探偵"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a dark storm cloud with lightning
+msgid "STORM"
+msgstr "嵐"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); scrubs, cap and mask
+msgid "SURGEON"
+msgstr "外科医"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); overalls and a spanner
+msgid "MECHANIC"
+msgstr "整備士"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a veiled hat with bees
+msgid "BEEKEEPER"
+msgstr "養蜂家"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); spiky hair and a guitar
+msgid "ROCK STAR"
+msgstr "ロックスター"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a captain's cap and brass buttons
+msgid "SEA CAPTAIN"
+msgstr "船長"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a helmet with a plume, armour
+msgid "KNIGHT"
+msgstr "騎士"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a flying cap, goggles and scarf
+msgid "AVIATOR"
+msgstr "飛行士"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a mirror-ball head and glitter
+msgid "DISCO"
+msgstr "ディスコ"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a hood with horns, wings and a tail
+msgid "DRAGON"
+msgstr "ドラゴン"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); MapWoman made of platinum
+msgid "PLATINUM"
+msgstr "プラチナ"
+
 #. Wardrobe: how rare a look is, as in collectible games
 msgid "COMMON"
 msgstr "コモン"
@@ -838,6 +918,26 @@ msgstr "未開放、レベル%dで解放"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "未開放、ゲームクリアで解放"
+
+#. Sheet title: MapWoman's own looks, the wardrobe's second page; keep MAPWOMAN
+msgid "MAPWOMAN'S WARDROBE"
+msgstr "MAPWOMANのクローゼット"
+
+#. Wardrobe button to MapWoman's page (the > points to it; keep MAPWOMAN); must fit in 11 characters
+msgid "MAPWOMAN >"
+msgstr "MAPWOMAN >"
+
+#. Wardrobe button back to MapMan's page (the < points back; keep MAPMAN)
+msgid "<  MAPMAN"
+msgstr "<  MAPMAN"
+
+#. Wardrobe: when one of MapWoman's looks was released, a Revision B sheet number like 035-B
+msgid "RELEASED AT SHEET %03d-B"
+msgstr "図面%03d-Bで解放"
+
+#. Screen reader: one of MapWoman's looks not yet released
+msgid "Locked, released at Revision B sheet %d"
+msgstr "未開放、改訂B図面%dで解放"
 
 #. Level clear button, under MapMan: plays every try at the level back at once
 msgid "WATCH REPLAY"

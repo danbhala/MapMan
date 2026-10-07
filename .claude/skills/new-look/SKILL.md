@@ -12,6 +12,9 @@ bugs it lists don't show on a still of him standing.
 1. **List it** in `godot/scripts/wardrobe.gd` `LOOKS`: id, name (an English
    msgid), the level whose first clear releases it, and its tier. Levels are
    every 5th, one look each, rarer tiers later (`test_wardrobe.gd` checks).
+   A look of MapWoman's goes in `HERS` instead (released by that Revision B
+   sheet; the figure is her in it, with her bow unless the id is in
+   `Outfits.BARE_HEAD`).
    A look released another way (a feat) needs a rule and save storage, so
    plan that with the user first.
 2. **Colours** in `godot/scripts/outfits/outfits.gd` `PALETTES`, by role:

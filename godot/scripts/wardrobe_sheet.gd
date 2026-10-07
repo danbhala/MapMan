@@ -1,8 +1,10 @@
 class_name WardrobeSheet
 extends RefCounted
 ## The wardrobe on the sheets (docs/wardrobe): the WARDROBE row on the main
-## menu, sheet 001-D with every look in the order it is released, and the gold
-## slips that say a look has been released. Static functions that build onto
+## menu, sheet 001-D with every look in the order it is released (his page,
+## and MapWoman's once she has joined, a switch between them in the spare
+## cells of the last row), and the gold slips that say a look has been
+## released. Static functions that build onto
 ## the Menus sheet they are given, with its own helpers; Menus calls them.
 ## Like menus.gd, this only loads with the game scene, so it may name the Save
 ## autoload (godot/CLAUDE.md).
@@ -11,7 +13,10 @@ extends RefCounted
 ## looks' and the tiers' names are in Wardrobe.
 const TEXT := {
 	"title": "WARDROBE",
+	"hers_title": "MAPWOMAN'S WARDROBE",
 	"number": "001-D",
+	"her_page": "MAPWOMAN >",
+	"his_page": "<  MAPMAN",
 	"count": "%d/%d",
 	"new": "NEW",
 	"released": ["%d OF %d RELEASED", "%d OF %d RELEASED"],
@@ -21,6 +26,7 @@ const TEXT := {
 	"the_end": "THE END",
 	"worn": "WORN",
 	"released_at": "RELEASED AT LEVEL %d",
+	"released_at_b": "RELEASED AT SHEET %03d-B",
 	"from_the_start": "IN THE WARDROBE FROM THE START",
 	"for_finishing": "RELEASED FOR FINISHING THE GAME",
 	"new_in_wardrobe": "NEW IN THE WARDROBE",
@@ -31,8 +37,11 @@ const TEXT := {
 	"a11y_row": "Wardrobe, %d of %d released",
 	"a11y_worn": "%s, worn",
 	"a11y_locked": "Locked, released at level %d",
+	"a11y_locked_b": "Locked, released at Revision B sheet %d",
 	"a11y_locked_end": "Locked, released for finishing the game",
 }
+## A Revision B sheet's number on one of her cells: figures, in every language.
+const SHEET_B := "%03d-B"
 ## The WARDROBE row on the main menu, under MapMan and clear of the title
 ## block on a 16:9 screen: room for the catalog's 12 letters of WARDROBE
 ## (GUARDA-ROUPA) beside its count, which takes this much at the far end
@@ -76,7 +85,7 @@ const WEAR_W := 104.0
 ## "wardrobe".
 static func main_menu_row(m: Menus) -> void:
 	var count := _released_count()
-	var total := Wardrobe.LOOKS.size()
+	var total := _total()
 	var pos := Vector2(m._mx(ROW_POS.x, ROW_SIZE.x), ROW_POS.y)
 	var b := Blueprint.item(m._panel, m.tr(TEXT.title), pos, ROW_SIZE)
 	b.alignment = m._align()
@@ -118,15 +127,17 @@ static func tag(m: Menus, text: String, end_x: float, y: float) -> void:
 ## framed in its tier's colour. A released look is a button that reports
 ## "wear <id>"; a locked one is drawn in hidden lines, with the level that
 ## releases it. MapMan stands on the right in the look he wears, under its
-## name, with a WORN stamp. The focus starts on the worn look.
-static func build(m: Menus, back_level := 0) -> void:
+## name, with a WORN stamp. The focus starts on the worn look. `hers` is
+## MapWoman's page: her looks, released by Revision B's sheets.
+static func build(m: Menus, back_level := 0, hers := false) -> void:
 	# Redrawn after a tap on another look: the stamp lands on the new one.
 	var before := ""
 	if m.current == "wardrobe" and m._hero != null:
 		before = m._hero.outfit
-	m._open("wardrobe", TEXT.number, m.tr(TEXT.title))
-	var count := _released_count()
-	var total := Wardrobe.LOOKS.size()
+	m._open("wardrobe", TEXT.number, m.tr(TEXT.hers_title if hers else TEXT.title))
+	var list: Array = Wardrobe.her_list() if hers else Wardrobe.LOOKS
+	var count := _page_count(list)
+	var total := list.size()
 	var tally: String = m.tr_n(TEXT.released[0], TEXT.released[1], count) % [count, total]
 	var note: String = m.tr(Menus.TEXT.note) % (tally + " · " + m.tr(TEXT.tap_to_wear))
 	# One line: wrapped, it would run into the first row of cells.
@@ -137,10 +148,12 @@ static func build(m: Menus, back_level := 0) -> void:
 		worn = Wardrobe.look("classic")
 	_worn_info(m, worn)
 	var worn_cell: Button = null
-	for i in Wardrobe.LOOKS.size():
-		var b := _cell(m, i)
-		if Wardrobe.LOOKS[i].id == worn.id:
+	for i in list.size():
+		var b := _cell(m, list[i], i)
+		if list[i].id == worn.id:
 			worn_cell = b
+	if Save.is_released("mapwoman"):
+		_page_switch(m, list.size(), hers)
 	m._return_item(RETURN_Y, Blueprint.TAP_HEIGHT, back_level)
 	m._hero_on("tilt")
 	_worn_stamp(m, before != "" and before != worn.id)
@@ -149,10 +162,10 @@ static func build(m: Menus, back_level := 0) -> void:
 	m._focus_first()
 
 
-## The cell of the `i`th look: a button with him in it, or, while it is
-## locked, his outline in hidden lines; when it is released, underneath.
-static func _cell(m: Menus, i: int) -> Button:
-	var look: Dictionary = Wardrobe.LOOKS[i]
+## The cell of `look`, the `i`th on the page: a button with him in it, or,
+## while it is locked, his outline in hidden lines; when it is released,
+## underneath.
+static func _cell(m: Menus, look: Dictionary, i: int) -> Button:
 	var id: String = look.id
 	@warning_ignore("integer_division")
 	var row := i / COLUMNS
@@ -184,7 +197,7 @@ static func _cell(m: Menus, i: int) -> Button:
 		hidden.frame_colour = Color(colour, colour.a * 0.5)
 		cell.add_child(hidden)
 	var ink := Blueprint.INK if open else Blueprint.FAINT
-	var when := _when(m, look.level)
+	var when := _when(m, look)
 	var cap := Blueprint.label(
 		cell, when, 9, ink, Vector2(2, 39), 600, CELL.x - 4.0, HORIZONTAL_ALIGNMENT_CENTER
 	)
@@ -203,13 +216,53 @@ static func _cell(m: Menus, i: int) -> Button:
 	return b
 
 
-## When a look is released, as its cell says it: "LV 35", START or THE END.
-static func _when(m: Menus, level: int) -> String:
+## When a look is released, as its cell says it: "LV 35", START or THE END;
+## "035-B" for one of hers, the Revision B sheet's number.
+static func _when(m: Menus, look: Dictionary) -> String:
+	var level: int = look.level
 	if level == 0:
 		return m.tr(TEXT.start)
 	if level == Wardrobe.THE_END:
 		return m.tr(TEXT.the_end)
+	if _her_look(look):
+		return SHEET_B % level
 	return m.tr(TEXT.level) % level
+
+
+## Whether a look is one of MapWoman's own (not MapWoman herself).
+static func _her_look(look: Dictionary) -> bool:
+	return look.level != Wardrobe.THE_END and Wardrobe.is_hers(look.id)
+
+
+## The switch to the other page, in the spare cells at the end of the last
+## row (his page leaves two, hers three): "MAPWOMAN  >" or "<  MAPMAN",
+## with a gold dot while a look over there is new. Reports "her wardrobe" or
+## "his wardrobe".
+static func _page_switch(m: Menus, cells: int, hers: bool) -> void:
+	@warning_ignore("integer_division")
+	var row := cells / COLUMNS
+	var col := cells % COLUMNS
+	if col == 0:
+		return  # a full last row: no spare cell
+	var w := (COLUMNS - col) * PITCH.x - (PITCH.x - CELL.x)
+	var at := Vector2(
+		Menus.LIST_X + col * PITCH.x,
+		CELLS_Y + row * PITCH.y + (CELL.y - Blueprint.TAP_HEIGHT) / 2.0
+	)
+	var size := Vector2(w, Blueprint.TAP_HEIGHT)
+	var text: String = m.tr(TEXT.his_page if hers else TEXT.her_page)
+	var b := Blueprint.item(m._panel, text, Vector2(m._mx(at.x, w), at.y), size)
+	b.alignment = m._align()
+	m._connect(b, "his wardrobe" if hers else "her wardrobe")
+	for id in Save.released:
+		if id not in Save.seen and Wardrobe.is_hers(id) != hers:
+			var dot := Polygon2D.new()
+			dot.polygon = Blueprint.ellipse_points(Vector2(_flip(m, w - 7.0, 0, w), 7), 3, 3, 12)
+			dot.color = Blueprint.GOLD
+			dot.antialiased = true
+			b.add_child(dot)
+			break
+	m._reveal(b)
 
 
 ## A cell for screen readers: "Cowboy, Uncommon" or "Cowboy, worn", or when
@@ -218,6 +271,8 @@ static func _a11y(m: Menus, look: Dictionary, open: bool, worn: bool) -> String:
 	if not open:
 		if look.level == Wardrobe.THE_END:
 			return m.tr(TEXT.a11y_locked_end)
+		if _her_look(look):
+			return m.tr(TEXT.a11y_locked_b) % look.level
 		return m.tr(TEXT.a11y_locked) % look.level
 	var name := m._sentence(m.tr(look.name))
 	if worn:
@@ -252,6 +307,8 @@ static func _detail(m: Menus, look: Dictionary) -> String:
 	var when: String = m.tr(TEXT.released_at) % level
 	if level == Wardrobe.THE_END:
 		when = m.tr(TEXT.for_finishing)
+	elif _her_look(look):
+		when = m.tr(TEXT.released_at_b) % level
 	var tier := _tier(m, look)
 	if tier == "":
 		return when
@@ -361,6 +418,20 @@ static func _slip_text(
 ## Looks in the wardrobe, Classic included.
 static func _released_count() -> int:
 	return Save.released.size() + 1
+
+
+## Looks there could be: his, and hers once MapWoman has joined.
+static func _total() -> int:
+	return Wardrobe.LOOKS.size() + (Wardrobe.HERS.size() if Save.is_released("mapwoman") else 0)
+
+
+## How many of a page's looks are released.
+static func _page_count(list: Array) -> int:
+	var n := 0
+	for look: Dictionary in list:
+		if Save.is_released(look.id):
+			n += 1
+	return n
 
 
 ## The x of a piece `w` wide at `x` in a box `total` wide, mirrored on a

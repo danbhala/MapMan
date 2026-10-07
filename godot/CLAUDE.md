@@ -36,9 +36,11 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   tier). `Save` keeps `worn`, `released` and `seen`, and on load releases
   whatever the progress has earned. `main.gd` releases a look on the first
   clear of every 5th level in the main game (never practice or the
-  tutorial) and MapWoman on finishing; wearing MapWoman, MapMan waits at the
-  end. `scripts/wardrobe_sheet.gd` draws sheet 001-D and the release slips
-  for `menus.gd`.
+  tutorial) and MapWoman on finishing; wearing MapWoman, or any look of hers
+  (`Wardrobe.HERS`, released by the first clear of every 5th sheet of
+  Revision B), MapMan waits at the end. `scripts/wardrobe_sheet.gd` draws
+  sheet 001-D (his page, and her page once she has joined) and the release
+  slips for `menus.gd`.
 - The level clear of the main game (`scripts/clear_sheet.gd`, for
   `menus.gd`) counts its bonuses in (a tap mid-count finishes it), then
   offers NEXT, WARDROBE and MAIN MENU. Until NEXT banks the level

@@ -766,6 +766,86 @@ msgstr "ÓR GLAN"
 msgid "MAPWOMAN"
 msgstr "MAPWOMAN"
 
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sky-blue MapWoman
+msgid "SKY BLUE"
+msgstr "SPÉIRGHORM"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a beret on her head
+msgid "BERET"
+msgstr "BAIRÉAD"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sports headband
+msgid "HEADBAND"
+msgstr "BANDA CINN"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); yellow, with a sunflower on her front
+msgid "SUNFLOWER"
+msgstr "LUS NA GRÉINE"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); round goggles over her eyes
+msgid "GOGGLES"
+msgstr "GLOINÍ"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a striped football kit
+msgid "FOOTBALLER"
+msgstr "PEILEADÓIR"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a chef's hat and neckerchief
+msgid "CHEF"
+msgstr "CÓCAIRE"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a fire helmet and turnout coat
+msgid "FIREFIGHTER"
+msgstr "COMHRAICEOIR"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a deerstalker hat and magnifying glass
+msgid "DETECTIVE"
+msgstr "BLEACHTAIRE"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a dark storm cloud with lightning
+msgid "STORM"
+msgstr "STOIRM"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); scrubs, cap and mask
+msgid "SURGEON"
+msgstr "MÁINLIA"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); overalls and a spanner
+msgid "MECHANIC"
+msgstr "MEICNEOIR"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a veiled hat with bees
+msgid "BEEKEEPER"
+msgstr "BEACHAIRE"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); spiky hair and a guitar
+msgid "ROCK STAR"
+msgstr "RÉALTA ROC"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a captain's cap and brass buttons
+msgid "SEA CAPTAIN"
+msgstr "CAPTAEN"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a helmet with a plume, armour
+msgid "KNIGHT"
+msgstr "RIDIRE"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a flying cap, goggles and scarf
+msgid "AVIATOR"
+msgstr "EITLEOIR"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a mirror-ball head and glitter
+msgid "DISCO"
+msgstr "DIOSCÓ"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a hood with horns, wings and a tail
+msgid "DRAGON"
+msgstr "DRAGAN"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); MapWoman made of platinum
+msgid "PLATINUM"
+msgstr "PLATANAM"
+
 #. Wardrobe: how rare a look is, as in collectible games
 msgid "COMMON"
 msgstr "COITIANTA"
@@ -870,6 +950,26 @@ msgstr "Faoi ghlas, scaoilfear ag leibhéal %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Faoi ghlas, scaoilfear ag an deireadh"
+
+#. Sheet title: MapWoman's own looks, the wardrobe's second page; keep MAPWOMAN
+msgid "MAPWOMAN'S WARDROBE"
+msgstr "VARDRÚS MAPWOMAN"
+
+#. Wardrobe button to MapWoman's page (the > points to it; keep MAPWOMAN); must fit in 11 characters
+msgid "MAPWOMAN >"
+msgstr "MAPWOMAN >"
+
+#. Wardrobe button back to MapMan's page (the < points back; keep MAPMAN)
+msgid "<  MAPMAN"
+msgstr "<  MAPMAN"
+
+#. Wardrobe: when one of MapWoman's looks was released, a Revision B sheet number like 035-B
+msgid "RELEASED AT SHEET %03d-B"
+msgstr "SCAOILTE AG BILEOG %03d-B"
+
+#. Screen reader: one of MapWoman's looks not yet released
+msgid "Locked, released at Revision B sheet %d"
+msgstr "Faoi ghlas, scaoilfear ag bileog %d de Leasú B"
 
 #. Level clear button, under MapMan: plays every try at the level back at once
 msgid "WATCH REPLAY"

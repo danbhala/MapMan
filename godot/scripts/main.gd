@@ -716,7 +716,7 @@ func _flash(which: String) -> void:
 func _start_ending() -> void:
 	# MapWoman waits on the bottom path, four tiles in, like the original's (4, 1).
 	# Playing as MapWoman (a look from the wardrobe), MapMan waits for her.
-	_woman.art = "man" if player.outfit == "mapwoman" else "woman"
+	_woman.art = "man" if Wardrobe.is_hers(player.outfit) else "woman"
 	_woman_key = Vector2i(4, completion_level["rows"].size() - 2)
 	_ending_phase = EndingPhase.WAITING
 	_ending_clock = 0.0
@@ -918,8 +918,9 @@ func advance_level(check_point: bool) -> void:
 	if tutorial:
 		next_level()
 		return
-	# The first clear of every 5th level in the main game releases a look.
-	var released := Wardrobe.released_at(level)
+	# The first clear of every 5th level in the main game releases a look;
+	# in Revision B, one of MapWoman's.
+	var released := Wardrobe.released_at(level, Save.rev_b)
 	if not Save.release(released):
 		released = ""
 	var time_bonus := _seconds_remaining() / 2

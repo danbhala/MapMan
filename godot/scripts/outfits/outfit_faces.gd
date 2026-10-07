@@ -70,6 +70,15 @@ static func _head(pen: OutfitPen, id: String) -> void:
 			_robot_head(pen)
 		"gold":
 			pen.arc_line(pen.hc, pen.hr * 0.7, 3.5, 4.4, Color(1, 1, 1, 0.55), 2.2)
+		# MapWoman's (docs/wardrobe, "Her wardrobe").
+		"headband":
+			_headband(pen)
+		"rock_star":
+			_spiky_hair(pen)
+		"disco":
+			_facets(pen)
+		"platinum":
+			pen.arc_line(pen.hc, pen.hr * 0.7, 3.5, 4.4, Color(1, 1, 1, 0.75), 2.2)
 
 
 static func _face(pen: OutfitPen, id: String) -> void:
@@ -82,6 +91,11 @@ static func _face(pen: OutfitPen, id: String) -> void:
 			_eye_patch(pen)
 		"wizard":
 			_beard(pen, Color("#f1f1f1"), Color("#9aa5b1"))
+		# MapWoman's (docs/wardrobe, "Her wardrobe").
+		"goggles":
+			_goggles(pen)
+		"surgeon":
+			_surgical_mask(pen)
 
 
 ## A point on the head's rim, `inset` inside it, out from the centre towards
@@ -297,3 +311,91 @@ static func _robot_face(pen: OutfitPen) -> void:
 	var lx := pen.look.x * EYE_SLIDE
 	for y: float in [7.6, 9.6, 11.6]:
 		pen.line(pen.h(lx - 5.0, y), pen.h(lx + 5.0, y), GUNMETAL, 0.9)
+
+
+# --- MapWoman's --------------------------------------------------------------------
+
+
+## A sports headband round her head, knotted at one side with two tails.
+static func _headband(pen: OutfitPen) -> void:
+	var band := Color("#ff5d8f")
+	var k := pen.hr / OutfitPen.HEAD_R
+	pen.poly(_head_band_points(pen, -9.6, -6.0), band)
+	pen.poly(_head_band_points(pen, -8.4, -7.2), Color("#fff1f5"))
+	var knot := pen.h(13.2, -6.6)
+	pen.dot(knot, 1.8 * k, band)
+	pen.line(knot, pen.h(18.0, -3.0), band, 1.6 * k)
+	pen.line(knot, pen.h(16.5, 0.5), band, 1.6 * k)
+
+
+## The band of the head between heights y0 and y1 (head units), through
+## pen.h() so it sinks and shrinks with the head.
+static func _head_band_points(pen: OutfitPen, y0: float, y1: float) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for v in OutfitPen.chord_band(OutfitPen.HEAD_R + 0.5, y0, y1):
+		out.append(pen.h(v.x, v.y))
+	return out
+
+
+## Spiky hair over the top of her head.
+static func _spiky_hair(pen: OutfitPen) -> void:
+	var hair := Color("#1b1b22")
+	var tip := Color("#b5171f")
+	var base := pen.h(0, -8.0)
+	for i in 7:
+		var a := lerpf(-2.65, -0.5, i / 6.0)
+		var root := pen.h(cos(a) * 13.0, sin(a) * 13.0)
+		var point := pen.h(cos(a) * 22.0 + (i - 3) * 0.6, sin(a) * 22.0 - 1.0)
+		var left := pen.h(cos(a - 0.3) * 12.0, sin(a - 0.3) * 12.0)
+		var right := pen.h(cos(a + 0.3) * 12.0, sin(a + 0.3) * 12.0)
+		pen.poly(PackedVector2Array([left, point, right, base]), hair)
+		pen.line(root.lerp(point, 0.6), point, tip, 1.2)
+
+
+## A mirror ball's facets over the head: a grid of faint lines.
+static func _facets(pen: OutfitPen) -> void:
+	var seam := Color("#8a93a3")
+	var r := OutfitPen.HEAD_R - 0.8
+	for k in 4:
+		var y := -9.0 + k * 6.0
+		var w := sqrt(maxf(r * r - y * y, 0.0))
+		pen.line(pen.h(-w, y), pen.h(w, y), seam, 0.6)
+		var x := y
+		pen.line(pen.h(x, -w), pen.h(x, w), seam, 0.6)
+
+
+## Round goggles over the eyes (they still blink behind the glass), with a
+## strap round to the rim.
+static func _goggles(pen: OutfitPen) -> void:
+	var rim := Color("#1b1b1f")
+	var e: Array[Vector2] = [pen.eye(-1.0), pen.eye(1.0)]
+	for i in 2:
+		var c := e[i] + Vector2(0, -0.2)
+		pen.dot(c, 4.3, Color(0.55, 0.85, 1.0, 0.35))
+		pen.arc(c, 4.3, 0.0, TAU, rim, 1.4)
+		pen.line(c + Vector2(-2.4, -2.0), c + Vector2(-1.0, -2.9), Color(1, 1, 1, 0.6), 0.9)
+	pen.line(e[0] + Vector2(4.1, -0.8), e[1] + Vector2(-4.1, -0.8), rim, 1.4)
+	pen.line(e[0] + Vector2(-4.3, -0.8), _rim(pen, -14.3, -2.0), rim, 1.6)
+	pen.line(e[1] + Vector2(4.3, -0.8), _rim(pen, 14.3, -2.0), rim, 1.6)
+
+
+## A surgical mask over the lower face, tied behind the ears.
+static func _surgical_mask(pen: OutfitPen) -> void:
+	var cloth := Color("#cfe8e4")
+	var fold := Color("#9fcbc4")
+	var lx := pen.look.x * EYE_SLIDE
+	var k := pen.hr / OutfitPen.HEAD_R
+	var mask := PackedVector2Array()
+	for v: Vector2 in [
+		Vector2(-8.6, 6.6),
+		Vector2(8.6, 6.6),
+		Vector2(8.0, 12.4),
+		Vector2(0.0, 13.6),
+		Vector2(-8.0, 12.4)
+	]:
+		mask.append(pen.h(v.x + lx, v.y))
+	pen.poly(mask, cloth)
+	for y: float in [8.8, 10.8]:
+		pen.line(pen.h(lx - 6.5, y), pen.h(lx + 6.5, y), fold, 0.7)
+	pen.line(pen.h(lx - 8.6, 6.8), _rim(pen, -14.0, 1.0), cloth, 1.2 * k)
+	pen.line(pen.h(lx + 8.6, 6.8), _rim(pen, 14.0, 1.0), cloth, 1.2 * k)

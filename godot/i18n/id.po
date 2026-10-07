@@ -738,6 +738,86 @@ msgstr "EMAS MURNI"
 msgid "MAPWOMAN"
 msgstr "MAPWOMAN"
 
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sky-blue MapWoman
+msgid "SKY BLUE"
+msgstr "BIRU LANGIT"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a beret on her head
+msgid "BERET"
+msgstr "BARET"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sports headband
+msgid "HEADBAND"
+msgstr "BANDO"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); yellow, with a sunflower on her front
+msgid "SUNFLOWER"
+msgstr "BUNGA MATAHARI"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); round goggles over her eyes
+msgid "GOGGLES"
+msgstr "KACAMATA"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a striped football kit
+msgid "FOOTBALLER"
+msgstr "PESEPAK BOLA"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a chef's hat and neckerchief
+msgid "CHEF"
+msgstr "KOKI"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a fire helmet and turnout coat
+msgid "FIREFIGHTER"
+msgstr "PEMADAM"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a deerstalker hat and magnifying glass
+msgid "DETECTIVE"
+msgstr "DETEKTIF"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a dark storm cloud with lightning
+msgid "STORM"
+msgstr "BADAI"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); scrubs, cap and mask
+msgid "SURGEON"
+msgstr "AHLI BEDAH"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); overalls and a spanner
+msgid "MECHANIC"
+msgstr "MEKANIK"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a veiled hat with bees
+msgid "BEEKEEPER"
+msgstr "PETERNAK LEBAH"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); spiky hair and a guitar
+msgid "ROCK STAR"
+msgstr "BINTANG ROK"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a captain's cap and brass buttons
+msgid "SEA CAPTAIN"
+msgstr "KAPTEN KAPAL"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a helmet with a plume, armour
+msgid "KNIGHT"
+msgstr "KSATRIA"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a flying cap, goggles and scarf
+msgid "AVIATOR"
+msgstr "PENERBANG"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a mirror-ball head and glitter
+msgid "DISCO"
+msgstr "DISKO"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a hood with horns, wings and a tail
+msgid "DRAGON"
+msgstr "NAGA"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); MapWoman made of platinum
+msgid "PLATINUM"
+msgstr "PLATINUM"
+
 #. Wardrobe: how rare a look is, as in collectible games
 msgid "COMMON"
 msgstr "BIASA"
@@ -838,6 +918,26 @@ msgstr "Terkunci, dirilis di level %d"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "Terkunci, dirilis setelah permainan tamat"
+
+#. Sheet title: MapWoman's own looks, the wardrobe's second page; keep MAPWOMAN
+msgid "MAPWOMAN'S WARDROBE"
+msgstr "LEMARI BAJU MAPWOMAN"
+
+#. Wardrobe button to MapWoman's page (the > points to it; keep MAPWOMAN); must fit in 11 characters
+msgid "MAPWOMAN >"
+msgstr "MAPWOMAN >"
+
+#. Wardrobe button back to MapMan's page (the < points back; keep MAPMAN)
+msgid "<  MAPMAN"
+msgstr "<  MAPMAN"
+
+#. Wardrobe: when one of MapWoman's looks was released, a Revision B sheet number like 035-B
+msgid "RELEASED AT SHEET %03d-B"
+msgstr "DIRILIS DI LEMBAR %03d-B"
+
+#. Screen reader: one of MapWoman's looks not yet released
+msgid "Locked, released at Revision B sheet %d"
+msgstr "Terkunci, dirilis di lembar %d Revisi B"
 
 #. Level clear button, under MapMan: plays every try at the level back at once
 msgid "WATCH REPLAY"

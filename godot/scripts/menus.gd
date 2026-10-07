@@ -840,7 +840,7 @@ func _pair_on() -> void:
 	var ellipse := Blueprint.ellipse_points(Vector2(_mx(500, 0), 236), 60, 14)
 	Blueprint.line(_panel, ellipse, Blueprint.INK, 1.2)
 	_hero = _figure("man", Vector2(_mx(478, 0), PAIR_FEET))
-	var partner := "man" if Save.worn == "mapwoman" else "woman"
+	var partner := "man" if Wardrobe.is_hers(Save.worn) else "woman"
 	_woman = _figure(partner, Vector2(_mx(524, 0), PAIR_FEET), "classic")
 	# They face each other, whichever side each stands on.
 	if _rtl:
@@ -1003,11 +1003,11 @@ func _language_name(code: String) -> String:
 	return _t("phone_language")
 
 
-## 001-D: the wardrobe, every look to wear (WardrobeSheet). A released one
-## reports "wear <id>". Opened from the level clear of level `back_level`,
-## its last row goes back there.
-func show_wardrobe(back_level := 0) -> void:
-	WardrobeSheet.build(self, back_level)
+## 001-D: the wardrobe, every look to wear (WardrobeSheet): his, or hers
+## with `hers`. A released one reports "wear <id>". Opened from the level
+## clear of level `back_level`, its last row goes back there.
+func show_wardrobe(back_level := 0, hers := false) -> void:
+	WardrobeSheet.build(self, back_level, hers)
 
 
 ## The language sheet: the phone's language, then every language in its own
