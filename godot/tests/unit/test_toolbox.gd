@@ -200,6 +200,7 @@ func test_the_belt_shows_only_on_a_sheet_with_tools() -> void:
 	assert_eq(game.toolbox.belt(), ["eraser"] as Array[String])
 	game.toolbox.update_belt()
 	assert_true(game.belt.visible)
+	assert_eq(game.belt.global_position, game.hud.bar.global_position, "over the bar's left end")
 	assert_eq(game.hud.belt_room, ToolBelt.room(1))
 	game.tutorial = true
 	assert_false(game.toolbox.showing(), "not in the tutorial")

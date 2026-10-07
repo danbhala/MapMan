@@ -25,7 +25,7 @@ func _init(box: Toolbox) -> void:
 
 ## Sits over the bar's left end, `hud` giving the bar's place.
 func place(hud: Hud) -> void:
-	position = hud.bar.position + hud.bar.global_position - hud.global_position
+	position = hud.bar.global_position
 	size = Vector2(PITCH * 3.0 + 8.0, Hud.BAR_HEIGHT)
 
 
