@@ -1,0 +1,155 @@
+name: Play build
+
+# Builds the MapMan app bundle (.aab) that Google Play takes, signed with the
+# Play upload key, and uploads it to the internal testing track when the Play
+# service account secret is set (see CONTRIBUTING.md, "Play builds"). Run it
+# from the Actions tab (any branch; master by default). Without the upload-key
+# secrets the build still runs, signed with a throwaway key, so the workflow
+# itself can be checked on a PR, but Play would refuse that bundle.
+
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: Play track to upload the bundle to (needs PLAY_SERVICE_ACCOUNT_JSON)
+        type: choice
+        options: [internal, none]
+        default: internal
+  pull_request:
+    paths:
+      - .github/workflows/play.yml
+      - .github/actions/setup-godot/**
+      - .github/actions/stamp-version/**
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    # Same-repo PRs only: forks get a read-only token and no secrets.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-godot
+        with:
+          android: "true"
+
+      - name: Work out the version
+        id: version
+        env:
+          RUN: ${{ github.run_number }}
+        run: |
+          # Play needs every uploaded bundle's version code to be higher than
+          # the last: the release code (1.2.3 -> 10203) times 1000, plus this
+          # workflow's run number, only ever goes up.
+          base=$(cat version.txt)
+          IFS=. read -r major minor patch <<< "$base"
+          code=$(( (major * 10000 + minor * 100 + patch) * 1000 + RUN ))
+          {
+            echo "name=$base-play.$RUN"
+            echo "code=$code"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload key
+        id: key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.PLAY_UPLOAD_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.PLAY_UPLOAD_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > /tmp/upload.keystore
+            echo "real=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::PLAY_UPLOAD_KEYSTORE_BASE64 and PLAY_UPLOAD_KEYSTORE_PASSWORD are not set: signing with a throwaway key. Play will refuse this bundle (CONTRIBUTING.md, Play builds)."
+            KEYSTORE_PASSWORD=throwaway
+            keytool -genkeypair -keystore /tmp/upload.keystore -alias upload \
+              -keyalg RSA -keysize 2048 -validity 30 \
+              -storepass "$KEYSTORE_PASSWORD" -keypass "$KEYSTORE_PASSWORD" \
+              -dname "CN=throwaway"
+            echo "real=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "::add-mask::$KEYSTORE_PASSWORD"
+          {
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=/tmp/upload.keystore"
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=upload"
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=$KEYSTORE_PASSWORD"
+          } >> "$GITHUB_ENV"
+
+      - uses: ./.github/actions/stamp-version
+        with:
+          preset: Android
+          version-name: ${{ steps.version.outputs.name }}
+          build-number: ${{ steps.version.outputs.code }}
+          source: play-${{ github.run_number }}
+          # The same preset as the sideloadable APK, exported as a signed bundle.
+          options: |
+            gradle_build/export_format=1
+            package/signed=true
+
+      - name: Export the bundle
+        run: |
+          mkdir -p godot/build
+          godot --headless --path godot --import
+          godot --headless --path godot --install-android-build-template \
+            --export-release Android build/MapMan.aab
+          test -s godot/build/MapMan.aab
+          unzip -l godot/build/MapMan.aab | grep -q BundleConfig.pb
+          jarsigner -verify -keystore /tmp/upload.keystore godot/build/MapMan.aab
+          mv godot/build/MapMan.aab "MapMan-${{ steps.version.outputs.name }}.aab"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MapMan-${{ steps.version.outputs.name }}
+          path: MapMan-${{ steps.version.outputs.name }}.aab
+          if-no-files-found: error
+
+      - name: Check for the Play service account
+        id: play
+        env:
+          SA: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          TRACK: ${{ inputs.track }}
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "$TRACK" = "none" ]; then
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.key.outputs.real }}" != "true" ]; then
+            echo "::warning::Not uploading to Play: the bundle is signed with a throwaway key."
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+          elif [ -z "$SA" ]; then
+            echo "::notice::PLAY_SERVICE_ACCOUNT_JSON is not set: download the bundle from this run's artifacts and upload it in Play Console by hand (Test and release > Internal testing)."
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "upload=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload to Play's internal testing track
+        if: steps.play.outputs.upload == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.danbhala.mapman
+          releaseFiles: MapMan-${{ steps.version.outputs.name }}.aab
+          track: ${{ inputs.track }}
+          status: completed
+
+      - name: Summary
+        env:
+          NAME: ${{ steps.version.outputs.name }}
+          CODE: ${{ steps.version.outputs.code }}
+          REAL: ${{ steps.key.outputs.real }}
+          UPLOADED: ${{ steps.play.outputs.upload }}
+        run: |
+          {
+            echo "## MapMan $NAME (version code $CODE)"
+            if [ "$REAL" != "true" ]; then
+              echo "Signed with a **throwaway key**: a check of the workflow only. Play would refuse this bundle."
+            elif [ "$UPLOADED" = "true" ]; then
+              echo "Uploaded to Play's **internal testing** track. Testers get it from the Play Store within minutes."
+            else
+              echo "Download the \`.aab\` from this run's artifacts and upload it in Play Console: Test and release > Internal testing > Create new release."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
