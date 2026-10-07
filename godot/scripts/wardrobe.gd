@@ -5,6 +5,10 @@ extends RefCounted
 ## finishing the game releases MapWoman. He wears one at a time, like a skin;
 ## Outfits draws them, Save keeps which are released and which is worn. Names
 ## are English msgids (i18n/catalog.json).
+##
+## MapWoman has a wardrobe of her own (HERS): looks that are hers, not his
+## with a bow on, released by the first clear of every 5th sheet of Revision
+## B. Wearing one is playing as her, in it.
 
 ## The release level of a look that comes with finishing the game.
 const THE_END := 101
@@ -34,6 +38,31 @@ const LOOKS := [
 	{"id": "gold", "name": "SOLID GOLD", "level": 100, "tier": "legendary"},
 	{"id": "mapwoman", "name": "MAPWOMAN", "level": THE_END, "tier": "special"},
 ]
+## MapWoman's wardrobe, in release order: `level` is the Revision B sheet
+## whose first clear releases the look. MapWoman herself (LOOKS' last entry)
+## opens it, and is its Classic.
+const HERS := [
+	{"id": "sky_blue", "name": "SKY BLUE", "level": 5, "tier": "common"},
+	{"id": "beret", "name": "BERET", "level": 10, "tier": "common"},
+	{"id": "headband", "name": "HEADBAND", "level": 15, "tier": "common"},
+	{"id": "sunflower", "name": "SUNFLOWER", "level": 20, "tier": "common"},
+	{"id": "goggles", "name": "GOGGLES", "level": 25, "tier": "common"},
+	{"id": "footballer", "name": "FOOTBALLER", "level": 30, "tier": "uncommon"},
+	{"id": "chef", "name": "CHEF", "level": 35, "tier": "uncommon"},
+	{"id": "firefighter", "name": "FIREFIGHTER", "level": 40, "tier": "uncommon"},
+	{"id": "detective", "name": "DETECTIVE", "level": 45, "tier": "uncommon"},
+	{"id": "storm", "name": "STORM", "level": 50, "tier": "uncommon"},
+	{"id": "surgeon", "name": "SURGEON", "level": 55, "tier": "rare"},
+	{"id": "mechanic", "name": "MECHANIC", "level": 60, "tier": "rare"},
+	{"id": "beekeeper", "name": "BEEKEEPER", "level": 65, "tier": "rare"},
+	{"id": "rock_star", "name": "ROCK STAR", "level": 70, "tier": "rare"},
+	{"id": "sea_captain", "name": "SEA CAPTAIN", "level": 75, "tier": "rare"},
+	{"id": "knight", "name": "KNIGHT", "level": 80, "tier": "epic"},
+	{"id": "aviator", "name": "AVIATOR", "level": 85, "tier": "epic"},
+	{"id": "disco", "name": "DISCO", "level": 90, "tier": "epic"},
+	{"id": "dragon", "name": "DRAGON", "level": 95, "tier": "epic"},
+	{"id": "platinum", "name": "PLATINUM", "level": 100, "tier": "legendary"},
+]
 ## Tier -> its name on the sheets (msgid); Classic has none.
 const TIERS := {
 	"start": "",
@@ -57,9 +86,12 @@ const TIER_COLOURS := {
 }
 
 
-## The look with this id, or {} if there is none.
+## The look with this id, his or hers, or {} if there is none.
 static func look(id: String) -> Dictionary:
 	for entry: Dictionary in LOOKS:
+		if entry.id == id:
+			return entry
+	for entry: Dictionary in HERS:
 		if entry.id == id:
 			return entry
 	return {}
@@ -69,19 +101,38 @@ static func is_look(id: String) -> bool:
 	return not look(id).is_empty()
 
 
+## MapWoman's looks, and MapWoman herself: worn, the player is her.
+static func is_hers(id: String) -> bool:
+	if id == "mapwoman":
+		return true
+	for entry: Dictionary in HERS:
+		if entry.id == id:
+			return true
+	return false
+
+
+## Every id: his looks, then hers.
 static func ids() -> Array[String]:
 	var out: Array[String] = []
 	for entry: Dictionary in LOOKS:
 		out.append(entry.id)
+	for entry: Dictionary in HERS:
+		out.append(entry.id)
 	return out
 
 
-## The look the first clear of `level` releases, or "". MapWoman isn't a
-## level's: she comes with finishing the game.
-static func released_at(level: int) -> String:
+## Her wardrobe as the sheet lists it: MapWoman first, then her looks.
+static func her_list() -> Array:
+	return [LOOKS[-1]] + HERS
+
+
+## The look the first clear of `level` releases, or "": one of his in the
+## main game, one of hers in Revision B. MapWoman isn't a level's: she comes
+## with finishing the game.
+static func released_at(level: int, rev_b := false) -> String:
 	if level <= 0 or level >= THE_END:
 		return ""
-	for entry: Dictionary in LOOKS:
+	for entry: Dictionary in HERS if rev_b else LOOKS:
 		if entry.level == level:
 			return entry.id
 	return ""
@@ -95,5 +146,16 @@ static func earned(furthest_level: int, has_completed: bool) -> Array[String]:
 	for entry: Dictionary in LOOKS:
 		var level: int = entry.level
 		if level == 0 or level < furthest_level or has_completed:
+			out.append(entry.id)
+	return out
+
+
+## Every look of hers that Revision B's progress has earned: a sheet's once
+## she has been past it (the last sheet's only by clearing it, which
+## releases it at the time).
+static func earned_hers(furthest_sheet: int) -> Array[String]:
+	var out: Array[String] = []
+	for entry: Dictionary in HERS:
+		if entry.level < furthest_sheet:
 			out.append(entry.id)
 	return out

@@ -412,6 +412,9 @@ func sync_wardrobe() -> void:
 	for id in Wardrobe.earned(track_a.furthest_level, has_completed):
 		if not is_released(id):
 			released.append(id)
+	for id in Wardrobe.earned_hers(track_b.furthest_level):
+		if not is_released(id):
+			released.append(id)
 
 
 ## The known looks in a list read from the save, each once.

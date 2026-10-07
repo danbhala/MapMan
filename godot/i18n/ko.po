@@ -738,6 +738,86 @@ msgstr "순금"
 msgid "MAPWOMAN"
 msgstr "MAPWOMAN"
 
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sky-blue MapWoman
+msgid "SKY BLUE"
+msgstr "하늘색"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a beret on her head
+msgid "BERET"
+msgstr "베레모"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sports headband
+msgid "HEADBAND"
+msgstr "헤어밴드"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); yellow, with a sunflower on her front
+msgid "SUNFLOWER"
+msgstr "해바라기"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); round goggles over her eyes
+msgid "GOGGLES"
+msgstr "고글"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a striped football kit
+msgid "FOOTBALLER"
+msgstr "축구 선수"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a chef's hat and neckerchief
+msgid "CHEF"
+msgstr "셰프"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a fire helmet and turnout coat
+msgid "FIREFIGHTER"
+msgstr "소방관"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a deerstalker hat and magnifying glass
+msgid "DETECTIVE"
+msgstr "탐정"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a dark storm cloud with lightning
+msgid "STORM"
+msgstr "폭풍"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); scrubs, cap and mask
+msgid "SURGEON"
+msgstr "외과의"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); overalls and a spanner
+msgid "MECHANIC"
+msgstr "정비사"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a veiled hat with bees
+msgid "BEEKEEPER"
+msgstr "양봉가"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); spiky hair and a guitar
+msgid "ROCK STAR"
+msgstr "록 스타"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a captain's cap and brass buttons
+msgid "SEA CAPTAIN"
+msgstr "선장"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a helmet with a plume, armour
+msgid "KNIGHT"
+msgstr "기사"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a flying cap, goggles and scarf
+msgid "AVIATOR"
+msgstr "비행사"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a mirror-ball head and glitter
+msgid "DISCO"
+msgstr "디스코"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); a hood with horns, wings and a tail
+msgid "DRAGON"
+msgstr "드래곤"
+
+#. Wardrobe: name of one of MapWoman's own looks (released by Revision B); MapWoman made of platinum
+msgid "PLATINUM"
+msgstr "플래티넘"
+
 #. Wardrobe: how rare a look is, as in collectible games
 msgid "COMMON"
 msgstr "일반"
@@ -838,6 +918,26 @@ msgstr "잠김, 레벨 %d에서 해금"
 #. Screen reader: MapWoman before the game is finished
 msgid "Locked, released for finishing the game"
 msgstr "잠김, 게임 클리어 시 해금"
+
+#. Sheet title: MapWoman's own looks, the wardrobe's second page; keep MAPWOMAN
+msgid "MAPWOMAN'S WARDROBE"
+msgstr "MAPWOMAN의 옷장"
+
+#. Wardrobe button to MapWoman's page (the > points to it; keep MAPWOMAN); must fit in 11 characters
+msgid "MAPWOMAN >"
+msgstr "MAPWOMAN >"
+
+#. Wardrobe button back to MapMan's page (the < points back; keep MAPMAN)
+msgid "<  MAPMAN"
+msgstr "<  MAPMAN"
+
+#. Wardrobe: when one of MapWoman's looks was released, a Revision B sheet number like 035-B
+msgid "RELEASED AT SHEET %03d-B"
+msgstr "도면 %03d-B에서 해금"
+
+#. Screen reader: one of MapWoman's looks not yet released
+msgid "Locked, released at Revision B sheet %d"
+msgstr "잠김, 개정 B 도면 %d에서 해금"
 
 #. Level clear button, under MapMan: plays every try at the level back at once
 msgid "WATCH REPLAY"

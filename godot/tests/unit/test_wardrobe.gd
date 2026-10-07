@@ -31,6 +31,9 @@ func after_each() -> void:
 	Save.seen.clear()
 	Save.furthest_level = 1
 	Save.has_completed = false
+	Save.rev_b = false
+	Save.track_b = Save.Track.new()
+	Blueprint.revise(false)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(OLD_SAVE))
 
 
@@ -94,7 +97,8 @@ func test_ids_are_unique_and_known_to_the_outfits() -> void:
 		if id != "classic" and id != "mapwoman":
 			assert_true(_outfits_know(id), id + ": the outfits colour or draw it")
 	assert_eq(ids[0], "classic")
-	assert_eq(ids[-1], "mapwoman", "MapWoman comes last, for finishing")
+	assert_eq(Wardrobe.LOOKS[-1].id, "mapwoman", "MapWoman comes last of his, for finishing")
+	assert_eq(ids.size(), Wardrobe.LOOKS.size() + Wardrobe.HERS.size(), "then hers")
 
 
 ## Whether the outfits do anything for a look: its own colours, or a part in
@@ -145,6 +149,145 @@ func test_what_progress_has_earned() -> void:
 	assert_false("gold" in at_100, "level 100 isn't cleared yet")
 	assert_false("mapwoman" in at_100)
 	assert_eq(Wardrobe.earned(100, true).size(), Wardrobe.LOOKS.size(), "finishing earns all")
+
+
+# --- her wardrobe -------------------------------------------------------------------
+
+
+func test_she_has_a_look_for_every_fifth_sheet_of_revision_b() -> void:
+	var levels := []
+	for entry: Dictionary in Wardrobe.HERS:
+		levels.append(entry.level)
+		assert_true(Wardrobe.is_hers(entry.id), entry.id + " is hers")
+		assert_false(Outfits.palette(entry.id).is_empty() and not _outfits_know(entry.id))
+	var expected := []
+	for n in range(5, 101, 5):
+		expected.append(n)
+	assert_eq(levels, expected, "5, 10 .. 100")
+	var last := 0
+	for entry: Dictionary in Wardrobe.HERS:
+		var tier: int = TIER_ORDER.find(entry.tier)
+		assert_gt(tier, -1, "%s has a known tier" % entry.id)
+		assert_true(tier >= last, "%s is no commoner than the one before" % entry.id)
+		last = tier
+	assert_true(Wardrobe.is_hers("mapwoman"))
+	assert_false(Wardrobe.is_hers("cowboy"))
+	assert_eq(Wardrobe.her_list()[0].id, "mapwoman", "her page starts with her")
+	assert_eq(Wardrobe.her_list().size(), Wardrobe.HERS.size() + 1)
+
+
+func test_which_revision_b_clear_releases_which_look_of_hers() -> void:
+	assert_eq(Wardrobe.released_at(5, true), "sky_blue")
+	assert_eq(Wardrobe.released_at(100, true), "platinum")
+	assert_eq(Wardrobe.released_at(6, true), "", "only every 5th sheet")
+	assert_eq(Wardrobe.released_at(5, false), "party_hat", "the first game releases his")
+
+
+func test_what_revision_b_progress_has_earned() -> void:
+	assert_eq(Wardrobe.earned_hers(1).size(), 0)
+	var at_31 := Wardrobe.earned_hers(31)
+	assert_true("footballer" in at_31, "sheet 30 is behind her")
+	assert_false("chef" in at_31)
+	assert_false("platinum" in Wardrobe.earned_hers(100), "sheet 100 isn't cleared yet")
+
+
+func test_a_save_with_revision_b_progress_gets_her_looks() -> void:
+	_save_file({"progress": {"has_completed": true}, "rev_b": {"furthest_level": 21}})
+	Save.load_all(OLD_SAVE)
+	assert_true(Save.is_released("mapwoman"))
+	for id in ["sky_blue", "beret", "headband", "sunflower"]:
+		assert_true(Save.is_released(id), id + " came with sheet 20")
+	assert_false(Save.is_released("goggles"), "sheet 25 isn't cleared yet")
+	assert_eq(Save.released.size(), Wardrobe.LOOKS.size() - 1 + 4)
+
+
+func test_the_first_clear_of_a_5th_sheet_of_revision_b_releases_her_look() -> void:
+	_game()
+	Save.has_completed = true
+	Save.release("mapwoman")
+	game.revision_b.start(5)
+	game.map._load_elapsed = game.map._load_time
+	game.advance_level(false)
+	assert_true(Save.is_released("sky_blue"), "her look, not his")
+	assert_false(Save.is_released("party_hat"))
+	assert_eq(game.menus.current, "end_level")
+	game.advance_level(false)
+	assert_eq(Save.released, ["mapwoman", "sky_blue"] as Array[String], "released once")
+
+
+func test_the_first_game_releases_nothing_of_hers() -> void:
+	_game()
+	_clear(5)
+	assert_false(Save.is_released("sky_blue"))
+
+
+func test_wearing_one_of_hers_makes_the_player_her() -> void:
+	_game()
+	Save.release("mapwoman")
+	Save.release("chef")
+	game._on_menu_action("wear chef")
+	assert_eq(game.player.outfit, "chef")
+	assert_eq(game.menus.current, "wardrobe")
+	assert_true(_on_her_page(), "and the wardrobe stays on her page")
+	# The player is her in it: MapMan waits at the end, as when she is worn.
+	game.menus.close()
+	game.levels = [game.levels[0]]
+	game.new_game(1)
+	game.end_of_level_points = 0
+	game.next_level()
+	assert_eq(game._woman.art, "man", "MapMan waits for her")
+
+
+func test_her_page_opens_once_she_has_joined() -> void:
+	_game()
+	game._on_menu_action("wardrobe")
+	assert_null(_button(tr("MAPWOMAN >")), "no page of hers before the game is finished")
+	assert_false(_on_her_page())
+	Save.release("mapwoman")
+	game._on_menu_action("wardrobe")
+	assert_not_null(_button(tr("MAPWOMAN >")))
+	game._on_menu_action("her wardrobe")
+	assert_eq(game.menus.current, "wardrobe")
+	assert_true(_on_her_page())
+	assert_not_null(_button(tr("<  MAPMAN")))
+	assert_null(_button(tr("MAPWOMAN >")))
+	game._on_menu_action("his wardrobe")
+	assert_false(_on_her_page())
+	# Worn, she opens the wardrobe on her page.
+	Save.wear("mapwoman")
+	game._on_menu_action("wardrobe")
+	assert_true(_on_her_page())
+
+
+func test_the_main_menu_counts_her_looks_once_she_has_joined() -> void:
+	_game()
+	game.show_start_menu()
+	assert_not_null(_label("1/%d" % Wardrobe.LOOKS.size()))
+	Save.release("mapwoman")
+	Save.release("sky_blue")
+	game.show_start_menu()
+	assert_not_null(_label("3/%d" % (Wardrobe.LOOKS.size() + Wardrobe.HERS.size())))
+
+
+## Whether the wardrobe open now is her page, by its heading.
+func _on_her_page() -> bool:
+	return game.menus._header.text.ends_with(tr("MAPWOMAN'S WARDROBE"))
+
+
+## A label on the sheet open now (a closed sheet is still in the tree until
+## the end of the frame).
+func _label(text: String) -> Label:
+	for l in game.menus._panel.find_children("*", "Label", true, false):
+		if l.text == text or l.text.ends_with(text):
+			return l
+	return null
+
+
+func _button(text: String) -> Button:
+	for b in game.menus._panel.find_children("*", "Button", true, false):
+		if b.text == text:
+			return b
+	return null
 
 
 # --- the save -------------------------------------------------------------------

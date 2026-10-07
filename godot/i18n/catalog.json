@@ -914,6 +914,106 @@
       "max": 14
     },
     {
+      "id": "SKY BLUE",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sky-blue MapWoman",
+      "max": 14
+    },
+    {
+      "id": "BERET",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a beret on her head",
+      "max": 14
+    },
+    {
+      "id": "HEADBAND",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a sports headband",
+      "max": 14
+    },
+    {
+      "id": "SUNFLOWER",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); yellow, with a sunflower on her front",
+      "max": 14
+    },
+    {
+      "id": "GOGGLES",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); round goggles over her eyes",
+      "max": 14
+    },
+    {
+      "id": "FOOTBALLER",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a striped football kit",
+      "max": 14
+    },
+    {
+      "id": "CHEF",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a chef's hat and neckerchief",
+      "max": 14
+    },
+    {
+      "id": "FIREFIGHTER",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a fire helmet and turnout coat",
+      "max": 14
+    },
+    {
+      "id": "DETECTIVE",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a deerstalker hat and magnifying glass",
+      "max": 14
+    },
+    {
+      "id": "STORM",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a dark storm cloud with lightning",
+      "max": 14
+    },
+    {
+      "id": "SURGEON",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); scrubs, cap and mask",
+      "max": 14
+    },
+    {
+      "id": "MECHANIC",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); overalls and a spanner",
+      "max": 14
+    },
+    {
+      "id": "BEEKEEPER",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a veiled hat with bees",
+      "max": 14
+    },
+    {
+      "id": "ROCK STAR",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); spiky hair and a guitar",
+      "max": 14
+    },
+    {
+      "id": "SEA CAPTAIN",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a captain's cap and brass buttons",
+      "max": 14
+    },
+    {
+      "id": "KNIGHT",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a helmet with a plume, armour",
+      "max": 14
+    },
+    {
+      "id": "AVIATOR",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a flying cap, goggles and scarf",
+      "max": 14
+    },
+    {
+      "id": "DISCO",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a mirror-ball head and glitter",
+      "max": 14
+    },
+    {
+      "id": "DRAGON",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); a hood with horns, wings and a tail",
+      "max": 14
+    },
+    {
+      "id": "PLATINUM",
+      "note": "Wardrobe: name of one of MapWoman's own looks (released by Revision B); MapWoman made of platinum",
+      "max": 14
+    },
+    {
       "id": "COMMON",
       "note": "Wardrobe: how rare a look is, as in collectible games",
       "max": 11
@@ -1038,6 +1138,31 @@
       "id": "Locked, released for finishing the game",
       "note": "Screen reader: MapWoman before the game is finished",
       "max": 44
+    },
+    {
+      "id": "MAPWOMAN'S WARDROBE",
+      "note": "Sheet title: MapWoman's own looks, the wardrobe's second page; keep MAPWOMAN",
+      "max": 24
+    },
+    {
+      "id": "MAPWOMAN >",
+      "note": "Wardrobe button to MapWoman's page (the > points to it; keep MAPWOMAN); must fit in 11 characters",
+      "max": 11
+    },
+    {
+      "id": "<  MAPMAN",
+      "note": "Wardrobe button back to MapMan's page (the < points back; keep MAPMAN)",
+      "max": 11
+    },
+    {
+      "id": "RELEASED AT SHEET %03d-B",
+      "note": "Wardrobe: when one of MapWoman's looks was released, a Revision B sheet number like 035-B",
+      "max": 30
+    },
+    {
+      "id": "Locked, released at Revision B sheet %d",
+      "note": "Screen reader: one of MapWoman's looks not yet released",
+      "max": 56
     },
     {
       "id": "WATCH REPLAY",

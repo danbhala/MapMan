@@ -237,11 +237,11 @@ func test_every_character_has_a_bundled_glyph() -> void:
 ## The look whose name and tier take the most room in the language on screen,
 ## of those a level releases: the longest release slip, and the longest name
 ## over MapMan on the wardrobe sheet.
-func _longest_look() -> String:
+func _longest_look(looks: Array = Wardrobe.LOOKS) -> String:
 	var font := Blueprint.mono(800)
 	var longest := ""
 	var widest := 0.0
-	for look in Wardrobe.LOOKS:
+	for look in looks:
 		if look.level == 0 or look.level == Wardrobe.THE_END:
 			continue
 		var text: String = tr(look.name) + "  ·  " + tr(Wardrobe.TIERS[look.tier])
@@ -252,10 +252,11 @@ func _longest_look() -> String:
 	return longest
 
 
-## Sheet 001-D with `worn` on: its name and details over him.
+## Sheet 001-D with `worn` on: its name and details over him; her page
+## when the look is hers.
 func _wardrobe_sheet(worn: String) -> void:
 	Save.worn = worn
-	game.menus.show_wardrobe()
+	game.menus.show_wardrobe(0, Wardrobe.is_hers(worn))
 
 
 ## Sheet 001-H steering by touch: the tilt rows greyed out, TILT ONLY.
@@ -356,8 +357,9 @@ func _open_every_sheet(check: Callable) -> void:
 	var m = game.menus
 	# Part way through: the first ten looks, the longest and MapWoman released.
 	var longest := _longest_look()
+	var longest_hers := _longest_look(Wardrobe.HERS)
 	var released: Array = Wardrobe.ids().slice(1, 11)
-	for id in [longest, "mapwoman"]:
+	for id in [longest, "mapwoman", longest_hers]:
 		if id not in released:
 			released.append(id)
 	_pin_wardrobe(longest, released)
@@ -387,6 +389,8 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
 		func(): m.show_wardrobe(36),
+		func(): m.show_wardrobe(36, true),
+		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest_hers),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),
 		func(): m.show_congratulations(2042, true, "mapwoman", "released"),
@@ -395,6 +399,7 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_game_complete(1842, 100, 100, true),
 		_wardrobe_sheet.bind(longest),
 		_wardrobe_sheet.bind("mapwoman"),
+		_wardrobe_sheet.bind(longest_hers),
 		_wardrobe_sheet.bind("classic"),
 		func(): m.show_main(1842, true, 100, true),
 		func(): DraftingSheet.build(m, _drafts(), _received()),

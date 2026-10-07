@@ -35,6 +35,13 @@ const ROWS := [
 	[["rare"], "RARE"],
 	[["epic", "legendary", "special"], "EPIC +"],
 ]
+## Her collection's rows: MapWoman herself heads the first.
+const ROWS_HERS := [
+	[["special", "common"], "COMMON"],
+	[["uncommon"], "UNCOMMON"],
+	[["rare"], "RARE"],
+	[["epic", "legendary"], "EPIC +"],
+]
 ## The design sheets' title block.
 const BLOCK := Vector2(260, 104)
 ## Levels for the playing-size sheet, and the looks walking about on each.
@@ -43,6 +50,8 @@ const PANELS := [
 	[24, ["signal_red", "hard_hat", "skeleton", "astronaut"]],
 	[49, ["blueprint", "top_hat", "explorer", "robot"]],
 	[92, ["neon", "superhero", "wizard", "gold"]],
+	[15, ["sky_blue", "sunflower", "footballer", "chef"]],
+	[66, ["knight", "aviator", "dragon", "platinum"]],
 ]
 
 var out_dir := "user://wardrobe_sheets"
@@ -105,21 +114,21 @@ static func pose(p: Player, which: String) -> void:
 	p.queue_redraw()
 
 
-## The ids in a collection row (ROWS), in release order.
-static func row_ids(tiers: Array) -> Array[String]:
+## The ids in a collection row (ROWS) of `looks`, in release order.
+static func row_ids(tiers: Array, looks: Array) -> Array[String]:
 	var out: Array[String] = []
-	for entry: Dictionary in Wardrobe.LOOKS:
+	for entry: Dictionary in looks:
 		if entry.tier in tiers:
 			out.append(entry.id)
 	return out
 
 
 ## The levels a collection row's looks come at: "5–25", "80–100 + THE END".
-static func row_levels(tiers: Array) -> String:
+static func row_levels(tiers: Array, looks: Array) -> String:
 	var first := Wardrobe.THE_END
 	var last := 0
 	var at_the_end := false
-	for entry: Dictionary in Wardrobe.LOOKS:
+	for entry: Dictionary in looks:
 		var level: int = entry.level
 		if entry.tier not in tiers or level == 0:
 			continue
@@ -131,12 +140,14 @@ static func row_levels(tiers: Array) -> String:
 	return "%d–%d%s" % [first, last, " + THE END" if at_the_end else ""]
 
 
-## When a look comes, short: "LV 35", "THE END", "ALWAYS".
+## When a look comes, short: "LV 35", "THE END", "ALWAYS"; "035-B" for hers.
 static func when(entry: Dictionary) -> String:
 	if entry.level == 0:
 		return "ALWAYS"
 	if entry.level == Wardrobe.THE_END:
 		return "THE END"
+	if Wardrobe.is_hers(entry.id):
+		return "%03d-B" % entry.level
 	return "LV %d" % entry.level
 
 
@@ -161,11 +172,33 @@ func run() -> void:
 	if save != null:
 		save.persist = false  # never touch real progress
 		save.reduce_motion = false  # decorative motion (sparkles, twinkles) shows
-	await collection()
+	await collection(
+		"01_collection",
+		"THE COLLECTION",
+		(
+			"%d LOOKS TO RELEASE  ·  ONE EVERY 5 LEVELS  ·  MAPWOMAN FOR FINISHING THE GAME"
+			% (Wardrobe.LOOKS.size() - 1)
+		),
+		Wardrobe.LOOKS,
+		ROWS,
+		"W-01"
+	)
+	await collection(
+		"01_collection_hers",
+		"HER COLLECTION",
+		"%d LOOKS OF MAPWOMAN'S OWN  ·  ONE EVERY 5 SHEETS OF REVISION B" % Wardrobe.HERS.size(),
+		Wardrobe.her_list(),
+		ROWS_HERS,
+		"W-01B"
+	)
 	var ids := Wardrobe.ids()
-	await poses("02_poses_1", ids.slice(0, 8), 1, 3)
-	await poses("02_poses_2", ids.slice(8, 15), 2, 3)
-	await poses("02_poses_3", ids.slice(15), 3, 3)
+	var his := Wardrobe.LOOKS.size()
+	await poses("02_poses_1", ids.slice(0, 8), 1, 6)
+	await poses("02_poses_2", ids.slice(8, 15), 2, 6)
+	await poses("02_poses_3", ids.slice(15, his), 3, 6)
+	await poses("02_poses_4", ids.slice(his, his + 7), 4, 6)
+	await poses("02_poses_5", ids.slice(his + 7, his + 14), 5, 6)
+	await poses("02_poses_6", ids.slice(his + 14), 6, 6)
 	await in_game()
 	print("done")
 	quit()
@@ -232,31 +265,24 @@ func ellipse(parent: Node, at: Vector2, rx: float, ry: float, color := Color(1, 
 	Blueprint.line(parent, Blueprint.ellipse_points(at, rx, ry), color, 1.4)
 
 
-## Every look, by tier, standing on the sheet.
-func collection() -> void:
+## Every look of `looks`, by tier (`rows`), standing on the sheet.
+func collection(
+	file_name: String, title: String, subtitle: String, looks: Array, rows: Array, sheet: String
+) -> void:
 	var size := Vector2i(2100, 1580)
 	var vp := new_sheet(size)
-	frame(
-		vp,
-		Vector2(size),
-		"THE COLLECTION",
-		(
-			(
-				"%d LOOKS TO RELEASE  ·  ONE EVERY 5 LEVELS  ·  MAPWOMAN FOR FINISHING THE GAME"
-				% (Wardrobe.LOOKS.size() - 1)
-			)
-			+ "  ·  WORN ONE AT A TIME"
-		),
-		"W-01"
-	)
-	for r in ROWS.size():
-		var tiers: Array = ROWS[r][0]
+	frame(vp, Vector2(size), title, subtitle + "  ·  WORN ONE AT A TIME", sheet)
+	var hers: bool = looks[0].id == "mapwoman"
+	for r in rows.size():
+		var tiers: Array = rows[r][0]
 		var y0 := 150.0 + r * 320.0
-		var main: String = tiers[1] if tiers[0] == "start" else tiers[0]  # Classic heads no row
-		text(vp, ROWS[r][1], 24, Wardrobe.TIER_COLOURS[main], Vector2(56, y0 + 110), 800)
-		var levels := row_levels(tiers).replace(" + ", "\nAND ")
-		text(vp, "LEVELS " + levels, 16, Blueprint.FAINT, Vector2(58, y0 + 146))
-		var ids := row_ids(tiers)
+		# Classic and MapWoman head no row.
+		var main: String = tiers[1] if tiers[0] in ["start", "special"] else tiers[0]
+		text(vp, rows[r][1], 24, Wardrobe.TIER_COLOURS[main], Vector2(56, y0 + 110), 800)
+		var levels := row_levels(tiers, looks).replace(" + ", "\nAND ")
+		var word := "SHEETS " if hers else "LEVELS "
+		text(vp, word + levels, 16, Blueprint.FAINT, Vector2(58, y0 + 146))
+		var ids := row_ids(tiers, looks)
 		for c in ids.size():
 			var entry := Wardrobe.look(ids[c])
 			var colour: Color = Wardrobe.TIER_COLOURS[entry.tier]
@@ -269,7 +295,7 @@ func collection() -> void:
 			text(vp, entry.name, 22, Blueprint.INK, Vector2(x0 + 14, y0 + 250), 800)
 			var tone: Color = Blueprint.FAINT if entry.tier in ["common", "start"] else colour
 			text(vp, detail(entry, "  ·  "), 14, tone, Vector2(x0 + 14, y0 + 278))
-	await save_sheet(vp, "01_collection")
+	await save_sheet(vp, file_name)
 
 
 ## Each look in every pose the game puts him in.
@@ -306,7 +332,7 @@ func in_game() -> void:
 	var data: Dictionary = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/levels.json")
 	)
-	var size := Vector2i(1334 * 2 + 60, 1800)
+	var size := Vector2i(1334 * 2 + 60, 140 + 770 * 3 + 120)
 	var vp := new_sheet(size)
 	frame(
 		vp,
@@ -323,6 +349,7 @@ func in_game() -> void:
 		var level: int = PANELS[p][0]
 		var ids: Array = PANELS[p][1]
 		var holder := Node2D.new()
+		@warning_ignore("integer_division")
 		holder.position = Vector2(20 + (p % 2) * 1354, 140 + (p / 2) * 770)
 		holder.scale = Vector2(2, 2)
 		vp.add_child(holder)

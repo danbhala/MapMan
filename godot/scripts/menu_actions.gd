@@ -20,8 +20,11 @@ static func handle(game, act: String) -> void:
 			game.new_game(1, true)
 		"restart from checkpoint":
 			game.menus.show_restart(Save.checkpoints.keys())
-		"wardrobe":
-			game.menus.show_wardrobe(game.level if game._between else 0)
+		"wardrobe", "his wardrobe", "her wardrobe":
+			# The main menu's opens on the page of the look worn; the switch
+			# on the sheet names the page it wants.
+			var hers := Wardrobe.is_hers(Save.worn) if act == "wardrobe" else act == "her wardrobe"
+			game.menus.show_wardrobe(game.level if game._between else 0, hers)
 		"main menu":
 			if game.menus.current == "wardrobe":
 				# Looked at: nothing in it is new any more (the marks stay
@@ -46,7 +49,8 @@ static func handle(game, act: String) -> void:
 		"replay":
 			game._start_replay()
 		"clear wardrobe":
-			game.menus.show_wardrobe(game.level)
+			# Revision B's clears release her looks: its page.
+			game.menus.show_wardrobe(game.level, Save.rev_b)
 		"back to clear":
 			if game.menus.current == "wardrobe":
 				Save.mark_seen()
@@ -117,12 +121,13 @@ static func _prefixed(game, act: String) -> void:
 	elif act.begins_with("wear "):
 		# From the wardrobe, or the slip on the level clear that released it:
 		# he wears it from now on.
-		if Save.wear(act.get_slice(" ", 1)):
+		var id := act.get_slice(" ", 1)
+		if Save.wear(id):
 			game.player.outfit = Save.worn
 		if game.menus.current == "end_level":
 			game.menus.redraw()
-		else:
-			game.menus.show_wardrobe(game.level if game._between else 0)
+		else:  # the page the look is on
+			game.menus.show_wardrobe(game.level if game._between else 0, Wardrobe.is_hers(id))
 	elif act.begins_with("L") and act.substr(1).is_valid_int():
 		game.menus.close()
 		game.new_game(int(act.substr(1)) + 1)

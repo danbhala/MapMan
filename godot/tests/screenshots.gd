@@ -332,6 +332,17 @@ func run() -> void:
 	await frames(70)
 	await shot("30_rev_b_pause")
 	game._on_menu_action("end game")
+
+	# MapWoman's page of the wardrobe: she has joined, her first four looks
+	# are released (the last of them new), the chef worn.
+	var hers: Array = ["mapwoman", "sky_blue", "beret", "headband", "sunflower"]
+	save.released.assign(hers)
+	save.seen.assign(hers.slice(0, hers.size() - 1))
+	save.worn = "beret"
+	game._on_menu_action("main menu")
+	game._on_menu_action("wardrobe")
+	await frames(100)
+	await shot("31_wardrobe_hers")
 	save.has_completed = false
 
 	if failures.is_empty():

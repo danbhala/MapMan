@@ -43,6 +43,23 @@ static func _legs(pen: OutfitPen, id: String) -> void:
 		"robot":
 			for i in 2:
 				pen.leg_line(i, 0.1, 0.9, STEEL, 1.4)
+		# MapWoman's (docs/wardrobe, "Her wardrobe").
+		"footballer":
+			for i in 2:
+				pen.leg_line(i, 0.58, 0.8, Color("#1f7a4f"), 4.4)
+				pen.leg_line(i, 0.66, 0.72, Color("#f2f5f9"), 4.4)
+		"chef":
+			_check_legs(pen)
+		"mechanic":
+			_boots(pen, Color("#3b2a1a"), 5.6)
+		"knight":
+			for i in 2:
+				pen.leg_line(i, 0.3, 0.42, STEEL, 4.4)
+				pen.leg_line(i, 0.56, 0.68, STEEL, 4.4)
+		"aviator":
+			_boots(pen, Color("#2b1d12"), 5.4)
+		"disco":
+			_boots(pen, Color("#ef476f"), 6.0)
 
 
 static func _body(pen: OutfitPen, id: String) -> void:
@@ -84,6 +101,37 @@ static func _body(pen: OutfitPen, id: String) -> void:
 			_hem_band(pen, 2.4, GOLD)
 		"gold":
 			_shine(pen)
+		# MapWoman's (docs/wardrobe, "Her wardrobe").
+		"sunflower":
+			if pen.front():
+				_sunflower(pen, s)
+		"footballer":
+			pen.stripe(-13.0 + s, -8.0 + s, Color("#1f7a4f"))
+			pen.stripe(-2.5 + s, 2.5 + s, Color("#1f7a4f"))
+			pen.stripe(8.0 + s, 13.0 + s, Color("#1f7a4f"))
+		"firefighter":
+			_turnout_coat(pen, s)
+		"detective":
+			_tweed(pen)
+		"storm":
+			if pen.front():
+				_bolt(pen, s)
+		"surgeon":
+			if pen.front():
+				_scrub_pocket(pen, s)
+		"mechanic":
+			_bib(pen, s)
+		"rock_star":
+			_jacket(pen, s)
+		"sea_captain":
+			if pen.front():
+				_brass_buttons(pen, s)
+		"knight":
+			_plates(pen, s)
+		"dragon":
+			_scales(pen)
+		"platinum":
+			_shine(pen)
 
 
 static func _neck(pen: OutfitPen, id: String) -> void:
@@ -115,6 +163,21 @@ static func _neck(pen: OutfitPen, id: String) -> void:
 			)
 			pen.poly(ring, Color("#9aa8b8"))
 			pen.outline(ring, Color("#34495e"), 0.9)
+		# MapWoman's (docs/wardrobe, "Her wardrobe").
+		"footballer":
+			if pen.front():
+				_collar(pen, Color("#1f7a4f"), s)
+		"chef":
+			if pen.front():
+				_bandana(pen, RED, s)
+		"detective":
+			if pen.front():
+				_magnifier(pen, s)
+		"surgeon":
+			if pen.front():
+				_collar(pen, Color("#1b6b62"), s)
+		"aviator":
+			_fur_collar(pen, s)
 
 
 # --- legs -----------------------------------------------------------------------
@@ -360,3 +423,179 @@ static func _fallen(pen: OutfitPen, pts: Array, pivot: Vector2, fall: float) -> 
 		var on_him := pen.b(pivot.x + r.x, pivot.y + r.y)
 		out.append(on_him.lerp(ground + r, fall))
 	return out
+
+
+# --- MapWoman's --------------------------------------------------------------------
+
+
+## A chef's check trousers: light squares down each dark leg.
+static func _check_legs(pen: OutfitPen) -> void:
+	for i in 2:
+		for k in 4:
+			var t0 := 0.08 + k * 0.22
+			pen.leg_line(i, t0, t0 + 0.09, Color("#d9d9d9"), 1.6)
+
+
+## A sunflower on the front of her: a brown heart ringed with petals, and a
+## leaf on its stalk.
+static func _sunflower(pen: OutfitPen, s: float) -> void:
+	var c := Vector2(s + 5.0, -41.0)
+	var stalk := pen.bp([Vector2(s + 5.0, -38.5), Vector2(s + 4.0, -28.0)])
+	pen.polyline(stalk, Color("#2f5d34"), 1.2)
+	pen.poly(
+		pen.bp(OutfitPen.ellipse(Vector2(s + 1.0, -32.5), 3.2, 1.5, 12, -0.6)), Color("#3f8a46")
+	)
+	for i in 8:
+		var a := TAU * i / 8.0
+		var petal := OutfitPen.ellipse(c + Vector2(cos(a), sin(a)) * 4.6, 2.6, 1.3, 10, a)
+		pen.poly(pen.bp(petal), Color("#ffb703"))
+	pen.dot(pen.b(c.x, c.y), 2.6, Color("#5a3a1a"))
+
+
+## A turnout coat's two reflective bands, each with a bright stripe through
+## it, and its clasps down the front.
+static func _turnout_coat(pen: OutfitPen, s: float) -> void:
+	for y: float in [-40.5, -32.5]:
+		pen.band(y, y + 3.6, Color("#e3e9f0"))
+		pen.band(y + 1.2, y + 2.4, Color("#c8f04a"))
+	if pen.front():
+		for y: float in [-47.0, -44.0]:
+			pen.line(pen.b(s - 2.0, y), pen.b(s + 2.0, y), DARK, 1.2)
+
+
+## A tweed check all round a jacket: faint lines both ways.
+static func _tweed(pen: OutfitPen) -> void:
+	var thread := Color(0.2, 0.15, 0.08, 0.35)
+	for k in 5:
+		var y := -52.0 + k * 5.0
+		var w := OutfitPen.dome_w(y) - 0.4
+		pen.line(pen.b(-w, y), pen.b(w, y), thread, 0.7)
+	for x: float in [-15.0, -10.0, -5.0, 0.0, 5.0, 10.0, 15.0]:
+		pen.line(pen.b(x, OutfitPen.dome_top(x) + 0.4), pen.b(x, OutfitPen.HEM), thread, 0.7)
+
+
+## A lightning bolt down her front.
+static func _bolt(pen: OutfitPen, s: float) -> void:
+	var bolt := (
+		pen
+		. bp(
+			[
+				Vector2(s + 3.0, -52.0),
+				Vector2(s - 4.0, -40.5),
+				Vector2(s + 0.5, -40.5),
+				Vector2(s - 3.0, -29.5),
+				Vector2(s + 5.0, -43.0),
+				Vector2(s + 0.5, -43.0),
+				Vector2(s + 6.5, -52.0),
+			]
+		)
+	)
+	pen.poly(bolt, Color("#ffd60a"))
+
+
+## A scrub top's pocket, with a pen in it.
+static func _scrub_pocket(pen: OutfitPen, s: float) -> void:
+	var pocket := pen.bp(
+		[
+			Vector2(-14 + s, -40),
+			Vector2(-8.5 + s, -40),
+			Vector2(-8.5 + s, -35.5),
+			Vector2(-14 + s, -35.5)
+		]
+	)
+	pen.outline(pocket, Color("#1b6b62"), 0.9)
+	pen.line(pen.b(-12.2 + s, -42.6), pen.b(-12.2 + s, -38.8), Color("#f4f6f8"), 1.3)
+
+
+## Overalls: a bib on the chest with straps up over the shoulders, and a
+## pocket on the bib.
+static func _bib(pen: OutfitPen, s: float) -> void:
+	var denim := Color("#2a4f8a")
+	var stitch := Color("#d8b25a")
+	for side: float in [-1.0, 1.0]:
+		var x := side * 6.0
+		pen.line(pen.b(x + s * 0.5, OutfitPen.dome_top(x) + 0.4), pen.b(x + s, -44.0), denim, 2.6)
+	if not pen.front():
+		return
+	var bib := pen.bp(OutfitPen.rrect(Vector2(s, -39.0), Vector2(7.0, 5.0), 1.2))
+	pen.poly(bib, denim)
+	pen.outline(bib, stitch, 0.7)
+	var pocket := pen.bp(OutfitPen.rrect(Vector2(s, -38.0), Vector2(3.4, 2.4), 0.8))
+	pen.outline(pocket, stitch, 0.7)
+	for side: float in [-1.0, 1.0]:
+		pen.dot(pen.b(s + side * 5.4, -43.0), 1.0, stitch)
+
+
+## A leather jacket: an open front, studs along the shoulders, a belt.
+static func _jacket(pen: OutfitPen, s: float) -> void:
+	var lining := Color("#5a1f2a")
+	var stud := Color("#c0c6d0")
+	if pen.front():
+		pen.poly(pen.bp([Vector2(-7 + s, -53), Vector2(s, -39), Vector2(7 + s, -53)]), lining)
+		pen.line(pen.b(-7 + s, -53), pen.b(s, -39), stud, 0.8)
+		pen.line(pen.b(7 + s, -53), pen.b(s, -39), stud, 0.8)
+		pen.line(pen.b(s, -39), pen.b(s, -27), stud, 0.8)
+	for x: float in [-16.0, -12.5, -9.0, 9.0, 12.5, 16.0]:
+		pen.dot(pen.b(x, OutfitPen.dome_top(x) + 2.2), 0.9, stud)
+	pen.band(-30.4, -28.2, Color("#2b2b33"))
+	pen.poly(pen.bp(OutfitPen.rrect(Vector2(s, -29.3), Vector2(2.2, 1.6), 0.5)), stud)
+
+
+## Two rows of brass buttons down a captain's jacket.
+static func _brass_buttons(pen: OutfitPen, s: float) -> void:
+	for side: float in [-1.0, 1.0]:
+		for y: float in [-45.0, -39.5, -34.0]:
+			pen.dot(pen.b(s + side * 4.0, y), 1.1, BRASS)
+	pen.line(pen.b(s, -47.0), pen.b(s, -30.0), Color("#15294f"), 0.8)
+
+
+## Armour plates: darker bands round the body, with rivets.
+static func _plates(pen: OutfitPen, s: float) -> void:
+	var dark := Color("#7b8794")
+	for y: float in [-44.0, -36.0]:
+		pen.band(y, y + 1.4, dark)
+	for y: float in [-42.0, -34.0]:
+		var w := OutfitPen.dome_w(y) - 3.0
+		for k in 5:
+			pen.dot(pen.b(lerpf(-w, w, k / 4.0), y), 0.8, dark)
+	if pen.front():
+		pen.line(pen.b(s, -52.0), pen.b(s, -28.0), dark, 1.0)
+
+
+## Scales down her body: rows of little arcs, offset row by row.
+static func _scales(pen: OutfitPen) -> void:
+	var scale := Color("#3fae6e")
+	for k in 6:
+		var y := -51.0 + k * 4.6
+		var w := OutfitPen.dome_w(y) - 2.4
+		var x := -w + (2.3 if k % 2 == 1 else 0.0)
+		while x <= w:
+			pen.arc_line(pen.b(x, y), 2.2, PI, TAU, scale, 0.8)
+			x += 4.6
+
+
+## A V collar under her chin.
+static func _collar(pen: OutfitPen, c: Color, s: float) -> void:
+	var v := pen.bp([Vector2(-6.5 + s, -52.5), Vector2(s, -45.5), Vector2(6.5 + s, -52.5)])
+	pen.polyline(v, c, 1.6)
+
+
+## A magnifying glass on a cord, hanging in front.
+static func _magnifier(pen: OutfitPen, s: float) -> void:
+	var cord := Color("#3b2a1a")
+	pen.line(pen.b(s - 7, -49.5), pen.b(s - 1.0, -41.0), cord, 0.9)
+	pen.line(pen.b(s + 7, -49.5), pen.b(s + 1.0, -41.0), cord, 0.9)
+	var c := pen.b(s, -37.0)
+	pen.line(pen.b(s, -41.0), c + Vector2(0, -3.2), cord, 1.4)
+	pen.dot(c, 3.6, BRASS)
+	pen.dot(c, 2.6, Color(0.75, 0.9, 1.0, 0.55))
+	pen.line(c + Vector2(-1.6, -1.2), c + Vector2(-0.4, -1.8), Color(1, 1, 1, 0.7), 0.8)
+
+
+## A fluffy fur collar round the neck of a flying jacket.
+static func _fur_collar(pen: OutfitPen, s: float) -> void:
+	var fur := Color("#efe3c6")
+	for k in 9:
+		var x := -11.0 + k * 2.75
+		var y := -49.5 + absf(x) * 0.25 - (1.5 if k % 2 == 0 else 0.0)
+		pen.dot(pen.b(x + s * 0.5, y), 2.3, fur)

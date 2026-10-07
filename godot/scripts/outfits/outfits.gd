@@ -12,8 +12,9 @@ enum Layer { BACK, LEGS, BODY, NECK, HEAD, FACE, HAT, FRONT }
 
 ## Colour roles a look changes. body, head, eyes; legs (else the body's);
 ## outline (round the body), leg_outline, head_outline; glow (a halo round the
-## body and the legs), head_glow. Every look keeps a dark mass and a light
-## one, so he reads on the blue paper and on a white tile (test_outfits.gd).
+## body and the legs), head_glow; bow (MapWoman's, else the body's). Every
+## look keeps a dark mass and a light one, so he reads on the blue paper and
+## on a white tile (test_outfits.gd).
 const PALETTES := {
 	"signal_red": {"body": Color("#e0453a")},
 	"racing_green": {"body": Color("#1f7a4f")},
@@ -57,10 +58,80 @@ const PALETTES := {
 		"leg_outline": Color("#8a6512"),
 		"head_outline": Color("#b8860b"),
 	},
+	# MapWoman's (docs/wardrobe, "Her wardrobe").
+	"sky_blue": {"body": Color("#5fb3e8"), "legs": Color("#1d5c8a"), "bow": Color("#1d5c8a")},
+	"sunflower": {"body": Color("#f2c230"), "legs": Color("#2f5d34")},
+	"footballer": {"body": Color("#f2f5f9"), "legs": Color("#1b263b"), "outline": Color("#2c3e50")},
+	"chef": {"body": Color("#f6f6f6"), "legs": Color("#2b2b2b"), "outline": Color("#4a4a4a")},
+	"firefighter": {"body": Color("#f9c74f"), "legs": Color("#1b263b")},
+	"detective": {"body": Color("#8a7a5a"), "legs": Color("#4a3f2e")},
+	"storm":
+	{
+		"body": Color("#111a2e"),
+		"eyes": Color("#ffd60a"),
+		"glow": Color("#ffd60a"),
+		"head_glow": Color("#ffd60a"),
+	},
+	"surgeon": {"body": Color("#2a9d8f"), "legs": Color("#1b6b62")},
+	"mechanic": {"body": Color("#3e6db3"), "legs": Color("#3e6db3")},
+	"beekeeper":
+	{
+		"body": Color("#f4f1e8"),
+		"legs": Color("#f4f1e8"),
+		"outline": Color("#6b6b5e"),
+		"leg_outline": Color("#6b6b5e"),
+	},
+	"rock_star": {"body": Color("#1b1b22"), "legs": Color("#b5171f"), "outline": Color("#c0c6d0")},
+	"sea_captain":
+	{
+		"body": Color("#1f3b73"),
+		"legs": Color("#eef2f7"),
+		"outline": Color("#d4a017"),
+		"leg_outline": Color("#34495e"),
+	},
+	"knight": {"body": Color("#a9b4c2"), "legs": Color("#6b7685"), "outline": Color("#4b5563")},
+	"aviator": {"body": Color("#8c6a3f"), "legs": Color("#4a3a26")},
+	"disco":
+	{
+		"body": Color("#c9ced6"),
+		"head": Color("#e6e9ee"),
+		"eyes": Color("#3a2d6b"),
+		"legs": Color("#3a2d6b"),
+		"outline": Color("#5b6270"),
+		"head_outline": Color("#8a93a3"),
+		"bow": Color("#5b6270"),
+	},
+	"dragon": {"body": Color("#2e8b57"), "legs": Color("#1f5e3a")},
+	"platinum":
+	{
+		"body": Color("#d8dde3"),
+		"head": Color("#eef1f4"),
+		"eyes": Color("#4a5563"),
+		"outline": Color("#6b7785"),
+		"leg_outline": Color("#6b7785"),
+		"head_outline": Color("#9aa3ae"),
+		"bow": Color("#9aa3ae"),
+	},
 }
 ## Looks with something on the back (a cape, a rolled map). It hangs behind
 ## him, and covers his back when he walks away.
-const BACKS := ["superhero", "explorer"]
+const BACKS := ["superhero", "explorer", "mechanic", "rock_star", "aviator", "dragon"]
+## MapWoman's looks that take the place of her bow: a hat, a hood, hair.
+const BARE_HEAD := [
+	"beret",
+	"headband",
+	"chef",
+	"firefighter",
+	"detective",
+	"surgeon",
+	"mechanic",
+	"beekeeper",
+	"rock_star",
+	"sea_captain",
+	"knight",
+	"aviator",
+	"dragon",
+]
 
 
 ## The colours a look changes ({} for plain MapMan).
@@ -70,6 +141,12 @@ static func palette(id: String) -> Dictionary:
 
 static func has_back(id: String) -> bool:
 	return id in BACKS
+
+
+## Whether a look of hers leaves off MapWoman's bow (something else is on
+## her head).
+static func hides_bow(id: String) -> bool:
+	return id in BARE_HEAD
 
 
 ## The parts of look `id` in `layer`.

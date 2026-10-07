@@ -133,7 +133,8 @@ const HEAD_DIP: Array[float] = [
 ]
 
 ## "man" or "woman": whether the figure wears MapWoman's bow. Read each draw,
-## so the ending can turn the figure waiting there into either.
+## so the ending can turn the figure waiting there into either. A look of
+## hers (Wardrobe.is_hers) makes the figure her too, bow or not.
 var art := "man"
 ## The look he wears: a Wardrobe id ("classic" is plain MapMan).
 var outfit := "classic":
@@ -484,7 +485,7 @@ func _paint(measuring: bool) -> Rect2:
 	pen.hr = OutfitPen.HEAD_R * (1.0 - dead * 0.15)
 	var has_back := Outfits.has_back(outfit)
 	var behind := pen.from_behind()
-	var woman := art == "woman" or outfit == "mapwoman"
+	var woman := (art == "woman" or Wardrobe.is_hers(outfit)) and not Outfits.hides_bow(outfit)
 
 	if has_back and (not behind or dead > 0.0):
 		pen.set_frame(origin, 0.0, mirror)
@@ -499,7 +500,8 @@ func _paint(measuring: bool) -> Rect2:
 	if dead > 0.0:
 		_draw_head(pal)  # swallowed whole
 		if woman:
-			_draw_bow(pen.hc + Vector2(-9.0, -11.0), Color(body, body.a * fade))
+			var bow: Color = pal.get("bow", body)
+			_draw_bow(pen.hc + Vector2(-9.0, -11.0), Color(bow, bow.a * fade))
 		pen.alpha = fade
 		Outfits.draw(pen, Outfits.Layer.HEAD, outfit)
 		pen.alpha = 1.0
@@ -609,7 +611,7 @@ func _draw_body(pts: PackedVector2Array, pal: Dictionary) -> void:
 func _draw_head_and_hair(pal: Dictionary, woman: bool, body: Color) -> void:
 	_draw_head(pal)
 	if woman:
-		_draw_bow(_pen.hc + Vector2(-9.0, -11.0), body)
+		_draw_bow(_pen.hc + Vector2(-9.0, -11.0), pal.get("bow", body))
 	Outfits.draw(_pen, Outfits.Layer.HEAD, outfit)
 
 

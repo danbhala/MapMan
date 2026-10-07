@@ -9,11 +9,14 @@ The WARDROBE on the main menu starts as rows of question marks. Each time you
 clear a 5th level for the first time, one look is released. The rarer looks
 only come late in the game, and finishing the game releases MapWoman. You wear
 one look at a time, like a character skin: never a hat plus somebody else's
-coat.
+coat. MapWoman has [a wardrobe of her own](#her-wardrobe), released the same
+way by the sheets of Revision B.
 
 ![The collection](sheets/01_collection.png)
+![Her collection](sheets/01_collection_hers.png)
 
 - [What you unlock, and when](#what-you-unlock-and-when)
+- [Her wardrobe](#her-wardrobe)
 - [How players meet it](#how-players-meet-it)
 - [How it is built](#how-it-is-built)
 - [Rules for future sessions](#rules-for-future-sessions)
@@ -28,7 +31,9 @@ design prototype.
 | Sheet | What it shows |
 | --- | --- |
 | [01 collection](sheets/01_collection.png) | the 21 looks and Classic, by tier |
-| [02 poses 1](sheets/02_poses_1.png), [2](sheets/02_poses_2.png), [3](sheets/02_poses_3.png) | every look in the 11 poses the game puts him in |
+| [01 her collection](sheets/01_collection_hers.png) | MapWoman and her 20 looks, by tier |
+| [02 poses 1](sheets/02_poses_1.png), [2](sheets/02_poses_2.png), [3](sheets/02_poses_3.png) | every look of his in the 11 poses the game puts him in |
+| [02 poses 4](sheets/02_poses_4.png), [5](sheets/02_poses_5.png), [6](sheets/02_poses_6.png) | every look of hers in the same poses |
 | [04 at playing size](sheets/04_at_playing_size.png) | real levels and tiles, at the baselines' 2× |
 | [03 bench](sheets/03_bench.png) | 8 alternates, not in the game, same pose check |
 | [05 caught by the pose check](sheets/05_caught_by_the_pose_check.png) | 9 bugs in the first draft, and the rules that fixed them |
@@ -111,6 +116,38 @@ save so adding looks later never changes what a player already has.
 
 **Players who already have progress** get everything they have earned the
 first time the game loads their save, marked NEW (see [the save](#the-save)).
+
+## Her wardrobe
+
+Finishing the game releases MapWoman, and with her a second page of the
+wardrobe: **MAPWOMAN >** in the spare cells of the last row of sheet 001-D
+(and **< MAPMAN** back), headed MAPWOMAN'S WARDROBE. Her page lists MapWoman
+herself, then her 20 looks, one for every 5th sheet of Revision B, released
+by that sheet's first clear exactly as his are by the first game's levels
+(the gold slip on the level clear, NEW in the wardrobe, a sheet number like
+035-B on the cell). The first game never releases one of hers, and Revision B
+never one of his. The main menu's count is out of 22 until she joins, then
+out of 42.
+
+Her looks are her own, not his with a bow on: nothing clichéd, and she can
+be anything (Dan, October 2026). The list, in `Wardrobe.HERS`:
+
+| Tier | Sheets | Looks |
+| --- | --- | --- |
+| Common | 005-B – 025-B | Sky blue, Beret, Headband, Sunflower, Goggles |
+| Uncommon | 030-B – 050-B | Footballer, Chef, Firefighter, Detective, Storm |
+| Rare | 055-B – 075-B | Surgeon, Mechanic, Beekeeper, Rock star, Sea captain |
+| Epic | 080-B – 095-B | Knight (plume sways), Aviator (scarf streams), Disco (glitter), Dragon (wings beat, tail wags) |
+| Legendary | 100-B | Platinum |
+
+Wearing one of hers is playing as her: the figure is MapWoman in it
+(`Wardrobe.is_hers()`: `Player` draws her bow unless the look is in
+`Outfits.BARE_HEAD`, a hat, hood or hair in its place; a palette's `bow`
+colour keeps the bow visible on a pale look), and MapMan waits for her at
+the end, as when she is worn plain. Her parts live in the same files as his,
+under "MapWoman's", and follow every rule below; `Save.sync_wardrobe()`
+releases what Revision B's furthest sheet has earned, so an older save gets
+them on load.
 
 ## How players meet it
 
@@ -378,7 +415,8 @@ checked.
 Decided in building it: a fixed schedule; a release does not put the look
 on, the wardrobe does; the way in is a WARDROBE row under MapMan; the list as
 proposed; MapWoman is exactly the ending's MapWoman; practice clears don't
-count.
+count. Revision B's sheets release her looks, not more of his, so the second
+playthrough has its own collection to fill.
 
 Left for later, if wanted: the bench and feats (needs save counters),
 shuffling within tiers, seasonal looks. (MapMan used to lean when walking;
