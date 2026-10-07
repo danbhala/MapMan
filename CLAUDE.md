@@ -85,6 +85,9 @@ edit `CHANGELOG.md`, `version.txt` or `version/name`/`version/code` by hand.
   with its download link, plus a TestFlight build for iPhone once the Apple
   secrets are set (a second comment); master's latest is at
   `https://github.com/danbhala/MapMan/raw/apk-master/MapMan-Dev.apk`. Point the
-  user at the PR's link when a change needs trying on the phone.
+  user at the PR's link when a change needs trying on the phone. The Play
+  build workflow (`.github/workflows/play.yml`, run by hand) makes the signed
+  app bundle for Google Play's testing tracks; its secrets are in
+  `CONTRIBUTING.md`.
 - The user plays on an Android phone (OnePlus 12). Tilt, shake and feel can
   only be judged there: say what to try on the phone after gameplay changes.

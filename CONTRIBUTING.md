@@ -38,6 +38,10 @@ Write `feat` and `fix` subjects for players: they become release notes.
 - Every PR and master push also uploads a **MapMan Dev** build to TestFlight
   (once the Apple secrets below are set); testers install it with the
   TestFlight app on an iPhone, about 10 minutes after the PR comment says so.
+- The **Play build** workflow (Actions tab → Play build → Run workflow)
+  builds the signed app bundle Google Play takes and uploads it to the
+  internal testing track, or leaves it as the run's artifact to upload by hand
+  (setup below under *Play builds*).
 - release-please keeps a `chore(master): release X.Y.Z` PR open. Merging it tags
   the release, publishes it on GitHub with the APK and the `.ipa`, uploads a
   **MapMan** build to TestFlight, and updates
@@ -92,3 +96,43 @@ No provisioning profile needs storing: each build fetches the app's App Store
 profile with the API key (`fastlane sigh`, which creates it the first time).
 Build numbers only go up (the run number for MapMan Dev, major×10000 +
 minor×100 + patch for MapMan), and TestFlight builds expire after 90 days.
+
+### Play builds (Google Play)
+
+The Play build workflow signs the bundle with a throwaway key, with a warning,
+until these are set up. Once, by the owner:
+
+1. Make the upload key on your own machine (keep the file and the password
+   somewhere safe; if they are lost, Play Console can reset the upload key):
+
+   ```
+   keytool -genkeypair -v -keystore mapman-upload.keystore -alias upload \
+     -keyalg RSA -keysize 2048 -validity 10000 \
+     -dname "CN=MapMan upload key, O=danbhala, C=IE"
+   ```
+
+   Use the same password for the keystore and the key when it asks.
+2. **Settings → Secrets and variables → Actions:** add
+   `PLAY_UPLOAD_KEYSTORE_BASE64` (`base64 -w0 mapman-upload.keystore`, or
+   `base64 -i mapman-upload.keystore` on a Mac) and
+   `PLAY_UPLOAD_KEYSTORE_PASSWORD`.
+3. In Play Console, create the app `com.danbhala.mapman` (free, game). Play App
+   Signing is on by default: Google makes the signing key from the first
+   bundle you upload, and the bundle carries the upload certificate.
+4. Run the Play build workflow once with the track set to *none*, download
+   the `.aab` from the run's artifacts and upload it by hand under *Test and
+   release → Internal testing → Create new release*. Play's API refuses an
+   app's very first bundle, so the first one is always by hand. Add testers
+   there as an email list; they opt in once through the link and then get
+   every later build from the Play Store.
+5. Optional, so later runs upload themselves: in Google Cloud make a service
+   account in the project Play Console created, download its JSON key, invite
+   its email in Play Console under *Users and permissions* with *Release to
+   testing tracks* on this app, and add the JSON's text as the
+   `PLAY_SERVICE_ACCOUNT_JSON` secret.
+
+Version codes on Play are the release code (major×10000 + minor×100 + patch)
+times 1000 plus the workflow's run number, so they only ever go up; the version
+name is `X.Y.Z-play.N`. The sideloadable APKs keep their own debug-key signing
+and are unaffected.
+
