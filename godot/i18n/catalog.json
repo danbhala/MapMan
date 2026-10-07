@@ -1530,6 +1530,126 @@
       "id": "TRY %s",
       "note": "First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE",
       "max": 30
+    },
+    {
+      "id": "MADE BY YOU",
+      "note": "Level card: this level was drawn on this phone",
+      "max": 30
+    },
+    {
+      "id": "FROM A FRIEND",
+      "note": "Level card: this level came from someone else's code",
+      "max": 30
+    },
+    {
+      "id": "RECEIVED LEVEL %d",
+      "note": "Level card title: a level a friend sent (%d is its number on the drafting table, 1 to 12)",
+      "max": 24
+    },
+    {
+      "id": "PLAYED",
+      "note": "Level card figure label: how many tries the level has had",
+      "max": 14
+    },
+    {
+      "id": "CLEARED",
+      "note": "Level card figure label: how many times it was won",
+      "max": 14
+    },
+    {
+      "id": "BEST",
+      "note": "Level card figure label: the best time",
+      "max": 14
+    },
+    {
+      "id": "%ds LEFT",
+      "note": "Level card figure: the best time, as seconds left on the clock (%d)",
+      "max": 11
+    },
+    {
+      "id": "PLAY",
+      "note": "Level card button: play this level",
+      "max": 14
+    },
+    {
+      "id": "EDIT",
+      "note": "Level card button: open the draft in the editor",
+      "max": 14
+    },
+    {
+      "id": "REMIX",
+      "note": "Level card button: copy a friend's level into an empty draft, to change it",
+      "max": 14
+    },
+    {
+      "id": "DELETE",
+      "note": "Level card button, and the button that confirms it: remove the level for good",
+      "max": 14
+    },
+    {
+      "id": "RENAME",
+      "note": "Level card button: give the level a name that only this player sees",
+      "max": 11
+    },
+    {
+      "id": "REPLAY — %s",
+      "note": "Replay heading for a drafting table level: its name (%s)",
+      "max": 28
+    },
+    {
+      "id": "KEEP IT",
+      "note": "Delete question button: don't delete",
+      "max": 14
+    },
+    {
+      "id": "BACK TO THE LEVEL",
+      "note": "Share sheet item: back to the level's card",
+      "max": 28
+    },
+    {
+      "id": "DELETE DRAFT %d?",
+      "note": "Delete question (%d is the draft's number, 1 to 6)",
+      "max": 30
+    },
+    {
+      "id": "DELETE RECEIVED LEVEL %d?",
+      "note": "Delete question for a level a friend sent (%d is its number, 1 to 12)",
+      "max": 30
+    },
+    {
+      "id": "ITS NAME, BEST TIME AND GHOST GO WITH IT. THIS CAN'T BE UNDONE",
+      "note": "Delete question note, under the question; wraps onto two lines",
+      "max": 70
+    },
+    {
+      "id": "NAME THIS LEVEL · ONLY YOU SEE IT",
+      "note": "Rename sheet: the name stays on this phone and is never sent with the level's code",
+      "max": 46
+    },
+    {
+      "id": "SAVE THE NAME",
+      "note": "Rename sheet button",
+      "max": 24
+    },
+    {
+      "id": "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX",
+      "note": "Level card note when no draft is empty, so REMIX can't copy the level",
+      "max": 60
+    },
+    {
+      "id": "CLEARED WITH %ds LEFT · NEW BEST",
+      "note": "Level card note after a win with more time left than ever before (%d seconds)",
+      "max": 60
+    },
+    {
+      "id": "Level name",
+      "note": "Screen reader: the text box for a level's name",
+      "max": 30
+    },
+    {
+      "id": "The level's map",
+      "note": "Screen reader: the picture of the level on its card",
+      "max": 30
     }
   ]
 }

@@ -1246,3 +1246,99 @@ msgstr "SEGUIR: %s"
 #. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
 msgid "TRY %s"
 msgstr "PROBAR: %s"
+
+#. Level card: this level was drawn on this phone
+msgid "MADE BY YOU"
+msgstr "HECHO POR TI"
+
+#. Level card: this level came from someone else's code
+msgid "FROM A FRIEND"
+msgstr "DE UN AMIGO"
+
+#. Level card title: a level a friend sent (%d is its number on the drafting table, 1 to 12)
+msgid "RECEIVED LEVEL %d"
+msgstr "NIVEL RECIBIDO %d"
+
+#. Level card figure label: how many tries the level has had
+msgid "PLAYED"
+msgstr "JUGADO"
+
+#. Level card figure label: how many times it was won
+msgid "CLEARED"
+msgstr "SUPERADO"
+
+#. Level card figure label: the best time
+msgid "BEST"
+msgstr "MEJOR"
+
+#. Level card figure: the best time, as seconds left on the clock (%d)
+msgid "%ds LEFT"
+msgstr "QUEDAN %ds"
+
+#. Level card button: play this level
+msgid "PLAY"
+msgstr "JUGAR"
+
+#. Level card button: open the draft in the editor
+msgid "EDIT"
+msgstr "EDITAR"
+
+#. Level card button: copy a friend's level into an empty draft, to change it
+msgid "REMIX"
+msgstr "REMEZCLAR"
+
+#. Level card button, and the button that confirms it: remove the level for good
+msgid "DELETE"
+msgstr "BORRAR"
+
+#. Level card button: give the level a name that only this player sees
+msgid "RENAME"
+msgstr "RENOMBRAR"
+
+#. Replay heading for a drafting table level: its name (%s)
+msgid "REPLAY — %s"
+msgstr "REPETICIÓN — %s"
+
+#. Delete question button: don't delete
+msgid "KEEP IT"
+msgstr "CONSERVAR"
+
+#. Share sheet item: back to the level's card
+msgid "BACK TO THE LEVEL"
+msgstr "VOLVER AL NIVEL"
+
+#. Delete question (%d is the draft's number, 1 to 6)
+msgid "DELETE DRAFT %d?"
+msgstr "¿BORRAR EL BORRADOR %d?"
+
+#. Delete question for a level a friend sent (%d is its number, 1 to 12)
+msgid "DELETE RECEIVED LEVEL %d?"
+msgstr "¿BORRAR EL NIVEL RECIBIDO %d?"
+
+#. Delete question note, under the question; wraps onto two lines
+msgid "ITS NAME, BEST TIME AND GHOST GO WITH IT. THIS CAN'T BE UNDONE"
+msgstr "SE VAN SU NOMBRE, SU MEJOR TIEMPO Y SU FANTASMA. NO SE PUEDE DESHACER"
+
+#. Rename sheet: the name stays on this phone and is never sent with the level's code
+msgid "NAME THIS LEVEL · ONLY YOU SEE IT"
+msgstr "PONLE NOMBRE · SOLO TÚ LO VES"
+
+#. Rename sheet button
+msgid "SAVE THE NAME"
+msgstr "GUARDAR EL NOMBRE"
+
+#. Level card note when no draft is empty, so REMIX can't copy the level
+msgid "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX"
+msgstr "LOS 6 BORRADORES ESTÁN OCUPADOS: BORRA UNO"
+
+#. Level card note after a win with more time left than ever before (%d seconds)
+msgid "CLEARED WITH %ds LEFT · NEW BEST"
+msgstr "SUPERADO CON %ds · NUEVO RÉCORD"
+
+#. Screen reader: the text box for a level's name
+msgid "Level name"
+msgstr "Nombre del nivel"
+
+#. Screen reader: the picture of the level on its card
+msgid "The level's map"
+msgstr "Mapa del nivel"

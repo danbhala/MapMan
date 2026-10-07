@@ -291,6 +291,8 @@ func _on_clear_drafting() -> void:
 		return
 	Save.drafts.clear()
 	Save.received.clear()
+	Save.received_names.clear()
+	Save.level_stats.clear()
 	Save.save_all()
 	game.drafting.draft = null
 	_refresh_main_menu()

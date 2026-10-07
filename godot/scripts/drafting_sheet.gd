@@ -113,8 +113,16 @@ const QrCode := preload("res://addons/kenyoni/qr_code/qr_code.gd")
 const CELL := Vector2(90, Blueprint.TAP_HEIGHT)
 const CELL_PITCH := 98.0
 const DRAFTS_Y := 80.0
-const RECEIVED_HEAD_Y := 136.0
-const RECEIVED_Y := 154.0
+const RECEIVED_HEAD_Y := 132.0
+const RECEIVED_Y := 150.0
+const ROW_PITCH := 48.0
+## Under the cells: the two ways to get a friend's level, side by side, the
+## note and the way back.
+const ITEMS_Y := 248.0
+const ITEMS_H := 40.0
+const HALF_W := 286.0
+const NOTE_Y := 292.0
+const RETURN_Y := 306.0
 ## The editor, on the 667 × 375 panel: the status line, the grid (cells in
 ## the tiles' own 32:23 shape), the buttons under it, and the palette and
 ## code meter down the far side, clear of a dev build's DEV button.
@@ -146,24 +154,27 @@ static var tool := "c"
 # --- 001-E: the drafting table --------------------------------------------------------
 
 
-## drafts: Draft for each slot; received: codes, newest first. note: a line
-## about the last level played, in place of the usual one.
+## drafts: Draft for each slot; received: codes, newest first, two rows of
+## them. A cell shows the level's name, if it has one. note: a line about
+## the last level played, in place of the usual one.
 static func build(m: Menus, drafts: Array, received: Array, note := "") -> void:
 	m._open("drafting", TEXT.number, m.tr(TEXT.title))
 	m._columns([m.tr(TEXT.your_drafts)], [Menus.LIST_X])
 	for i in Draft.SLOTS:
 		var d: Draft = drafts[i]
-		var detail := TEXT.empty
+		var detail := m.tr(TEXT.empty)
 		var a11y := TEXT.a11y_draft_empty
 		if d.signed:
-			detail = TEXT.signed
+			detail = m.tr(TEXT.signed)
 			a11y = TEXT.a11y_draft_signed
 		elif not d.is_empty():
-			detail = TEXT.draft
+			detail = m.tr(TEXT.draft)
 			a11y = TEXT.a11y_draft
+		if d.name != "" and not d.is_empty():
+			detail = d.name
 		var pos := Vector2(Menus.LIST_X + i * CELL_PITCH, DRAFTS_Y)
 		var title: String = TEXT.draft_cell % (i + 1)
-		m._cell(pos, CELL, true, title, m.tr(detail), "draft %d" % i, m.tr(a11y) % (i + 1))
+		_named_cell(m, pos, title, detail, "draft %d" % i, m.tr(a11y) % (i + 1))
 	var head := m._row(RECEIVED_HEAD_Y, 16)
 	m._text(head, m.tr(TEXT.received), 11, Blueprint.FAINT, Menus.LIST_X, 0, 560.0)
 	m._reveal(head)
@@ -172,17 +183,44 @@ static func build(m: Menus, drafts: Array, received: Array, note := "") -> void:
 		m._text(none, m.tr(TEXT.none_received), 10, Blueprint.FAINT, Menus.LIST_X, 0, 560.0)
 		m._reveal(none)
 	for i in mini(received.size(), Draft.RECEIVED_KEPT):
-		var pos := Vector2(Menus.LIST_X + i * CELL_PITCH, RECEIVED_Y)
+		@warning_ignore("integer_division")
+		var pos := Vector2(
+			Menus.LIST_X + (i % Draft.SLOTS) * CELL_PITCH,
+			RECEIVED_Y + (i / Draft.SLOTS) * ROW_PITCH
+		)
 		var code: String = received[i]
+		var name: String = Save.received_name(code)
 		var title: String = TEXT.received_cell % (i + 1)
 		var a11y: String = m.tr(TEXT.a11y_received) % (i + 1)
-		m._cell(pos, CELL, true, title, code.left(4), "received %d" % i, a11y)
-	m._item(1, m.tr(TEXT.enter_code), "enter code", 204, true, 38)
-	m._item(2, m.tr(TEXT.scan), "scan code", 242, true, 38)
+		_named_cell(m, pos, title, name if name != "" else code.left(4), "received %d" % i, a11y)
+	var half := Vector2(HALF_W, ITEMS_H)
+	for i in 2:
+		var text: String = [TEXT.enter_code, TEXT.scan][i]
+		var x := Menus.LIST_X + i * (HALF_W + CELL_PITCH - CELL.x)
+		var b := Blueprint.item(
+			m._panel, "%02d  %s" % [i + 1, m.tr(text)], Vector2(m._mx(x, HALF_W), ITEMS_Y), half
+		)
+		b.alignment = m._align()
+		b.accessibility_name = m._sentence(m.tr(text))
+		m._connect(b, ["enter code", "scan code"][i])
+		m._reveal(b)
 	var line := note if note != "" else m.tr(TEXT.how)
-	m._note(m.tr(Menus.TEXT.note) % line, 285)
-	m._return_item(300)
+	m._note(m.tr(Menus.TEXT.note) % line, NOTE_Y)
+	m._return_item(RETURN_Y)
 	m._focus_first()
+
+
+## A cell of the table whose detail line may be a name the player typed,
+## which keeps to the cell.
+static func _named_cell(
+	m: Menus, pos: Vector2, title: String, detail: String, act: String, a11y: String
+) -> void:
+	var b := m._cell(pos, CELL, true, title, detail, act, a11y)
+	for l in b.get_parent().get_children():
+		if l is Label and l.text == detail:
+			l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			l.clip_text = true
+			l.size.x = CELL.x - 16.0
 
 
 # --- 001-F: a level code ----------------------------------------------------------------
@@ -193,12 +231,26 @@ static func build(m: Menus, drafts: Array, received: Array, note := "") -> void:
 static func build_code_entry(m: Menus, text: String, error := "") -> void:
 	m._open("enter_code", TEXT.code_number, m.tr(TEXT.code_title))
 	m._note(m.tr(TEXT.type_or_paste), Menus.LIST_TOP, Blueprint.FAINT, 11)
-	var edit := LineEdit.new()
-	m._panel.add_child(edit)
-	edit.position = Vector2(m._mx(Menus.LIST_X, 560.0), 84)
-	Blueprint.fit(edit, Vector2(560, Blueprint.TAP_HEIGHT))
+	var edit := line_edit(m, Vector2(Menus.LIST_X, 84), 560.0, m.tr(TEXT.a11y_code))
 	edit.text = text
 	edit.placeholder_text = LevelCode.PREFIX + " 0MM3-C7P1-…"
+	edit.text_direction = Control.TEXT_DIRECTION_LTR
+	edit.text_submitted.connect(func(_t: String): m.action.emit("play code"))
+	m._item(1, m.tr(TEXT.paste), "paste code", 144)
+	m._item(2, m.tr(TEXT.play_code), "play code", 188)
+	if error != "":
+		var why: String = TEXT.newer_code if error == "newer" else TEXT.bad_code
+		m._note(m.tr(why), 240, Blueprint.PINK, 11)
+	_back_row(m, "<  " + m.tr(TEXT.title), "drafting table", 282)
+	m.code_input = edit
+
+
+## A box to type into, in the sheet's ink, `w` wide at `at`.
+static func line_edit(m: Menus, at: Vector2, w: float, a11y: String) -> LineEdit:
+	var edit := LineEdit.new()
+	m._panel.add_child(edit)
+	edit.position = Vector2(m._mx(at.x, w), at.y)
+	Blueprint.fit(edit, Vector2(w, Blueprint.TAP_HEIGHT))
 	edit.add_theme_font_override("font", Blueprint.mono(700))
 	edit.add_theme_font_size_override("font_size", 18)
 	edit.add_theme_color_override("font_color", Blueprint.INK)
@@ -212,17 +264,9 @@ static func build_code_entry(m: Menus, text: String, error := "") -> void:
 	box.content_margin_right = 12
 	edit.add_theme_stylebox_override("normal", box)
 	edit.add_theme_stylebox_override("focus", box)
-	edit.text_direction = Control.TEXT_DIRECTION_LTR
-	edit.accessibility_name = m.tr(TEXT.a11y_code)
-	edit.text_submitted.connect(func(_t: String): m.action.emit("play code"))
+	edit.accessibility_name = a11y
 	m._reveal(edit)
-	m._item(1, m.tr(TEXT.paste), "paste code", 144)
-	m._item(2, m.tr(TEXT.play_code), "play code", 188)
-	if error != "":
-		var why: String = TEXT.newer_code if error == "newer" else TEXT.bad_code
-		m._note(m.tr(why), 240, Blueprint.PINK, 11)
-	_back_row(m, "<  " + m.tr(TEXT.title), "drafting table", 282)
-	m.code_input = edit
+	return edit
 
 
 ## A code found on the clipboard as the game opened: play it, or not.
@@ -325,16 +369,19 @@ static func _on_scanned(text: String, m: Menus) -> void:
 # --- Dn-S: sharing ----------------------------------------------------------------------
 
 
-static func build_share(m: Menus, draft: Draft, copied := false) -> void:
-	var code := draft.code()
-	m._open("share", TEXT.share_number % (draft.slot + 1), m.tr(TEXT.share))
+## The share sheet of the level with code `code`, numbered `number`
+## ("D1-S"); its second row goes back with `back_act`, labelled `back`.
+static func build_share(
+	m: Menus, code: String, number: String, back: String, back_act: String, copied := false
+) -> void:
+	m._open("share", number, m.tr(TEXT.share))
 	m._note(m.tr(TEXT.scan_or_send), Menus.LIST_TOP, Blueprint.FAINT, 11)
 	var l := m._text(m._panel, code_lines(code), 18, Blueprint.INK, Menus.LIST_X, 98, 300.0, 700)
 	l.text_direction = Control.TEXT_DIRECTION_LTR
 	l.accessibility_name = m.tr(TEXT.a11y_code) + ": " + code
 	m._reveal(l)
 	m._item(1, m.tr(TEXT.copy_code), "copy code", 214)
-	m._item(2, m.tr(TEXT.back_to_draft), "draft %d" % draft.slot, 258)
+	m._item(2, back, back_act, 258)
 	if copied:
 		m._note(m.tr(TEXT.copied), 310, Blueprint.GOLD, 11)
 	var qr := TextureRect.new()
@@ -347,7 +394,8 @@ static func build_share(m: Menus, draft: Draft, copied := false) -> void:
 	qr.accessibility_name = m.tr(TEXT.a11y_qr)
 	m._panel.add_child(qr)
 	m._reveal(qr)
-	m._stamp(m.tr(TEXT.signed), Vector2(470, 256), Blueprint.GOLD, Menus.STAMP_DELAY, false)
+	if number.begins_with("D"):
+		m._stamp(m.tr(TEXT.signed), Vector2(470, 256), Blueprint.GOLD, Menus.STAMP_DELAY, false)
 	m._focus_first()
 
 
@@ -412,7 +460,13 @@ static func build_pause(m: Menus, number: String) -> void:
 
 ## A row on the panel, like the parts list's way back, that reports `act`.
 static func _back_row(m: Menus, text: String, act: String, y: float) -> void:
-	var b := Blueprint.item(m._panel, text, Vector2(m._mx(Menus.LIST_X, Menus.LIST_W), y))
+	_back_row_at(m, text, act, Menus.LIST_X, Menus.LIST_W, y)
+
+
+static func _back_row_at(m: Menus, text: String, act: String, x: float, w: float, y: float) -> void:
+	var b := Blueprint.item(
+		m._panel, text, Vector2(m._mx(x, w), y), Vector2(w, Blueprint.TAP_HEIGHT)
+	)
 	b.alignment = m._align()
 	m._connect(b, act)
 	m._reveal(b)
@@ -629,6 +683,8 @@ class DraftGrid:
 	static var _textures := {}
 
 	var draft: Draft
+	## A level card's map: shown, never painted.
+	var read_only := false
 	var _painting := false
 	var _last := Vector2i(-1, -1)
 	var _changed := false
@@ -656,7 +712,7 @@ class DraftGrid:
 			c.draw_dashed_line(corners[i], corners[(i + 1) % 4], color, 1.0, 3.0)
 
 	func _ready() -> void:
-		mouse_filter = Control.MOUSE_FILTER_STOP
+		mouse_filter = Control.MOUSE_FILTER_IGNORE if read_only else Control.MOUSE_FILTER_STOP
 
 	func _cell_size() -> Vector2:
 		return Vector2(size.x / Draft.COLUMNS, size.y / Draft.ROWS)

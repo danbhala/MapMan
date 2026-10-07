@@ -20,6 +20,8 @@ func before_each() -> void:
 	Save.drafts.clear()
 	Save.received.clear()
 	Save.clipboard_seen = ""
+	Save.received_names.clear()
+	Save.level_stats.clear()
 	game = MAIN_SCENE.instantiate()
 	add_child_autofree(game)
 
