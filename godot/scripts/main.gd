@@ -1005,7 +1005,7 @@ func advance_level(check_point: bool) -> void:
 ## star with QUICK_SECONDS or more left. What the level clear says of it:
 ## {"paid", "bank"}, or {} while the Toolbox is still closed.
 func _bank_stars() -> Dictionary:
-	var key := Toolbox.sheet_key(level, Save.get("rev_b") == true)
+	var key := Toolbox.sheet_key(level, Save.rev_b)
 	var paid := Save.bank_sheet(key, stars, _seconds_remaining() >= QUICK_SECONDS)
 	if not Save.toolbox_open():
 		return {}

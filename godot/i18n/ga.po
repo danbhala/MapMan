@@ -1629,6 +1629,10 @@ msgstr "CLOIGEANN, UAIR SA BHILEOG"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "CLOIGEANN NÓ SPÍCÍ, 1×"
 
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "CLOIGEANN NÓ SPÍCÍ, 2×"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "LEIBHÉAL %d"

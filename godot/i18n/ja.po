@@ -1589,6 +1589,10 @@ msgstr "ドクロ、図面ごとに1回"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "ドクロかトゲ、1回"
 
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "ドクロかトゲ、2回"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "レベル%d"

@@ -1599,6 +1599,10 @@ msgstr "CRÂNE, 1 FOIS PAR PLANCHE"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "CRÂNE OU PICS, 1 FOIS"
 
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "CRÂNE OU PICS, 2 FOIS"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "NIVEAU %d"

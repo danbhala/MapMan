@@ -1589,6 +1589,10 @@ msgstr "骷髏，每張 1 次"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "骷髏或尖刺，1 次"
 
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "骷髏或尖刺，2 次"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "第%d關"

@@ -281,7 +281,7 @@ static func still_needed(save) -> int:
 
 ## The belt's slots: a third once sheet THIRD_SLOT_LEVEL is reached.
 static func belt_slots(save) -> int:
-	if save.furthest_level >= THIRD_SLOT_LEVEL or save.has_completed:
+	if save.track_a.furthest_level >= THIRD_SLOT_LEVEL or save.has_completed:
 		return BELT_SLOTS + 1
 	return BELT_SLOTS
 

@@ -1974,7 +1974,9 @@
     {
       "id": "SKULL OR SPIKES, TWICE",
       "note": "Toolbox tier line: the Hard Hat saves twice a sheet",
-      "max": 26,
+      "max": 26
+    },
+    {
       "id": "LEVEL %d",
       "note": "Level card title for a main game level opened from practice (%d is 1 to 100)",
       "max": 20

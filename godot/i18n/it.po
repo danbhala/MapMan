@@ -1599,6 +1599,10 @@ msgstr "TESCHIO, 1 VOLTA PER TAVOLA"
 msgid "SKULL OR SPIKES, ONCE"
 msgstr "TESCHIO O SPINE, 1 VOLTA"
 
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "TESCHIO O SPINE, 2 VOLTE"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "LIVELLO %d"
