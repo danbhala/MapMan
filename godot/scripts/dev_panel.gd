@@ -167,6 +167,11 @@ func _build_panel(theme: Theme) -> Control:
 	row.add_child(_button_for("Seed drafting table", _on_seed_drafting))
 	row.add_child(_button_for("Clear drafting table", _on_clear_drafting))
 	box.add_child(row)
+	row = HBoxContainer.new()
+	row.add_child(_button_for("+100 stars", _on_bank_stars))
+	row.add_child(_button_for("Own every tool", _on_own_every_tool))
+	row.add_child(_button_for("Empty the toolbox", _on_empty_toolbox))
+	box.add_child(row)
 
 	# Tilt tuning
 	box.add_child(_heading("Tilt tuning (saved on this phone, applies to this app)"))
@@ -297,6 +302,48 @@ func _on_clear_drafting() -> void:
 	game.drafting.draft = null
 	_refresh_main_menu()
 	_toast_text("Drafting table cleared")
+
+
+## A hundred stars in the bank, with the toolbox open.
+func _on_bank_stars() -> void:
+	if not Dev.enabled:
+		return
+	Save.bank += 100
+	Save.furthest_level = maxi(Save.furthest_level, 11)
+	Save.save_all()
+	_refresh_main_menu()
+	_toast_text("★ %d in the bank" % Save.bank)
+
+
+## Every tool at tier III, the first two on the belt, Fresh Sheet bought.
+func _on_own_every_tool() -> void:
+	if not Dev.enabled:
+		return
+	for tool in Toolbox.TOOLS:
+		Save.tools[tool.id] = Toolbox.TIERS
+	Save.belt.clear()
+	for tool in Toolbox.TOOLS:
+		if Save.belt.size() < Toolbox.belt_slots(Save):
+			Save.belt.append(tool.id)
+	Save.fresh_sheet = true
+	Save.furthest_level = maxi(Save.furthest_level, 11)
+	Save.save_all()
+	_refresh_main_menu()
+	_toast_text("Every tool owned")
+
+
+## No tools, no stars, nothing banked: the toolbox as a new player finds it.
+func _on_empty_toolbox() -> void:
+	if not Dev.enabled:
+		return
+	Save.tools.clear()
+	Save.belt.clear()
+	Save.banked.clear()
+	Save.bank = 0
+	Save.fresh_sheet = false
+	Save.save_all()
+	_refresh_main_menu()
+	_toast_text("Toolbox emptied")
 
 
 ## The main menu shows the wardrobe's count and the worn look: redraw it

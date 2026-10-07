@@ -38,7 +38,10 @@ static func svg(id: String) -> String:
 					% [GOLD, STROKE]
 				)
 				+ '<path d="M39 52 L57 52 M42 59 L54 59" fill="none" %s/>' % STROKE
-				+ '<path d="M14 26 L21 27 M82 26 L75 27 M22 9 L27 14 M74 9 L69 14" fill="none" %s/>' % THIN
+				+ (
+					'<path d="M14 26 L21 27 M82 26 L75 27 M22 9 L27 14 M74 9 L69 14" fill="none" %s/>'
+					% THIN
+				)
 			)
 		"pin":
 			body = (
@@ -66,8 +69,8 @@ static func svg(id: String) -> String:
 		"revive":
 			body = (
 				(
-					'<path d="M48 56 C26 42 26 26 37 22 C43 20 47 24 48 28 C49 24 53 20 59 22 C70 26 70 42 48 56 Z" fill="white" %s/>'
-					% STROKE
+					'<path d="M48 56 C26 42 26 26 37 22 C43 20 47 24 48 28 C49 24 53 20 59 22 '
+					+ 'C70 26 70 42 48 56 Z" fill="white" %s/>' % STROKE
 				)
 				+ '<path d="M18 40 A30 30 0 1 1 30 60" fill="none" %s/>' % MID
 				+ '<path d="M12 33 L18 42 L27 36" fill="none" %s/>' % MID
@@ -77,7 +80,10 @@ static func svg(id: String) -> String:
 				'<circle cx="48" cy="38" r="22" fill="white" %s/>' % STROKE
 				+ '<path d="M48 16 A22 22 0 0 1 48 60 Z" fill="%s"/>' % LILAC
 				+ '<circle cx="48" cy="38" r="22" fill="none" %s/>' % STROKE
-				+ '<path d="M48 38 L48 24 M42 9 L54 9 M48 9 L48 16 M66 18 L70 14" fill="none" %s/>' % STROKE
+				+ (
+					'<path d="M48 38 L48 24 M42 9 L54 9 M48 9 L48 16 M66 18 L70 14" fill="none" %s/>'
+					% STROKE
+				)
 			)
 		"look":
 			body = (
@@ -89,7 +95,8 @@ static func svg(id: String) -> String:
 			body = (
 				'<circle cx="48" cy="38" r="22" fill="white" %s/>' % STROKE
 				+ '<path d="M42 9 L54 9 M48 9 L48 16" fill="none" %s/>' % STROKE
-				+ '<path d="M40 28 L40 48 M56 28 L56 48" fill="none" stroke="black" stroke-width="7" stroke-linecap="round"/>'
+				+ '<path d="M40 28 L40 48 M56 28 L56 48" fill="none" stroke="black" '
+				+ 'stroke-width="7" stroke-linecap="round"/>'
 			)
 		"fresh":
 			body = (

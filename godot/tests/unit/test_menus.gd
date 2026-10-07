@@ -188,7 +188,9 @@ func test_toolbox_buttons_once_it_is_open() -> void:
 	)
 	game.menus.show_pause(false, 35, 12, true)
 	assert_eq(_press_all(), ["unpause", "confirm quit", "toolbox pause"])
-	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14, false, "", 0, {"paid": 3, "bank": 12})
+	game.menus.show_end_level(
+		100, 10, 7, 2, false, 35, 14, false, "", {"bank": {"paid": 3, "bank": 12}}
+	)
 	assert_has(_texts(), "★ 3 INTO THE STAR BANK · NOW ★ 12")
 	assert_eq(_press_all(), ["next level", "clear wardrobe", "leave clear", "toolbox"])
 

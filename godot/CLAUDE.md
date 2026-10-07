@@ -93,6 +93,16 @@ landscape. Your training data skews to Godot 3: no `yield`, `KinematicBody2D`,
   assists in Revision B (`losses_here()`). The menus' actions themselves are
   carried out by `scripts/menu_actions.gd`, the Options sheet's by
   `scripts/options_actions.gd`, so `main.gd` stays under the lint's 1300 lines.
+- The Toolbox (`docs/toolbox.md`): `scripts/toolbox.gd` (`main.toolbox`) is
+  the tree of nine tools bought with the stars a cleared sheet banks
+  (`Save.bank`, `tools`, `belt`, `banked`, `fresh_sheet`), and the tools at
+  work on a sheet: `main.gd` asks it before a tap pauses (`field_tap()`),
+  before a skull or spikes kill (`hat_saves()`), at game over (`revive()`),
+  while the sheet waits to start (`look_update()`) and on the clock
+  (`clock_stopped()`). `scripts/toolbox_sheet.gd` draws sheet 001-T,
+  `scripts/tool_belt.gd` the belt on the HUD, `scripts/tool_icons.gd` the
+  icons (SVG, drawn crisp at the scale shown). Tools work in the main game
+  and practice only.
 - Autoloads: `Save` (progress in `user://mapman.cfg`), `Audio`, `Dev`.
 - `Dev` (`scripts/dev.gd`) holds the tilt tuning every build reads
   (`Dev.t("tilt_threshold")` etc.; defaults are the original's values), the

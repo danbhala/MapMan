@@ -292,7 +292,7 @@ func started() -> bool:
 
 func _process(delta: float) -> void:
 	_update_gauge(delta)
-	_update_belt()
+	toolbox.update_belt()
 	steering.update()
 	if _tries.replay or menus.visible or not game_active:
 		return
@@ -348,21 +348,6 @@ func _update_gauge(delta: float) -> void:
 	gauge.steer = tilt.get_vector()
 	gauge.pace = pace(gauge.steer)
 	gauge.near_player(player.position, delta)
-
-
-## The tool belt shows beside the gauge while a sheet with tools is played.
-func _update_belt() -> void:
-	belt.visible = (
-		toolbox.showing() and not menus.visible and hud.visible and _tries.replay == null
-	)
-	var ids: Array[String] = []
-	if toolbox.showing():
-		ids = toolbox.belt()
-	belt.refresh(ids)
-	var room := ToolBelt.room(ids.size())
-	if room != hud.belt_room:
-		hud.belt_room = room
-		hud.layout()
 
 
 ## Tapping the gauge: the way the phone is held now becomes level.
@@ -601,19 +586,6 @@ func _start_move(actual: Vector2i, seconds: float) -> void:
 		_moves += 1
 		if vanish > 0:
 			vanish -= 1
-
-
-## A hop (the Toolbox) of `tiles` tiles in direction `actual` over `seconds`
-## has begun: the try records it as that many quick steps, so its replay
-## and ghost cross the tiles he hopped over on foot.
-func hopped(actual: Vector2i, tiles: int, seconds: float) -> void:
-	for i in tiles:
-		_tries.step(actual, seconds / tiles)
-	map.update_move(0.0)
-	player.face_direction(actual, true)
-	_moves += 1
-	if vanish > 0:
-		vanish -= 1
 
 
 # --- tries, the replay and the best-run ghost ----------------------------------
@@ -960,7 +932,7 @@ func advance_level(check_point: bool) -> void:
 			new_best = Save.record_best(level, _seconds_remaining(), stars)
 			if run:
 				Save.record_ghost(level, run)
-			bank = _bank_stars()
+			bank = toolbox.bank_stars()
 		if practice:
 			Audio.play("end_level")
 			var note := tr("LEVEL %d: %ds LEFT, NEW BEST!" if new_best else "LEVEL %d: %ds LEFT")
@@ -995,21 +967,8 @@ func advance_level(check_point: bool) -> void:
 		clock,
 		last,
 		released,
-		tries,
-		bank
+		{"tries": tries, "bank": bank}
 	)
-
-
-## The sheet just cleared pays into the star bank (the Toolbox): its star
-## tiles the first time each is picked up, its clear star, and its quick
-## star with QUICK_SECONDS or more left. What the level clear says of it:
-## {"paid", "bank"}, or {} while the Toolbox is still closed.
-func _bank_stars() -> Dictionary:
-	var key := Toolbox.sheet_key(level, Save.rev_b)
-	var paid := Save.bank_sheet(key, stars, _seconds_remaining() >= QUICK_SECONDS)
-	if not Save.toolbox_open():
-		return {}
-	return {"paid": paid.total, "bank": Save.bank}
 
 
 func next_level() -> void:
@@ -1137,7 +1096,7 @@ func finish_lose_life() -> void:
 	if not tutorial and not (Dev.enabled and Dev.unlimited_lives):
 		lives -= 1
 	_update_stats()
-	if lives < 1 and _second_draft():
+	if lives < 1 and toolbox.revive():
 		return
 	if lives < 1:
 		game_over()
@@ -1145,21 +1104,6 @@ func finish_lose_life() -> void:
 		menus.show_lose_life(lives, level, _lose_reason, assist_name())
 	else:
 		reset_all()
-
-
-## Second Draft (the Toolbox): out of lives, he gets back up on the same
-## sheet with its seconds on the clock; false when there is no draft left.
-func _second_draft() -> bool:
-	var seconds := toolbox.second_draft()
-	if seconds < 0.0:
-		return false
-	lives = 1
-	_update_stats()
-	reset_all(false)
-	_time_left = seconds
-	map.float_text(tr("SECOND DRAFT"), Blueprint.GOLD)
-	Audio.play("revive")
-	return true
 
 
 func game_over(show_score := true) -> void:

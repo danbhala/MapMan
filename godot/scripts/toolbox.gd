@@ -291,6 +291,85 @@ static func sheet_key(level: int, rev_b := false) -> String:
 	return ("B%d" if rev_b else "A%d") % level
 
 
+# --- the bank and the shop (on a Save) ---------------------------------------------
+
+
+## The stars a cleared sheet pays into the bank: its star tiles beyond any
+## it has paid before, its clear star the first time, and its quick star the
+## first time it is cleared with `quick` true. `key` names the sheet ("A35").
+## Returns what was paid: {"tiles", "clear", "quick", "total"}.
+static func bank_sheet(save, key: String, star_tiles: int, quick: bool) -> Dictionary:
+	var b: Dictionary = save.banked.get(key, {"tiles": 0, "clear": false, "quick": false})
+	var paid := {"tiles": maxi(star_tiles - int(b.tiles), 0), "clear": 0, "quick": 0}
+	if not b.clear:
+		paid.clear = 1
+	if quick and not b.quick:
+		paid.quick = 1
+	paid["total"] = paid.tiles + paid.clear + paid.quick
+	b.tiles = maxi(int(b.tiles), star_tiles)
+	b.clear = true
+	b.quick = bool(b.quick) or quick
+	save.banked[key] = b
+	if paid.total > 0:
+		save.bank += paid.total
+	save.save_all()
+	return paid
+
+
+## The next tier of tool `id` is bought, if the save.bank can pay for it and the
+## tool above it in its branch is owned; true if it was.
+static func buy(save, id: String) -> bool:
+	var price := next_price(id, save.tool_tier(id))
+	if price < 0 or price > save.bank or not unlocked(id, save):
+		return false
+	save.bank -= price
+	save.tools[id] = save.tool_tier(id) + 1
+	save.save_all()
+	return true
+
+
+## Fresh Sheet is bought once, for its price; true if it was just now.
+static func buy_fresh_sheet(save) -> bool:
+	if save.fresh_sheet or save.bank < FRESH_SHEET_PRICE:
+		return false
+	save.bank -= FRESH_SHEET_PRICE
+	save.fresh_sheet = true
+	save.save_all()
+	return true
+
+
+## Fresh Sheet: every star spent on save.tools comes back to the save.bank, and the
+## save.tools and the save.belt are cleared; true if there was anything to take back.
+static func refund(save) -> bool:
+	if not save.fresh_sheet:
+		return false
+	var refund := spent_stars(save)
+	if refund == 0:
+		return false
+	save.bank += refund
+	save.tools.clear()
+	save.belt.clear()
+	save.save_all()
+	return true
+
+
+## Puts an owned tool on the save.belt, or takes it off; false when there is no
+## room, or it isn't owned.
+static func set_on_belt(save, id: String, on: bool) -> bool:
+	if on:
+		if save.tool_tier(id) == 0 or id in save.belt:
+			return false
+		if save.belt.size() >= belt_slots(save):
+			return false
+		save.belt.append(id)
+	else:
+		if id not in save.belt:
+			return false
+		save.belt.erase(id)
+	save.save_all()
+	return true
+
+
 # --- in play --------------------------------------------------------------------------
 
 
@@ -327,7 +406,9 @@ func belt() -> Array[String]:
 
 ## A new sheet: every count and effect starts afresh.
 func begin_sheet() -> void:
-	_uses.clear()
+	for id in _uses.keys():
+		if tool(id).limit != "game":
+			_uses.erase(id)
 	begin_try()
 
 
@@ -353,6 +434,34 @@ func begin_try() -> void:
 func begin_game() -> void:
 	_uses.clear()
 	begin_try()
+
+
+## The sheet just cleared pays into the star bank: its star tiles the first
+## time each is picked up, its clear star, and its quick star with
+## main.gd's QUICK_SECONDS or more left. What the level clear says of it:
+## {"paid", "bank"}, or {} while the Toolbox is still closed.
+func bank_stars() -> Dictionary:
+	var g = _game
+	var key := sheet_key(g.level, Save.rev_b)
+	var paid := bank_sheet(Save, key, g.stars, g._seconds_remaining() >= g.QUICK_SECONDS)
+	if not Save.toolbox_open():
+		return {}
+	return {"paid": paid.total, "bank": Save.bank}
+
+
+## The tool belt shows beside the gauge while a sheet with tools is played.
+func update_belt() -> void:
+	var g = _game
+	var belt: ToolBelt = g.belt
+	belt.visible = showing() and not g.menus.visible and g.hud.visible and g._tries.replay == null
+	var ids: Array[String] = []
+	if showing():
+		ids = self.belt()
+	belt.refresh(ids)
+	var room := ToolBelt.room(ids.size())
+	if room != g.hud.belt_room:
+		g.hud.belt_room = room
+		g.hud.layout()
 
 
 ## The sheet is over (cleared, lost, or left): no effect outlives it.
@@ -608,7 +717,15 @@ func _hop() -> bool:
 		return false
 	var seconds: float = _game.STOP_TIME * 0.5 * (tiles + 1)
 	map.hop(dir, tiles + 1, seconds)
-	_game.hopped(dir, tiles + 1, seconds)
+	# The try records the hop as that many quick steps, so its replay and
+	# ghost cross the tiles he hopped over on foot.
+	for i in tiles + 1:
+		_game._tries.step(dir, seconds / (tiles + 1))
+	map.update_move(0.0)
+	_game.player.face_direction(dir, true)
+	_game._moves += 1
+	if _game.vanish > 0:
+		_game.vanish -= 1
 	Audio.play("hop")
 	return true
 
@@ -642,13 +759,20 @@ func hat_saves(key: Vector2i, what: String) -> bool:
 
 
 ## Out of lives: Second Draft stands him back up on the same sheet with its
-## tier's seconds on the clock, once a game (twice at tier III); -1 when it
-## can't.
-func second_draft() -> float:
+## tier's seconds on the clock, once a game (twice at tier III); false when
+## there is no draft left.
+func revive() -> bool:
 	if tier("revive") == 0 or used_up("revive"):
-		return -1.0
+		return false
 	_uses["revive"] = int(_uses.get("revive", 0)) + 1
-	return strength("revive", tier("revive"), "s")
+	var g = _game
+	g.lives = 1
+	g._update_stats()
+	g.reset_all(false)
+	g._time_left = strength("revive", tier("revive"), "s")
+	g.map.float_text(TranslationServer.translate("SECOND DRAFT"), Blueprint.GOLD)
+	Audio.play("revive")
+	return true
 
 
 # --- the clock ----------------------------------------------------------------------
@@ -716,6 +840,8 @@ func look_update(delta: float) -> bool:
 		_look_pending = false
 		if tier("look") > 0 and not _game.paused:
 			_look_left = strength("look", tier("look"), "s")
+			# The way the phone is held now is level: only a lean from here ends it.
+			_game.tilt.calibrate()
 			_game.player.update_at(_game.map.get_player_position(), 0.0)
 			_game.player.show_player()
 			_game.hud.set_time_message(TranslationServer.translate("FIRST LOOK"))
@@ -816,7 +942,9 @@ class ToolMarks:
 					continue
 				var tex := tile.sprite.texture
 				var size := tex.get_size() * LevelMap.ASSET_SCALE
-				draw_texture_rect(tex, Rect2(tile.position - size / 2.0, size), false, Color(1, 1, 1, 0.4))
+				draw_texture_rect(
+					tex, Rect2(tile.position - size / 2.0, size), false, Color(1, 1, 1, 0.4)
+				)
 		var pin := ToolIcons.texture("pin", 2.0)
 		for key in map.pinned:
 			var tile: LevelMap.Tile = map.tiles.get(key)
@@ -861,11 +989,11 @@ func action(act: String) -> bool:
 					_game.show_start_menu()
 		"fresh sheet":
 			if not Save.fresh_sheet:
-				if Save.buy_fresh_sheet():
+				if Toolbox.buy_fresh_sheet(Save):
 					Audio.play("stamp")
-			elif _game.game_active and not _game._between:
+			elif from == "pause":
 				pass  # only between sheets: the belt stays as it is mid-sheet
-			elif Save.refund_tools():
+			elif Toolbox.refund(Save):
 				Audio.play("fresh")
 			_show()
 		_:
@@ -875,13 +1003,13 @@ func action(act: String) -> bool:
 					selected = id
 				_show()
 			elif act.begins_with("buy "):
-				if Save.buy_tool(act.get_slice(" ", 1)):
+				if Toolbox.buy(Save, act.get_slice(" ", 1)):
 					Audio.play("buy")
 					_auto_belt(act.get_slice(" ", 1))
 				_show()
 			elif act.begins_with("belt "):
 				var id := act.get_slice(" ", 1)
-				if Save.set_on_belt(id, not Save.on_belt(id)):
+				if Toolbox.set_on_belt(Save, id, not Save.on_belt(id)):
 					Audio.play("toggle")
 				_show()
 			else:
@@ -892,7 +1020,7 @@ func action(act: String) -> bool:
 ## A tool just bought goes on the belt when there is room.
 func _auto_belt(id: String) -> void:
 	if Save.tool_tier(id) == 1 and Save.belt.size() < belt_slots(Save):
-		Save.set_on_belt(id, true)
+		Toolbox.set_on_belt(Save, id, true)
 
 
 func _show() -> void:

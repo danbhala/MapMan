@@ -78,6 +78,11 @@ const FRESH_POS := Vector2(240, 296)
 const FRESH_SIZE := Vector2(180, 46)
 const BACK_POS := Vector2(428, 296)
 const BACK_SIZE := Vector2(120, 44)
+## The TOOLBOX row over MapMan on the main menu, with the stars in the bank
+## at its far end. Reports "toolbox".
+const ROW_POS := Vector2(436, 72)
+const ROW_SIZE := Vector2(196, Blueprint.TAP_HEIGHT)
+const COUNT_W := 68.0
 
 
 ## The sheet, with `box.selected`'s card. Each row of a column is a button
@@ -94,7 +99,9 @@ static func build(m: Menus, box: Toolbox) -> void:
 		var head := m._row(BRANCH_Y, 28)
 		var title: String = TEXT.branch % [b + 1, m.tr(Toolbox.BRANCHES[b][0])]
 		m._text(head, title, 11, Blueprint.INK, x, 0, COLUMN_W - 4.0, 800)
-		m._text(head, m.tr(Toolbox.BRANCHES[b][1]), 9, Blueprint.FAINT, x + 24.0, 15, COLUMN_W - 28.0)
+		m._text(
+			head, m.tr(Toolbox.BRANCHES[b][1]), 9, Blueprint.FAINT, x + 24.0, 15, COLUMN_W - 28.0
+		)
 		m._reveal(head)
 		var tools := Toolbox.branch_tools(b)
 		for j in tools.size():
@@ -111,10 +118,14 @@ static func build(m: Menus, box: Toolbox) -> void:
 ## The bank, top right: the stars to spend, and what is spent of the whole.
 static func _bank(m: Menus) -> void:
 	var row := m._row(12, 46)
-	var stars := m._text(row, TEXT.star % _figure(Save.bank), 20, Blueprint.GOLD, BANK_X, 0, BANK_W, 800)
+	var stars := m._text(
+		row, TEXT.star % _figure(Save.bank), 20, Blueprint.GOLD, BANK_X, 0, BANK_W, 800
+	)
 	stars.accessibility_name = m.tr(TEXT.a11y_bank) % Save.bank
 	m._text(row, m.tr(TEXT.in_bank), 9, Blueprint.FAINT, BANK_X, 25, BANK_W)
-	var spent := m.tr(TEXT.spent) % [_figure(Toolbox.spent_stars(Save)), _figure(Toolbox.tree_price())]
+	var spent := (
+		m.tr(TEXT.spent) % [_figure(Toolbox.spent_stars(Save)), _figure(Toolbox.tree_price())]
+	)
 	m._text(row, spent, 8, Blueprint.FAINT, BANK_X, 36, BANK_W)
 	m._reveal(row)
 
@@ -153,16 +164,22 @@ static func _node(
 	var alpha := 1.0 if owned > 0 else (0.6 if open else 0.35)
 	ToolIcons.tile(cell, id if open else "lock", Vector2(icon_x, icon_y), ICON_W, alpha)
 	if id == box.selected:
-		marks.rings.append([cell.position + Vector2(icon_x, icon_y - 1.0), 31.0, Blueprint.INK, 1.0])
+		marks.rings.append(
+			[cell.position + Vector2(icon_x, icon_y - 1.0), 31.0, Blueprint.INK, 1.0]
+		)
 	if Save.on_belt(id):
-		marks.rings.append([cell.position + Vector2(icon_x, icon_y - 1.0), 27.0, Blueprint.GOLD, 2.0])
+		marks.rings.append(
+			[cell.position + Vector2(icon_x, icon_y - 1.0), 27.0, Blueprint.GOLD, 2.0]
+		)
 	var ink := Blueprint.INK if open else Blueprint.FAINT
 	var name: String = m.tr(tool.name)
 	_cell_text(m, cell, name, 11, ink, 56.0, 10.0, 94.0, 700)
 	var pips := ""
 	for t in Toolbox.TIERS:
 		pips += "●" if t < owned else "○"
-	_cell_text(m, cell, pips, 10, Blueprint.GOLD if owned > 0 else Blueprint.FAINT, 56.0, 25.0, 30.0)
+	_cell_text(
+		m, cell, pips, 10, Blueprint.GOLD if owned > 0 else Blueprint.FAINT, 56.0, 25.0, 30.0
+	)
 	var next := Toolbox.next_price(id, owned)
 	if not open:
 		_cell_text(m, cell, m.tr(TEXT.locked), 9, Blueprint.FAINT, 88.0, 26.0, 60.0, 600)
@@ -205,7 +222,14 @@ static func _card(m: Menus, marks: Marks, box: Toolbox) -> void:
 	m._text(card, m.tr(TEXT.limits[limit]), 9, Blueprint.FAINT, CARD_X, 53, CARD_W)
 	# Wrapped over up to three lines (m._text would turn the wrap off).
 	var blurb := Blueprint.label(
-		card, m.tr(tool.blurb), 8, Blueprint.FAINT, Vector2(m._mx(CARD_X, CARD_W), 66), 500, CARD_W, m._align()
+		card,
+		m.tr(tool.blurb),
+		8,
+		Blueprint.FAINT,
+		Vector2(m._mx(CARD_X, CARD_W), 66),
+		500,
+		CARD_W,
+		m._align()
 	)
 	# Wrapping doesn't refresh the label's minimum size by itself, and the
 	# unwrapped line would keep its width whatever the box says.
@@ -249,7 +273,9 @@ static func _card(m: Menus, marks: Marks, box: Toolbox) -> void:
 	if owned > 0:
 		var on := Save.on_belt(id)
 		var full := not on and Save.belt.size() >= Toolbox.belt_slots(Save)
-		var text: String = m.tr(TEXT.take_off_belt if on else (TEXT.belt_full if full else TEXT.put_on_belt))
+		var text: String = m.tr(
+			TEXT.take_off_belt if on else (TEXT.belt_full if full else TEXT.put_on_belt)
+		)
 		_card_button(m, card, text, BELT_Y, "belt " + id, not full)
 	m._reveal(card)
 
@@ -384,12 +410,6 @@ class Marks:
 
 
 # --- 001: the way in ---------------------------------------------------------------
-
-## The TOOLBOX row over MapMan on the main menu, with the stars in the bank
-## at its far end. Reports "toolbox".
-const ROW_POS := Vector2(436, 72)
-const ROW_SIZE := Vector2(196, Blueprint.TAP_HEIGHT)
-const COUNT_W := 68.0
 
 
 static func main_menu_row(m: Menus) -> void:

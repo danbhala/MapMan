@@ -54,8 +54,9 @@ static func end_level(m: Menus, args: Array) -> void:
 	var seconds_left: int = args[6]
 	var last: bool = args[7]
 	var released: String = args[8]
-	var tries: int = args[9] if args.size() > 9 else 0
-	var bank: Dictionary = args[10] if args.size() > 10 else {}
+	var tail: Dictionary = args[9] if args.size() > 9 else {}
+	var tries: int = tail.get("tries", 0)
+	var bank: Dictionary = tail.get("bank", {})
 	# The question before quitting from here numbers itself after this sheet.
 	m._level = level
 	m._tutorial = false
@@ -80,7 +81,9 @@ static func end_level(m: Menus, args: Array) -> void:
 		y += PITCH
 	var total := m._total(y + 4, str(score))
 	if checkpoint:
-		m._note(m._t("checkpoint_saved"), y + 40 - (4 if not bank.is_empty() else 0), Blueprint.GOLD, 11)
+		m._note(
+			m._t("checkpoint_saved"), y + 40 - (4 if not bank.is_empty() else 0), Blueprint.GOLD, 11
+		)
 	if not bank.is_empty():
 		var line: String = m.tr(TEXT.into_bank) % [bank.paid, bank.bank]
 		m._note(line, BANK_Y + (11 if checkpoint else 0), Blueprint.GOLD, 10)

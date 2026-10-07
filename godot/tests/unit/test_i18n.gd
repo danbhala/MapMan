@@ -277,7 +277,9 @@ func _longest_look() -> String:
 ## The level clear with the star bank's line, the toolbox open.
 func _clear_with_bank(m, longest: String) -> void:
 	Save.furthest_level = 50
-	m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest, 3, {"paid": 3, "bank": 128})
+	m.show_end_level(
+		1842, 10, 7, 2, true, 35, 14, false, longest, {"tries": 3, "bank": {"paid": 3, "bank": 128}}
+	)
 	Save.furthest_level = 1
 
 
@@ -289,7 +291,7 @@ func _toolbox(m, from: String, selected: String, owned: Dictionary) -> void:
 	Save.tools = owned.duplicate()
 	Save.belt.clear()
 	for id in owned:
-		Save.set_on_belt(id, Save.belt.size() < 2)
+		Toolbox.set_on_belt(Save, id, Save.belt.size() < 2)
 	Save.fresh_sheet = from == "main"
 	game.toolbox.from = from
 	game.toolbox.selected = selected

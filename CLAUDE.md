@@ -24,6 +24,8 @@ now ported to Godot 4.5.
   is drawn.
 - `docs/drafting-table.md` – the on-phone level editor and level codes. Read it
   before touching tiles, `godot/scripts/level_code.gd` or its frozen table.
+- `docs/toolbox.md` – the Toolbox: the star bank, the tree of tools and how
+  each works on a sheet. Read it before touching stars, lives or the clock.
 
 ## Checking your work
 

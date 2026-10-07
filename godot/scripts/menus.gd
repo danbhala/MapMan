@@ -1236,11 +1236,10 @@ func show_end_level(
 	seconds_left := -1,
 	last := false,
 	released := "",
-	tries := 0,
-	bank := {}
+	tail := {}
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released, tries, bank]
+	_clear_args = args + [last, released, tail]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
 
