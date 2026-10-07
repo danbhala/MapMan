@@ -1212,3 +1212,99 @@ msgstr "%sのまま"
 #. First run steering check: row that switches to the other steering; %s is TILT TO MOVE or DRAG TO MOVE
 msgid "TRY %s"
 msgstr "%sを試す"
+
+#. Level card: this level was drawn on this phone
+msgid "MADE BY YOU"
+msgstr "自分で作成"
+
+#. Level card: this level came from someone else's code
+msgid "FROM A FRIEND"
+msgstr "友だちから"
+
+#. Level card title: a level a friend sent (%d is its number on the drafting table, 1 to 12)
+msgid "RECEIVED LEVEL %d"
+msgstr "受け取ったレベル %d"
+
+#. Level card figure label: how many tries the level has had
+msgid "PLAYED"
+msgstr "プレイ回数"
+
+#. Level card figure label: how many times it was won
+msgid "CLEARED"
+msgstr "クリア回数"
+
+#. Level card figure label: the best time
+msgid "BEST"
+msgstr "ベスト"
+
+#. Level card figure: the best time, as seconds left on the clock (%d)
+msgid "%ds LEFT"
+msgstr "残り%d秒"
+
+#. Level card button: play this level
+msgid "PLAY"
+msgstr "プレイ"
+
+#. Level card button: open the draft in the editor
+msgid "EDIT"
+msgstr "編集"
+
+#. Level card button: copy a friend's level into an empty draft, to change it
+msgid "REMIX"
+msgstr "リミックス"
+
+#. Level card button, and the button that confirms it: remove the level for good
+msgid "DELETE"
+msgstr "削除"
+
+#. Level card button: give the level a name that only this player sees
+msgid "RENAME"
+msgstr "名前を変更"
+
+#. Replay heading for a drafting table level: its name (%s)
+msgid "REPLAY — %s"
+msgstr "リプレイ — %s"
+
+#. Delete question button: don't delete
+msgid "KEEP IT"
+msgstr "残す"
+
+#. Share sheet item: back to the level's card
+msgid "BACK TO THE LEVEL"
+msgstr "レベルへ戻る"
+
+#. Delete question (%d is the draft's number, 1 to 6)
+msgid "DELETE DRAFT %d?"
+msgstr "下書き %d を削除しますか？"
+
+#. Delete question for a level a friend sent (%d is its number, 1 to 12)
+msgid "DELETE RECEIVED LEVEL %d?"
+msgstr "受け取ったレベル %d を削除しますか？"
+
+#. Delete question note, under the question; wraps onto two lines
+msgid "ITS NAME, BEST TIME AND GHOST GO WITH IT. THIS CAN'T BE UNDONE"
+msgstr "名前、ベストタイム、ゴーストも消えます。元に戻せません"
+
+#. Rename sheet: the name stays on this phone and is never sent with the level's code
+msgid "NAME THIS LEVEL · ONLY YOU SEE IT"
+msgstr "このレベルに名前をつける · 自分だけに表示"
+
+#. Rename sheet button
+msgid "SAVE THE NAME"
+msgstr "名前を保存"
+
+#. Level card note when no draft is empty, so REMIX can't copy the level
+msgid "ALL 6 DRAFTS ARE IN USE: DELETE ONE TO REMIX"
+msgstr "下書き6つがすべて使用中：1つ削除してください"
+
+#. Level card note after a win with more time left than ever before (%d seconds)
+msgid "CLEARED WITH %ds LEFT · NEW BEST"
+msgstr "残り%d秒でクリア · 新記録"
+
+#. Screen reader: the text box for a level's name
+msgid "Level name"
+msgstr "レベル名"
+
+#. Screen reader: the picture of the level on its card
+msgid "The level's map"
+msgstr "レベルのマップ"

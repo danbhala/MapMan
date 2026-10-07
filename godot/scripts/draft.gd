@@ -7,7 +7,9 @@ extends RefCounted
 
 ## How many drafts the drafting table keeps, and how many received levels.
 const SLOTS := 6
-const RECEIVED_KEPT := 6
+const RECEIVED_KEPT := 12
+## The most characters a level's name has.
+const NAME_MAX := 16
 const COLUMNS := 17
 const ROWS := 12
 const UNDO_LIMIT := 60
@@ -22,6 +24,8 @@ var rows: Array[String] = []
 ## Vector2i -> true for each tile that starts hidden.
 var hidden := {}
 var signed := false
+## What the player called it ("" for none). It stays on this phone.
+var name := ""
 
 var _undo: Array = []
 
@@ -142,7 +146,7 @@ func to_save() -> Dictionary:
 	var keys: Array[Vector2i] = []
 	for key: Vector2i in hidden:
 		keys.append(key)
-	return {"rows": rows.duplicate(), "hidden": keys, "signed": signed}
+	return {"rows": rows.duplicate(), "hidden": keys, "signed": signed, "name": name}
 
 
 static func from_save(slot_number: int, saved: Variant) -> Draft:
@@ -160,6 +164,7 @@ static func from_save(slot_number: int, saved: Variant) -> Draft:
 		if key is Vector2i and on_grid(key) and d.tile(key) != " ":
 			d.hidden[key] = true
 	d.signed = bool(saved.get("signed", false)) and d.problem() == ""
+	d.name = tidy_name(str(saved.get("name", "")))
 	return d
 
 
@@ -180,6 +185,20 @@ static func from_level(slot_number: int, level: Dictionary) -> Draft:
 	for key: Vector2i in trimmed[1]:
 		d.hidden[at + key] = true
 	return d
+
+
+## A name as the sheets show it: capitals, single spaces, at most NAME_MAX
+## characters, and only what the game's fonts can draw (so no emoji).
+static func tidy_name(text: String) -> String:
+	var font := Blueprint.mono(700)
+	var out := ""
+	for ch in text.to_upper():
+		if ch.unicode_at(0) < 32 or not font.has_char(ch.unicode_at(0)):
+			continue
+		if ch == " " and (out == "" or out.ends_with(" ")):
+			continue
+		out += ch
+	return out.strip_edges().left(NAME_MAX).strip_edges()
 
 
 static func _known(line: String) -> bool:

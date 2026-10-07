@@ -51,6 +51,14 @@ var seen: Array[String] = []
 var drafts: Array = []
 var received: Array[String] = []
 var clipboard_seen := ""
+## The names players gave received levels, by code (LevelCode.clean()); a
+## draft keeps its own. Names stay on this phone: codes never carry them.
+var received_names := {}
+## Each drafting table level's record, by code (LevelCode.clean()): "played"
+## tries, "cleared" wins, "best" most seconds left (-1 before a win) and
+## "ghost", its best run (RunRecord.encode()). A changed draft is a new code,
+## so its record starts afresh.
+var level_stats := {}
 ## Tests turn this off so they never overwrite the player's real progress.
 var persist := true
 
@@ -157,6 +165,18 @@ func load_all(path := PATH) -> void:
 		if code is String and LevelCode.decode(code).has("rows"):
 			received.append(code)
 	clipboard_seen = str(_cfg.get_value("drafting", "clipboard_seen", ""))
+	received_names.clear()
+	var saved_names: Variant = _cfg.get_value("drafting", "names", {})
+	if saved_names is Dictionary:
+		for code in saved_names:
+			if code is String and saved_names[code] is String:
+				received_names[code] = saved_names[code]
+	level_stats.clear()
+	var saved_stats: Variant = _cfg.get_value("drafting", "stats", {})
+	if saved_stats is Dictionary:
+		for code in saved_stats:
+			if code is String and saved_stats[code] is Dictionary:
+				level_stats[code] = _stat_of(saved_stats[code])
 	# Saves from before the wardrobe have the progress but not the looks.
 	sync_wardrobe()
 	var saved_worn: Variant = _cfg.get_value("wardrobe", "worn", "classic")
@@ -191,6 +211,8 @@ func save_all(path := PATH) -> void:
 	_cfg.set_value("drafting", "drafts", drafts)
 	_cfg.set_value("drafting", "received", received)
 	_cfg.set_value("drafting", "clipboard_seen", clipboard_seen)
+	_cfg.set_value("drafting", "names", received_names)
+	_cfg.set_value("drafting", "stats", level_stats)
 	_cfg.save(path)
 
 
@@ -322,15 +344,106 @@ func store_draft(draft: Draft) -> void:
 	while drafts.size() < Draft.SLOTS:
 		drafts.append({})
 	drafts[draft.slot] = {} if draft.is_empty() else draft.to_save()
+	forget_unused()
 	save_all()
 
 
-## Keeps a code a friend sent at the front of the list (once), dropping the
-## oldest past what the drafting table shows.
+## Keeps a code a friend sent at the front of the list (once). A full list
+## lets go of its oldest unnamed level, or its oldest if all have names.
 func receive(code: String) -> void:
 	var tidy := LevelCode.pretty(code)
 	received.erase(tidy)
 	received.push_front(tidy)
-	if received.size() > Draft.RECEIVED_KEPT:
-		received.resize(Draft.RECEIVED_KEPT)
+	while received.size() > Draft.RECEIVED_KEPT:
+		var drop := received.size() - 1
+		for i in range(received.size() - 1, -1, -1):
+			if received_name(received[i]) == "":
+				drop = i
+				break
+		received.remove_at(drop)
+	forget_unused()
 	save_all()
+
+
+## Takes received level `index` off the drafting table, with its name and record.
+func delete_received(index: int) -> void:
+	if index < 0 or index >= received.size():
+		return
+	received.remove_at(index)
+	forget_unused()
+	save_all()
+
+
+## Empties draft slot `slot`, and forgets its record.
+func delete_draft(slot: int) -> void:
+	store_draft(Draft.new(slot))
+
+
+func received_name(code: String) -> String:
+	return received_names.get(LevelCode.clean(code), "")
+
+
+func name_received(code: String, name: String) -> void:
+	var key := LevelCode.clean(code)
+	if name == "":
+		received_names.erase(key)
+	else:
+		received_names[key] = name
+	save_all()
+
+
+## The record of the level with code `code` (see level_stats).
+func level_stat(code: String) -> Dictionary:
+	return level_stats.get(LevelCode.clean(code), _stat_of({}))
+
+
+## A try at a drafting table level began.
+func level_tried(code: String) -> void:
+	var key := LevelCode.clean(code)
+	var s := level_stat(key)
+	s.played += 1
+	level_stats[key] = s
+	save_all()
+
+
+## A drafting table level was won with `time_left` seconds left (run: the try,
+## or null); true if it beat the best so far.
+func level_won(code: String, time_left: int, run: RunRecord) -> bool:
+	var key := LevelCode.clean(code)
+	var s := level_stat(key)
+	s.cleared += 1
+	var best: bool = time_left > s.best
+	if best:
+		s.best = time_left
+	if run != null and run.won():
+		var old := RunRecord.decode(s.ghost)
+		if old == null or run.time_left > old.time_left:
+			s.ghost = run.encode()
+	level_stats[key] = s
+	save_all()
+	return best
+
+
+## Records and names of levels no longer on the drafting table go.
+func forget_unused() -> void:
+	var keep := {}
+	for code in received:
+		keep[LevelCode.clean(code)] = true
+	for d in all_drafts():
+		var code := d.code()
+		if code != "":
+			keep[LevelCode.clean(code)] = true
+	for table: Dictionary in [level_stats, received_names]:
+		for key in table.keys():
+			if not keep.has(key):
+				table.erase(key)
+
+
+static func _stat_of(saved: Dictionary) -> Dictionary:
+	var ghost: Variant = saved.get("ghost", "")
+	return {
+		"played": maxi(int(saved.get("played", 0)), 0),
+		"cleared": maxi(int(saved.get("cleared", 0)), 0),
+		"best": maxi(int(saved.get("best", -1)), -1),
+		"ghost": ghost if ghost is String else "",
+	}

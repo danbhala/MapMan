@@ -7,7 +7,7 @@ short code. There are no accounts and no server: the code *is* the level.
 
 - **Unlocks** once you reach level 11 (or have finished the game): sheet 001
   gains a sixth row, DRAFTING TABLE.
-- **Six drafts.** Tap a slot to open the editor: a 17 × 12 grid, a palette of
+- **Six drafts.** Tap an empty slot to open the editor: a 17 × 12 grid, a palette of
   every tile the campaign uses, UNDO (one step per stroke), CLEAR (which
   UNDO also takes back), TEST and SHARE.
   Drags paint; one start tile per level (placing another moves it).
@@ -20,8 +20,26 @@ short code. There are no accounts and no server: the code *is* the level.
   on their share sheet and plays the level as soon as it reads; ENTER A
   LEVEL CODE types or PASTEs one. Or just copy their message and open
   MapMan: a code on the clipboard is offered once on the main menu (the
-  phone's own camera app can put a QR's text there too). The last six codes played are kept under
-  RECEIVED LEVELS.
+  phone's own camera app can put a QR's text there too). Up to twelve codes
+  played are kept under RECEIVED LEVELS, in two rows, until the player deletes
+  them; a thirteenth lets go of the oldest one without a name.
+- **Level cards.** Tapping a drawn draft or a received level opens its card
+  (sheet D1 or R1, `scripts/level_card.gd`): the map, its name, PLAYED (tries),
+  CLEARED (wins) and BEST (most seconds left), and PLAY, EDIT (REMIX for a
+  friend's level: a copy in the first empty draft), SHARE, WATCH REPLAY (the
+  tries since the game opened) and DELETE, which asks once. Playing from a
+  card comes back to it.
+- **Names stay on the phone.** RENAME names a level (capitals, 16
+  characters, only what the bundled fonts can draw, `Draft.tidy_name()`).
+  Codes and links never carry a name, so a friend never sees text someone
+  typed; a received level arrives as R1, R2… and its player can name it.
+  Drafts keep their name in the draft; received levels' names are in
+  `Save.received_names`.
+- **Records and ghosts.** `Save.level_stats` keeps each level's tries, wins,
+  best time and best run (its ghost) by its code, so a draft that changes is
+  a new level and starts afresh, and a level that leaves the table takes its
+  record with it (`Save.forget_unused()`). The game plays these levels as
+  level 0 with the code as the key (`Tries.begin()`), apart from level 1.
 - **Level links:** scanning the QR with the phone's camera or tapping the
   link in a chat opens a page with the code. On Android its OPEN IN MAPMAN
   opens the game straight into the level, whether it was closed or in the
