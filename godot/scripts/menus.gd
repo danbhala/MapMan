@@ -931,6 +931,8 @@ func show_main(
 		_note(_t("note") % " · ".join(parts), 308 + 4 * extra)
 	_hero_on("tilt")
 	WardrobeSheet.main_menu_row(self)
+	if Save.toolbox_open():
+		ToolboxSheet.main_menu_row(self)
 	_focus_first()
 
 
@@ -1021,7 +1023,8 @@ func _remember_row(row: int) -> void:
 	_refocus_row = row
 
 
-func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
+## toolbox: a third row opens the Toolbox (tools apply to this sheet).
+func show_pause(tutorial: bool, level := 0, seconds := -1, toolbox := false) -> void:
 	_level = level
 	_tutorial = tutorial
 	_open("pause", _level_number("A"), _t("paused_title"))
@@ -1039,14 +1042,18 @@ func show_pause(tutorial: bool, level := 0, seconds := -1) -> void:
 		_item(2, _t("end_tutorial"), "end tutorial", 138)
 	else:
 		_item(2, _t("end_game"), "confirm quit", 138)
-	_pause_tail()
+	if toolbox:
+		_item(3, tr(ToolboxSheet.TEXT.title), "toolbox pause", 186)
+	_pause_tail(toolbox)
 
 
-## The pause sheet under its first two rows: the note, MapMan and the stamp.
-func _pause_tail() -> void:
-	_note(_t("pause_note_touch" if Save.controls == "touch" else "pause_note"), 200)
+## The pause sheet under its rows: the note, MapMan and the stamp; lower
+## down when a third row (`tall`) is above them.
+func _pause_tail(tall := false) -> void:
+	var drop := 40.0 if tall else 0.0
+	_note(_t("pause_note_touch" if Save.controls == "touch" else "pause_note"), 200 + drop)
 	_hero_on("tilt")
-	var hold := Vector2(_mx(230, 120.0), 240)
+	var hold := Vector2(_mx(230, 120.0), 240 + drop)
 	_reveal(Blueprint.stamp(_panel, _t("on_hold"), hold, Blueprint.GOLD))
 	_focus_first()
 
@@ -1216,7 +1223,9 @@ func _best_text(bests: Dictionary, level: int, open: bool) -> String:
 
 ## Level clear (ClearSheet): the bonuses count into the score, then NEXT,
 ## WARDROBE and MAIN MENU. released: the look this first clear released, if
-## any; tries: how many tries the replay would show (0: no WATCH REPLAY).
+## any; tries: how many tries the replay would show (0: no WATCH REPLAY);
+## bank: what the sheet paid into the star bank ({"paid", "bank"}, the
+## Toolbox), {} with the Toolbox closed.
 func show_end_level(
 	score: int,
 	level_bonus: int,
@@ -1227,10 +1236,10 @@ func show_end_level(
 	seconds_left := -1,
 	last := false,
 	released := "",
-	tries := 0
+	tail := {}
 ) -> void:
 	var args := [score, level_bonus, time_bonus, stars, checkpoint, level, seconds_left]
-	_clear_args = args + [last, released, tries]
+	_clear_args = args + [last, released, tail]
 	ClearSheet.end_level(self, _clear_args)
 	_redraw = show_end_level.bindv(_clear_args)
 

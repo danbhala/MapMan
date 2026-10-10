@@ -1333,6 +1333,266 @@ msgstr "レベル名"
 msgid "The level's map"
 msgstr "レベルのマップ"
 
+#. Toolbox: first branch of tools, the ones the player uses by tapping
+msgid "YOUR HAND"
+msgstr "あなたの手"
+
+#. Toolbox: line under the YOUR HAND branch
+msgid "you help him"
+msgstr "彼を助ける"
+
+#. Toolbox: second branch, MapMan's own moves and saves
+msgid "HIS FEET"
+msgstr "彼の足"
+
+#. Toolbox: line under the HIS FEET branch
+msgid "he gets moves"
+msgstr "彼の動きが増える"
+
+#. Toolbox: third branch, tools that change the level's countdown
+msgid "THE CLOCK"
+msgstr "時計"
+
+#. Toolbox: line under THE CLOCK branch
+msgid "time bends"
+msgstr "時間が曲がる"
+
+#. Toolbox tool: shows the hidden tiles for a moment, like paper on a light table
+msgid "LIGHT TABLE"
+msgstr "ライトテーブル"
+
+#. Toolbox tool: pins spikes or a crumble tile so it stays as it is
+msgid "PUSH PIN"
+msgstr "画びょう"
+
+#. Toolbox tool: MapMan hops over the next tile
+msgid "HOP"
+msgstr "ホップ"
+
+#. Toolbox tool: out of lives, MapMan gets back up on the same sheet (a drawing's second draft); also floats over the field when it happens
+msgid "SECOND DRAFT"
+msgstr "第二稿"
+
+#. Toolbox tool: everything at half speed for a few seconds
+msgid "SLOW-MO"
+msgstr "スローモー"
+
+#. Toolbox tool: the clock waits a few seconds at the start of a try; also the HUD's note while it does
+msgid "FIRST LOOK"
+msgstr "下見"
+
+#. Toolbox tool: the countdown stops for a few seconds while MapMan keeps walking
+msgid "STOP CLOCK"
+msgstr "時計ストップ"
+
+#. Floats over the field when the Hard Hat tool saves MapMan from a skull or spikes
+msgid "HARD HAT!"
+msgstr "ヘルメット！"
+
+#. Toolbox: what the Eraser does (card, wraps over 3-4 short lines)
+msgid "Tap a skull to rub it out, even one you can't see."
+msgstr "ドクロをタップして消す。見えないものも消せる。"
+
+#. Toolbox: what the Light Table does
+msgid "The hidden tiles show through the paper for a moment."
+msgstr "隠れたタイルが一瞬、紙の下から透けて見える。"
+
+#. Toolbox: what the Push Pin does
+msgid "Tap spikes or a crumble tile to pin it: it stays put."
+msgstr "トゲや崩れるタイルをタップして固定。そのまま動かない。"
+
+#. Toolbox: what Hop does
+msgid "He hops over the next tile the way he's facing."
+msgstr "向いている方向の次のタイルを飛び越える。"
+
+#. Toolbox: what the Hard Hat does
+msgid "The first skull on a sheet doesn't get him."
+msgstr "図面で最初のドクロは彼をやっつけられない。"
+
+#. Toolbox: what Second Draft does
+msgid "Out of lives, he gets back up on the same sheet."
+msgstr "ライフが尽きても、同じ図面で立ち上がる。"
+
+#. Toolbox: what Slow-mo does
+msgid "Everything at half speed for a few seconds, music too."
+msgstr "数秒間、音楽もすべて半分の速さに。"
+
+#. Toolbox: what First Look does
+msgid "The clock waits while you take in the sheet."
+msgstr "図面を眺めている間、時計は待ってくれる。"
+
+#. Toolbox: what Stop Clock does
+msgid "The countdown stops while he keeps walking."
+msgstr "彼が歩き続ける間、カウントダウンが止まる。"
+
+#. Toolbox tier line: the Eraser's recharge time (%s seconds)
+msgid "RECHARGES IN %s S"
+msgstr "%s秒で回復"
+
+#. Toolbox tier line: how long the Light Table or First Look shows (%s seconds)
+msgid "%s S LOOK"
+msgstr "%s秒見る"
+
+#. Toolbox tier line: how long the Push Pin holds (%s seconds)
+msgid "PINNED %s S"
+msgstr "%s秒固定"
+
+#. Toolbox tier line: Hop clears one tile, recharges in %s seconds
+msgid "1 TILE, %s S RECHARGE"
+msgstr "1マス、%s秒で回復"
+
+#. Toolbox tier line: Hop clears two tiles, recharges in %s seconds
+msgid "2 TILES, %s S RECHARGE"
+msgstr "2マス、%s秒で回復"
+
+#. Toolbox tier line: Second Draft puts MapMan back up with %s seconds on the clock
+msgid "BACK UP WITH %s S"
+msgstr "%s秒で復帰"
+
+#. Toolbox tier line: Second Draft works twice a game, with %s seconds
+msgid "TWICE A GAME, %s S"
+msgstr "1ゲーム2回、%s秒"
+
+#. Toolbox tier line: how long Slow-mo lasts
+msgid "%s S AT HALF SPEED"
+msgstr "%s秒間、半分の速さ"
+
+#. Toolbox tier line: how long Stop Clock holds the countdown
+msgid "CLOCK STOPS %s S"
+msgstr "時計が%s秒止まる"
+
+#. Title of sheet 001-T, the tree of tools bought with stars; also the main menu row, pause row and level-clear button that open it
+msgid "TOOLBOX"
+msgstr "道具箱"
+
+#. Toolbox: label under the star count the player has to spend
+msgid "IN THE BANK"
+msgstr "銀行に"
+
+#. Toolbox: tag on a tool carried into levels
+msgid "ON BELT"
+msgstr "装備中"
+
+#. Toolbox: tag on a tool bought but not on the belt
+msgid "OWNED"
+msgstr "所有"
+
+#. Toolbox card: how often a tool works (it recharges after each use)
+msgid "RECHARGES"
+msgstr "回復する"
+
+#. Toolbox card: the tool works once per try at a level
+msgid "ONCE A TRY"
+msgstr "トライごとに1回"
+
+#. Toolbox card: the tool works once per level
+msgid "ONCE A SHEET"
+msgstr "図面ごとに1回"
+
+#. Toolbox card: the tool works once per game from the start
+msgid "ONCE A GAME"
+msgstr "1ゲームに1回"
+
+#. Toolbox card: the tool works at the start of every try
+msgid "EVERY TRY"
+msgstr "毎トライ"
+
+#. Toolbox card button: buy tier %s (I, II or III) for %d stars
+msgid "BUY %s  ★ %d"
+msgstr "%s を買う  ★ %d"
+
+#. Toolbox card: all three tiers of the tool are bought
+msgid "EVERY TIER OWNED"
+msgstr "全段階を所有"
+
+#. Toolbox card: stars still needed for the next tier
+msgid "★ %d MORE TO GO"
+msgstr "あと ★ %d"
+
+#. Toolbox card: the tool above (%s, its name) must be bought before this one
+msgid "BUY %s FIRST"
+msgstr "まず %s を買う"
+
+#. Toolbox card button: carry the tool into levels
+msgid "PUT ON BELT"
+msgstr "装備する"
+
+#. Toolbox card button: stop carrying the tool
+msgid "TAKE OFF BELT"
+msgstr "外す"
+
+#. Toolbox card: no free belt slot for this tool
+msgid "BELT FULL"
+msgstr "装備がいっぱい"
+
+#. Toolbox: label of the strip of belt slots (the tools carried into levels)
+msgid "BELT"
+msgstr "装備"
+
+#. Toolbox: the third belt slot opens at level %d
+msgid "SHEET %d"
+msgstr "図面 %d"
+
+#. Toolbox: the reset that takes back every star spent (bought once)
+msgid "FRESH SHEET"
+msgstr "新しい図面"
+
+#. Toolbox: Fresh Sheet button before it is bought
+msgid "BUY FOR ★ %d"
+msgstr "★ %d で買う"
+
+#. Toolbox: Fresh Sheet button once bought, %s is the stars that come back
+msgid "TAKE BACK ★ %s"
+msgstr "★ %s を戻す"
+
+#. Toolbox: Fresh Sheet has nothing to take back
+msgid "NOTHING SPENT"
+msgstr "未使用"
+
+#. Toolbox: Fresh Sheet can't be used while a level is paused
+msgid "BETWEEN SHEETS ONLY"
+msgstr "図面の間だけ"
+
+#. Toolbox: button back to the level it was opened from (%s is its number); keep <
+msgid "<  SHEET %s"
+msgstr "<  図面 %s"
+
+#. Screen reader name of a tool's node in the toolbox (%s its name)
+msgid "%s, tier %d of 3"
+msgstr "%s、3段階中%d"
+
+#. Screen reader name of a tool not bought yet
+msgid "%s, not owned"
+msgstr "%s、未所有"
+
+#. Screen reader name of a tool whose tool above isn't bought
+msgid "%s, locked"
+msgstr "%s、ロック中"
+
+#. Screen reader name of the toolbox's star count
+msgid "%d stars in the bank"
+msgstr "銀行に星%d個"
+
+#. Level clear small print: stars the level paid into the bank, and the bank's total
+msgid "★ %d INTO THE STAR BANK · NOW ★ %d"
+msgstr "★ %d を銀行へ · 合計 ★ %d"
+
+#. Toolbox: stars spent so far of the whole tree's price (small print under the bank)
+msgid "★ %s / ★ %s SPENT"
+msgstr "★ %s / ★ %s 使用"
+
+#. Toolbox tier line: the Hard Hat saves from a skull once a sheet
+msgid "SKULL, ONCE A SHEET"
+msgstr "ドクロ、図面ごとに1回"
+
+#. Toolbox tier line: the Hard Hat saves from a skull or spikes once a sheet
+msgid "SKULL OR SPIKES, ONCE"
+msgstr "ドクロかトゲ、1回"
+
+#. Toolbox tier line: the Hard Hat saves twice a sheet
+msgid "SKULL OR SPIKES, TWICE"
+msgstr "ドクロかトゲ、2回"
+
 #. Level card title for a main game level opened from practice (%d is 1 to 100)
 msgid "LEVEL %d"
 msgstr "レベル%d"

@@ -18,6 +18,18 @@ const SFX := {
 	"checkpoint": "res://assets/sfx/checkpoint.ogg",
 	"love": "res://assets/sfx/love.ogg",
 	"stamp": "res://assets/sfx/pop.ogg",
+	# The Toolbox: a tool used, armed or refused, and each tool's own note.
+	"tool": "res://assets/sfx/star.wav",
+	"tool_arm": "res://assets/sfx/step.wav",
+	"tool_no": "res://assets/sfx/pop.ogg",
+	"erase": "res://assets/sfx/vanish.wav",
+	"pin": "res://assets/sfx/sticky.wav",
+	"hop": "res://assets/sfx/slide.wav",
+	"hardhat": "res://assets/sfx/crumble.wav",
+	"buy": "res://assets/sfx/points.wav",
+	"fresh": "res://assets/sfx/reverse.wav",
+	"toggle": "res://assets/sfx/step.wav",
+	"revive": "res://assets/sfx/life.wav",
 }
 
 const GAME_TRACKS := [
@@ -40,6 +52,7 @@ var _music_kind := ""
 var _music_path := ""
 var _step_alt := false
 var _pause_timer: SceneTreeTimer
+var _slow_tween: Tween
 
 
 func _ready() -> void:
@@ -148,6 +161,19 @@ func pause_music(seconds: float) -> void:
 	await timer.timeout
 	if _pause_timer == timer:
 		_music.stream_paused = false
+
+
+## Slow-mo (the Toolbox): the music winds down to `pitch` like a tape
+## slowing, and back up to 1.0, over a moment on the clock on the wall.
+func slow_music(pitch: float) -> void:
+	if _slow_tween:
+		_slow_tween.kill()
+	if not Blueprint.motion() or not is_inside_tree():
+		_music.pitch_scale = pitch
+		return
+	_slow_tween = create_tween()
+	_slow_tween.set_ignore_time_scale(true)
+	_slow_tween.tween_property(_music, "pitch_scale", pitch, 0.4).set_trans(Tween.TRANS_SINE)
 
 
 func set_music_enabled(on: bool) -> void:

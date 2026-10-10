@@ -16,6 +16,10 @@ const UNTRANSLATED := [
 	"001-F",
 	"001-G",
 	"001-H",
+	"001-T",
+	"I",
+	"II",
+	"III",
 	"D%d",
 	"R%d",
 	"D%d-S",
@@ -34,6 +38,8 @@ const UNTRANSLATED := [
 	"DEV",
 	"%s, %s",
 	"★ %d",
+	"★ %s",
+	"%02d  %s",
 	"♥ %d",
 	"T-0:%02d"
 ]
@@ -105,9 +111,15 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 		DraftingSheet.TEXT,
 		ControlsSheet.TEXT,
 		LevelCard.TEXT,
+		ToolboxSheet.TEXT,
+		ToolboxSheet.TEXT.limits,
+		ClearSheet.TEXT,
+		Toolbox.TIER_TEXT,
 	]:
 		for key in table:
 			var value = table[key]
+			if value is Dictionary:
+				continue
 			var texts: Array = value if value is Array else [value]
 			for text in texts:
 				if _has_letters(text) and text not in UNTRANSLATED:
@@ -116,13 +128,22 @@ func test_every_menu_and_hud_string_is_in_the_catalog() -> void:
 	for entry in DraftingSheet.TOOLS:
 		if entry[1] != "":
 			assert_true(msgids.has(entry[1]), "catalog has the tool %s" % entry[1])
+	for branch in Toolbox.BRANCHES:
+		for text in branch:
+			assert_true(msgids.has(text), "catalog has the branch %s" % text)
+	for tool in Toolbox.TOOLS:
+		assert_true(msgids.has(tool.name), "catalog has the tool %s" % tool.name)
+		assert_true(msgids.has(tool.blurb), "catalog has the blurb of %s" % tool.name)
 
 
 func test_every_tr_call_in_the_scripts_is_in_the_catalog() -> void:
-	var literal := RegEx.create_from_string('\\btr(?:_n)?\\(\\s*"((?:[^"\\\\]|\\\\.)*)"')
+	var literal := RegEx.create_from_string(
+		'\\b(?:tr(?:_n)?|translate)\\(\\s*"((?:[^"\\\\]|\\\\.)*)"'
+	)
 	var count := 0
 	var scripts := ["main.gd", "hud.gd", "menus.gd", "wardrobe_sheet.gd", "level_map.gd"]
-	scripts.append_array(["drafting_sheet.gd", "draft.gd", "level_card.gd"])
+	scripts.append_array(["drafting_sheet.gd", "draft.gd", "level_card.gd", "clear_sheet.gd"])
+	scripts.append_array(["toolbox.gd", "toolbox_sheet.gd", "tool_belt.gd"])
 	for script in scripts:
 		var source := FileAccess.get_file_as_string("res://scripts/" + script)
 		for m in literal.search_all(source):
@@ -253,6 +274,43 @@ func _longest_look() -> String:
 
 
 ## Sheet 001-D with `worn` on: its name and details over him.
+## The level clear with the star bank's line, the toolbox open.
+func _clear_with_bank(m, longest: String) -> void:
+	Save.furthest_level = 50
+	m.show_end_level(
+		1842, 10, 7, 2, true, 35, 14, false, longest, {"tries": 3, "bank": {"paid": 3, "bank": 128}}
+	)
+	Save.furthest_level = 1
+
+
+## Sheet 001-T with `owned` (id -> tier) bought, the first two on the belt,
+## opened from `from` with `selected` picked; Fresh Sheet bought at sheet 50.
+func _toolbox(m, from: String, selected: String, owned: Dictionary) -> void:
+	Save.furthest_level = 50 if from == "main" else 11
+	Save.bank = 128
+	Save.tools = owned.duplicate()
+	Save.belt.clear()
+	for id in owned:
+		Toolbox.set_on_belt(Save, id, Save.belt.size() < 2)
+	Save.fresh_sheet = from == "main"
+	game.toolbox.from = from
+	game.toolbox.selected = selected
+	m._level = 35
+	ToolboxSheet.build(m, game.toolbox)
+	Save.tools.clear()
+	Save.belt.clear()
+	Save.bank = 0
+	Save.fresh_sheet = false
+	Save.furthest_level = 1
+
+
+func _every_tool() -> Dictionary:
+	var owned := {}
+	for tool in Toolbox.TOOLS:
+		owned[tool.id] = 3
+	return owned
+
+
 func _wardrobe_sheet(worn: String) -> void:
 	Save.worn = worn
 	game.menus.show_wardrobe()
@@ -386,6 +444,12 @@ func _open_every_sheet(check: Callable) -> void:
 		func(): m.show_practice(1, 25, {21: {"time": 9, "stars": 1}}, 100),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14),
 		func(): m.show_end_level(1842, 10, 7, 2, true, 35, 14, false, longest),
+		_clear_with_bank.bind(m, longest),
+		func(): m.show_pause(false, 35, 12, true),
+		_toolbox.bind(m, "main", "eraser", {}),
+		_toolbox.bind(m, "pause", "hop", {"eraser": 1, "pin": 1, "hop": 2}),
+		_toolbox.bind(m, "clear", "hardhat", {"hardhat": 3, "revive": 3, "slow": 2}),
+		_toolbox.bind(m, "main", "freeze", _every_tool()),
 		func(): m.show_wardrobe(36),
 		func(): m.show_congratulations(2042, true),
 		func(): m.show_congratulations(2042, true, "mapwoman"),

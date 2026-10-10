@@ -294,6 +294,11 @@ func face_direction(dir: Vector2i, walk: bool) -> void:
 	_face(dir, walk)
 
 
+## The way he faces, in screen directions; ZERO facing front, at rest.
+func facing() -> Vector2i:
+	return _facing
+
+
 func vanish() -> void:
 	visible = false
 	is_hidden = true

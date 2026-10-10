@@ -105,6 +105,12 @@ func run() -> void:
 	save.tilt_gauge = true
 	save.controls = "tilt"
 	save.tilt_sensitivity = 1
+	# The Toolbox closed and empty until its own shots.
+	save.bank = 0
+	save.tools.clear()
+	save.belt.clear()
+	save.banked.clear()
+	save.fresh_sheet = false
 
 	game = load("res://scenes/main.tscn").instantiate()
 	# The tilt gauge only shows on phones; draw it here so the shots match them.
@@ -333,6 +339,39 @@ func run() -> void:
 	await shot("30_rev_b_pause")
 	game._on_menu_action("end game")
 	save.has_completed = false
+
+	# The Toolbox: sheet 001-T part way through the tree, and a sheet played
+	# with two tools on the belt, Slow-mo running.
+	save.furthest_level = 23
+	save.bank = 128
+	save.tools = {"hop": 2, "hardhat": 3, "slow": 1}
+	save.belt.assign(["hop", "slow"])
+	save.fresh_sheet = true
+	game.toolbox.selected = "hardhat"
+	game._on_menu_action("main menu")
+	await frames(70)
+	await shot("31_main_menu_toolbox")
+	game._on_menu_action("toolbox")
+	await frames(70)
+	await shot("32_toolbox")
+	game._on_menu_action("toolbox back")
+	game._on_menu_action("play game")
+	while not game._timer_running:
+		await process_frame
+	game.level = 3
+	game.load_level()
+	game.reset_all()
+	while not game._timer_running:
+		await process_frame
+	game.toolbox.use("slow")
+	await frames(20)
+	await shot("33_belt_slow_mo")
+	game._on_menu_action("end game")
+	await frames(10)
+	save.tools.clear()
+	save.belt.clear()
+	save.bank = 0
+	save.fresh_sheet = false
 
 	if failures.is_empty():
 		print("SCREENSHOTS OK")

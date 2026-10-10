@@ -73,6 +73,8 @@ var ices := {}
 var spikes := {}
 var spike_time := 0.0
 var spike_cycle := 2.0
+## Tiles the Push Pin holds (key -> true): spikes stay down, crumble holds.
+var pinned := {}
 
 # Movement between two tiles.
 var moving := false
@@ -200,7 +202,8 @@ func load_level(level: Dictionary, screen_size: Vector2, x_hides_override := -1)
 		_falls,
 		ices,
 		spikes,
-		_spike_states
+		_spike_states,
+		pinned
 	]:
 		d.clear()
 	spike_time = 0.0
@@ -693,6 +696,51 @@ func last_step() -> Vector2i:
 	return _move_to - _move_from
 
 
+## How far along the move under way he is, 0..1.
+func move_share() -> float:
+	if not moving or _move_seconds <= 0.0:
+		return 0.0
+	return clampf(_move_elapsed / _move_seconds, 0.0, 1.0)
+
+
+## A hop (the Toolbox): `tiles` tiles in direction `step` in one move, over
+## whatever lies between, landing on a tile he can stand on.
+func hop(step: Vector2i, tiles: int, seconds: float) -> void:
+	var target := position_key + step * tiles
+	if not walkable(target):
+		return
+	moving = true
+	_move_from = position_key
+	_move_to = target
+	_move_elapsed = 0.0
+	_move_seconds = seconds
+
+
+## Whether the move under way is a hop (more than one tile).
+func hopping() -> bool:
+	return moving and (_move_to - _move_from).length_squared() > 1
+
+
+## The Eraser (the Toolbox): the death tile at `key` becomes a plain tile,
+## shown, until reset().
+func erase_tile(key: Vector2i) -> void:
+	if not deaths.get(key, false):
+		return
+	deaths[key] = false
+	var tile: Tile = tiles[key]
+	tile.sprite.texture = _tex("blank1.png")
+	_unhide_tile(tile, true)
+	if Blueprint.motion():
+		var tw := create_tween()
+		tw.tween_property(tile.sprite, "scale", Vector2.ONE * ASSET_SCALE * 0.85, 0.08)
+		(
+			tw
+			. tween_property(tile.sprite, "scale", Vector2.ONE * ASSET_SCALE, 0.2)
+			. set_trans(Tween.TRANS_BACK)
+			. set_ease(Tween.EASE_OUT)
+		)
+
+
 ## step is in screen directions: (1, 0) right, (0, -1) up.
 func move(step: Vector2i, seconds: float) -> void:
 	var target := position_key + step
@@ -709,7 +757,7 @@ func move(step: Vector2i, seconds: float) -> void:
 ## The crumble tile at key falls away: it drops and fades, then is gone until
 ## reset(). Nothing happens if it has already fallen.
 func crumble(key: Vector2i) -> void:
-	if not crumbles.get(key, false):
+	if not crumbles.get(key, false) or pinned.has(key):
 		return
 	crumbles[key] = false
 	broken[key] = true
@@ -743,6 +791,8 @@ func spike_phase(key: Vector2i) -> float:
 
 ## 0 down, 1 warning poke, 2 up (deadly).
 func spike_state(key: Vector2i) -> int:
+	if pinned.has(key):
+		return 0
 	var ph := spike_phase(key)
 	if ph < SPIKE_DOWN:
 		return 0
@@ -774,6 +824,7 @@ func update_spikes(delta: float) -> bool:
 func reset() -> void:
 	moving = false
 	position_key = start_position
+	pinned.clear()
 	spike_time = 0.0
 	update_spikes(0.0)
 	for tw: Tween in _falls.values():

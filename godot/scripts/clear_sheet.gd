@@ -16,9 +16,14 @@ const BUTTON_WS := [112.0, 126.0, 126.0]
 const GAP := 8.0
 const BUTTON_FONT := 14
 const NOTE_Y := 296.0
-## WATCH REPLAY, under MapMan on the far side.
-const REPLAY_POS := Vector2(448, 248)
+## WATCH REPLAY, under MapMan on the far side, and TOOLBOX under it (clear
+## of the title block), with the bank's line over the buttons.
+const REPLAY_POS := Vector2(448, 246)
 const REPLAY_W := 196.0
+const REPLAY_H := 40.0
+const TOOLBOX_POS := Vector2(448, 290)
+const TOOLBOX_W := 104.0
+const BANK_Y := 208.0
 
 ## The count-up: each row's figure and the TOTAL climb together in at most
 ## TICKS ticks this far apart, so a big bonus takes no longer than a small
@@ -26,6 +31,9 @@ const REPLAY_W := 196.0
 const TICKS := 16
 const TICK := 0.05
 const TICK_RISE := 0.6
+
+## The words the Toolbox adds to the level clear (msgids).
+const TEXT := {"into_bank": "★ %d INTO THE STAR BANK · NOW ★ %d"}
 
 
 ## Level clear: the bonuses are added into the score one row at a time, then
@@ -46,7 +54,9 @@ static func end_level(m: Menus, args: Array) -> void:
 	var seconds_left: int = args[6]
 	var last: bool = args[7]
 	var released: String = args[8]
-	var tries: int = args[9] if args.size() > 9 else 0
+	var tail: Dictionary = args[9] if args.size() > 9 else {}
+	var tries: int = tail.get("tries", 0)
+	var bank: Dictionary = tail.get("bank", {})
 	# The question before quitting from here numbers itself after this sheet.
 	m._level = level
 	m._tutorial = false
@@ -71,7 +81,12 @@ static func end_level(m: Menus, args: Array) -> void:
 		y += PITCH
 	var total := m._total(y + 4, str(score))
 	if checkpoint:
-		m._note(m._t("checkpoint_saved"), y + 40, Blueprint.GOLD, 11)
+		m._note(
+			m._t("checkpoint_saved"), y + 40 - (4 if not bank.is_empty() else 0), Blueprint.GOLD, 11
+		)
+	if not bank.is_empty():
+		var line: String = m.tr(TEXT.into_bank) % [bank.paid, bank.bank]
+		m._note(line, BANK_Y + (11 if checkpoint else 0), Blueprint.GOLD, 10)
 	var texts := [m._t("next"), m.tr(WardrobeSheet.TEXT.title), m._t("menu")]
 	var a11y := [m._t("next_level"), texts[1], m._t("main_menu")]
 	var acts := ["next level", "clear wardrobe", "leave clear"]
@@ -82,6 +97,8 @@ static func end_level(m: Menus, args: Array) -> void:
 		x += BUTTON_WS[i] + GAP
 	if tries > 0:
 		buttons.append(_replay_button(m, tries))
+	if Save.toolbox_open():
+		buttons.append(_toolbox_button(m, tries > 0))
 	if released != "":
 		WardrobeSheet.release_slip(m, released)
 	else:
@@ -126,12 +143,26 @@ static func _side_button(
 static func _replay_button(m: Menus, tries: int) -> Button:
 	var pos := Vector2(m._mx(REPLAY_POS.x, REPLAY_W), REPLAY_POS.y)
 	var text := m.tr("WATCH REPLAY")
-	var b := Blueprint.item(m._panel, text, pos, Vector2(REPLAY_W, Blueprint.TAP_HEIGHT))
+	var b := Blueprint.item(m._panel, text, pos, Vector2(REPLAY_W, REPLAY_H))
 	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	b.accessibility_name = (
 		"%s, %s" % [m._sentence(text), m._sentence(m.tr_n("%d TRY", "%d TRIES", tries) % tries)]
 	)
 	m._connect(b, "replay")
+	return b
+
+
+## TOOLBOX: the Toolbox sheet, which comes back here. Under WATCH REPLAY, or
+## in its place when there is no replay.
+static func _toolbox_button(m: Menus, under_replay: bool) -> Button:
+	var y := TOOLBOX_POS.y if under_replay else REPLAY_POS.y
+	var pos := Vector2(m._mx(TOOLBOX_POS.x, TOOLBOX_W), y)
+	var text := m.tr(ToolboxSheet.TEXT.title)
+	var b := Blueprint.item(m._panel, text, pos, Vector2(TOOLBOX_W, REPLAY_H))
+	b.add_theme_font_size_override("font_size", 12)
+	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.accessibility_name = m._sentence(text)
+	m._connect(b, "toolbox")
 	return b
 
 
