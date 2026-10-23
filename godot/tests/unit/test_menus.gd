@@ -229,7 +229,9 @@ func _tap() -> void:
 
 func test_level_clear_buttons() -> void:
 	game.menus.show_end_level(100, 10, 7, 2, false, 35, 14)
-	assert_eq(_press_all(), ["next level", "clear wardrobe", "leave clear"])
+	# Left to right: MENU, WARDROBE, then NEXT at the far end, first to focus.
+	assert_eq(game.menus._first_button.text, "NEXT")
+	assert_eq(_press_all(), ["leave clear", "clear wardrobe", "next level"])
 
 
 func test_a_tap_mid_count_finishes_it_and_stays() -> void:
@@ -436,7 +438,7 @@ func test_release_slips() -> void:
 	assert_has(_texts(), "NEW IN THE WARDROBE")
 	assert_has(_texts(), "COWBOY")
 	assert_has(_texts(), "UNCOMMON")
-	var acts := ["next level", "clear wardrobe", "leave clear", "wear cowboy"]
+	var acts := ["leave clear", "clear wardrobe", "next level", "wear cowboy"]
 	assert_eq(_press_all(), acts, "WEAR IT on the slip")
 	m.show_end_level(100, 10, 7, 2, false, 35, 14, false, "cowboy")
 	_actions.clear()
