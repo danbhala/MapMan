@@ -1,20 +1,29 @@
 class_name ClearSheet
 extends RefCounted
 ## The level clear of the main game: the bonuses count into the score, then
-## NEXT, WARDROBE and MAIN MENU come up under the total. Static functions that
+## MENU, WARDROBE and NEXT come up under the total, NEXT solid at the far end. Static functions that
 ## build onto the Menus sheet they are given, with its own helpers, as
 ## WardrobeSheet does; their words are in Menus.TEXT. The count-up serves
 ## the final inspection too.
 
 ## Where its table starts and its pitch (tighter than Menus.ROW_H, to make
 ## room for the buttons), the buttons' row, their widths in reading order
-## with the gap between them, and the small print when no slip takes its place.
+## (MENU, WARDROBE, NEXT: the way on sits at the far end, where the eye
+## finishes the row; MENU takes whatever WARDROBE leaves) with the gap after
+## each, and the small print when no slip takes its place.
 const ROWS_Y := 80.0
 const PITCH := 30.0
 const BUTTONS_Y := 232.0
-const BUTTON_WS := [112.0, 126.0, 126.0]
-const GAP := 8.0
+const BUTTON_WS := [84.0, 116.0, 164.0]
+const GAPS := [4.0, 12.0]
 const BUTTON_FONT := 14
+const NEXT_FONT := 16
+## NEXT's arrow: a chevron this tall, this far in from the button's far end,
+## that nudges forward this far and back once a beat while NEXT waits.
+const ARROW_H := 12.0
+const ARROW_IN := 18.0
+const ARROW_NUDGE := 4.0
+const ARROW_BEAT := 0.9
 const NOTE_Y := 296.0
 ## WATCH REPLAY, under MapMan on the far side.
 const REPLAY_POS := Vector2(448, 248)
@@ -29,7 +38,7 @@ const TICK_RISE := 0.6
 
 
 ## Level clear: the bonuses are added into the score one row at a time, then
-## NEXT, WARDROBE and MAIN MENU come up under the total. A tap before then
+## MENU, WARDROBE and NEXT come up under the total. A tap before then
 ## finishes the count; after it, a tap goes on to the next level. `args` are
 ## Menus.show_end_level's: score, level_bonus, time_bonus, stars, checkpoint,
 ## level, seconds_left (the clock at the exit, the time bonus's quantity),
@@ -72,14 +81,26 @@ static func end_level(m: Menus, args: Array) -> void:
 	var total := m._total(y + 4, str(score))
 	if checkpoint:
 		m._note(m._t("checkpoint_saved"), y + 40, Blueprint.GOLD, 11)
-	var texts := [m._t("next"), m.tr(WardrobeSheet.TEXT.title), m._t("menu")]
-	var a11y := [m._t("next_level"), texts[1], m._t("main_menu")]
-	var acts := ["next level", "clear wardrobe", "leave clear"]
-	var buttons: Array[Button] = []
-	var x := Menus.LIST_X
-	for i in acts.size():
-		buttons.append(_side_button(m, x, BUTTON_WS[i], texts[i], a11y[i], acts[i]))
-		x += BUTTON_WS[i] + GAP
+	# Three kinds of button, so the way on can't be missed: MENU a quiet word,
+	# WARDROBE an outlined box, NEXT solid with an arrow, at the end of the row.
+	# Laid from the far end, so a long word in WARDROBE takes room from MENU.
+	var end := Menus.LIST_X + Menus.LIST_W
+	var next := _side_button(m, 0.0, BUTTON_WS[2], m._t("next"), m._t("next_level"), "next level")
+	var arrow := _solid(m, next)
+	_place(m, next, end - BUTTON_WS[2], BUTTON_WS[2])
+	var wardrobe_text := m.tr(WardrobeSheet.TEXT.title)
+	var wardrobe := _side_button(
+		m, 0.0, BUTTON_WS[1], wardrobe_text, wardrobe_text, "clear wardrobe"
+	)
+	_outlined(wardrobe)
+	var ww := maxf(BUTTON_WS[1], wardrobe.get_combined_minimum_size().x)
+	var wx := end - BUTTON_WS[2] - GAPS[1] - ww
+	_place(m, wardrobe, wx, ww)
+	var menu := _side_button(m, 0.0, BUTTON_WS[0], m._t("menu"), m._t("main_menu"), "leave clear")
+	_quiet(menu)
+	_place(m, menu, Menus.LIST_X, wx - GAPS[0] - Menus.LIST_X)
+	# NEXT first: it takes the focus and a gamepad's first press.
+	var buttons: Array[Button] = [next, wardrobe, menu]
 	if tries > 0:
 		buttons.append(_replay_button(m, tries))
 	if released != "":
@@ -103,8 +124,9 @@ static func end_level(m: Menus, args: Array) -> void:
 			b.mouse_filter = Control.MOUSE_FILTER_STOP
 			b.focus_mode = Control.FOCUS_ALL
 		m._tap_to("next level")
-		m._first_button = buttons[0]
+		m._first_button = next
 		m._focus_first()
+		_nudge(m, arrow)
 	count_up(m, total, score, rows, all_in)
 
 
@@ -120,6 +142,103 @@ static func _side_button(
 	b.accessibility_name = m._sentence(a11y)
 	m._connect(b, act)
 	return b
+
+
+## Move a level clear button to `x`, `w` wide (mirrored on a right-to-left sheet).
+static func _place(m: Menus, b: Button, x: float, w: float) -> void:
+	b.position.x = m._mx(x, w)
+	Blueprint.fit(b, Vector2(w, Blueprint.TAP_HEIGHT))
+
+
+## MENU: a word on the sheet, no rule under it, for the way out.
+static func _quiet(b: Button) -> void:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color.TRANSPARENT
+	box.content_margin_left = 4
+	box.content_margin_right = 4
+	_styles(b, box, Blueprint.FAINT)
+
+
+## WARDROBE: a box ruled all round, for a side trip.
+static func _outlined(b: Button) -> void:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color.TRANSPARENT
+	box.border_color = Blueprint.INK
+	box.set_border_width_all(1)
+	box.content_margin_left = 8
+	box.content_margin_right = 8
+	_styles(b, box, Blueprint.INK)
+
+
+## NEXT: filled with ink, its word in the sheet's own blue, bold, with a
+## chevron at the far end pointing on (back, on a right-to-left sheet).
+## Returns the chevron, for _nudge.
+static func _solid(m: Menus, b: Button) -> Line2D:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Blueprint.INK
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	if m._rtl:
+		box.content_margin_left += ARROW_IN
+	else:
+		box.content_margin_right += ARROW_IN
+	_styles(b, box, Blueprint.field)
+	b.add_theme_font_override("font", Blueprint.mono(800))
+	b.add_theme_font_size_override("font_size", NEXT_FONT)
+	var size: Vector2 = b.get_meta("fit")
+	var tip := ARROW_IN if m._rtl else size.x - ARROW_IN
+	var back := 5.0 if m._rtl else -5.0
+	var mid := size.y / 2.0
+	var h := ARROW_H / 2.0
+	var arrow := Line2D.new()
+	arrow.points = PackedVector2Array(
+		[Vector2(tip + back, mid - h), Vector2(tip, mid), Vector2(tip + back, mid + h)]
+	)
+	arrow.default_color = Blueprint.field
+	arrow.width = 2.5
+	arrow.joint_mode = Line2D.LINE_JOINT_ROUND
+	arrow.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	arrow.end_cap_mode = Line2D.LINE_CAP_ROUND
+	arrow.antialiased = true
+	b.add_child(arrow)
+	return arrow
+
+
+## One look for a button in every state: a touch shades it, as on any sheet.
+static func _styles(b: Button, normal: StyleBoxFlat, ink: Color) -> void:
+	var hover: StyleBoxFlat = normal.duplicate()
+	var pressed: StyleBoxFlat = normal.duplicate()
+	if normal.bg_color.a > 0.0:
+		hover.bg_color = normal.bg_color.darkened(0.06)
+		pressed.bg_color = normal.bg_color.darkened(0.18)
+	else:
+		hover.bg_color = Blueprint.HOVER
+		pressed.bg_color = Blueprint.PRESS
+	b.add_theme_stylebox_override("normal", normal)
+	b.add_theme_stylebox_override("hover", hover)
+	b.add_theme_stylebox_override("pressed", pressed)
+	b.add_theme_stylebox_override("hover_pressed", pressed)
+	for n in [
+		"font_color",
+		"font_hover_color",
+		"font_pressed_color",
+		"font_focus_color",
+		"font_hover_pressed_color",
+	]:
+		b.add_theme_color_override(n, ink)
+
+
+## NEXT's chevron steps forward and back once a beat while the sheet waits:
+## the one thing moving says which way to go. Still with reduced motion.
+static func _nudge(m: Menus, arrow: Line2D) -> void:
+	if not m._animate:
+		return
+	var step := Vector2(-ARROW_NUDGE if m._rtl else ARROW_NUDGE, 0.0)
+	var tw := m.create_tween().set_loops()
+	m._tweens.append(tw)
+	tw.tween_property(arrow, "position", step, ARROW_BEAT * 0.3).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(arrow, "position", Vector2.ZERO, ARROW_BEAT * 0.3).set_trans(Tween.TRANS_SINE)
+	tw.tween_interval(ARROW_BEAT * 0.4)
 
 
 ## WATCH REPLAY: every try at the level played back at once (Replay).
