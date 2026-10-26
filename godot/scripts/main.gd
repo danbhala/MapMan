@@ -310,6 +310,8 @@ func loaded() -> void:
 		return
 	player.update_at(map.get_player_position(), 0.0)
 	player.show_player()
+	if not completed:
+		Stats.event("level_start", Stats.of(self))
 	if not tutorial:
 		if not completed:
 			# A drafting table level plays as level 1, but as level 0 here, by its code.
@@ -874,6 +876,7 @@ func skip_level() -> void:
 	if not assists_on(ASSIST_SKIP):
 		return
 	Dev.record(level, "skip", _time_left, _moves)
+	Stats.event("level_skip", Stats.of(self))
 	menus.close()
 	losses.erase(level)
 	level += 1
@@ -885,6 +888,8 @@ func skip_level() -> void:
 
 func advance_level(check_point: bool) -> void:
 	_timer_stop()
+	if not completed:
+		Stats.event("level_clear", Stats.of(self, {"time_left": _time_left, "stars": stars}))
 	if completed:
 		# Into the vortex: on to the completion scoring.
 		Audio.play("end_level")
@@ -954,6 +959,7 @@ func finish_advancing_level() -> void:
 	if level > count:
 		if tutorial:
 			# The tutorial runs straight on into level 1 of the real game.
+			Stats.event("tutorial_done")
 			tutorial = false
 			level = 1
 			hud.show_stats(true)
@@ -961,6 +967,7 @@ func finish_advancing_level() -> void:
 			# Past the last level: the bonus map where MapWoman waits. Finishing
 			# the game releases her into the wardrobe.
 			completed = true
+			Stats.event("game_finished", {"score": score, "lives": lives})
 			_first_finish = not Save.has_completed and not Save.rev_b
 			_mark_completed()
 			Save.release("mapwoman")
@@ -1041,6 +1048,8 @@ func lose_life(reason := "death") -> void:
 			losses[level] = losses.get(level, 0) + 1
 	Audio.play("lose_life")
 	_lose_reason = reason
+	var at := {"reason": reason, "time_left": _time_left, "x": map.position_key.x}
+	Stats.event("life_lost", Stats.of(self, at.merged({"y": map.position_key.y})))
 	player.show_player()
 	player.face_death()
 	dead = true
@@ -1080,6 +1089,7 @@ func game_over(show_score := true) -> void:
 	paused = false
 	set_background()
 	if show_score:
+		Stats.event("game_over", {"level": level, "score": score})
 		Audio.play_game_over()
 		var previous_best := Save.highscore
 		var pb := Save.submit_score(score)
@@ -1132,6 +1142,10 @@ func revise(rev_b: bool) -> void:
 func show_start_menu() -> void:
 	revise(false)
 	Audio.play_menu()
+	if Stats.should_ask():
+		# Once, before the menu: may MapMan send play stats? (StatsSheet)
+		StatsSheet.build_question(menus)
+		return
 	var drafting := Save.drafting_open()
 	menus.show_main(
 		Save.highscore,
@@ -1221,9 +1235,10 @@ func go_back() -> void:
 			_on_menu_action("back to clear" if _between else "main menu")
 		"options", "restart", "first_play", "game_over", "congratulations", "practice":
 			_on_menu_action("main menu")
-		"language", "controls":
+		"language", "controls", "privacy":
 			_on_menu_action("options")
 		"main":
 			get_tree().quit()
 		# Tap-to-continue screens (life lost, level clear, completion scoring)
-		# ignore back so a stray press can't skip or lose anything.
+		# and the play stats question ignore back so a stray press can't
+		# skip, lose or answer anything.

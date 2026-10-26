@@ -1356,3 +1356,55 @@ msgstr "练习"
 #. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
 msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
 msgstr "通关后才能看到隐藏的格子"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "游戏统计"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "用匿名统计帮助改进MAPMAN？"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "哪些关卡开始、通过或失败，以及在哪里"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "不含姓名、账号或广告ID"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "可随时更改：%s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "好，发送统计"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "不用了"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "隐私政策"
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "隐私"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "发送游戏统计"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "打开"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "统计ID %s：申请删除数据时提供"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "不会发送任何内容。开启后将生成新的随机ID"

@@ -1396,3 +1396,55 @@ msgstr "CLEACHTADH"
 #. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
 msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
 msgstr "CRÍOCHNAIGH É LE TÍLEANNA I BHFOLACH A FHEICEÁIL"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "STAITISTICÍ IMEARTHA"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "CABHRÚ LE MAPMAN LE STAITISTICÍ GAN AINM?"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "NA LEIBHÉIL A THOSAÍTEAR, A CHRÍOCHNAÍTEAR NÓ A CHAILLTEAR"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "GAN AINM, GAN CHUNTAS, GAN ID FÓGRAÍOCHTA"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "ATHRAIGH AM AR BITH É: %s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "SEOL STAITISTICÍ"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "NÍ RAIBH MAITH AGAT"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "POLASAÍ PRÍOBH."
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "PRÍOBHÁIDEACHT"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "SEOL STAITISTICÍ"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "OSCAIL"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "ID STAITISTICÍ %s: LUAIGH É CHUN A SHONRAÍ A SCRIOSADH"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "NÍ SHEOLTAR AON RUD. CRUTHAÍONN É A CHUR AR SIÚL ID NUA"

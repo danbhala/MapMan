@@ -1356,3 +1356,55 @@ msgstr "ANTRENMAN"
 #. Level card note: tiles that start hidden aren't drawn on the map until the level has been beaten
 msgid "CLEAR IT TO SEE ITS HIDDEN TILES"
 msgstr "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR"
+
+#. Sheet title: the question whether the game may send anonymous play statistics
+msgid "PLAY STATS"
+msgstr "OYUN İSTATİSTİKLERİ"
+
+#. Play stats question, main line. Must stay neutral: asks, does not push
+msgid "HELP MAKE MAPMAN BETTER WITH ANONYMOUS PLAY STATS?"
+msgstr "MAPMAN'İ ANONİM İSTATİSTİKLERLE GELİŞTİRELİM Mİ?"
+
+#. Play stats question, small print: what the stats say
+msgid "WHICH LEVELS ARE STARTED, CLEARED OR LOST, AND WHERE"
+msgstr "HANGİ BÖLÜMLER BAŞLADI, GEÇİLDİ YA DA KAYBEDİLDİ, VE NEREDE"
+
+#. Play stats question, small print: what they never include
+msgid "NO NAME, NO ACCOUNT, NO ADVERTISING ID"
+msgstr "İSİM YOK, HESAP YOK, REKLAM KİMLİĞİ YOK"
+
+#. Play stats question, small print. The two %s are the names of the Options sheet and its PRIVACY button, filled in by the game
+msgid "CHANGE IT ANY TIME: %s > %s"
+msgstr "İSTEDİĞİN ZAMAN DEĞİŞTİR: %s > %s"
+
+#. Play stats question: the yes row; same weight as the no row
+msgid "YES, SEND PLAY STATS"
+msgstr "EVET, GÖNDER"
+
+#. Play stats question: the no row
+msgid "NO THANKS"
+msgstr "HAYIR, TEŞEKKÜRLER"
+
+#. Row that opens the privacy policy web page
+msgid "PRIVACY POLICY"
+msgstr "GİZLİLİK POLİTİKASI"
+
+#. Button on the Options sheet and title of the privacy sheet
+msgid "PRIVACY"
+msgstr "GİZLİLİK"
+
+#. Privacy sheet row: play stats on or off
+msgid "SHARE PLAY STATS"
+msgstr "İSTATİSTİK GÖNDER"
+
+#. Privacy sheet value: opens the privacy policy page in the browser
+msgid "OPEN"
+msgstr "AÇ"
+
+#. Privacy sheet note: %s is the first 8 characters of the random stats ID, to quote in a deletion request
+msgid "STATS ID %s: QUOTE IT TO HAVE ITS STATS DELETED"
+msgstr "İSTATİSTİK KİMLİĞİ %s: VERİLERİ SİLDİRMEK İÇİN BELİRT"
+
+#. Privacy sheet note while play stats are off
+msgid "NOTHING IS SENT. TURNING STATS ON STARTS A NEW RANDOM ID"
+msgstr "HİÇBİR ŞEY GÖNDERİLMEZ. AÇMAK YENİ RASTGELE KİMLİK OLUŞTURUR"

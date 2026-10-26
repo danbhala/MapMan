@@ -32,6 +32,7 @@ locale/include_text_server_data=true
 Save="*res://scripts/save.gd"
 Audio="*res://scripts/audio.gd"
 Dev="*res://scripts/dev.gd"
+Stats="*res://scripts/stats.gd"
 
 [display]
 
@@ -99,6 +100,13 @@ pause={
 
 sensors/enable_accelerometer=true
 sensors/enable_gravity=true
+
+[mapman]
+
+# Play stats (scripts/stats.gd, docs/stats.md): the PostHog EU project's API
+# key. It can only send events, so it is safe in the repo; empty turns the
+# stats and their question off.
+stats/posthog_key=""
 
 [rendering]
 
