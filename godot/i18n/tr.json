@@ -334,5 +334,8 @@
   "WATCH BEST RUN": "REKORU İZLE",
   "BEST RUN — LEVEL %d": "REKOR — BÖLÜM %d",
   "PRACTICE": "ANTRENMAN",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "GİZLİ KARELERİ GÖRMEK İÇİN BİTİR",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Haritada ok tuşları veya WASD ile ilerle ve çıkış karesine git.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Bu kareye basınca Map Man yapışıp kalır.\nSilkelemek ve yeniden yürümek için Boşluk'a bas.",
+  "Press Esc or P during play to pause, or click the screen.": "Oyun sırasında duraklatmak için Esc veya P'ye bas ya da ekrana tıkla."
 }

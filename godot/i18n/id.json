@@ -334,5 +334,8 @@
   "WATCH BEST RUN": "LIHAT REKOR",
   "BEST RUN — LEVEL %d": "REKOR — LEVEL %d",
   "PRACTICE": "LATIHAN",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "SELESAIKAN UNTUK MELIHAT PETAK TERSEMBUNYI"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SELESAIKAN UNTUK MELIHAT PETAK TERSEMBUNYI",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Gunakan tombol panah atau WASD untuk bergerak dan menuju petak keluar.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Menginjak petak ini membuat Map Man tersangkut.\nTekan Spasi untuk mengguncangnya agar bisa bergerak lagi.",
+  "Press Esc or P during play to pause, or click the screen.": "Tekan Esc atau P saat bermain untuk jeda, atau klik layar."
 }

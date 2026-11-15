@@ -334,5 +334,8 @@
   "WATCH BEST RUN": "최고 기록 보기",
   "BEST RUN — LEVEL %d": "최고 기록 — 레벨 %d",
   "PRACTICE": "연습",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "클리어하면 숨은 타일이 보입니다"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "클리어하면 숨은 타일이 보입니다",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "WASD나 방향 입력으로 지도를 움직여 출구 타일로 가세요.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "이 타일을 밟으면 Map Man이 꼼짝 못 하게 됩니다.\nSpace로 흔들어 풀어 주고 다시 움직이세요.",
+  "Press Esc or P during play to pause, or click the screen.": "플레이 중 Esc나 P를 입력하거나 화면을 탭하면 일시정지됩니다."
 }

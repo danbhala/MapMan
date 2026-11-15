@@ -13,6 +13,9 @@ inputs:
   ios:
     description: Also install iOS export templates (macOS runners only)
     default: "false"
+  web:
+    description: Also install the web export templates (single-threaded)
+    default: "false"
 
 runs:
   using: composite
@@ -25,7 +28,7 @@ runs:
           ~/godot
           ~/.local/share/godot/export_templates
           ~/Library/Application Support/Godot/export_templates
-        key: godot-${{ inputs.version }}-${{ runner.os }}-android-${{ inputs.android }}-gradle-ios-${{ inputs.ios }}
+        key: godot-${{ inputs.version }}-${{ runner.os }}-android-${{ inputs.android }}-gradle-ios-${{ inputs.ios }}-web-${{ inputs.web }}
 
     - name: Download Godot
       if: steps.cache.outputs.cache-hit != 'true'
@@ -34,6 +37,7 @@ runs:
         V: ${{ inputs.version }}
         ANDROID: ${{ inputs.android }}
         IOS: ${{ inputs.ios }}
+        WEB: ${{ inputs.web }}
         OS: ${{ runner.os }}
       run: |
         base="https://github.com/godotengine/godot/releases/download/${V}-stable"
@@ -52,6 +56,7 @@ runs:
         wanted=()
         [ "$ANDROID" = "true" ] && wanted+=(templates/android_release.apk templates/android_source.zip)
         [ "$IOS" = "true" ] && wanted+=(templates/ios.zip)
+        [ "$WEB" = "true" ] && wanted+=(templates/web_nothreads_release.zip templates/web_nothreads_debug.zip)
         if [ ${#wanted[@]} -gt 0 ]; then
           mkdir -p "$templates"
           curl -sSfL -o /tmp/templates.tpz "$base/Godot_v${V}-stable_export_templates.tpz"

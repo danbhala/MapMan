@@ -50,14 +50,14 @@ var _stick_dragged := false
 
 
 static func has_accelerometer() -> bool:
-	return OS.has_feature("mobile") and Input.get_gravity().length() > 0.1
+	return Motion.on_phone() and Motion.gravity().length() > 0.1
 
 
 ## Use the current device angle as "level". Called when each level starts and
 ## when the game is unpaused, replacing the original's fixed sitting/standing
 ## offsets. Readings over the next CALIBRATE_SECONDS are averaged in.
 func calibrate() -> void:
-	calibrate_to(Input.get_gravity())
+	calibrate_to(Motion.gravity())
 
 
 func calibrate_to(gravity: Vector3) -> void:
@@ -70,7 +70,7 @@ func calibrate_to(gravity: Vector3) -> void:
 ## Call once per frame while playing.
 func update(delta: float) -> void:
 	if _calibrate_left > 0.0:
-		sample(Input.get_gravity(), delta)
+		sample(Motion.gravity(), delta)
 
 
 func sample(gravity: Vector3, delta: float) -> void:
@@ -158,7 +158,7 @@ func get_vector() -> Vector2:
 func _tilt_vector() -> Vector2:
 	if not _has_neutral:
 		calibrate()
-	var v := steer_from_gravity(Input.get_gravity(), _neutral)
+	var v := steer_from_gravity(Motion.gravity(), _neutral)
 	if Dev.t("invert_x"):
 		v.x = -v.x
 	if Dev.t("invert_y"):
@@ -245,4 +245,4 @@ func shook() -> bool:
 func shake_strength() -> float:
 	if not has_accelerometer():
 		return 0.0
-	return ((Input.get_accelerometer() - Input.get_gravity()) / 9.81).length()
+	return ((Motion.accelerometer() - Motion.gravity()) / 9.81).length()

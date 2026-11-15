@@ -366,5 +366,8 @@
   "WATCH BEST RUN": "FÉACH AN BHUAIC",
   "BEST RUN — LEVEL %d": "BUAIC — LEIBHÉAL %d",
   "PRACTICE": "CLEACHTADH",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "CRÍOCHNAIGH É LE TÍLEANNA I BHFOLACH A FHEICEÁIL"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "CRÍOCHNAIGH É LE TÍLEANNA I BHFOLACH A FHEICEÁIL",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Úsáid na saigheadeochracha nó WASD le bogadh agus déan ar an tíl amach.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Má sheasann Map Man ar an tíl seo, greamaítear é.\nBrúigh Spás lena chroitheadh saor agus bogadh arís.",
+  "Press Esc or P during play to pause, or click the screen.": "Brúigh Esc nó P le linn imeartha le stopadh, nó cliceáil ar an scáileán."
 }

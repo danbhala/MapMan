@@ -1253,6 +1253,22 @@ msgstr ""
 "Tadhaill agus tarraing áit ar bith le bogadh agus déan ar an tíl amach.\n"
 "Thar an bhfáinne briste siúl, thar an bhfáinne iomlán rith."
 
+#. Tutorial lesson 1 in the web version on a computer, steering with the keyboard (two lines, up to about 85 characters a line)
+msgid "Use the arrow keys or WASD to move around the map and head for the exit tile."
+msgstr "Úsáid na saigheadeochracha nó WASD le bogadh agus déan ar an tíl amach."
+
+#. Tutorial lesson on the sticky tile in the web version on a computer, where Space shakes (two lines, up to about 85 characters a line)
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Press Space to shake him free and get moving again."
+msgstr ""
+"Má sheasann Map Man ar an tíl seo, greamaítear é.\n"
+"Brúigh Spás lena chroitheadh saor agus bogadh arís."
+
+#. Tutorial lesson on pausing in the web version on a computer (two lines, up to about 85 characters a line)
+msgid "Press Esc or P during play to pause, or click the screen."
+msgstr "Brúigh Esc nó P le linn imeartha le stopadh, nó cliceáil ar an scáileán."
+
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "Tapáil an scáileán le linn imeartha chun sos a ghlacadh. Ní ghlacann ach tapáil ghasta sos: má tharraingíonn tú, bogann MapMan."

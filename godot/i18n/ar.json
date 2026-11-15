@@ -374,5 +374,8 @@
   "WATCH BEST RUN": "شاهد أفضل محاولة",
   "BEST RUN — LEVEL %d": "أفضل محاولة — المستوى %d",
   "PRACTICE": "تدريب",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "اجتزه لترى البلاطات المخفية"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "اجتزه لترى البلاطات المخفية",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "استخدم مفاتيح الأسهم أو WASD للتحرك في الخريطة والوصول إلى مربع الخروج.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "الوقوف على هذا المربع يجعل Map Man يعلق.\nاضغط مفتاح المسافة لهزه وتحريره ومتابعة السير.",
+  "Press Esc or P during play to pause, or click the screen.": "اضغط Esc أو P أثناء اللعب للإيقاف المؤقت، أو انقر على الشاشة."
 }

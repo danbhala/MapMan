@@ -150,6 +150,9 @@ func test_data_text_is_in_the_catalog() -> void:
 		var touch: String = level.get("description_touch", "")
 		if touch != "":
 			assert_true(msgids.has(touch), "tutorial lesson, touch: " + touch)
+		var keys: String = level.get("description_keys", "")
+		if keys != "":
+			assert_true(msgids.has(keys), "tutorial lesson, keys: " + keys)
 	var levels: Dictionary = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/levels.json")
 	)

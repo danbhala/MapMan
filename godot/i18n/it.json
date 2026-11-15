@@ -342,5 +342,8 @@
   "WATCH BEST RUN": "GUARDA IL RECORD",
   "BEST RUN — LEVEL %d": "RECORD — LIVELLO %d",
   "PRACTICE": "ALLENAMENTO",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "SUPERALO PER VEDERE LE CASELLE NASCOSTE"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SUPERALO PER VEDERE LE CASELLE NASCOSTE",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Usa le frecce o WASD per muoverti e raggiungi la casella d'uscita.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Se calpesti questa casella, Map Man resta bloccato.\nPremi Spazio per scuoterlo e ripartire.",
+  "Press Esc or P during play to pause, or click the screen.": "Premi Esc o P durante il gioco per mettere in pausa, o fai clic sullo schermo."
 }

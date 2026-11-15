@@ -342,5 +342,8 @@
   "WATCH BEST RUN": "BESTZEIT ANSEHEN",
   "BEST RUN — LEVEL %d": "BESTZEIT — LEVEL %d",
   "PRACTICE": "ÜBEN",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "SCHAFF ES, UM VERSTECKTE FELDER ZU SEHEN"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "SCHAFF ES, UM VERSTECKTE FELDER ZU SEHEN",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Bewege dich mit den Pfeiltasten oder WASD und steuere das Ausgangsfeld an.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Wer auf dieses Feld tritt, bleibt kleben.\nDrücke die Leertaste, um Map Man freizuschütteln.",
+  "Press Esc or P during play to pause, or click the screen.": "Drücke Esc oder P im Spiel für eine Pause, oder klicke auf den Bildschirm."
 }
