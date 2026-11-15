@@ -1213,6 +1213,22 @@ msgstr ""
 "在任何位置按住並拖曳即可移動，前往出口地磚。\n"
 "超過虛線圈走路，超過實線圈奔跑。"
 
+#. Tutorial lesson 1 in the web version on a computer, steering with the keyboard (two lines, up to about 85 characters a line)
+msgid "Use the arrow keys or WASD to move around the map and head for the exit tile."
+msgstr "用方向或 WASD 在地圖上移動，前往出口格。"
+
+#. Tutorial lesson on the sticky tile in the web version on a computer, where Space shakes (two lines, up to about 85 characters a line)
+msgid ""
+"Stepping on this tile will cause Map Man to get stuck.\n"
+"Press Space to shake him free and get moving again."
+msgstr ""
+"踩到這個格子，Map Man 會被黏住。\n"
+"按空格把他搖下來，繼續前進。"
+
+#. Tutorial lesson on pausing in the web version on a computer (two lines, up to about 85 characters a line)
+msgid "Press Esc or P during play to pause, or click the screen."
+msgstr "遊戲中按 Esc 或 P 暫停，或點一下螢幕。"
+
 #. Tutorial lesson 11 when steering with the touch stick
 msgid "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
 msgstr "遊戲中點一下螢幕即可暫停。只有快速點一下才會暫停：拖曳時MapMan會移動。"

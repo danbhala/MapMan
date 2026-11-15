@@ -194,7 +194,11 @@ static func build(m: Menus, drafts: Array, received: Array, note := "") -> void:
 		var a11y: String = m.tr(TEXT.a11y_received) % (i + 1)
 		_named_cell(m, pos, title, name if name != "" else code.left(4), "received %d" % i, a11y)
 	var half := Vector2(HALF_W, ITEMS_H)
-	for i in 2:
+	# A browser has no camera scanner: only code entry, at full width.
+	var items := 1 if OS.has_feature("web") else 2
+	if items == 1:
+		half.x = HALF_W * 2 + CELL_PITCH - CELL.x
+	for i in items:
 		var text: String = [TEXT.enter_code, TEXT.scan][i]
 		var x := Menus.LIST_X + i * (HALF_W + CELL_PITCH - CELL.x)
 		var b := Blueprint.item(

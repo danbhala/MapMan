@@ -22,6 +22,9 @@ now ported to Godot 4.5.
   design and the rules that keep extra parts on him from breaking his
   animations. Read its README before touching looks, releases or how MapMan
   is drawn.
+- `docs/web.md` – the web version (browser, hosted on Vercel from the
+  `web-master` branch) and what it leaves out. Guard Android-only features
+  with `OS.has_feature("web")`.
 - `docs/drafting-table.md` – the on-phone level editor and level codes. Read it
   before touching tiles, `godot/scripts/level_code.gd` or its frozen table.
 

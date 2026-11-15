@@ -859,7 +859,7 @@ func _pair_on() -> void:
 ## been seen (so screenshots stay the same from run to run).
 func _look_target(delta: float) -> Vector2:
 	if TiltInput.has_accelerometer():
-		var g := Input.get_gravity().normalized()
+		var g := Motion.gravity().normalized()
 		if _rest == Vector3.ZERO:
 			_rest = g
 		else:

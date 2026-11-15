@@ -334,5 +334,8 @@
   "WATCH BEST RUN": "ベスト記録を見る",
   "BEST RUN — LEVEL %d": "ベスト記録 — レベル%d",
   "PRACTICE": "練習",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "クリアすると隠れたタイルが見えます"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "クリアすると隠れたタイルが見えます",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "やじるしキーかWASDでマップを動き、出口のタイルへ向かいましょう。",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "このタイルを踏むとMap Manが動けなくなります。\nスペースキーで振って解放し、また動き出しましょう。",
+  "Press Esc or P during play to pause, or click the screen.": "プレイ中にEscかPで一時停止します。画面をタップしても一時停止します。"
 }

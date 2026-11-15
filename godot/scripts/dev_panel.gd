@@ -419,7 +419,7 @@ class TiltReadout:
 		var v: Vector2 = game.tilt.get_vector()
 		var p := c + (v * scale).limit_length(RADIUS)
 		draw_circle(p, 5, Color.WHITE)
-		var g := Input.get_gravity()
+		var g := Motion.gravity()
 		var lines := [
 			"steer %+.2f %+.2f" % [v.x, v.y],
 			"gravity %+.1f %+.1f %+.1f" % [g.x, g.y, g.z],

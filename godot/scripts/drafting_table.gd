@@ -281,8 +281,11 @@ func check_link(link := "") -> void:
 	play_code(link, "main")
 
 
-## The link Android opened the game with (the intent's data), or "".
+## The link Android opened the game with (the intent's data), or the
+## browser page's address on the web version, or "".
 static func launch_link() -> String:
+	if OS.has_feature("web"):
+		return str(JavaScriptBridge.eval("window.location.href", true))
 	if not Engine.has_singleton("AndroidRuntime"):
 		return ""
 	var activity = Engine.get_singleton("AndroidRuntime").getActivity()

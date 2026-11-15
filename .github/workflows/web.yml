@@ -1,0 +1,127 @@
+name: Web build
+
+# Builds the web version (plays in a browser, on a computer or a phone) for
+# master and every pull request, and publishes it to a branch that Vercel
+# deploys:
+#   master -> web-master  -> the live site (Vercel production)
+#   PR #12 -> web-pr-12   -> a Vercel preview, linked in a PR comment
+# The Vercel project is linked to this repo and ignores every other branch
+# (docs/web.md). The PR's branch is deleted when the PR closes.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: web-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # Vercel's address for a branch's latest preview.
+  VERCEL_PROJECT: mapman
+  VERCEL_TEAM_SLUG: dan-stuarts-projects-b8791952
+
+jobs:
+  build:
+    if: >-
+      github.event.action != 'closed' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Work out names
+        id: names
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          base=$(cat version.txt)
+          if [ -n "$PR" ]; then
+            echo "source=pr-$PR" >> "$GITHUB_OUTPUT"
+            echo "branch=web-pr-$PR" >> "$GITHUB_OUTPUT"
+            echo "version=$base-pr.$PR" >> "$GITHUB_OUTPUT"
+          else
+            echo "source=web" >> "$GITHUB_OUTPUT"
+            echo "branch=web-master" >> "$GITHUB_OUTPUT"
+            echo "version=$base" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: ./.github/actions/setup-godot
+        with:
+          web: "true"
+
+      - name: Export
+        env:
+          VERSION: ${{ steps.names.outputs.version }}
+          SOURCE: ${{ steps.names.outputs.source }}
+        run: |
+          printf '{"version": "%s", "commit": "%s", "built": "%s", "source": "%s"}' \
+            "$VERSION" "$(git rev-parse HEAD)" "$(date -u '+%Y-%m-%d %H:%M UTC')" "$SOURCE" \
+            > godot/build_info.json
+          godot --headless --path godot --import
+          mkdir -p godot/build/web
+          godot --headless --path godot --export-release Web build/web/index.html
+          test -s godot/build/web/index.wasm
+          cp web/motion.js web/vercel.json godot/build/web/
+
+      - name: Publish to the web branch
+        env:
+          BRANCH: ${{ steps.names.outputs.branch }}
+          VERSION: ${{ steps.names.outputs.version }}
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          commit=$(git rev-parse --short HEAD)
+          cd godot/build/web
+          git init -q -b "$BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -q -m "chore: web build $VERSION ($commit)"
+          # One commit per branch, replaced each time, so old builds don't pile up.
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${REPO}.git" "HEAD:refs/heads/$BRANCH"
+
+      - name: Comment the play link on the PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ steps.names.outputs.branch }}
+          VERSION: ${{ steps.names.outputs.version }}
+        run: |
+          url="https://$VERCEL_PROJECT-git-$BRANCH-$VERCEL_TEAM_SLUG.vercel.app"
+          marker="<!-- web-build -->"
+          body="$marker
+          🌐 **Web build ready: MapMan $VERSION** (commit $(git rev-parse --short HEAD))
+
+          [Play in the browser]($url) once Vercel has deployed it (a minute or so). Arrow keys or WASD on a computer; tilt or drag on a phone held sideways. Vercel previews ask you to sign in to Vercel."
+          id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -f body="$body" > /dev/null
+          fi
+
+  cleanup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Delete the PR's web branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh api -X DELETE "repos/$REPO/git/refs/heads/web-pr-$PR" || echo "nothing to delete"

@@ -350,5 +350,8 @@
   "WATCH BEST RUN": "СМОТРЕТЬ РЕКОРД",
   "BEST RUN — LEVEL %d": "РЕКОРД — УРОВЕНЬ %d",
   "PRACTICE": "ТРЕНИРОВКА",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "ПРОЙДИТЕ ЕГО, ЧТОБЫ УВИДЕТЬ СКРЫТЫЕ ПЛИТКИ"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "ПРОЙДИТЕ ЕГО, ЧТОБЫ УВИДЕТЬ СКРЫТЫЕ ПЛИТКИ",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Двигайтесь стрелками или WASD и идите к клетке выхода.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "На этой клетке Map Man прилипает.\nНажмите Пробел, чтобы встряхнуть его и идти дальше.",
+  "Press Esc or P during play to pause, or click the screen.": "Нажмите Esc или P во время игры, чтобы поставить паузу, или щёлкните по экрану."
 }

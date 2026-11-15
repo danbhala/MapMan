@@ -15,7 +15,8 @@
    "x_hides": 25,
    "checkpoint": false,
    "description": "Tilt your device to move around the map and head for the exit tile.\nThe gauge in the corner shows your tilt: dashed ring to walk, solid ring to run.",
-   "description_touch": "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run."
+   "description_touch": "Touch and drag anywhere to move around the map and head for the exit tile.\nDrag past the dashed ring to walk, past the solid ring to run.",
+   "description_keys": "Use the arrow keys or WASD to move around the map and head for the exit tile."
   },
   {
    "number": 2,
@@ -63,7 +64,8 @@
    "delay": 0.05,
    "x_hides": 25,
    "checkpoint": false,
-   "description": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him and get moving again."
+   "description": "Stepping on this tile will cause Map Man to get stuck.\nShake your device to free him and get moving again.",
+   "description_keys": "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again."
   },
   {
    "number": 5,
@@ -227,7 +229,8 @@
    "x_hides": 25,
    "checkpoint": false,
    "description": "Tap the screen during play to pause. Holding your device a new way? Tap the corner gauge to set that as the new centre.",
-   "description_touch": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan."
+   "description_touch": "Tap the screen during play to pause. Only a quick tap pauses: a touch that drags moves MapMan.",
+   "description_keys": "Press Esc or P during play to pause, or click the screen."
   },
   {
    "number": 15,

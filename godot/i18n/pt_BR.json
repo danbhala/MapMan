@@ -342,5 +342,8 @@
   "WATCH BEST RUN": "VER O RECORDE",
   "BEST RUN — LEVEL %d": "RECORDE — NÍVEL %d",
   "PRACTICE": "PRÁTICA",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "VENÇA PARA VER AS CASAS OCULTAS"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "VENÇA PARA VER AS CASAS OCULTAS",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "Use as setas ou WASD para se mover pelo mapa e vá até o bloco de saída.",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "Pisar neste bloco deixa o Map Man grudado.\nAperte Espaço para sacudi-lo e voltar a andar.",
+  "Press Esc or P during play to pause, or click the screen.": "Aperte Esc ou P durante o jogo para pausar, ou clique na tela."
 }

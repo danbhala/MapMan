@@ -778,6 +778,11 @@ func _current_level_data() -> Dictionary:
 	return tutorial_levels[level - 1] if tutorial else levels[level - 1]
 
 
+## The web version on a computer: lessons talk about keys, not tilting.
+func _on_keyboard() -> bool:
+	return OS.has_feature("web") and not Motion.on_phone() and not TiltInput.has_accelerometer()
+
+
 func load_level() -> void:
 	_timer_stop()
 	_timer_reset()
@@ -791,8 +796,12 @@ func load_level() -> void:
 		hud.set_time_message("")
 		_start_ending()
 	elif tutorial:
-		var touch := tilt.stick and data.has("description_touch")  # tilting lessons
-		hud.set_tutorial_text(tr(data.get("description_touch" if touch else "description", "")))
+		var key := "description"
+		if tilt.stick and data.has("description_touch"):  # tilting lessons
+			key = "description_touch"
+		elif _on_keyboard() and data.has("description_keys"):
+			key = "description_keys"
+		hud.set_tutorial_text(tr(data.get(key, "")))
 		hud.set_timer(0, -1.0, false)
 		hud.set_time_message("")
 	else:

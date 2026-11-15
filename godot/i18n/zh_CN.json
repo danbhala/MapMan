@@ -334,5 +334,8 @@
   "WATCH BEST RUN": "观看最佳记录",
   "BEST RUN — LEVEL %d": "最佳记录 — 第%d关",
   "PRACTICE": "练习",
-  "CLEAR IT TO SEE ITS HIDDEN TILES": "通关后才能看到隐藏的格子"
+  "CLEAR IT TO SEE ITS HIDDEN TILES": "通关后才能看到隐藏的格子",
+  "Use the arrow keys or WASD to move around the map and head for the exit tile.": "用方向或 WASD 在地图上移动，前往出口格。",
+  "Stepping on this tile will cause Map Man to get stuck.\nPress Space to shake him free and get moving again.": "踩到这个格子，Map Man 会被粘住。\n按空格把他摇下来，继续前进。",
+  "Press Esc or P during play to pause, or click the screen.": "游戏中按 Esc 或 P 暂停，或点击屏幕。"
 }
