@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in web-*) exit 1;; *) exit 0;; esac",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/:code([A-Za-z0-9_-]{4,})",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.(wasm|pck)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
